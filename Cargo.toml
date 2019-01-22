@@ -1,0 +1,32 @@
+[package]
+name = "scorrect"
+version = "0.1.0"
+authors = ["Ed Page <eopage@gmail.com>"]
+description = "Source Code Spelling Correction"
+repository = "https://github.com/crate-ci/scorrect"
+documentation = "https://docs.rs/scorrect"
+readme = "README.md"
+categories = ["development-tools", "text-processing"]
+keywords = ["development", "spelling"]
+license = "MIT"
+edition = "2018"
+
+[badges]
+travis-ci = { repository = "crate-ci/scorrect" }
+appveyor  = { repository = "epage/scorrect" }
+
+[dependencies]
+failure = "0.1"
+structopt = "0.2"
+ignore = "0.4"
+phf = "0.7"
+regex = "1.0"
+lazy_static = "1.2.0"
+grep-searcher = "0.1"
+
+[dev-dependencies]
+assert_fs = "0.10"
+
+[build-dependencies]
+phf_codegen = "0.7"
+csv = "1.0"

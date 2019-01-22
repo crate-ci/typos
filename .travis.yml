@@ -1,0 +1,60 @@
+sudo: false
+language: rust
+rust:
+- 1.31.0  # oldest supported version
+- stable
+- beta
+- nightly
+matrix:
+  include:
+  - env: RUSTFMT
+    rust: 1.31.0  # `stable`: Locking down for consistent behavior
+    install:
+      - rustup component add rustfmt
+    script:
+      - cargo fmt -- --check
+  - env: RUSTFLAGS="-D warnings"
+    rust: 1.31.0  # `stable`: Locking down for consistent behavior
+    install:
+    script:
+    - cargo check --tests
+  - env: CLIPPY
+    rust: 1.31.0  # `stable`: Locking down for consistent behavior
+    install:
+      - rustup component add clippy
+    script:
+      - cargo clippy --all-features
+  - env: BENCH
+    rust: nightly
+    script:
+      - cargo bench
+
+install:
+- rustc -Vv
+- cargo -V
+- export PATH=$HOME/.cargo/bin:$PATH
+
+script:
+- cargo check --verbose
+- cargo test  --verbose
+
+branches:
+  only:
+  # Release tags
+  - /^v\d+\.\d+\.\d+.*$/
+  - master
+
+# Need to cache the whole `.cargo` directory to keep .crates.toml for
+# cargo-update to work
+cache:
+  directories:
+    - /home/travis/.cargo
+# But don't cache the cargo registry
+before_cache:
+- rm -rf $HOME/.cargo/registry
+# Travis can't cache files that are not readable by "others"
+- chmod -R a+r $HOME/.cargo
+
+notifications:
+  email:
+    on_success: never
