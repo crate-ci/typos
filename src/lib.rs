@@ -23,7 +23,7 @@ impl<'t> Token<'t> {
 
 pub fn tokenize(content: &[u8]) -> impl Iterator<Item=Token> {
     lazy_static::lazy_static! {
-        static ref SPLIT: regex::bytes::Regex = regex::bytes::Regex::new(r#"\b\w+\b"#).unwrap();
+        static ref SPLIT: regex::bytes::Regex = regex::bytes::Regex::new(r#"\b(\p{Alphabetic}|\d|_)+\b"#).unwrap();
     }
     SPLIT.find_iter(content).map(|m| Token::new(m.as_bytes(), m.start()))
 }
