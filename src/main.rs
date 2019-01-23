@@ -33,7 +33,7 @@ impl Default for Format {
 
 #[derive(Debug, StructOpt)]
 struct Options {
-    #[structopt(parse(from_os_str))]
+    #[structopt(parse(from_os_str), default_value = ".")]
     /// Paths to check
     path: Vec<std::path::PathBuf>,
 
