@@ -1,10 +1,47 @@
+// 2015-edition macros.
+#[macro_use]
+extern crate clap;
+
 use structopt::StructOpt;
+
+arg_enum!{
+    #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+    enum Format {
+        Silent,
+        Brief,
+        Long,
+        Json,
+    }
+}
+
+impl Format {
+    fn report(self) -> scorrect::Report {
+        match self {
+            Format::Silent => scorrect::print_silent,
+            Format::Brief => scorrect::print_brief,
+            Format::Long => scorrect::print_long,
+            Format::Json => scorrect::print_json,
+        }
+    }
+}
+
+impl Default for Format {
+    fn default() -> Self {
+        Format::Long
+    }
+}
 
 #[derive(Debug, StructOpt)]
 struct Options {
     #[structopt(parse(from_os_str))]
     /// Paths to check
     path: Vec<std::path::PathBuf>,
+
+
+    #[structopt(long = "format",
+                raw(possible_values = "&Format::variants()", case_insensitive = "true"),
+                default_value = "long")]
+    pub format: Format,
 
     #[structopt(short="j", long="threads", default_value="0")]
     /// The approximate number of threads to use.
@@ -38,7 +75,7 @@ fn run() -> Result<(), failure::Error> {
     for entry in walk.build() {
         let entry = entry?;
         if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            scorrect::process_file(entry.path(), &dictionary)?;
+            scorrect::process_file(entry.path(), &dictionary, options.format.report())?;
         }
     }
 
