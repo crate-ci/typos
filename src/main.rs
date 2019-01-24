@@ -15,12 +15,12 @@ arg_enum!{
 }
 
 impl Format {
-    fn report(self) -> scorrect::Report {
+    fn report(self) -> scorrect::report::Report {
         match self {
-            Format::Silent => scorrect::print_silent,
-            Format::Brief => scorrect::print_brief,
-            Format::Long => scorrect::print_long,
-            Format::Json => scorrect::print_json,
+            Format::Silent => scorrect::report::print_silent,
+            Format::Brief => scorrect::report::print_brief,
+            Format::Long => scorrect::report::print_long,
+            Format::Json => scorrect::report::print_json,
         }
     }
 }
@@ -63,7 +63,7 @@ impl Options {
 fn run() -> Result<(), failure::Error> {
     let options = Options::from_args().infer();
 
-    let dictionary = scorrect::Corrections::new();
+    let dictionary = scorrect::Dictionary::new();
 
     let first_path = &options.path.get(0).expect("arg parsing enforces at least one");
     let mut walk = ignore::WalkBuilder::new(first_path);
