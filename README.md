@@ -1,6 +1,6 @@
 # defenestrate
 
-> **Source Code Spelling Correction**
+> **Throw spelling errors out the window**
 
 [![Travis Status](https://travis-ci.org/crate-ci/defenestrate.svg?branch=master)](https://travis-ci.org/crate-ci/defenestrate)
 [![Appveyor Status](https://ci.appveyor.com/api/projects/status/ngaynop65qg5sqpq/branch/master?svg=true)](https://ci.appveyor.com/project/epage/defenestrate/branch/master)
@@ -10,11 +10,10 @@
 
 ## Install
 
-Add to your `Cargo.toml`:
+For now, `rust` is required for install:
 
 ```toml
-[dependencies]
-defenestrate = "0.3"
+cargo install defenestrate
 ```
 
 ## License
