@@ -1,10 +1,10 @@
 [package]
-name = "scorrect"
+name = "defenestrate"
 version = "0.1.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
-repository = "https://github.com/crate-ci/scorrect"
-documentation = "https://docs.rs/scorrect"
+repository = "https://github.com/crate-ci/defenestrate"
+documentation = "https://docs.rs/defenestrate"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
@@ -12,8 +12,8 @@ license = "MIT"
 edition = "2018"
 
 [badges]
-travis-ci = { repository = "crate-ci/scorrect" }
-appveyor  = { repository = "epage/scorrect" }
+travis-ci = { repository = "crate-ci/defenestrate" }
+appveyor  = { repository = "epage/defenestrate" }
 
 [dependencies]
 failure = "0.1"

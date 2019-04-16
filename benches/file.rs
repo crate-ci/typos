@@ -12,8 +12,8 @@ fn process_empty(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::EMPTY).unwrap();
 
-    let corrections = scorrect::Dictionary::new();
-    b.iter(|| scorrect::process_file(sample_path.path(), &corrections, scorrect::report::print_silent));
+    let corrections = defenestrate::Dictionary::new();
+    b.iter(|| defenestrate::process_file(sample_path.path(), &corrections, defenestrate::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -24,8 +24,8 @@ fn process_no_tokens(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::NO_TOKENS).unwrap();
 
-    let corrections = scorrect::Dictionary::new();
-    b.iter(|| scorrect::process_file(sample_path.path(), &corrections, scorrect::report::print_silent));
+    let corrections = defenestrate::Dictionary::new();
+    b.iter(|| defenestrate::process_file(sample_path.path(), &corrections, defenestrate::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -36,8 +36,8 @@ fn process_single_token(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::SINGLE_TOKEN).unwrap();
 
-    let corrections = scorrect::Dictionary::new();
-    b.iter(|| scorrect::process_file(sample_path.path(), &corrections, scorrect::report::print_silent));
+    let corrections = defenestrate::Dictionary::new();
+    b.iter(|| defenestrate::process_file(sample_path.path(), &corrections, defenestrate::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -48,8 +48,8 @@ fn process_sherlock(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::SHERLOCK).unwrap();
 
-    let corrections = scorrect::Dictionary::new();
-    b.iter(|| scorrect::process_file(sample_path.path(), &corrections, scorrect::report::print_silent));
+    let corrections = defenestrate::Dictionary::new();
+    b.iter(|| defenestrate::process_file(sample_path.path(), &corrections, defenestrate::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -60,8 +60,8 @@ fn process_code(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::CODE).unwrap();
 
-    let corrections = scorrect::Dictionary::new();
-    b.iter(|| scorrect::process_file(sample_path.path(), &corrections, scorrect::report::print_silent));
+    let corrections = defenestrate::Dictionary::new();
+    b.iter(|| defenestrate::process_file(sample_path.path(), &corrections, defenestrate::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -72,8 +72,8 @@ fn process_corpus(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::CORPUS).unwrap();
 
-    let corrections = scorrect::Dictionary::new();
-    b.iter(|| scorrect::process_file(sample_path.path(), &corrections, scorrect::report::print_silent));
+    let corrections = defenestrate::Dictionary::new();
+    b.iter(|| defenestrate::process_file(sample_path.path(), &corrections, defenestrate::report::print_silent));
 
     temp.close().unwrap();
 }

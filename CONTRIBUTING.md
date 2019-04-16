@@ -1,4 +1,4 @@
-# Contributing to scorrect
+# Contributing to defenestrate
 
 Thanks for wanting to contribute! There are many ways to contribute and we
 appreciate any level you're willing to do.
@@ -61,7 +61,7 @@ When we're ready to release, a project owner should do the following
 - `git push upstream master --tag v<X>.<Y>.<Z>`
 - Run `cargo publish` (run `cargo login` first if needed)
 
-[issues]: https://github.com/crate-ci/scorrect/issues
-[new issue]: https://github.com/crate-ci/scorrect/issues/new
-[all issues]: https://github.com/crate-ci/scorrect/issues?utf8=%E2%9C%93&q=is%3Aissue
-[travis]: https://github.com/crate-ci/scorrect/blob/master/.travis.yml
+[issues]: https://github.com/crate-ci/defenestrate/issues
+[new issue]: https://github.com/crate-ci/defenestrate/issues/new
+[all issues]: https://github.com/crate-ci/defenestrate/issues?utf8=%E2%9C%93&q=is%3Aissue
+[travis]: https://github.com/crate-ci/defenestrate/blob/master/.travis.yml

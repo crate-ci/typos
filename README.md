@@ -1,12 +1,12 @@
-# scorrect
+# defenestrate
 
 > **Source Code Spelling Correction**
 
-[![Travis Status](https://travis-ci.org/crate-ci/scorrect.svg?branch=master)](https://travis-ci.org/crate-ci/scorrect)
-[![Appveyor Status](https://ci.appveyor.com/api/projects/status/ngaynop65qg5sqpq/branch/master?svg=true)](https://ci.appveyor.com/project/epage/scorrect/branch/master)
+[![Travis Status](https://travis-ci.org/crate-ci/defenestrate.svg?branch=master)](https://travis-ci.org/crate-ci/defenestrate)
+[![Appveyor Status](https://ci.appveyor.com/api/projects/status/ngaynop65qg5sqpq/branch/master?svg=true)](https://ci.appveyor.com/project/epage/defenestrate/branch/master)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
-![License](https://img.shields.io/crates/l/scorrect.svg)
-[![Crates Status](https://img.shields.io/crates/v/scorrect.svg)](https://crates.io/crates/scorrect)
+![License](https://img.shields.io/crates/l/defenestrate.svg)
+[![Crates Status](https://img.shields.io/crates/v/defenestrate.svg)](https://crates.io/crates/defenestrate)
 
 ## Install
 
@@ -14,7 +14,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-scorrect = "0.3"
+defenestrate = "0.3"
 ```
 
 ## License
@@ -33,5 +33,5 @@ submitted for inclusion in the work by you, as defined in the Apache-2.0
 license, shall be dual licensed as above, without any additional terms or
 conditions.
 
-[Crates.io]: https://crates.io/crates/scorrect
-[Documentation]: https://docs.rs/scorrect
+[Crates.io]: https://crates.io/crates/defenestrate
+[Documentation]: https://docs.rs/defenestrate

@@ -15,12 +15,12 @@ arg_enum!{
 }
 
 impl Format {
-    fn report(self) -> scorrect::report::Report {
+    fn report(self) -> defenestrate::report::Report {
         match self {
-            Format::Silent => scorrect::report::print_silent,
-            Format::Brief => scorrect::report::print_brief,
-            Format::Long => scorrect::report::print_long,
-            Format::Json => scorrect::report::print_json,
+            Format::Silent => defenestrate::report::print_silent,
+            Format::Brief => defenestrate::report::print_brief,
+            Format::Long => defenestrate::report::print_long,
+            Format::Json => defenestrate::report::print_json,
         }
     }
 }
@@ -63,7 +63,7 @@ impl Options {
 fn run() -> Result<(), failure::Error> {
     let options = Options::from_args().infer();
 
-    let dictionary = scorrect::Dictionary::new();
+    let dictionary = defenestrate::Dictionary::new();
 
     let first_path = &options.path.get(0).expect("arg parsing enforces at least one");
     let mut walk = ignore::WalkBuilder::new(first_path);
@@ -75,7 +75,7 @@ fn run() -> Result<(), failure::Error> {
     for entry in walk.build() {
         let entry = entry?;
         if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            scorrect::process_file(entry.path(), &dictionary, options.format.report())?;
+            defenestrate::process_file(entry.path(), &dictionary, options.format.report())?;
         }
     }
 
