@@ -12,7 +12,7 @@
 
 For now, `rust` is required for install:
 
-```toml
+```bash
 cargo install defenestrate
 ```
 
