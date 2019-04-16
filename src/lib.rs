@@ -18,6 +18,7 @@ pub fn process_file(path: &std::path::Path, dictionary: &Dictionary, report: rep
         let line_num = line_idx + 1;
         for token in identifier::tokenize(line) {
             if let Some(word) = std::str::from_utf8(token.token).ok() {
+                // Correct tokens as-is
                 if let Some(correction) = dictionary.correct_str(word) {
                     let col_num = token.offset;
                     let msg = report::Message {
