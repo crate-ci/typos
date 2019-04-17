@@ -3,8 +3,8 @@ extern crate serde_derive;
 
 mod dict;
 
-pub mod identifier;
 pub mod report;
+pub mod tokens;
 
 pub use crate::dict::*;
 
@@ -16,7 +16,7 @@ pub fn process_file(path: &std::path::Path, dictionary: &Dictionary, report: rep
     File::open(path)?.read_to_end(&mut buffer)?;
     for (line_idx, line) in grep_searcher::LineIter::new(b'\n', &buffer).enumerate() {
         let line_num = line_idx + 1;
-        for token in identifier::tokenize(line) {
+        for token in tokens::tokenize(line) {
             // Correct tokens as-is
             if let Some(correction) = dictionary.correct_bytes(token.token) {
                 let word = String::from_utf8_lossy(token.token);
