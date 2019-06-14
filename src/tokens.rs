@@ -9,7 +9,7 @@ impl<'t> Symbol<'t> {
         Self { token, offset }
     }
 
-    pub fn parse<'s>(content: &'s [u8]) -> impl Iterator<Item = Symbol<'s>> {
+    pub fn parse(content: &[u8]) -> impl Iterator<Item = Symbol<'_>> {
         lazy_static::lazy_static! {
             static ref SPLIT: regex::bytes::Regex = regex::bytes::Regex::new(r#"\b(\p{Alphabetic}|\d|_)+\b"#).unwrap();
         }

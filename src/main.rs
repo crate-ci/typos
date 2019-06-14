@@ -51,10 +51,8 @@ struct Options {
 
 impl Options {
     pub fn infer(mut self) -> Self {
-        if self.path.len() == 1 {
-            if self.path[0].is_file() {
-                self.threads = 1;
-            }
+        if self.path.len() == 1 && self.path[0].is_file() {
+            self.threads = 1;
         }
 
         self

@@ -1,5 +1,6 @@
 include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
 
+#[derive(Default)]
 pub struct Dictionary {}
 
 impl Dictionary {
@@ -29,6 +30,6 @@ fn map_lookup(
     // See https://github.com/rust-lang/rust/issues/28853#issuecomment-158735548
     unsafe {
         let key = ::std::mem::transmute::<_, &'static str>(key);
-        map.get(&UniCase(key)).map(|s| *s)
+        map.get(&UniCase(key)).cloned()
     }
 }

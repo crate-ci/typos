@@ -21,7 +21,7 @@ pub fn process_file(
     for (line_idx, line) in grep_searcher::LineIter::new(b'\n', &buffer).enumerate() {
         let line_num = line_idx + 1;
         for token in tokens::Symbol::parse(line) {
-            if let Some(word) = std::str::from_utf8(token.token).ok() {
+            if let Ok(word) = std::str::from_utf8(token.token) {
                 // Correct tokens as-is
                 if let Some(correction) = dictionary.correct_str(word) {
                     let col_num = token.offset;
