@@ -24,6 +24,7 @@ fn main() {
     for record in &records {
         let value = format!(r#""{}""#, &record[1]);
         builder.entry(unicase::UniCase(&record[0]), &value);
+        break;
     }
     builder.build(&mut file).unwrap();
     write!(&mut file, ";\n").unwrap();

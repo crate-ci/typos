@@ -1,25 +1,24 @@
 sudo: false
 language: rust
 rust:
-- 1.31.0  # oldest supported version
 - stable
 - beta
 - nightly
 matrix:
   include:
   - env: RUSTFMT
-    rust: 1.31.0  # `stable`: Locking down for consistent behavior
+    rust: 1.35.0  # `stable`: Locking down for consistent behavior
     install:
       - rustup component add rustfmt
     script:
       - cargo fmt -- --check
   - env: RUSTFLAGS="-D warnings"
-    rust: 1.31.0  # `stable`: Locking down for consistent behavior
+    rust: 1.35.0  # `stable`: Locking down for consistent behavior
     install:
     script:
     - cargo check --tests
   - env: CLIPPY
-    rust: 1.31.0  # `stable`: Locking down for consistent behavior
+    rust: 1.35.0  # `stable`: Locking down for consistent behavior
     install:
       - rustup component add clippy
     script:
