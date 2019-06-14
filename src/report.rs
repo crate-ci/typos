@@ -1,4 +1,4 @@
-#[derive(Debug, Serialize)]
+#[derive(Copy, Clone, Debug, Serialize)]
 pub struct Message<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
