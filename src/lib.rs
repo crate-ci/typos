@@ -21,22 +21,20 @@ pub fn process_file(
     File::open(path)?.read_to_end(&mut buffer)?;
     for (line_idx, line) in grep_searcher::LineIter::new(b'\n', &buffer).enumerate() {
         let line_num = line_idx + 1;
-        for token in tokens::Symbol::parse(line) {
-            if let Ok(word) = std::str::from_utf8(token.token) {
-                // Correct tokens as-is
-                if let Some(correction) = dictionary.correct_str(word) {
-                    let col_num = token.offset;
-                    let msg = report::Message {
-                        path,
-                        line,
-                        line_num,
-                        col_num,
-                        word,
-                        correction,
-                        non_exhaustive: (),
-                    };
-                    report(msg);
-                }
+        for symbol in tokens::Symbol::parse(line) {
+            // Correct tokens as-is
+            if let Some(correction) = dictionary.correct_str(symbol.token) {
+                let col_num = symbol.offset;
+                let msg = report::Message {
+                    path,
+                    line,
+                    line_num,
+                    col_num,
+                    word: symbol.token,
+                    correction,
+                    non_exhaustive: (),
+                };
+                report(msg);
             }
         }
     }
