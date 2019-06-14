@@ -13,7 +13,7 @@ fn main() {
     write!(&mut file, "use unicase::UniCase;").unwrap();
     write!(
         &mut file,
-        "static DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
+        "pub(crate) static DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
     )
     .unwrap();
     let mut builder = phf_codegen::Map::new();
@@ -24,7 +24,6 @@ fn main() {
     for record in &records {
         let value = format!(r#""{}""#, &record[1]);
         builder.entry(unicase::UniCase(&record[0]), &value);
-        break;
     }
     builder.build(&mut file).unwrap();
     write!(&mut file, ";\n").unwrap();

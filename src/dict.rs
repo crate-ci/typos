@@ -1,5 +1,4 @@
-#[allow(clippy)]
-include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
+use unicase::UniCase;
 
 #[derive(Default)]
 pub struct Dictionary {}
@@ -10,7 +9,7 @@ impl Dictionary {
     }
 
     pub fn correct_str<'s, 'w>(&'s self, word: &'w str) -> Option<&'s str> {
-        map_lookup(&DICTIONARY, word)
+        map_lookup(&crate::dict_codegen::DICTIONARY, word)
     }
 
     pub fn correct_bytes<'s, 'w>(&'s self, word: &'w [u8]) -> Option<&'s str> {

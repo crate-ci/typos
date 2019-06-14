@@ -2,6 +2,7 @@
 extern crate serde_derive;
 
 mod dict;
+mod dict_codegen;
 
 pub mod report;
 pub mod tokens;
