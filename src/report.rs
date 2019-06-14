@@ -13,11 +13,17 @@ pub struct Message<'m> {
 
 pub type Report = fn(msg: Message);
 
-pub fn print_silent(_: Message) {
-}
+pub fn print_silent(_: Message) {}
 
 pub fn print_brief(msg: Message) {
-    println!("{}:{}:{}: {} -> {}", msg.path.display(), msg.line_num, msg.col_num, msg.word, msg.correction);
+    println!(
+        "{}:{}:{}: {} -> {}",
+        msg.path.display(),
+        msg.line_num,
+        msg.col_num,
+        msg.word,
+        msg.correction
+    );
 }
 
 pub fn print_long(msg: Message) {
@@ -28,9 +34,18 @@ pub fn print_long(msg: Message) {
     let hl: String = itertools::repeat_n("^", msg.word.len()).collect();
 
     println!("error: `{}` should be `{}`", msg.word, msg.correction);
-    println!("  --> {}:{}:{}", msg.path.display(), msg.line_num, msg.col_num);
+    println!(
+        "  --> {}:{}:{}",
+        msg.path.display(),
+        msg.line_num,
+        msg.col_num
+    );
     println!("{} |", line_indent);
-    println!("{} | {}", msg.line_num, String::from_utf8_lossy(msg.line).trim_end());
+    println!(
+        "{} | {}",
+        msg.line_num,
+        String::from_utf8_lossy(msg.line).trim_end()
+    );
     println!("{} | {}{}", line_indent, hl_indent, hl);
     println!("{} |", line_indent);
 }

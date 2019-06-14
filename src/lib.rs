@@ -11,7 +11,11 @@ pub use crate::dict::*;
 use std::fs::File;
 use std::io::Read;
 
-pub fn process_file(path: &std::path::Path, dictionary: &Dictionary, report: report::Report) -> Result<(), failure::Error> {
+pub fn process_file(
+    path: &std::path::Path,
+    dictionary: &Dictionary,
+    report: report::Report,
+) -> Result<(), failure::Error> {
     let mut buffer = Vec::new();
     File::open(path)?.read_to_end(&mut buffer)?;
     for (line_idx, line) in grep_searcher::LineIter::new(b'\n', &buffer).enumerate() {
@@ -38,4 +42,3 @@ pub fn process_file(path: &std::path::Path, dictionary: &Dictionary, report: rep
 
     Ok(())
 }
-

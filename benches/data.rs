@@ -29,4 +29,3 @@ fn main() {
 ";
 
 pub const CORPUS: &str = include_str!("../assets/words.csv");
-

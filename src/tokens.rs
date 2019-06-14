@@ -6,17 +6,16 @@ pub struct Symbol<'t> {
 
 impl<'t> Symbol<'t> {
     pub fn new(token: &'t [u8], offset: usize) -> Self {
-        Self {
-            token,
-            offset,
-        }
+        Self { token, offset }
     }
 
-    pub fn parse<'s>(content: &'s [u8]) -> impl Iterator<Item=Symbol<'s>> {
+    pub fn parse<'s>(content: &'s [u8]) -> impl Iterator<Item = Symbol<'s>> {
         lazy_static::lazy_static! {
             static ref SPLIT: regex::bytes::Regex = regex::bytes::Regex::new(r#"\b(\p{Alphabetic}|\d|_)+\b"#).unwrap();
         }
-        SPLIT.find_iter(content).map(|m| Symbol::new(m.as_bytes(), m.start()))
+        SPLIT
+            .find_iter(content)
+            .map(|m| Symbol::new(m.as_bytes(), m.start()))
     }
 }
 

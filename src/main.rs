@@ -4,7 +4,7 @@ extern crate clap;
 
 use structopt::StructOpt;
 
-arg_enum!{
+arg_enum! {
     #[derive(Debug, Copy, Clone, PartialEq, Eq)]
     enum Format {
         Silent,
@@ -37,13 +37,14 @@ struct Options {
     /// Paths to check
     path: Vec<std::path::PathBuf>,
 
-
-    #[structopt(long = "format",
-                raw(possible_values = "&Format::variants()", case_insensitive = "true"),
-                default_value = "long")]
+    #[structopt(
+        long = "format",
+        raw(possible_values = "&Format::variants()", case_insensitive = "true"),
+        default_value = "long"
+    )]
     pub format: Format,
 
-    #[structopt(short="j", long="threads", default_value="0")]
+    #[structopt(short = "j", long = "threads", default_value = "0")]
     /// The approximate number of threads to use.
     threads: usize,
 }
@@ -65,7 +66,10 @@ fn run() -> Result<(), failure::Error> {
 
     let dictionary = defenestrate::Dictionary::new();
 
-    let first_path = &options.path.get(0).expect("arg parsing enforces at least one");
+    let first_path = &options
+        .path
+        .get(0)
+        .expect("arg parsing enforces at least one");
     let mut walk = ignore::WalkBuilder::new(first_path);
     for path in &options.path[1..] {
         walk.add(path);

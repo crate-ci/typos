@@ -20,4 +20,3 @@ fn no_correction(b: &mut test::Bencher) {
     assert_eq!(corrections.correct_str("success"), None);
     b.iter(|| corrections.correct_str("success"));
 }
-

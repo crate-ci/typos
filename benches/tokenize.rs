@@ -16,7 +16,9 @@ fn tokenize_no_tokens(b: &mut test::Bencher) {
 
 #[bench]
 fn tokenize_single_token(b: &mut test::Bencher) {
-    b.iter(|| defenestrate::tokens::Symbol::parse(data::SINGLE_TOKEN.as_bytes()).collect::<Vec<_>>());
+    b.iter(|| {
+        defenestrate::tokens::Symbol::parse(data::SINGLE_TOKEN.as_bytes()).collect::<Vec<_>>()
+    });
 }
 
 #[bench]
