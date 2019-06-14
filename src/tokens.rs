@@ -11,6 +11,8 @@ impl<'t> Symbol<'t> {
 
     pub fn parse(content: &[u8]) -> impl Iterator<Item = Symbol<'_>> {
         lazy_static::lazy_static! {
+            // Getting false positives for this lint
+            #[allow(clippy::invalid_regex)]
             static ref SPLIT: regex::bytes::Regex = regex::bytes::Regex::new(r#"\b(\p{Alphabetic}|\d|_)+\b"#).unwrap();
         }
         SPLIT
