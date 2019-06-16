@@ -22,19 +22,33 @@ pub fn process_file(
     for (line_idx, line) in grep_searcher::LineIter::new(b'\n', &buffer).enumerate() {
         let line_num = line_idx + 1;
         for symbol in tokens::Symbol::parse(line) {
-            // Correct tokens as-is
-            if let Some(correction) = dictionary.correct_str(symbol.token) {
-                let col_num = symbol.offset;
+            if let Some(correction) = dictionary.correct_symbol(symbol) {
+                let col_num = symbol.offset();
                 let msg = report::Message {
                     path,
                     line,
                     line_num,
                     col_num,
-                    word: symbol.token,
+                    word: symbol.token(),
                     correction,
                     non_exhaustive: (),
                 };
                 report(msg);
+            }
+            for word in symbol.split() {
+                if let Some(correction) = dictionary.correct_word(word) {
+                    let col_num = word.offset();
+                    let msg = report::Message {
+                        path,
+                        line,
+                        line_num,
+                        col_num,
+                        word: word.token(),
+                        correction,
+                        non_exhaustive: (),
+                    };
+                    report(msg);
+                }
             }
         }
     }

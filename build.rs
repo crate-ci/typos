@@ -11,9 +11,10 @@ fn main() {
 
     println!("rerun-if-changed=./assets/words.csv");
     write!(&mut file, "use unicase::UniCase;").unwrap();
+
     write!(
         &mut file,
-        "pub(crate) static DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
+        "pub(crate) static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
     )
     .unwrap();
     let mut builder = phf_codegen::Map::new();

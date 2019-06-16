@@ -8,14 +8,12 @@ impl Dictionary {
         Dictionary {}
     }
 
-    pub fn correct_str<'s, 'w>(&'s self, word: &'w str) -> Option<&'s str> {
-        map_lookup(&crate::dict_codegen::DICTIONARY, word)
+    pub fn correct_symbol<'s, 'w>(&'s self, _sym: crate::tokens::Symbol<'w>) -> Option<&'s str> {
+        None
     }
 
-    pub fn correct_bytes<'s, 'w>(&'s self, word: &'w [u8]) -> Option<&'s str> {
-        std::str::from_utf8(word)
-            .ok()
-            .and_then(|word| self.correct_str(word))
+    pub fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<&'s str> {
+        map_lookup(&crate::dict_codegen::WORD_DICTIONARY, word.token())
     }
 }
 
@@ -26,6 +24,7 @@ fn map_lookup(
     // This transmute should be safe as `get` will not store the reference with
     // the expanded lifetime. This is due to `Borrow` being overly strict and
     // can't have an impl for `&'static str` to `Borrow<&'a str>`.
+    //
     //
     // See https://github.com/rust-lang/rust/issues/28853#issuecomment-158735548
     unsafe {

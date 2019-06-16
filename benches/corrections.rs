@@ -8,15 +8,17 @@ fn load_corrections(b: &mut test::Bencher) {
 }
 
 #[bench]
-fn correction(b: &mut test::Bencher) {
+fn correct_word_hit(b: &mut test::Bencher) {
     let corrections = defenestrate::Dictionary::new();
-    assert_eq!(corrections.correct_str("successs"), Some("successes"));
-    b.iter(|| corrections.correct_str("successs"));
+    let input = defenestrate::tokens::Word::new("successs", 0).unwrap();
+    assert_eq!(corrections.correct_word(input), Some("successes"));
+    b.iter(|| corrections.correct_word(input));
 }
 
 #[bench]
-fn no_correction(b: &mut test::Bencher) {
+fn correct_word_miss(b: &mut test::Bencher) {
     let corrections = defenestrate::Dictionary::new();
-    assert_eq!(corrections.correct_str("success"), None);
-    b.iter(|| corrections.correct_str("success"));
+    let input = defenestrate::tokens::Word::new("success", 0).unwrap();
+    assert_eq!(corrections.correct_word(input), None);
+    b.iter(|| corrections.correct_word(input));
 }
