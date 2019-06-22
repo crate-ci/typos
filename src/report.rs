@@ -35,6 +35,9 @@ pub fn print_long(msg: Message) {
     let hl_indent: String = itertools::repeat_n(" ", msg.col_num).collect();
     let hl: String = itertools::repeat_n("^", msg.word.len()).collect();
 
+    let line = String::from_utf8_lossy(msg.line);
+    let line = line.replace("\t", " ");
+
     let stdout = io::stdout();
     let mut handle = stdout.lock();
 
@@ -53,13 +56,7 @@ pub fn print_long(msg: Message) {
     )
     .unwrap();
     writeln!(handle, "{} |", line_indent).unwrap();
-    writeln!(
-        handle,
-        "{} | {}",
-        msg.line_num,
-        String::from_utf8_lossy(msg.line).trim_end()
-    )
-    .unwrap();
+    writeln!(handle, "{} | {}", msg.line_num, line.trim_end()).unwrap();
     writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl).unwrap();
     writeln!(handle, "{} |", line_indent).unwrap();
 }
