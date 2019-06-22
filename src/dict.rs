@@ -8,7 +8,10 @@ impl Dictionary {
         Dictionary {}
     }
 
-    pub fn correct_symbol<'s, 'w>(&'s self, _sym: crate::tokens::Symbol<'w>) -> Option<&'s str> {
+    pub fn correct_ident<'s, 'w>(
+        &'s self,
+        _ident: crate::tokens::Identifier<'w>,
+    ) -> Option<&'s str> {
         None
     }
 
