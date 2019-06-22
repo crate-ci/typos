@@ -1,3 +1,5 @@
+use std::io::{self, Write};
+
 #[derive(Copy, Clone, Debug, Serialize)]
 pub struct Message<'m> {
     pub path: &'m std::path::Path,
@@ -33,21 +35,33 @@ pub fn print_long(msg: Message) {
     let hl_indent: String = itertools::repeat_n(" ", msg.col_num).collect();
     let hl: String = itertools::repeat_n("^", msg.word.len()).collect();
 
-    println!("error: `{}` should be `{}`", msg.word, msg.correction);
-    println!(
+    let stdout = io::stdout();
+    let mut handle = stdout.lock();
+
+    writeln!(
+        handle,
+        "error: `{}` should be `{}`",
+        msg.word, msg.correction
+    )
+    .unwrap();
+    writeln!(
+        handle,
         "  --> {}:{}:{}",
         msg.path.display(),
         msg.line_num,
         msg.col_num
-    );
-    println!("{} |", line_indent);
-    println!(
+    )
+    .unwrap();
+    writeln!(handle, "{} |", line_indent).unwrap();
+    writeln!(
+        handle,
         "{} | {}",
         msg.line_num,
         String::from_utf8_lossy(msg.line).trim_end()
-    );
-    println!("{} | {}{}", line_indent, hl_indent, hl);
-    println!("{} |", line_indent);
+    )
+    .unwrap();
+    writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl).unwrap();
+    writeln!(handle, "{} |", line_indent).unwrap();
 }
 
 pub fn print_json(msg: Message) {
