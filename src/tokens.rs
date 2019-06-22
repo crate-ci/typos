@@ -123,7 +123,7 @@ impl<'t> Word<'t> {
 /// The mode is a tri-state which tracks the case of the last cased character of the current
 /// word. If there is no cased character (either lowercase or uppercase) since the previous
 /// word boundary, than the mode is `Boundary`. If the last cased character is lowercase, then
-/// the mode is `Lowercase`. Othertherwise, the mode is `Uppercase`.
+/// the mode is `Lowercase`. Otherrwise, the mode is `Uppercase`.
 #[derive(Clone, Copy, PartialEq, Debug)]
 enum WordMode {
     /// There have been no lowercase or uppercase characters in the current word.
