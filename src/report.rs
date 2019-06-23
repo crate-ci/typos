@@ -7,7 +7,7 @@ pub struct Message<'m> {
     pub line: &'m [u8],
     pub line_num: usize,
     pub col_num: usize,
-    pub word: &'m str,
+    pub typo: &'m str,
     pub correction: &'m str,
     #[serde(skip)]
     pub(crate) non_exhaustive: (),
@@ -23,7 +23,7 @@ pub fn print_brief(msg: Message) {
         msg.path.display(),
         msg.line_num,
         msg.col_num,
-        msg.word,
+        msg.typo,
         msg.correction
     );
 }
@@ -33,7 +33,7 @@ pub fn print_long(msg: Message) {
     let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
     let hl_indent: String = itertools::repeat_n(" ", msg.col_num).collect();
-    let hl: String = itertools::repeat_n("^", msg.word.len()).collect();
+    let hl: String = itertools::repeat_n("^", msg.typo.len()).collect();
 
     let line = String::from_utf8_lossy(msg.line);
     let line = line.replace("\t", " ");
@@ -44,7 +44,7 @@ pub fn print_long(msg: Message) {
     writeln!(
         handle,
         "error: `{}` should be `{}`",
-        msg.word, msg.correction
+        msg.typo, msg.correction
     )
     .unwrap();
     writeln!(

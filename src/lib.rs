@@ -29,7 +29,7 @@ pub fn process_file(
                     line,
                     line_num,
                     col_num,
-                    word: ident.token(),
+                    typo: ident.token(),
                     correction,
                     non_exhaustive: (),
                 };
@@ -43,7 +43,7 @@ pub fn process_file(
                         line,
                         line_num,
                         col_num,
-                        word: word.token(),
+                        typo: word.token(),
                         correction,
                         non_exhaustive: (),
                     };
