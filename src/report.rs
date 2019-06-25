@@ -1,6 +1,7 @@
+use std::borrow::Cow;
 use std::io::{self, Write};
 
-#[derive(Copy, Clone, Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct Message<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
@@ -8,7 +9,7 @@ pub struct Message<'m> {
     pub line_num: usize,
     pub col_num: usize,
     pub typo: &'m str,
-    pub correction: &'m str,
+    pub correction: Cow<'m, str>,
     #[serde(skip)]
     pub(crate) non_exhaustive: (),
 }

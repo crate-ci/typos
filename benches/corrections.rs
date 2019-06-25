@@ -11,7 +11,10 @@ fn load_corrections(b: &mut test::Bencher) {
 fn correct_word_hit(b: &mut test::Bencher) {
     let corrections = defenestrate::Dictionary::new();
     let input = defenestrate::tokens::Word::new("successs", 0).unwrap();
-    assert_eq!(corrections.correct_word(input), Some("successes"));
+    assert_eq!(
+        corrections.correct_word(input),
+        Some(std::borrow::Cow::Borrowed("successes"))
+    );
     b.iter(|| corrections.correct_word(input));
 }
 

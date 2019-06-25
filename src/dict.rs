@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use unicase::UniCase;
 
 #[derive(Default)]
@@ -11,12 +13,12 @@ impl Dictionary {
     pub fn correct_ident<'s, 'w>(
         &'s self,
         _ident: crate::tokens::Identifier<'w>,
-    ) -> Option<&'s str> {
+    ) -> Option<Cow<'s, str>> {
         None
     }
 
-    pub fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<&'s str> {
-        map_lookup(&crate::dict_codegen::WORD_DICTIONARY, word.token())
+    pub fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Cow<'s, str>> {
+        map_lookup(&crate::dict_codegen::WORD_DICTIONARY, word.token()).map(|s| s.into())
     }
 }
 
