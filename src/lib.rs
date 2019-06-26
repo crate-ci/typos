@@ -21,21 +21,21 @@ pub fn process_file(
     File::open(path)?.read_to_end(&mut buffer)?;
     for (line_idx, line) in grep_searcher::LineIter::new(b'\n', &buffer).enumerate() {
         let line_num = line_idx + 1;
-        for symbol in tokens::Symbol::parse(line) {
-            if let Some(correction) = dictionary.correct_symbol(symbol) {
-                let col_num = symbol.offset();
+        for ident in tokens::Identifier::parse(line) {
+            if let Some(correction) = dictionary.correct_ident(ident) {
+                let col_num = ident.offset();
                 let msg = report::Message {
                     path,
                     line,
                     line_num,
                     col_num,
-                    word: symbol.token(),
+                    typo: ident.token(),
                     correction,
                     non_exhaustive: (),
                 };
                 report(msg);
             }
-            for word in symbol.split() {
+            for word in ident.split() {
                 if let Some(correction) = dictionary.correct_word(word) {
                     let col_num = word.offset();
                     let msg = report::Message {
@@ -43,7 +43,7 @@ pub fn process_file(
                         line,
                         line_num,
                         col_num,
-                        word: word.token(),
+                        typo: word.token(),
                         correction,
                         non_exhaustive: (),
                     };
