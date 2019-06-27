@@ -8,6 +8,8 @@
 ![License](https://img.shields.io/crates/l/defenestrate.svg)
 [![Crates Status](https://img.shields.io/crates/v/defenestrate.svg)](https://crates.io/crates/defenestrate)
 
+## [About](docs/about.md)
+
 ## Install
 
 For now, `rust` is required for install:
