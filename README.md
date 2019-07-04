@@ -1,12 +1,12 @@
-# defenestrate
+# typos
 
-> **Throw spelling errors out the window**
+> **Source code spell checker**
 
-[![Travis Status](https://travis-ci.org/crate-ci/defenestrate.svg?branch=master)](https://travis-ci.org/crate-ci/defenestrate)
-[![Appveyor Status](https://ci.appveyor.com/api/projects/status/ngaynop65qg5sqpq/branch/master?svg=true)](https://ci.appveyor.com/project/epage/defenestrate/branch/master)
+[![Travis Status](https://travis-ci.org/epage/typos.svg?branch=master)](https://travis-ci.org/epage/typos)
+[![Appveyor Status](https://ci.appveyor.com/api/projects/status/ngaynop65qg5sqpq/branch/master?svg=true)](https://ci.appveyor.com/project/epage/typos/branch/master)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
-![License](https://img.shields.io/crates/l/defenestrate.svg)
-[![Crates Status](https://img.shields.io/crates/v/defenestrate.svg)](https://crates.io/crates/defenestrate)
+![License](https://img.shields.io/crates/l/typos.svg)
+[![Crates Status](https://img.shields.io/crates/v/typos.svg)](https://crates.io/crates/typos)
 
 ## [Install](docs/install.md)
 
@@ -23,5 +23,5 @@ Licensed under either of
 
 at your option.
 
-[Crates.io]: https://crates.io/crates/defenestrate
-[Documentation]: https://docs.rs/defenestrate
+[Crates.io]: https://crates.io/crates/typos
+[Documentation]: https://docs.rs/typos

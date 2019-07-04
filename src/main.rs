@@ -15,12 +15,12 @@ arg_enum! {
 }
 
 impl Format {
-    fn report(self) -> defenestrate::report::Report {
+    fn report(self) -> typos::report::Report {
         match self {
-            Format::Silent => defenestrate::report::print_silent,
-            Format::Brief => defenestrate::report::print_brief,
-            Format::Long => defenestrate::report::print_long,
-            Format::Json => defenestrate::report::print_json,
+            Format::Silent => typos::report::print_silent,
+            Format::Brief => typos::report::print_brief,
+            Format::Long => typos::report::print_long,
+            Format::Json => typos::report::print_json,
         }
     }
 }
@@ -62,7 +62,7 @@ impl Options {
 fn run() -> Result<(), failure::Error> {
     let options = Options::from_args().infer();
 
-    let dictionary = defenestrate::Dictionary::new();
+    let dictionary = typos::Dictionary::new();
 
     let first_path = &options
         .path
@@ -77,7 +77,7 @@ fn run() -> Result<(), failure::Error> {
     for entry in walk.build() {
         let entry = entry?;
         if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            defenestrate::process_file(entry.path(), &dictionary, options.format.report())?;
+            typos::process_file(entry.path(), &dictionary, options.format.report())?;
         }
     }
 

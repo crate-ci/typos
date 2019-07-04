@@ -3,6 +3,6 @@
 For now, `rust` is required for install:
 
 ```bash
-cargo install defenestrate
+cargo install typos
 ```
 
