@@ -1,10 +1,10 @@
 [package]
-name = "defenestrate"
+name = "typos"
 version = "0.1.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
-repository = "https://github.com/crate-ci/defenestrate"
-documentation = "https://docs.rs/defenestrate"
+repository = "https://github.com/epage/typos"
+documentation = "https://docs.rs/typos"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
@@ -12,8 +12,8 @@ license = "MIT"
 edition = "2018"
 
 [badges]
-travis-ci = { repository = "crate-ci/defenestrate" }
-appveyor  = { repository = "epage/defenestrate" }
+travis-ci = { repository = "epage/typos" }
+appveyor  = { repository = "epage/typos" }
 
 [features]
 # Support quickly iterating

@@ -1,4 +1,4 @@
-# About defenestrate
+# About `typos`
 
 ## Design Requirements
 
@@ -20,7 +20,7 @@ Quick feedback and resolution for developer:
 
 ## Design Trade Offs
 
-### defenestrate uses a blacklist
+### typos uses a blacklist
 
 Blacklist: Known typos that map to their corresponding word
 - Ignores unknown typos
@@ -32,8 +32,8 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 
 ## Related Spell Checkers
 
-|               | defenestrate         | [scspell3k] | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] |
-|---------------|----------------------|-------------|---------------------------------|---------------------------------|
+|               | typos                 | [scspell3k] | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] |
+|---------------|-----------------------|-------------|---------------------------------|---------------------------------|
 | "Runtime"     | Rust ([#18][def-18])  | Python      | Rust                            | None                            |
 | Dictionary    | Blacklist             | Whitelist   | Blacklist                       | Blacklist                       |
 | Custom Dict   | No ([#9][def-9])      | Yes         | No                              | ?                               |
@@ -50,9 +50,9 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 [scspell3k]: https://github.com/myint/scspell
 [misspell-rs]: https://gitlab.com/bloom42/misspell
 [misspell-go]: https://github.com/client9/misspell
-[def-9]: https://github.com/epage/defenestrate/issues/9
-[def-14]: https://github.com/epage/defenestrate/issues/14
-[def-17]: https://github.com/epage/defenestrate/issues/17
-[def-18]: https://github.com/epage/defenestrate/issues/18
-[def-19]: https://github.com/epage/defenestrate/issues/19
-[def-3]: https://github.com/epage/defenestrate/issues/3
+[def-9]: https://github.com/epage/typos/issues/9
+[def-14]: https://github.com/epage/typos/issues/14
+[def-17]: https://github.com/epage/typos/issues/17
+[def-18]: https://github.com/epage/typos/issues/18
+[def-19]: https://github.com/epage/typos/issues/19
+[def-3]: https://github.com/epage/typos/issues/3

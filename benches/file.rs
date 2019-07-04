@@ -12,12 +12,12 @@ fn process_empty(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::EMPTY).unwrap();
 
-    let corrections = defenestrate::Dictionary::new();
+    let corrections = typos::Dictionary::new();
     b.iter(|| {
-        defenestrate::process_file(
+        typos::process_file(
             sample_path.path(),
             &corrections,
-            defenestrate::report::print_silent,
+            typos::report::print_silent,
         )
     });
 
@@ -30,12 +30,12 @@ fn process_no_tokens(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::NO_TOKENS).unwrap();
 
-    let corrections = defenestrate::Dictionary::new();
+    let corrections = typos::Dictionary::new();
     b.iter(|| {
-        defenestrate::process_file(
+        typos::process_file(
             sample_path.path(),
             &corrections,
-            defenestrate::report::print_silent,
+            typos::report::print_silent,
         )
     });
 
@@ -48,12 +48,12 @@ fn process_single_token(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::SINGLE_TOKEN).unwrap();
 
-    let corrections = defenestrate::Dictionary::new();
+    let corrections = typos::Dictionary::new();
     b.iter(|| {
-        defenestrate::process_file(
+        typos::process_file(
             sample_path.path(),
             &corrections,
-            defenestrate::report::print_silent,
+            typos::report::print_silent,
         )
     });
 
@@ -66,12 +66,12 @@ fn process_sherlock(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::SHERLOCK).unwrap();
 
-    let corrections = defenestrate::Dictionary::new();
+    let corrections = typos::Dictionary::new();
     b.iter(|| {
-        defenestrate::process_file(
+        typos::process_file(
             sample_path.path(),
             &corrections,
-            defenestrate::report::print_silent,
+            typos::report::print_silent,
         )
     });
 
@@ -84,12 +84,12 @@ fn process_code(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::CODE).unwrap();
 
-    let corrections = defenestrate::Dictionary::new();
+    let corrections = typos::Dictionary::new();
     b.iter(|| {
-        defenestrate::process_file(
+        typos::process_file(
             sample_path.path(),
             &corrections,
-            defenestrate::report::print_silent,
+            typos::report::print_silent,
         )
     });
 
@@ -102,12 +102,12 @@ fn process_corpus(b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data::CORPUS).unwrap();
 
-    let corrections = defenestrate::Dictionary::new();
+    let corrections = typos::Dictionary::new();
     b.iter(|| {
-        defenestrate::process_file(
+        typos::process_file(
             sample_path.path(),
             &corrections,
-            defenestrate::report::print_silent,
+            typos::report::print_silent,
         )
     });
 
