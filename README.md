@@ -3,7 +3,7 @@
 > **Source code spell checker**
 
 [![Travis Status](https://travis-ci.org/epage/typos.svg?branch=master)](https://travis-ci.org/epage/typos)
-[![Appveyor Status](https://ci.appveyor.com/api/projects/status/ngaynop65qg5sqpq/branch/master?svg=true)](https://ci.appveyor.com/project/epage/typos/branch/master)
+[![Appveyor Status](https://ci.appveyor.com/api/projects/status/uaa9voudebj944d5/branch/master?svg=true)](https://ci.appveyor.com/project/epage/typos/branch/master)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
 ![License](https://img.shields.io/crates/l/typos.svg)
 [![Crates Status](https://img.shields.io/crates/v/typos.svg)](https://crates.io/crates/typos)
