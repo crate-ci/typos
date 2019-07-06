@@ -44,7 +44,7 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 | C-Escapes     | No ([#20][def-3])     | Yes         | No                              | ?                               |
 | Encodings     | UTF-8 ([#17][def-17]) | Auto        | UTF-8                           | ?                               |
 | API           | Rust / [JSON Lines]   | None        | Rust                            | ?                               |
-| License       | MIT | Apache          | GPLv2       | AGPL                            | MIT                             |
+| License       | MIT or Apache         | GPLv2       | AGPL                            | MIT                             |
 
 [JSON Lines]: http://jsonlines.org/
 [scspell3k]: https://github.com/myint/scspell
