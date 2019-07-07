@@ -32,19 +32,19 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 
 ## Related Spell Checkers
 
-|               | typos                 | [scspell3k] | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] |
-|---------------|-----------------------|-------------|---------------------------------|---------------------------------|
-| "Runtime"     | Rust ([#18][def-18])  | Python      | Rust                            | None                            |
-| Dictionary    | Blacklist             | Whitelist   | Blacklist                       | Blacklist                       |
-| Custom Dict   | No ([#9][def-9])      | Yes         | No                              | ?                               |
-| Per-Lang Dict | No ([#14][def-14])    | Yes         | No                              | ?                               |
-| CamelCase     | Yes                   | Yes         | No                              | ?                               |
-| snake_case    | Yes                   | Yes         | No                              | ?                               |
-| Ignore Hex    | No ([#19][def-19])    | Yes         | No                              | ?                               |
-| C-Escapes     | No ([#20][def-3])     | Yes         | No                              | ?                               |
-| Encodings     | UTF-8 ([#17][def-17]) | Auto        | UTF-8                           | ?                               |
-| API           | Rust / [JSON Lines]   | None        | Rust                            | ?                               |
-| License       | MIT or Apache         | GPLv2       | AGPL                            | MIT                             |
+|               | typos                 | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] | [scspell3k] |
+|---------------|-----------------------|---------------------------------|---------------------------------|-------------|
+| "Runtime"     | Rust ([#18][def-18])  | Rust                            | None                            | Python      |
+| Dictionary    | Blacklist             | Blacklist                       | Blacklist                       | Whitelist   |
+| Custom Dict   | No ([#9][def-9])      | No                              | ?                               | Yes         |
+| Per-Lang Dict | No ([#14][def-14])    | No                              | ?                               | Yes         |
+| CamelCase     | Yes                   | No                              | ?                               | Yes         |
+| snake_case    | Yes                   | No                              | ?                               | Yes         |
+| Ignore Hex    | No ([#19][def-19])    | No                              | ?                               | Yes         |
+| C-Escapes     | No ([#20][def-3])     | No                              | ?                               | Yes         |
+| Encodings     | UTF-8 ([#17][def-17]) | UTF-8                           | ?                               | Auto        |
+| API           | Rust / [JSON Lines]   | Rust                            | ?                               | None        |
+| License       | MIT or Apache         | AGPL                            | MIT                             | GPLv2       |
 
 [JSON Lines]: http://jsonlines.org/
 [scspell3k]: https://github.com/myint/scspell
