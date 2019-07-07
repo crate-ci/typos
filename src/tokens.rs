@@ -176,13 +176,12 @@ fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
     while let Some((i, c)) = char_indices.next() {
         let cur_mode = WordMode::classify(c);
         if cur_mode == WordMode::Boundary {
-            if start == i {
-                start += 1;
-            }
+            assert!(start_mode == WordMode::Boundary);
             continue;
         }
         if start_mode == WordMode::Boundary {
             start_mode = cur_mode;
+            start = i;
         }
 
         if let Some(&(next_i, next)) = char_indices.peek() {
