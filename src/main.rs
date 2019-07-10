@@ -32,6 +32,7 @@ impl Default for Format {
 }
 
 #[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
 struct Options {
     #[structopt(parse(from_os_str), default_value = ".")]
     /// Paths to check
@@ -47,6 +48,12 @@ struct Options {
     #[structopt(short = "j", long = "threads", default_value = "0")]
     /// The approximate number of threads to use.
     threads: usize,
+
+    #[structopt(long, raw(overrides_with = r#""no-hidden""#))]
+    /// Search hidden files and directories.
+    hidden: bool,
+    #[structopt(long, raw(overrides_with = r#""hidden""#), raw(hidden = "true"))]
+    no_hidden: bool,
 }
 
 impl Options {
@@ -56,6 +63,15 @@ impl Options {
         }
 
         self
+    }
+
+    pub fn ignore_hidden(&self) -> Option<bool> {
+        match (self.hidden, self.no_hidden) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
     }
 }
 
@@ -72,7 +88,8 @@ fn run() -> Result<(), failure::Error> {
     for path in &options.path[1..] {
         walk.add(path);
     }
-    walk.threads(options.threads);
+    walk.threads(options.threads)
+        .hidden(options.ignore_hidden().unwrap_or(true));
     // TODO Add build_parallel for options.threads != 1
     for entry in walk.build() {
         let entry = entry?;
