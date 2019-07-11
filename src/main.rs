@@ -54,6 +54,12 @@ struct Options {
     hidden: bool,
     #[structopt(long, raw(overrides_with = r#""hidden""#), raw(hidden = "true"))]
     no_hidden: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore-dot""#))]
+    /// Don't respect .ignore files.
+    no_ignore_dot: bool,
+    #[structopt(long, raw(overrides_with = r#""no-ignore-dot""#), raw(hidden = "true"))]
+    ignore_dot: bool,
 }
 
 impl Options {
@@ -67,6 +73,15 @@ impl Options {
 
     pub fn ignore_hidden(&self) -> Option<bool> {
         match (self.hidden, self.no_hidden) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    pub fn ignore_dot(&self) -> Option<bool> {
+        match (self.no_ignore_dot, self.ignore_dot) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
@@ -89,7 +104,8 @@ fn run() -> Result<(), failure::Error> {
         walk.add(path);
     }
     walk.threads(options.threads)
-        .hidden(options.ignore_hidden().unwrap_or(true));
+        .hidden(options.ignore_hidden().unwrap_or(true))
+        .ignore(options.ignore_dot().unwrap_or(true));
     // TODO Add build_parallel for options.threads != 1
     for entry in walk.build() {
         let entry = entry?;
