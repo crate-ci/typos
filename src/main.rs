@@ -55,6 +55,12 @@ struct Options {
     #[structopt(long, raw(overrides_with = r#""hidden""#), raw(hidden = "true"))]
     no_hidden: bool,
 
+    #[structopt(long, raw(overrides_with = r#""ignore""#))]
+    /// Don't respect ignore files.
+    no_ignore: bool,
+    #[structopt(long, raw(overrides_with = r#""no-ignore""#), raw(hidden = "true"))]
+    ignore: bool,
+
     #[structopt(long, raw(overrides_with = r#""ignore-dot""#))]
     /// Don't respect .ignore files.
     no_ignore_dot: bool,
@@ -82,6 +88,16 @@ impl Options {
 
     pub fn ignore_dot(&self) -> Option<bool> {
         match (self.no_ignore_dot, self.ignore_dot) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+        .or_else(|| self.ignore_files())
+    }
+
+    fn ignore_files(&self) -> Option<bool> {
+        match (self.no_ignore, self.ignore) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
