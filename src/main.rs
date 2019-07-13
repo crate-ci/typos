@@ -86,6 +86,12 @@ struct Options {
         raw(hidden = "true")
     )]
     ignore_parent: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore-vcs""#))]
+    /// Don't respect ignore files in vcs directories.
+    no_ignore_vcs: bool,
+    #[structopt(long, raw(overrides_with = r#""no-ignore-vcs""#), raw(hidden = "true"))]
+    ignore_vcs: bool,
 }
 
 impl Options {
@@ -123,11 +129,22 @@ impl Options {
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
+        .or_else(|| self.ignore_vcs())
         .or_else(|| self.ignore_files())
     }
 
     pub fn ignore_parent(&self) -> Option<bool> {
         match (self.no_ignore_parent, self.ignore_parent) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+        .or_else(|| self.ignore_files())
+    }
+
+    pub fn ignore_vcs(&self) -> Option<bool> {
+        match (self.no_ignore_vcs, self.ignore_vcs) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
@@ -163,6 +180,8 @@ fn run() -> Result<(), failure::Error> {
         .hidden(options.ignore_hidden().unwrap_or(true))
         .ignore(options.ignore_dot().unwrap_or(true))
         .git_global(options.ignore_global().unwrap_or(true))
+        .git_ignore(options.ignore_vcs().unwrap_or(true))
+        .git_exclude(options.ignore_vcs().unwrap_or(true))
         .parents(options.ignore_parent().unwrap_or(true));
     // TODO Add build_parallel for options.threads != 1
     for entry in walk.build() {
