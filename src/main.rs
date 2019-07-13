@@ -66,6 +66,16 @@ struct Options {
     no_ignore_dot: bool,
     #[structopt(long, raw(overrides_with = r#""no-ignore-dot""#), raw(hidden = "true"))]
     ignore_dot: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore-global""#))]
+    /// Don't respect global ignore files.
+    no_ignore_global: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-ignore-global""#),
+        raw(hidden = "true")
+    )]
+    ignore_global: bool,
 }
 
 impl Options {
@@ -88,6 +98,16 @@ impl Options {
 
     pub fn ignore_dot(&self) -> Option<bool> {
         match (self.no_ignore_dot, self.ignore_dot) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+        .or_else(|| self.ignore_files())
+    }
+
+    pub fn ignore_global(&self) -> Option<bool> {
+        match (self.no_ignore_global, self.ignore_global) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
@@ -121,7 +141,8 @@ fn run() -> Result<(), failure::Error> {
     }
     walk.threads(options.threads)
         .hidden(options.ignore_hidden().unwrap_or(true))
-        .ignore(options.ignore_dot().unwrap_or(true));
+        .ignore(options.ignore_dot().unwrap_or(true))
+        .git_global(options.ignore_global().unwrap_or(true));
     // TODO Add build_parallel for options.threads != 1
     for entry in walk.build() {
         let entry = entry?;
