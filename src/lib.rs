@@ -18,10 +18,14 @@ pub fn process_file(
     path: &std::path::Path,
     dictionary: &Dictionary,
     ignore_hex: bool,
+    binary: bool,
     report: report::Report,
 ) -> Result<(), failure::Error> {
     let mut buffer = Vec::new();
     File::open(path)?.read_to_end(&mut buffer)?;
+    if !binary && buffer.find_byte(b'\0').is_some() {
+        return Ok(());
+    }
 
     for (line_idx, line) in buffer.lines().enumerate() {
         let line_num = line_idx + 1;

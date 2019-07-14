@@ -55,6 +55,12 @@ struct Options {
     /// The approximate number of threads to use.
     threads: usize,
 
+    #[structopt(long, raw(overrides_with = r#""no-binary""#))]
+    /// Search binary files.
+    binary: bool,
+    #[structopt(long, raw(overrides_with = r#""binary""#), raw(hidden = "true"))]
+    no_binary: bool,
+
     #[structopt(long, raw(overrides_with = r#""no-hidden""#))]
     /// Search hidden files and directories.
     hidden: bool,
@@ -113,6 +119,15 @@ impl Options {
         match (self.no_hex, self.hex) {
             (true, false) => Some(false),
             (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    pub fn binary(&self) -> Option<bool> {
+        match (self.binary, self.no_binary) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
@@ -183,6 +198,7 @@ fn run() -> Result<(), failure::Error> {
 
     let dictionary = typos::Dictionary::new();
     let ignore_hex = options.ignore_hex().unwrap_or(true);
+    let binary = options.binary().unwrap_or(false);
 
     let first_path = &options
         .path
@@ -207,6 +223,7 @@ fn run() -> Result<(), failure::Error> {
                 entry.path(),
                 &dictionary,
                 ignore_hex,
+                binary,
                 options.format.report(),
             )?;
         }
