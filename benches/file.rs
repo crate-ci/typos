@@ -18,6 +18,7 @@ fn process_empty(b: &mut test::Bencher) {
             sample_path.path(),
             &corrections,
             true,
+            false,
             typos::report::print_silent,
         )
     });
@@ -37,6 +38,7 @@ fn process_no_tokens(b: &mut test::Bencher) {
             sample_path.path(),
             &corrections,
             true,
+            false,
             typos::report::print_silent,
         )
     });
@@ -56,6 +58,7 @@ fn process_single_token(b: &mut test::Bencher) {
             sample_path.path(),
             &corrections,
             true,
+            false,
             typos::report::print_silent,
         )
     });
@@ -75,6 +78,7 @@ fn process_sherlock(b: &mut test::Bencher) {
             sample_path.path(),
             &corrections,
             true,
+            false,
             typos::report::print_silent,
         )
     });
@@ -94,6 +98,7 @@ fn process_code(b: &mut test::Bencher) {
             sample_path.path(),
             &corrections,
             true,
+            false,
             typos::report::print_silent,
         )
     });
@@ -113,6 +118,7 @@ fn process_corpus(b: &mut test::Bencher) {
             sample_path.path(),
             &corrections,
             true,
+            false,
             typos::report::print_silent,
         )
     });
