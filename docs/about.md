@@ -45,6 +45,7 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 | Encodings      | UTF-8 ([#17][def-17]) | UTF-8                           | ?                               | Auto        | Auto        |
 | Whole-project  | Yes                   | Yes                             | Yes                             | Yes         | No          |
 | Ignores hidden | Yes                   | Yes                             | ?                               | Yes         | No          |
+| Respect gitignore | Yes                | Yes                             | ?                               | No          | No          |
 | Checks filenames | No ([#24][def-24])  | No                              | ?                               | Yes         | No          |
 | API            | Rust / [JSON Lines]   | Rust                            | ?                               | Python      | None        |
 | License        | MIT or Apache         | AGPL                            | MIT                             | GPLv2       | GPLv2       |
