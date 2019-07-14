@@ -42,7 +42,7 @@ impl<'t> Identifier<'t> {
         lazy_static::lazy_static! {
             // Getting false positives for this lint
             #[allow(clippy::invalid_regex)]
-            static ref SPLIT: regex::bytes::Regex = regex::bytes::Regex::new(r#"\b(\p{Alphabetic}|\d|_)+\b"#).unwrap();
+            static ref SPLIT: regex::bytes::Regex = regex::bytes::Regex::new(r#"\b(\p{Alphabetic}|\d|_|')+\b"#).unwrap();
         }
         SPLIT.find_iter(content).filter_map(|m| {
             let s = std::str::from_utf8(m.as_bytes()).ok();

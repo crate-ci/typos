@@ -38,6 +38,12 @@ struct Options {
     /// Paths to check
     path: Vec<std::path::PathBuf>,
 
+    #[structopt(long, raw(overrides_with = r#""hex""#))]
+    /// Don't try to detect that an identifier looks like hex
+    no_hex: bool,
+    #[structopt(long, raw(overrides_with = r#""no-hex""#), raw(hidden = "true"))]
+    hex: bool,
+
     #[structopt(
         long = "format",
         raw(possible_values = "&Format::variants()", case_insensitive = "true"),
@@ -101,6 +107,15 @@ impl Options {
         }
 
         self
+    }
+
+    pub fn ignore_hex(&self) -> Option<bool> {
+        match (self.no_hex, self.hex) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
     }
 
     pub fn ignore_hidden(&self) -> Option<bool> {
@@ -167,6 +182,7 @@ fn run() -> Result<(), failure::Error> {
     let options = Options::from_args().infer();
 
     let dictionary = typos::Dictionary::new();
+    let ignore_hex = options.ignore_hex().unwrap_or(true);
 
     let first_path = &options
         .path
@@ -187,7 +203,12 @@ fn run() -> Result<(), failure::Error> {
     for entry in walk.build() {
         let entry = entry?;
         if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            typos::process_file(entry.path(), &dictionary, options.format.report())?;
+            typos::process_file(
+                entry.path(),
+                &dictionary,
+                ignore_hex,
+                options.format.report(),
+            )?;
         }
     }
 
