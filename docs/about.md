@@ -32,27 +32,32 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 
 ## Related Spell Checkers
 
-|               | typos                 | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] | [scspell3k] |
-|---------------|-----------------------|---------------------------------|---------------------------------|-------------|
-| "Runtime"     | Rust ([#18][def-18])  | Rust                            | None                            | Python      |
-| Dictionary    | Blacklist             | Blacklist                       | Blacklist                       | Whitelist   |
-| Custom Dict   | No ([#9][def-9])      | No                              | ?                               | Yes         |
-| Per-Lang Dict | No ([#14][def-14])    | No                              | ?                               | Yes         |
-| CamelCase     | Yes                   | No                              | ?                               | Yes         |
-| snake_case    | Yes                   | No                              | ?                               | Yes         |
-| Ignore Hex    | No ([#19][def-19])    | No                              | ?                               | Yes         |
-| C-Escapes     | No ([#20][def-3])     | No                              | ?                               | Yes         |
-| Encodings     | UTF-8 ([#17][def-17]) | UTF-8                           | ?                               | Auto        |
-| API           | Rust / [JSON Lines]   | Rust                            | ?                               | None        |
-| License       | MIT or Apache         | AGPL                            | MIT                             | GPLv2       |
+|                | typos                 | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] | [codespell] | [scspell3k] |
+|----------------|-----------------------|---------------------------------|---------------------------------|-------------|-------------|
+| "Runtime"      | Rust ([#18][def-18])  | Rust                            | None                            | Python      | Python      |
+| Dictionary     | Blacklist             | Blacklist                       | Blacklist                       | Blacklist   | Whitelist   |
+| Custom Dict    | No ([#9][def-9])      | No                              | ?                               | Yes         | Yes         |
+| Per-Lang Dict  | No ([#14][def-14])    | No                              | ?                               | No          | Yes         |
+| CamelCase      | Yes                   | No                              | ?                               | No          | Yes         |
+| snake_case     | Yes                   | No                              | ?                               | No          | Yes         |
+| Ignore Hex     | No ([#19][def-19])    | No                              | ?                               | No          | Yes         |
+| C-Escapes      | No ([#20][def-3])     | No                              | ?                               | No          | Yes         |
+| Encodings      | UTF-8 ([#17][def-17]) | UTF-8                           | ?                               | Auto        | Auto        |
+| Whole-project  | Yes                   | Yes                             | Yes                             | Yes         | No          |
+| Ignores hidden | Yes                   | Yes                             | ?                               | Yes         | No          |
+| Checks filenames | No ([#24][def-24])  | No                              | ?                               | Yes         | No          |
+| API            | Rust / [JSON Lines]   | Rust                            | ?                               | Python      | None        |
+| License        | MIT or Apache         | AGPL                            | MIT                             | GPLv2       | GPLv2       |
 
 [JSON Lines]: http://jsonlines.org/
 [scspell3k]: https://github.com/myint/scspell
 [misspell-rs]: https://gitlab.com/bloom42/misspell
 [misspell-go]: https://github.com/client9/misspell
+[codespell]: https://github.com/codespell-project/codespell
 [def-9]: https://github.com/epage/typos/issues/9
 [def-14]: https://github.com/epage/typos/issues/14
 [def-17]: https://github.com/epage/typos/issues/17
 [def-18]: https://github.com/epage/typos/issues/18
 [def-19]: https://github.com/epage/typos/issues/19
+[def-24]: https://github.com/epage/typos/issues/24
 [def-3]: https://github.com/epage/typos/issues/3
