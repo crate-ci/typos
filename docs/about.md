@@ -40,7 +40,7 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 | Per-Lang Dict  | No ([#14][def-14])    | No                              | ?                               | No          | Yes         |
 | CamelCase      | Yes                   | No                              | ?                               | No          | Yes         |
 | snake_case     | Yes                   | No                              | ?                               | No          | Yes         |
-| Ignore Hex     | No ([#19][def-19])    | No                              | ?                               | No          | Yes         |
+| Ignore Hex     | Yes                   | No                              | ?                               | No          | Yes         |
 | C-Escapes      | No ([#20][def-3])     | No                              | ?                               | No          | Yes         |
 | Encodings      | UTF-8 ([#17][def-17]) | UTF-8                           | ?                               | Auto        | Auto        |
 | Whole-project  | Yes                   | Yes                             | Yes                             | Yes         | No          |
@@ -59,6 +59,5 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 [def-14]: https://github.com/epage/typos/issues/14
 [def-17]: https://github.com/epage/typos/issues/17
 [def-18]: https://github.com/epage/typos/issues/18
-[def-19]: https://github.com/epage/typos/issues/19
 [def-24]: https://github.com/epage/typos/issues/24
 [def-3]: https://github.com/epage/typos/issues/3
