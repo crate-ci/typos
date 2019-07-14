@@ -63,7 +63,8 @@ pub fn process_file(
 fn is_hex(ident: &str) -> bool {
     lazy_static::lazy_static! {
         // `_`: number literal separator in Rust and other languages
-        static ref HEX: regex::Regex = regex::Regex::new(r#"^0[xX][0-9a-fA-F_]+$"#).unwrap();
+        // `'`: number literal separator in C++
+        static ref HEX: regex::Regex = regex::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap();
     }
     HEX.is_match(ident)
 }
