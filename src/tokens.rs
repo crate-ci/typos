@@ -14,7 +14,7 @@ pub struct Identifier<'t> {
 
 impl<'t> Identifier<'t> {
     pub fn new(token: &'t str, offset: usize) -> Result<Self, failure::Error> {
-        let mut itr = Self::parse(token.as_bytes());
+        let mut itr = Self::parse_bytes(token.as_bytes());
         let mut item = itr
             .next()
             .ok_or_else(|| failure::format_err!("Invalid ident (none found): {:?}", token))?;
@@ -38,7 +38,7 @@ impl<'t> Identifier<'t> {
         Self { token, offset }
     }
 
-    pub fn parse(content: &[u8]) -> impl Iterator<Item = Identifier<'_>> {
+    pub fn parse_bytes(content: &[u8]) -> impl Iterator<Item = Identifier<'_>> {
         lazy_static::lazy_static! {
             // Getting false positives for this lint
             #[allow(clippy::invalid_regex)]
@@ -242,7 +242,7 @@ mod test {
     fn tokenize_empty_is_empty() {
         let input = b"";
         let expected: Vec<Identifier> = vec![];
-        let actual: Vec<_> = Identifier::parse(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -250,7 +250,7 @@ mod test {
     fn tokenize_word_is_word() {
         let input = b"word";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", 0)];
-        let actual: Vec<_> = Identifier::parse(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -261,7 +261,7 @@ mod test {
             Identifier::new_unchecked("A", 0),
             Identifier::new_unchecked("B", 2),
         ];
-        let actual: Vec<_> = Identifier::parse(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -272,7 +272,7 @@ mod test {
             Identifier::new_unchecked("A", 0),
             Identifier::new_unchecked("B", 2),
         ];
-        let actual: Vec<_> = Identifier::parse(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -283,7 +283,7 @@ mod test {
             Identifier::new_unchecked("A", 0),
             Identifier::new_unchecked("B", 3),
         ];
-        let actual: Vec<_> = Identifier::parse(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -291,7 +291,7 @@ mod test {
     fn tokenize_underscore_doesnt_separate() {
         let input = b"A_B";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
-        let actual: Vec<_> = Identifier::parse(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
         assert_eq!(expected, actual);
     }
 

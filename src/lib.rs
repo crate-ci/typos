@@ -34,7 +34,7 @@ pub fn process_file(
 
     for (line_idx, line) in buffer.lines().enumerate() {
         let line_num = line_idx + 1;
-        for ident in tokens::Identifier::parse(line) {
+        for ident in tokens::Identifier::parse_bytes(line) {
             if !ignore_hex && is_hex(ident.token()) {
                 continue;
             }
