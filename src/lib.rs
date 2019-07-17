@@ -24,6 +24,11 @@ pub fn process_file(
     let mut buffer = Vec::new();
     File::open(path)?.read_to_end(&mut buffer)?;
     if !binary && buffer.find_byte(b'\0').is_some() {
+        let msg = report::BinaryFile {
+            path,
+            non_exhaustive: (),
+        };
+        report(msg.into());
         return Ok(());
     }
 
@@ -35,7 +40,7 @@ pub fn process_file(
             }
             if let Some(correction) = dictionary.correct_ident(ident) {
                 let col_num = ident.offset();
-                let msg = report::Message {
+                let msg = report::Correction {
                     path,
                     line,
                     line_num,
@@ -44,12 +49,12 @@ pub fn process_file(
                     correction,
                     non_exhaustive: (),
                 };
-                report(msg);
+                report(msg.into());
             }
             for word in ident.split() {
                 if let Some(correction) = dictionary.correct_word(word) {
                     let col_num = word.offset();
-                    let msg = report::Message {
+                    let msg = report::Correction {
                         path,
                         line,
                         line_num,
@@ -58,7 +63,7 @@ pub fn process_file(
                         correction,
                         non_exhaustive: (),
                     };
-                    report(msg);
+                    report(msg.into());
                 }
             }
         }
