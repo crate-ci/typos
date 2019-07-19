@@ -38,6 +38,17 @@ impl<'t> Identifier<'t> {
         Self { token, offset }
     }
 
+    pub fn parse(content: &str) -> impl Iterator<Item = Identifier<'_>> {
+        lazy_static::lazy_static! {
+            // Getting false positives for this lint
+            #[allow(clippy::invalid_regex)]
+            static ref SPLIT: regex::Regex = regex::Regex::new(r#"\b(\p{Alphabetic}|\d|_|')+\b"#).unwrap();
+        }
+        SPLIT
+            .find_iter(content)
+            .map(|m| Identifier::new_unchecked(m.as_str(), m.start()))
+    }
+
     pub fn parse_bytes(content: &[u8]) -> impl Iterator<Item = Identifier<'_>> {
         lazy_static::lazy_static! {
             // Getting false positives for this lint
@@ -240,58 +251,70 @@ mod test {
 
     #[test]
     fn tokenize_empty_is_empty() {
-        let input = b"";
+        let input = "";
         let expected: Vec<Identifier> = vec![];
-        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = Identifier::parse(input).collect();
         assert_eq!(expected, actual);
     }
 
     #[test]
     fn tokenize_word_is_word() {
-        let input = b"word";
+        let input = "word";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", 0)];
-        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = Identifier::parse(input).collect();
         assert_eq!(expected, actual);
     }
 
     #[test]
     fn tokenize_space_separated_words() {
-        let input = b"A B";
+        let input = "A B";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("A", 0),
             Identifier::new_unchecked("B", 2),
         ];
-        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = Identifier::parse(input).collect();
         assert_eq!(expected, actual);
     }
 
     #[test]
     fn tokenize_dot_separated_words() {
-        let input = b"A.B";
+        let input = "A.B";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("A", 0),
             Identifier::new_unchecked("B", 2),
         ];
-        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = Identifier::parse(input).collect();
         assert_eq!(expected, actual);
     }
 
     #[test]
     fn tokenize_namespace_separated_words() {
-        let input = b"A::B";
+        let input = "A::B";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("A", 0),
             Identifier::new_unchecked("B", 3),
         ];
-        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = Identifier::parse(input).collect();
         assert_eq!(expected, actual);
     }
 
     #[test]
     fn tokenize_underscore_doesnt_separate() {
-        let input = b"A_B";
+        let input = "A_B";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
-        let actual: Vec<_> = Identifier::parse_bytes(input).collect();
+        let actual: Vec<_> = Identifier::parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = Identifier::parse(input).collect();
         assert_eq!(expected, actual);
     }
 

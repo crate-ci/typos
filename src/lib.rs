@@ -17,10 +17,41 @@ use bstr::ByteSlice;
 pub fn process_file(
     path: &std::path::Path,
     dictionary: &Dictionary,
+    check_filenames: bool,
     ignore_hex: bool,
     binary: bool,
     report: report::Report,
 ) -> Result<(), failure::Error> {
+    if check_filenames {
+        for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
+            for ident in tokens::Identifier::parse(part) {
+                if !ignore_hex && is_hex(ident.token()) {
+                    continue;
+                }
+                if let Some(correction) = dictionary.correct_ident(ident) {
+                    let msg = report::FilenameCorrection {
+                        path,
+                        typo: ident.token(),
+                        correction,
+                        non_exhaustive: (),
+                    };
+                    report(msg.into());
+                }
+                for word in ident.split() {
+                    if let Some(correction) = dictionary.correct_word(word) {
+                        let msg = report::FilenameCorrection {
+                            path,
+                            typo: word.token(),
+                            correction,
+                            non_exhaustive: (),
+                        };
+                        report(msg.into());
+                    }
+                }
+            }
+        }
+    }
+
     let mut buffer = Vec::new();
     File::open(path)?.read_to_end(&mut buffer)?;
     if !binary && buffer.find_byte(b'\0').is_some() {
