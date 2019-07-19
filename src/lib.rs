@@ -18,6 +18,7 @@ pub fn process_file(
     path: &std::path::Path,
     dictionary: &Dictionary,
     check_filenames: bool,
+    check_files: bool,
     ignore_hex: bool,
     binary: bool,
     report: report::Report,
@@ -52,49 +53,51 @@ pub fn process_file(
         }
     }
 
-    let mut buffer = Vec::new();
-    File::open(path)?.read_to_end(&mut buffer)?;
-    if !binary && buffer.find_byte(b'\0').is_some() {
-        let msg = report::BinaryFile {
-            path,
-            non_exhaustive: (),
-        };
-        report(msg.into());
-        return Ok(());
-    }
+    if check_files {
+        let mut buffer = Vec::new();
+        File::open(path)?.read_to_end(&mut buffer)?;
+        if !binary && buffer.find_byte(b'\0').is_some() {
+            let msg = report::BinaryFile {
+                path,
+                non_exhaustive: (),
+            };
+            report(msg.into());
+            return Ok(());
+        }
 
-    for (line_idx, line) in buffer.lines().enumerate() {
-        let line_num = line_idx + 1;
-        for ident in tokens::Identifier::parse_bytes(line) {
-            if !ignore_hex && is_hex(ident.token()) {
-                continue;
-            }
-            if let Some(correction) = dictionary.correct_ident(ident) {
-                let col_num = ident.offset();
-                let msg = report::Correction {
-                    path,
-                    line,
-                    line_num,
-                    col_num,
-                    typo: ident.token(),
-                    correction,
-                    non_exhaustive: (),
-                };
-                report(msg.into());
-            }
-            for word in ident.split() {
-                if let Some(correction) = dictionary.correct_word(word) {
-                    let col_num = word.offset();
+        for (line_idx, line) in buffer.lines().enumerate() {
+            let line_num = line_idx + 1;
+            for ident in tokens::Identifier::parse_bytes(line) {
+                if !ignore_hex && is_hex(ident.token()) {
+                    continue;
+                }
+                if let Some(correction) = dictionary.correct_ident(ident) {
+                    let col_num = ident.offset();
                     let msg = report::Correction {
                         path,
                         line,
                         line_num,
                         col_num,
-                        typo: word.token(),
+                        typo: ident.token(),
                         correction,
                         non_exhaustive: (),
                     };
                     report(msg.into());
+                }
+                for word in ident.split() {
+                    if let Some(correction) = dictionary.correct_word(word) {
+                        let col_num = word.offset();
+                        let msg = report::Correction {
+                            path,
+                            line,
+                            line_num,
+                            col_num,
+                            typo: word.token(),
+                            correction,
+                            non_exhaustive: (),
+                        };
+                        report(msg.into());
+                    }
                 }
             }
         }
