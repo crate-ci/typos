@@ -73,10 +73,6 @@ struct Options {
     )]
     pub format: Format,
 
-    #[structopt(short = "j", long = "threads", default_value = "0")]
-    /// The approximate number of threads to use.
-    threads: usize,
-
     #[structopt(long, raw(overrides_with = r#""no-binary""#))]
     /// Search binary files.
     binary: bool,
@@ -132,11 +128,7 @@ struct Options {
 }
 
 impl Options {
-    pub fn infer(mut self) -> Self {
-        if self.path.len() == 1 && self.path[0].is_file() {
-            self.threads = 1;
-        }
-
+    pub fn infer(self) -> Self {
         self
     }
 
@@ -277,8 +269,7 @@ fn run() -> Result<(), failure::Error> {
     for path in &options.path[1..] {
         walk.add(path);
     }
-    walk.threads(options.threads)
-        .hidden(options.ignore_hidden().unwrap_or(true))
+    walk.hidden(options.ignore_hidden().unwrap_or(true))
         .ignore(options.ignore_dot().unwrap_or(true))
         .git_global(options.ignore_global().unwrap_or(true))
         .git_ignore(options.ignore_vcs().unwrap_or(true))
