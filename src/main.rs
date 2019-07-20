@@ -2,6 +2,8 @@
 #[macro_use]
 extern crate clap;
 
+use std::io::Write;
+
 use structopt::StructOpt;
 
 arg_enum! {
@@ -124,6 +126,9 @@ struct Options {
     no_ignore_vcs: bool,
     #[structopt(long, raw(overrides_with = r#""no-ignore-vcs""#), raw(hidden = "true"))]
     ignore_vcs: bool,
+
+    #[structopt(flatten)]
+    verbose: clap_verbosity_flag::Verbosity,
 }
 
 impl Options {
@@ -231,8 +236,32 @@ impl Options {
     }
 }
 
+pub fn get_logging(level: log::Level) -> env_logger::Builder {
+    let mut builder = env_logger::Builder::new();
+
+    builder.filter(None, level.to_level_filter());
+
+    if level == log::LevelFilter::Trace {
+        builder.default_format_timestamp(false);
+    } else {
+        builder.format(|f, record| {
+            writeln!(
+                f,
+                "[{}] {}",
+                record.level().to_string().to_lowercase(),
+                record.args()
+            )
+        });
+    }
+
+    builder
+}
+
 fn run() -> Result<(), failure::Error> {
     let options = Options::from_args().infer();
+
+    let mut builder = get_logging(options.verbose.log_level());
+    builder.init();
 
     let dictionary = typos::Dictionary::new();
     let check_filenames = options.check_filenames().unwrap_or(true);
