@@ -38,6 +38,26 @@ struct Options {
     /// Paths to check
     path: Vec<std::path::PathBuf>,
 
+    #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
+    /// Skip verifying spelling in file names.
+    no_check_filenames: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-check-filenames""#),
+        raw(hidden = "true")
+    )]
+    check_filenames: bool,
+
+    #[structopt(long, raw(overrides_with = r#""check-files""#))]
+    /// Skip verifying spelling in filess.
+    no_check_files: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-check-files""#),
+        raw(hidden = "true")
+    )]
+    check_files: bool,
+
     #[structopt(long, raw(overrides_with = r#""hex""#))]
     /// Don't try to detect that an identifier looks like hex
     no_hex: bool,
@@ -113,6 +133,24 @@ impl Options {
         }
 
         self
+    }
+
+    pub fn check_files(&self) -> Option<bool> {
+        match (self.check_files, self.no_check_files) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    pub fn check_filenames(&self) -> Option<bool> {
+        match (self.check_filenames, self.no_check_filenames) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
     }
 
     pub fn ignore_hex(&self) -> Option<bool> {
@@ -197,6 +235,8 @@ fn run() -> Result<(), failure::Error> {
     let options = Options::from_args().infer();
 
     let dictionary = typos::Dictionary::new();
+    let check_filenames = options.check_filenames().unwrap_or(true);
+    let check_files = options.check_files().unwrap_or(true);
     let ignore_hex = options.ignore_hex().unwrap_or(true);
     let binary = options.binary().unwrap_or(false);
 
@@ -222,6 +262,8 @@ fn run() -> Result<(), failure::Error> {
             typos::process_file(
                 entry.path(),
                 &dictionary,
+                check_filenames,
+                check_files,
                 ignore_hex,
                 binary,
                 options.format.report(),

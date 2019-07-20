@@ -6,34 +6,34 @@ mod data;
 
 #[bench]
 fn symbol_parse_empty(b: &mut test::Bencher) {
-    b.iter(|| typos::tokens::Identifier::parse(data::EMPTY.as_bytes()).last());
+    b.iter(|| typos::tokens::Identifier::parse_bytes(data::EMPTY.as_bytes()).last());
 }
 
 #[bench]
 fn symbol_parse_no_tokens(b: &mut test::Bencher) {
-    b.iter(|| typos::tokens::Identifier::parse(data::NO_TOKENS.as_bytes()).last());
+    b.iter(|| typos::tokens::Identifier::parse_bytes(data::NO_TOKENS.as_bytes()).last());
 }
 
 #[bench]
 fn symbol_parse_single_token(b: &mut test::Bencher) {
     b.iter(|| {
-        typos::tokens::Identifier::parse(data::SINGLE_TOKEN.as_bytes()).last();
+        typos::tokens::Identifier::parse_bytes(data::SINGLE_TOKEN.as_bytes()).last();
     });
 }
 
 #[bench]
 fn symbol_parse_sherlock(b: &mut test::Bencher) {
-    b.iter(|| typos::tokens::Identifier::parse(data::SHERLOCK.as_bytes()).last());
+    b.iter(|| typos::tokens::Identifier::parse_bytes(data::SHERLOCK.as_bytes()).last());
 }
 
 #[bench]
 fn symbol_parse_code(b: &mut test::Bencher) {
-    b.iter(|| typos::tokens::Identifier::parse(data::CODE.as_bytes()).last());
+    b.iter(|| typos::tokens::Identifier::parse_bytes(data::CODE.as_bytes()).last());
 }
 
 #[bench]
 fn symbol_parse_corpus(b: &mut test::Bencher) {
-    b.iter(|| typos::tokens::Identifier::parse(data::CORPUS.as_bytes()).last());
+    b.iter(|| typos::tokens::Identifier::parse_bytes(data::CORPUS.as_bytes()).last());
 }
 
 #[bench]

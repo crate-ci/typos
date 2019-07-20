@@ -46,7 +46,7 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 | Whole-project  | Yes                   | Yes                             | Yes                             | Yes         | No          |
 | Ignores hidden | Yes                   | Yes                             | ?                               | Yes         | No          |
 | Respect gitignore | Yes                | Yes                             | ?                               | No          | No          |
-| Checks filenames | No ([#24][def-24])  | No                              | ?                               | Yes         | No          |
+| Checks filenames | Yes                 | No                              | ?                               | Yes         | No          |
 | API            | Rust / [JSON Lines]   | Rust                            | ?                               | Python      | None        |
 | License        | MIT or Apache         | AGPL                            | MIT                             | GPLv2       | GPLv2       |
 
@@ -59,5 +59,4 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 [def-14]: https://github.com/epage/typos/issues/14
 [def-17]: https://github.com/epage/typos/issues/17
 [def-18]: https://github.com/epage/typos/issues/18
-[def-24]: https://github.com/epage/typos/issues/24
 [def-3]: https://github.com/epage/typos/issues/3
