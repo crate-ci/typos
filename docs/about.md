@@ -47,6 +47,7 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 | Ignores hidden | Yes                   | Yes                             | ?                               | Yes         | No          |
 | Respect gitignore | Yes                | Yes                             | ?                               | No          | No          |
 | Checks filenames | Yes                 | No                              | ?                               | Yes         | No          |
+| Status via exit code | Yes             | No                              | Yes                             | Yes         | Yes         |
 | API            | Rust / [JSON Lines]   | Rust                            | ?                               | Python      | None        |
 | License        | MIT or Apache         | AGPL                            | MIT                             | GPLv2       | GPLv2       |
 
