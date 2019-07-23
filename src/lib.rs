@@ -22,7 +22,9 @@ pub fn process_file(
     ignore_hex: bool,
     binary: bool,
     report: report::Report,
-) -> Result<(), failure::Error> {
+) -> Result<bool, failure::Error> {
+    let mut typos_found = false;
+
     if check_filenames {
         for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
             for ident in tokens::Identifier::parse(part) {
@@ -37,6 +39,7 @@ pub fn process_file(
                         non_exhaustive: (),
                     };
                     report(msg.into());
+                    typos_found = true;
                 }
                 for word in ident.split() {
                     if let Some(correction) = dictionary.correct_word(word) {
@@ -47,6 +50,7 @@ pub fn process_file(
                             non_exhaustive: (),
                         };
                         report(msg.into());
+                        typos_found = true;
                     }
                 }
             }
@@ -62,7 +66,7 @@ pub fn process_file(
                 non_exhaustive: (),
             };
             report(msg.into());
-            return Ok(());
+            return Ok(typos_found);
         }
 
         for (line_idx, line) in buffer.lines().enumerate() {
@@ -82,6 +86,7 @@ pub fn process_file(
                         correction,
                         non_exhaustive: (),
                     };
+                    typos_found = true;
                     report(msg.into());
                 }
                 for word in ident.split() {
@@ -96,6 +101,7 @@ pub fn process_file(
                             correction,
                             non_exhaustive: (),
                         };
+                        typos_found = true;
                         report(msg.into());
                     }
                 }
@@ -103,7 +109,7 @@ pub fn process_file(
         }
     }
 
-    Ok(())
+    Ok(typos_found)
 }
 
 fn is_hex(ident: &str) -> bool {

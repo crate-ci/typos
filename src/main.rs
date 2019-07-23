@@ -249,7 +249,7 @@ pub fn get_logging(level: log::Level) -> env_logger::Builder {
     builder
 }
 
-fn run() -> Result<(), failure::Error> {
+fn run() -> Result<i32, failure::Error> {
     let options = Options::from_args().infer();
 
     let mut builder = get_logging(options.verbose.log_level());
@@ -275,11 +275,11 @@ fn run() -> Result<(), failure::Error> {
         .git_ignore(options.ignore_vcs().unwrap_or(true))
         .git_exclude(options.ignore_vcs().unwrap_or(true))
         .parents(options.ignore_parent().unwrap_or(true));
-    // TODO Add build_parallel for options.threads != 1
+    let mut typos_found = false;
     for entry in walk.build() {
         let entry = entry?;
         if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            typos::process_file(
+            if typos::process_file(
                 entry.path(),
                 &dictionary,
                 check_filenames,
@@ -287,13 +287,20 @@ fn run() -> Result<(), failure::Error> {
                 ignore_hex,
                 binary,
                 options.format.report(),
-            )?;
+            )? {
+                typos_found = true;
+            }
         }
     }
 
-    Ok(())
+    if typos_found {
+        Ok(1)
+    } else {
+        Ok(0)
+    }
 }
 
 fn main() {
-    run().unwrap();
+    let code = run().unwrap();
+    std::process::exit(code);
 }
