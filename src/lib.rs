@@ -23,15 +23,12 @@ pub fn process_file(
     binary: bool,
     report: report::Report,
 ) -> Result<bool, failure::Error> {
-    let parser = tokens::Parser::new();
+    let parser = tokens::ParserBuilder::new().ignore_hex(ignore_hex).build();
     let mut typos_found = false;
 
     if check_filenames {
         for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
             for ident in parser.parse(part) {
-                if !ignore_hex && is_hex(ident.token()) {
-                    continue;
-                }
                 if let Some(correction) = dictionary.correct_ident(ident) {
                     let msg = report::FilenameCorrection {
                         path,
@@ -73,9 +70,6 @@ pub fn process_file(
         for (line_idx, line) in buffer.lines().enumerate() {
             let line_num = line_idx + 1;
             for ident in parser.parse_bytes(line) {
-                if !ignore_hex && is_hex(ident.token()) {
-                    continue;
-                }
                 if let Some(correction) = dictionary.correct_ident(ident) {
                     let col_num = ident.offset();
                     let msg = report::Correction {
@@ -111,13 +105,4 @@ pub fn process_file(
     }
 
     Ok(typos_found)
-}
-
-fn is_hex(ident: &str) -> bool {
-    lazy_static::lazy_static! {
-        // `_`: number literal separator in Rust and other languages
-        // `'`: number literal separator in C++
-        static ref HEX: regex::Regex = regex::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap();
-    }
-    HEX.is_match(ident)
 }

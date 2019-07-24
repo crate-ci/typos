@@ -7,11 +7,18 @@ pub enum Case {
 }
 
 #[derive(Debug, Clone, Default)]
-pub struct ParserBuilder {}
+pub struct ParserBuilder {
+    ignore_hex: bool,
+}
 
 impl ParserBuilder {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    pub fn ignore_hex(mut self, yes: bool) -> Self {
+        self.ignore_hex = yes;
+        self
     }
 
     pub fn build(self) -> Parser {
@@ -21,6 +28,7 @@ impl ParserBuilder {
         Parser {
             words_str,
             words_bytes,
+            ignore_hex: self.ignore_hex,
         }
     }
 }
@@ -29,6 +37,7 @@ impl ParserBuilder {
 pub struct Parser {
     words_str: regex::Regex,
     words_bytes: regex::bytes::Regex,
+    ignore_hex: bool,
 }
 
 impl Parser {
@@ -37,16 +46,22 @@ impl Parser {
     }
 
     pub fn parse<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
+        let ignore_hex = self.ignore_hex;
         self.words_str
             .find_iter(content)
+            .filter(move |m| !ignore_hex || !is_hex(m.as_str().as_bytes()))
             .map(|m| Identifier::new_unchecked(m.as_str(), m.start()))
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
-        self.words_bytes.find_iter(content).filter_map(|m| {
-            let s = std::str::from_utf8(m.as_bytes()).ok();
-            s.map(|s| Identifier::new_unchecked(s, m.start()))
-        })
+        let ignore_hex = self.ignore_hex;
+        self.words_bytes
+            .find_iter(content)
+            .filter(move |m| !ignore_hex || !is_hex(m.as_bytes()))
+            .filter_map(|m| {
+                let s = std::str::from_utf8(m.as_bytes()).ok();
+                s.map(|s| Identifier::new_unchecked(s, m.start()))
+            })
     }
 }
 
@@ -54,6 +69,15 @@ impl Default for Parser {
     fn default() -> Self {
         Self::new()
     }
+}
+
+fn is_hex(ident: &[u8]) -> bool {
+    lazy_static::lazy_static! {
+        // `_`: number literal separator in Rust and other languages
+        // `'`: number literal separator in C++
+        static ref HEX: regex::bytes::Regex = regex::bytes::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap();
+    }
+    HEX.is_match(ident)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -329,6 +353,37 @@ mod test {
 
         let input = "A_B";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_hex_enabled() {
+        let parser = ParserBuilder::new().ignore_hex(true).build();
+
+        let input = "Hello 0xDEADBEEF World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", 0),
+            Identifier::new_unchecked("World", 17),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_hex_disabled() {
+        let parser = ParserBuilder::new().ignore_hex(false).build();
+
+        let input = "Hello 0xDEADBEEF World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", 0),
+            Identifier::new_unchecked("0xDEADBEEF", 6),
+            Identifier::new_unchecked("World", 17),
+        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse(input).collect();
