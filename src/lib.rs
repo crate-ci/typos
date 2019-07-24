@@ -23,11 +23,12 @@ pub fn process_file(
     binary: bool,
     report: report::Report,
 ) -> Result<bool, failure::Error> {
+    let parser = tokens::Parser::new();
     let mut typos_found = false;
 
     if check_filenames {
         for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
-            for ident in tokens::Identifier::parse(part) {
+            for ident in parser.parse(part) {
                 if !ignore_hex && is_hex(ident.token()) {
                     continue;
                 }
@@ -71,7 +72,7 @@ pub fn process_file(
 
         for (line_idx, line) in buffer.lines().enumerate() {
             let line_num = line_idx + 1;
-            for ident in tokens::Identifier::parse_bytes(line) {
+            for ident in parser.parse_bytes(line) {
                 if !ignore_hex && is_hex(ident.token()) {
                     continue;
                 }
