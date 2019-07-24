@@ -6,6 +6,25 @@ pub enum Case {
     None,
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct ParserBuilder {}
+
+impl ParserBuilder {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
+    pub fn build(self) -> Parser {
+        let pattern = r#"\b(\p{Alphabetic}|\d|_|')+\b"#;
+        let words_str = regex::Regex::new(pattern).unwrap();
+        let words_bytes = regex::bytes::Regex::new(pattern).unwrap();
+        Parser {
+            words_str,
+            words_bytes,
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Parser {
     words_str: regex::Regex,
@@ -14,13 +33,7 @@ pub struct Parser {
 
 impl Parser {
     pub fn new() -> Self {
-        let pattern = r#"\b(\p{Alphabetic}|\d|_|')+\b"#;
-        let words_str = regex::Regex::new(pattern).unwrap();
-        let words_bytes = regex::bytes::Regex::new(pattern).unwrap();
-        Self {
-            words_str,
-            words_bytes,
-        }
+        ParserBuilder::default().build()
     }
 
     pub fn parse<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
@@ -34,6 +47,12 @@ impl Parser {
             let s = std::str::from_utf8(m.as_bytes()).ok();
             s.map(|s| Identifier::new_unchecked(s, m.start()))
         })
+    }
+}
+
+impl Default for Parser {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
