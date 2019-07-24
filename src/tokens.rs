@@ -16,12 +16,12 @@ impl ParserBuilder {
         Default::default()
     }
 
-    pub fn ignore_hex(mut self, yes: bool) -> Self {
+    pub fn ignore_hex(&mut self, yes: bool) -> &mut Self {
         self.ignore_hex = yes;
         self
     }
 
-    pub fn build(self) -> Parser {
+    pub fn build(&self) -> Parser {
         let pattern = r#"\b(\p{Alphabetic}|\d|_|')+\b"#;
         let words_str = regex::Regex::new(pattern).unwrap();
         let words_bytes = regex::bytes::Regex::new(pattern).unwrap();
