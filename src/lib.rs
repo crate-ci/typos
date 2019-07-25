@@ -19,11 +19,10 @@ pub fn process_file(
     dictionary: &Dictionary,
     check_filenames: bool,
     check_files: bool,
-    ignore_hex: bool,
+    parser: &tokens::Parser,
     binary: bool,
     report: report::Report,
 ) -> Result<bool, failure::Error> {
-    let parser = tokens::ParserBuilder::new().ignore_hex(ignore_hex).build();
     let mut typos_found = false;
 
     if check_filenames {

@@ -261,6 +261,10 @@ fn run() -> Result<i32, failure::Error> {
     let ignore_hex = options.ignore_hex().unwrap_or(true);
     let binary = options.binary().unwrap_or(false);
 
+    let parser = typos::tokens::ParserBuilder::new()
+        .ignore_hex(ignore_hex)
+        .build();
+
     let first_path = &options
         .path
         .get(0)
@@ -284,7 +288,7 @@ fn run() -> Result<i32, failure::Error> {
                 &dictionary,
                 check_filenames,
                 check_files,
-                ignore_hex,
+                &parser,
                 binary,
                 options.format.report(),
             )? {
