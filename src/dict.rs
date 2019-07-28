@@ -4,12 +4,21 @@ use unicase::UniCase;
 
 use crate::tokens::Case;
 
-#[derive(Default)]
-pub struct Dictionary {}
+pub trait Dictionary {
+    fn correct_ident<'s, 'w>(
+        &'s self,
+        _ident: crate::tokens::Identifier<'w>,
+    ) -> Option<Cow<'s, str>>;
 
-impl Dictionary {
+    fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Cow<'s, str>>;
+}
+
+#[derive(Default)]
+pub struct BuiltIn {}
+
+impl BuiltIn {
     pub fn new() -> Self {
-        Dictionary {}
+        Self {}
     }
 
     pub fn correct_ident<'s, 'w>(
@@ -22,6 +31,19 @@ impl Dictionary {
     pub fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Cow<'s, str>> {
         map_lookup(&crate::dict_codegen::WORD_DICTIONARY, word.token())
             .map(|s| case_correct(s, word.case()))
+    }
+}
+
+impl Dictionary for BuiltIn {
+    fn correct_ident<'s, 'w>(
+        &'s self,
+        ident: crate::tokens::Identifier<'w>,
+    ) -> Option<Cow<'s, str>> {
+        BuiltIn::correct_ident(self, ident)
+    }
+
+    fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Cow<'s, str>> {
+        BuiltIn::correct_word(self, word)
     }
 }
 

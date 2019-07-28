@@ -260,7 +260,7 @@ fn run() -> Result<i32, failure::Error> {
     let ignore_hex = options.ignore_hex().unwrap_or(true);
     let binary = options.binary().unwrap_or(false);
 
-    let dictionary = typos::Dictionary::new();
+    let dictionary = typos::BuiltIn::new();
 
     let parser = typos::tokens::ParserBuilder::new()
         .ignore_hex(ignore_hex)
