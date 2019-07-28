@@ -14,17 +14,8 @@ fn process_empty(b: &mut test::Bencher) {
 
     let corrections = typos::Dictionary::new();
     let parser = typos::tokens::Parser::new();
-    b.iter(|| {
-        typos::process_file(
-            sample_path.path(),
-            &corrections,
-            true,
-            true,
-            &parser,
-            false,
-            typos::report::print_silent,
-        )
-    });
+    let checks = typos::checks::CheckSettings::new().build(&corrections, &parser);
+    b.iter(|| checks.check_file(sample_path.path(), typos::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -37,17 +28,8 @@ fn process_no_tokens(b: &mut test::Bencher) {
 
     let corrections = typos::Dictionary::new();
     let parser = typos::tokens::Parser::new();
-    b.iter(|| {
-        typos::process_file(
-            sample_path.path(),
-            &corrections,
-            true,
-            true,
-            &parser,
-            false,
-            typos::report::print_silent,
-        )
-    });
+    let checks = typos::checks::CheckSettings::new().build(&corrections, &parser);
+    b.iter(|| checks.check_file(sample_path.path(), typos::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -60,17 +42,8 @@ fn process_single_token(b: &mut test::Bencher) {
 
     let corrections = typos::Dictionary::new();
     let parser = typos::tokens::Parser::new();
-    b.iter(|| {
-        typos::process_file(
-            sample_path.path(),
-            &corrections,
-            true,
-            true,
-            &parser,
-            false,
-            typos::report::print_silent,
-        )
-    });
+    let checks = typos::checks::CheckSettings::new().build(&corrections, &parser);
+    b.iter(|| checks.check_file(sample_path.path(), typos::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -83,17 +56,8 @@ fn process_sherlock(b: &mut test::Bencher) {
 
     let corrections = typos::Dictionary::new();
     let parser = typos::tokens::Parser::new();
-    b.iter(|| {
-        typos::process_file(
-            sample_path.path(),
-            &corrections,
-            true,
-            true,
-            &parser,
-            false,
-            typos::report::print_silent,
-        )
-    });
+    let checks = typos::checks::CheckSettings::new().build(&corrections, &parser);
+    b.iter(|| checks.check_file(sample_path.path(), typos::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -106,17 +70,8 @@ fn process_code(b: &mut test::Bencher) {
 
     let corrections = typos::Dictionary::new();
     let parser = typos::tokens::Parser::new();
-    b.iter(|| {
-        typos::process_file(
-            sample_path.path(),
-            &corrections,
-            true,
-            true,
-            &parser,
-            false,
-            typos::report::print_silent,
-        )
-    });
+    let checks = typos::checks::CheckSettings::new().build(&corrections, &parser);
+    b.iter(|| checks.check_file(sample_path.path(), typos::report::print_silent));
 
     temp.close().unwrap();
 }
@@ -129,17 +84,8 @@ fn process_corpus(b: &mut test::Bencher) {
 
     let corrections = typos::Dictionary::new();
     let parser = typos::tokens::Parser::new();
-    b.iter(|| {
-        typos::process_file(
-            sample_path.path(),
-            &corrections,
-            true,
-            true,
-            &parser,
-            false,
-            typos::report::print_silent,
-        )
-    });
+    let checks = typos::checks::CheckSettings::new().build(&corrections, &parser);
+    b.iter(|| checks.check_file(sample_path.path(), typos::report::print_silent));
 
     temp.close().unwrap();
 }
