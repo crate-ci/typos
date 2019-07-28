@@ -255,11 +255,22 @@ fn run() -> Result<i32, failure::Error> {
     let mut builder = get_logging(options.verbose.log_level());
     builder.init();
 
-    let dictionary = typos::Dictionary::new();
     let check_filenames = options.check_filenames().unwrap_or(true);
     let check_files = options.check_files().unwrap_or(true);
     let ignore_hex = options.ignore_hex().unwrap_or(true);
     let binary = options.binary().unwrap_or(false);
+
+    let dictionary = typos::BuiltIn::new();
+
+    let parser = typos::tokens::ParserBuilder::new()
+        .ignore_hex(ignore_hex)
+        .build();
+
+    let checks = typos::checks::CheckSettings::new()
+        .check_filenames(check_filenames)
+        .check_files(check_files)
+        .binary(binary)
+        .build(&dictionary, &parser);
 
     let first_path = &options
         .path
@@ -279,15 +290,10 @@ fn run() -> Result<i32, failure::Error> {
     for entry in walk.build() {
         let entry = entry?;
         if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            if typos::process_file(
-                entry.path(),
-                &dictionary,
-                check_filenames,
-                check_files,
-                ignore_hex,
-                binary,
-                options.format.report(),
-            )? {
+            if checks.check_filename(entry.path(), options.format.report())? {
+                typos_found = true;
+            }
+            if checks.check_file(entry.path(), options.format.report())? {
                 typos_found = true;
             }
         }
