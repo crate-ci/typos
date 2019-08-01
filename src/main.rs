@@ -290,10 +290,11 @@ fn run() -> Result<i32, failure::Error> {
     for entry in walk.build() {
         let entry = entry?;
         if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
+            let explicit = entry.depth() == 0;
             if checks.check_filename(entry.path(), options.format.report())? {
                 typos_found = true;
             }
-            if checks.check_file(entry.path(), options.format.report())? {
+            if checks.check_file(entry.path(), explicit, options.format.report())? {
                 typos_found = true;
             }
         }

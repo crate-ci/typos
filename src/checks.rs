@@ -111,6 +111,7 @@ impl<'d, 'p> Checks<'d, 'p> {
     pub fn check_file(
         &self,
         path: &std::path::Path,
+        explicit: bool,
         report: report::Report,
     ) -> Result<bool, failure::Error> {
         let mut typos_found = false;
@@ -121,7 +122,7 @@ impl<'d, 'p> Checks<'d, 'p> {
 
         let mut buffer = Vec::new();
         File::open(path)?.read_to_end(&mut buffer)?;
-        if !self.binary && buffer.find_byte(b'\0').is_some() {
+        if !explicit && !self.binary && buffer.find_byte(b'\0').is_some() {
             let msg = report::BinaryFile {
                 path,
                 non_exhaustive: (),
