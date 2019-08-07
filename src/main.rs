@@ -6,6 +6,8 @@ use std::io::Write;
 
 use structopt::StructOpt;
 
+mod config;
+
 arg_enum! {
     #[derive(Debug, Copy, Clone, PartialEq, Eq)]
     enum Format {
@@ -167,8 +169,10 @@ impl Options {
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
     }
+}
 
-    pub fn ignore_hidden(&self) -> Option<bool> {
+impl config::ConfigSource for Options {
+    fn ignore_hidden(&self) -> Option<bool> {
         match (self.hidden, self.no_hidden) {
             (true, false) => Some(false),
             (false, true) => Some(true),
@@ -177,49 +181,44 @@ impl Options {
         }
     }
 
-    pub fn ignore_dot(&self) -> Option<bool> {
+    fn ignore_files(&self) -> Option<bool> {
+        match (self.no_ignore, self.ignore) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn ignore_dot(&self) -> Option<bool> {
         match (self.no_ignore_dot, self.ignore_dot) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
-        .or_else(|| self.ignore_files())
     }
 
-    pub fn ignore_global(&self) -> Option<bool> {
-        match (self.no_ignore_global, self.ignore_global) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-        .or_else(|| self.ignore_vcs())
-        .or_else(|| self.ignore_files())
-    }
-
-    pub fn ignore_parent(&self) -> Option<bool> {
-        match (self.no_ignore_parent, self.ignore_parent) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-        .or_else(|| self.ignore_files())
-    }
-
-    pub fn ignore_vcs(&self) -> Option<bool> {
+    fn ignore_vcs(&self) -> Option<bool> {
         match (self.no_ignore_vcs, self.ignore_vcs) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
-        .or_else(|| self.ignore_files())
     }
 
-    fn ignore_files(&self) -> Option<bool> {
-        match (self.no_ignore, self.ignore) {
+    fn ignore_global(&self) -> Option<bool> {
+        match (self.no_ignore_global, self.ignore_global) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn ignore_parent(&self) -> Option<bool> {
+        match (self.no_ignore_parent, self.ignore_parent) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
@@ -252,6 +251,9 @@ pub fn get_logging(level: log::Level) -> env_logger::Builder {
 fn run() -> Result<i32, failure::Error> {
     let options = Options::from_args().infer();
 
+    let mut config = config::Config::default();
+    config.update(&options);
+
     let mut builder = get_logging(options.verbose.log_level());
     builder.init();
 
@@ -280,12 +282,12 @@ fn run() -> Result<i32, failure::Error> {
     for path in &options.path[1..] {
         walk.add(path);
     }
-    walk.hidden(options.ignore_hidden().unwrap_or(true))
-        .ignore(options.ignore_dot().unwrap_or(true))
-        .git_global(options.ignore_global().unwrap_or(true))
-        .git_ignore(options.ignore_vcs().unwrap_or(true))
-        .git_exclude(options.ignore_vcs().unwrap_or(true))
-        .parents(options.ignore_parent().unwrap_or(true));
+    walk.hidden(config.ignore_hidden())
+        .ignore(config.ignore_dot())
+        .git_global(config.ignore_global())
+        .git_ignore(config.ignore_vcs())
+        .git_exclude(config.ignore_vcs())
+        .parents(config.ignore_parent());
     let mut typos_found = false;
     for entry in walk.build() {
         let entry = entry?;
