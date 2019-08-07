@@ -9,6 +9,7 @@ pub enum Case {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ParserBuilder {
     ignore_hex: bool,
+    include_digits: bool,
 }
 
 impl ParserBuilder {
@@ -21,10 +22,19 @@ impl ParserBuilder {
         self
     }
 
+    pub fn include_digits(&mut self, yes: bool) -> &mut Self {
+        self.include_digits = yes;
+        self
+    }
+
     pub fn build(&self) -> Parser {
-        let pattern = r#"\b(\p{Alphabetic}|\d|_|')+\b"#;
-        let words_str = regex::Regex::new(pattern).unwrap();
-        let words_bytes = regex::bytes::Regex::new(pattern).unwrap();
+        let mut pattern = r#"\b(\p{Alphabetic}|_|'"#.to_owned();
+        if self.include_digits {
+            pattern.push_str(r#"|\d"#);
+        }
+        pattern.push_str(r#")+\b"#);
+        let words_str = regex::Regex::new(&pattern).unwrap();
+        let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
         Parser {
             words_str,
             words_bytes,
@@ -35,7 +45,10 @@ impl ParserBuilder {
 
 impl Default for ParserBuilder {
     fn default() -> Self {
-        Self { ignore_hex: true }
+        Self {
+            ignore_hex: true,
+            include_digits: true,
+        }
     }
 }
 
