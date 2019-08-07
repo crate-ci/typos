@@ -57,6 +57,14 @@ impl Config {
         Ok(content)
     }
 
+    pub fn derive(cwd: &std::path::Path) -> Result<Self, failure::Error> {
+        if let Some(path) = find_project_file(cwd.to_owned(), "typos.toml") {
+            Self::from_file(&path)
+        } else {
+            Ok(Default::default())
+        }
+    }
+
     pub fn update(&mut self, source: &dyn ConfigSource) {
         if let Some(source) = source.ignore_hidden() {
             self.ignore_hidden = Some(source);
@@ -137,4 +145,18 @@ impl ConfigSource for Config {
     fn ignore_parent(&self) -> Option<bool> {
         self.ignore_parent
     }
+}
+
+fn find_project_file(dir: std::path::PathBuf, name: &str) -> Option<std::path::PathBuf> {
+    let mut file_path = dir;
+    file_path.push(name);
+    while !file_path.exists() {
+        file_path.pop(); // filename
+        let hit_bottom = !file_path.pop();
+        if hit_bottom {
+            return None;
+        }
+        file_path.push(name);
+    }
+    Some(file_path)
 }

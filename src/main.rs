@@ -46,6 +46,10 @@ struct Options {
     /// Custom config file
     custom_config: Option<std::path::PathBuf>,
 
+    #[structopt(long = "isolated")]
+    /// Ignore implicit configuration files.
+    isolated: bool,
+
     #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
     /// Skip verifying spelling in file names.
     no_check_filenames: bool,
@@ -255,13 +259,6 @@ pub fn get_logging(level: log::Level) -> env_logger::Builder {
 fn run() -> Result<i32, failure::Error> {
     let options = Options::from_args().infer();
 
-    let mut config = config::Config::default();
-    if let Some(path) = options.custom_config.as_ref() {
-        let custom = config::Config::from_file(path)?;
-        config.update(&custom);
-    }
-    config.update(&options);
-
     let mut builder = get_logging(options.verbose.log_level());
     builder.init();
 
@@ -282,30 +279,47 @@ fn run() -> Result<i32, failure::Error> {
         .binary(binary)
         .build(&dictionary, &parser);
 
-    let first_path = &options
-        .path
-        .get(0)
-        .expect("arg parsing enforces at least one");
-    let mut walk = ignore::WalkBuilder::new(first_path);
-    for path in &options.path[1..] {
-        walk.add(path);
+    let mut config = config::Config::default();
+    if let Some(path) = options.custom_config.as_ref() {
+        let custom = config::Config::from_file(path)?;
+        config.update(&custom);
     }
-    walk.hidden(config.ignore_hidden())
-        .ignore(config.ignore_dot())
-        .git_global(config.ignore_global())
-        .git_ignore(config.ignore_vcs())
-        .git_exclude(config.ignore_vcs())
-        .parents(config.ignore_parent());
+    let config = config;
+
     let mut typos_found = false;
-    for entry in walk.build() {
-        let entry = entry?;
-        if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            let explicit = entry.depth() == 0;
-            if checks.check_filename(entry.path(), options.format.report())? {
-                typos_found = true;
-            }
-            if checks.check_file(entry.path(), explicit, options.format.report())? {
-                typos_found = true;
+    for path in options.path.iter() {
+        let path = path.canonicalize()?;
+        let cwd = if path.is_file() {
+            path.parent().unwrap()
+        } else {
+            path.as_path()
+        };
+
+        let mut config = config.clone();
+        if !options.isolated {
+            let derived = config::Config::derive(cwd)?;
+            config.update(&derived);
+        }
+        config.update(&options);
+        let config = config;
+
+        let mut walk = ignore::WalkBuilder::new(path);
+        walk.hidden(config.ignore_hidden())
+            .ignore(config.ignore_dot())
+            .git_global(config.ignore_global())
+            .git_ignore(config.ignore_vcs())
+            .git_exclude(config.ignore_vcs())
+            .parents(config.ignore_parent());
+        for entry in walk.build() {
+            let entry = entry?;
+            if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
+                let explicit = entry.depth() == 0;
+                if checks.check_filename(entry.path(), options.format.report())? {
+                    typos_found = true;
+                }
+                if checks.check_file(entry.path(), explicit, options.format.report())? {
+                    typos_found = true;
+                }
             }
         }
     }
