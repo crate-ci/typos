@@ -35,7 +35,7 @@ impl ParserBuilder {
 
 impl Default for ParserBuilder {
     fn default() -> Self {
-        Self { ignore_hex: false }
+        Self { ignore_hex: true }
     }
 }
 
