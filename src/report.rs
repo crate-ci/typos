@@ -1,31 +1,13 @@
 use std::borrow::Cow;
 use std::io::{self, Write};
 
-#[derive(Clone, Debug, serde::Serialize)]
+#[derive(Clone, Debug, serde::Serialize, derive_more::From)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
     Correction(Correction<'m>),
     FilenameCorrection(FilenameCorrection<'m>),
-}
-
-impl<'m> From<BinaryFile<'m>> for Message<'m> {
-    fn from(msg: BinaryFile<'m>) -> Self {
-        Message::BinaryFile(msg)
-    }
-}
-
-impl<'m> From<Correction<'m>> for Message<'m> {
-    fn from(msg: Correction<'m>) -> Self {
-        Message::Correction(msg)
-    }
-}
-
-impl<'m> From<FilenameCorrection<'m>> for Message<'m> {
-    fn from(msg: FilenameCorrection<'m>) -> Self {
-        Message::FilenameCorrection(msg)
-    }
 }
 
 #[derive(Clone, Debug, serde::Serialize)]
