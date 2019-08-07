@@ -262,21 +262,16 @@ fn run() -> Result<i32, failure::Error> {
     let mut builder = get_logging(options.verbose.log_level());
     builder.init();
 
-    let check_filenames = options.check_filenames().unwrap_or(true);
-    let check_files = options.check_files().unwrap_or(true);
-    let ignore_hex = options.ignore_hex().unwrap_or(true);
-    let binary = options.binary().unwrap_or(false);
-
     let dictionary = typos::BuiltIn::new();
 
     let parser = typos::tokens::ParserBuilder::new()
-        .ignore_hex(ignore_hex)
+        .ignore_hex(options.ignore_hex().unwrap_or(true))
         .build();
 
     let checks = typos::checks::CheckSettings::new()
-        .check_filenames(check_filenames)
-        .check_files(check_files)
-        .binary(binary)
+        .check_filenames(options.check_filenames().unwrap_or(true))
+        .check_files(options.check_files().unwrap_or(true))
+        .binary(options.binary().unwrap_or(false))
         .build(&dictionary, &parser);
 
     let mut config = config::Config::default();
