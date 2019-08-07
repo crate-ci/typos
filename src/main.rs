@@ -37,7 +37,7 @@ impl Default for Format {
 
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
-struct Options {
+struct Args {
     #[structopt(parse(from_os_str), default_value = ".")]
     /// Paths to check
     path: Vec<std::path::PathBuf>,
@@ -96,7 +96,7 @@ struct Options {
     verbose: clap_verbosity_flag::Verbosity,
 }
 
-impl Options {
+impl Args {
     pub fn infer(self) -> Self {
         self
     }
@@ -277,32 +277,32 @@ pub fn get_logging(level: log::Level) -> env_logger::Builder {
 }
 
 fn run() -> Result<i32, failure::Error> {
-    let options = Options::from_args().infer();
+    let args = Args::from_args().infer();
 
-    let mut builder = get_logging(options.verbose.log_level());
+    let mut builder = get_logging(args.verbose.log_level());
     builder.init();
 
     let dictionary = typos::BuiltIn::new();
 
     let parser = typos::tokens::ParserBuilder::new()
-        .ignore_hex(options.ignore_hex().unwrap_or(true))
+        .ignore_hex(args.ignore_hex().unwrap_or(true))
         .build();
 
     let checks = typos::checks::CheckSettings::new()
-        .check_filenames(options.check_filenames().unwrap_or(true))
-        .check_files(options.check_files().unwrap_or(true))
-        .binary(options.binary().unwrap_or(false))
+        .check_filenames(args.check_filenames().unwrap_or(true))
+        .check_files(args.check_files().unwrap_or(true))
+        .binary(args.binary().unwrap_or(false))
         .build(&dictionary, &parser);
 
     let mut config = config::Config::default();
-    if let Some(path) = options.custom_config.as_ref() {
+    if let Some(path) = args.custom_config.as_ref() {
         let custom = config::Config::from_file(path)?;
         config.update(&custom);
     }
     let config = config;
 
     let mut typos_found = false;
-    for path in options.path.iter() {
+    for path in args.path.iter() {
         let path = path.canonicalize()?;
         let cwd = if path.is_file() {
             path.parent().unwrap()
@@ -311,11 +311,11 @@ fn run() -> Result<i32, failure::Error> {
         };
 
         let mut config = config.clone();
-        if !options.isolated {
+        if !args.isolated {
             let derived = config::Config::derive(cwd)?;
             config.update(&derived);
         }
-        config.update(&options.config);
+        config.update(&args.config);
         let config = config;
 
         let mut walk = ignore::WalkBuilder::new(path);
@@ -329,10 +329,10 @@ fn run() -> Result<i32, failure::Error> {
             let entry = entry?;
             if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
                 let explicit = entry.depth() == 0;
-                if checks.check_filename(entry.path(), options.format.report())? {
+                if checks.check_filename(entry.path(), args.format.report())? {
                     typos_found = true;
                 }
-                if checks.check_file(entry.path(), explicit, options.format.report())? {
+                if checks.check_file(entry.path(), explicit, args.format.report())? {
                     typos_found = true;
                 }
             }
