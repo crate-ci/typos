@@ -89,49 +89,8 @@ struct Options {
     #[structopt(long, raw(overrides_with = r#""binary""#), raw(hidden = "true"))]
     no_binary: bool,
 
-    #[structopt(long, raw(overrides_with = r#""no-hidden""#))]
-    /// Search hidden files and directories.
-    hidden: bool,
-    #[structopt(long, raw(overrides_with = r#""hidden""#), raw(hidden = "true"))]
-    no_hidden: bool,
-
-    #[structopt(long, raw(overrides_with = r#""ignore""#))]
-    /// Don't respect ignore files.
-    no_ignore: bool,
-    #[structopt(long, raw(overrides_with = r#""no-ignore""#), raw(hidden = "true"))]
-    ignore: bool,
-
-    #[structopt(long, raw(overrides_with = r#""ignore-dot""#))]
-    /// Don't respect .ignore files.
-    no_ignore_dot: bool,
-    #[structopt(long, raw(overrides_with = r#""no-ignore-dot""#), raw(hidden = "true"))]
-    ignore_dot: bool,
-
-    #[structopt(long, raw(overrides_with = r#""ignore-global""#))]
-    /// Don't respect global ignore files.
-    no_ignore_global: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-ignore-global""#),
-        raw(hidden = "true")
-    )]
-    ignore_global: bool,
-
-    #[structopt(long, raw(overrides_with = r#""ignore-parent""#))]
-    /// Don't respect ignore files in parent directories.
-    no_ignore_parent: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-ignore-parent""#),
-        raw(hidden = "true")
-    )]
-    ignore_parent: bool,
-
-    #[structopt(long, raw(overrides_with = r#""ignore-vcs""#))]
-    /// Don't respect ignore files in vcs directories.
-    no_ignore_vcs: bool,
-    #[structopt(long, raw(overrides_with = r#""no-ignore-vcs""#), raw(hidden = "true"))]
-    ignore_vcs: bool,
+    #[structopt(flatten)]
+    config: ConfigArgs,
 
     #[structopt(flatten)]
     verbose: clap_verbosity_flag::Verbosity,
@@ -179,7 +138,68 @@ impl Options {
     }
 }
 
-impl config::ConfigSource for Options {
+#[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
+struct ConfigArgs {
+    #[structopt(flatten)]
+    walk: WalkArgs,
+}
+
+impl config::ConfigSource for ConfigArgs {
+    fn walk(&self) -> Option<&dyn config::WalkSource> {
+        Some(&self.walk)
+    }
+}
+
+#[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
+struct WalkArgs {
+    #[structopt(long, raw(overrides_with = r#""no-hidden""#))]
+    /// Search hidden files and directories.
+    hidden: bool,
+    #[structopt(long, raw(overrides_with = r#""hidden""#), raw(hidden = "true"))]
+    no_hidden: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore""#))]
+    /// Don't respect ignore files.
+    no_ignore: bool,
+    #[structopt(long, raw(overrides_with = r#""no-ignore""#), raw(hidden = "true"))]
+    ignore: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore-dot""#))]
+    /// Don't respect .ignore files.
+    no_ignore_dot: bool,
+    #[structopt(long, raw(overrides_with = r#""no-ignore-dot""#), raw(hidden = "true"))]
+    ignore_dot: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore-global""#))]
+    /// Don't respect global ignore files.
+    no_ignore_global: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-ignore-global""#),
+        raw(hidden = "true")
+    )]
+    ignore_global: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore-parent""#))]
+    /// Don't respect ignore files in parent directories.
+    no_ignore_parent: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-ignore-parent""#),
+        raw(hidden = "true")
+    )]
+    ignore_parent: bool,
+
+    #[structopt(long, raw(overrides_with = r#""ignore-vcs""#))]
+    /// Don't respect ignore files in vcs directories.
+    no_ignore_vcs: bool,
+    #[structopt(long, raw(overrides_with = r#""no-ignore-vcs""#), raw(hidden = "true"))]
+    ignore_vcs: bool,
+}
+
+impl config::WalkSource for WalkArgs {
     fn ignore_hidden(&self) -> Option<bool> {
         match (self.hidden, self.no_hidden) {
             (true, false) => Some(false),
@@ -295,16 +315,16 @@ fn run() -> Result<i32, failure::Error> {
             let derived = config::Config::derive(cwd)?;
             config.update(&derived);
         }
-        config.update(&options);
+        config.update(&options.config);
         let config = config;
 
         let mut walk = ignore::WalkBuilder::new(path);
-        walk.hidden(config.ignore_hidden())
-            .ignore(config.ignore_dot())
-            .git_global(config.ignore_global())
-            .git_ignore(config.ignore_vcs())
-            .git_exclude(config.ignore_vcs())
-            .parents(config.ignore_parent());
+        walk.hidden(config.files.ignore_hidden())
+            .ignore(config.files.ignore_dot())
+            .git_global(config.files.ignore_global())
+            .git_ignore(config.files.ignore_vcs())
+            .git_exclude(config.files.ignore_vcs())
+            .parents(config.files.ignore_parent());
         for entry in walk.build() {
             let entry = entry?;
             if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {

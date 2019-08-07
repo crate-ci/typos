@@ -1,6 +1,10 @@
 use std::io::Read;
 
 pub trait ConfigSource {
+    fn walk(&self) -> Option<&dyn WalkSource>;
+}
+
+pub trait WalkSource {
     /// Skip hidden files and directories.
     fn ignore_hidden(&self) -> Option<bool> {
         None
@@ -36,12 +40,7 @@ pub trait ConfigSource {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
-    pub ignore_hidden: Option<bool>,
-    pub ignore_files: Option<bool>,
-    pub ignore_dot: Option<bool>,
-    pub ignore_vcs: Option<bool>,
-    pub ignore_global: Option<bool>,
-    pub ignore_parent: Option<bool>,
+    pub files: Walk,
 }
 
 impl Config {
@@ -66,6 +65,32 @@ impl Config {
     }
 
     pub fn update(&mut self, source: &dyn ConfigSource) {
+        if let Some(walk) = source.walk() {
+            self.files.update(walk);
+        }
+    }
+}
+
+impl ConfigSource for Config {
+    fn walk(&self) -> Option<&dyn WalkSource> {
+        Some(&self.files)
+    }
+}
+
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct Walk {
+    pub ignore_hidden: Option<bool>,
+    pub ignore_files: Option<bool>,
+    pub ignore_dot: Option<bool>,
+    pub ignore_vcs: Option<bool>,
+    pub ignore_global: Option<bool>,
+    pub ignore_parent: Option<bool>,
+}
+
+impl Walk {
+    pub fn update(&mut self, source: &dyn WalkSource) {
         if let Some(source) = source.ignore_hidden() {
             self.ignore_hidden = Some(source);
         }
@@ -121,7 +146,7 @@ impl Config {
     }
 }
 
-impl ConfigSource for Config {
+impl WalkSource for Walk {
     fn ignore_hidden(&self) -> Option<bool> {
         self.ignore_hidden
     }
