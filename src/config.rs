@@ -1,3 +1,5 @@
+use std::io::Read;
+
 pub trait ConfigSource {
     /// Skip hidden files and directories.
     fn ignore_hidden(&self) -> Option<bool> {
@@ -43,6 +45,18 @@ pub struct Config {
 }
 
 impl Config {
+    pub fn from_file(path: &std::path::Path) -> Result<Self, failure::Error> {
+        let mut file = std::fs::File::open(path)?;
+        let mut s = String::new();
+        file.read_to_string(&mut s)?;
+        Self::from_toml(&s)
+    }
+
+    pub fn from_toml(data: &str) -> Result<Self, failure::Error> {
+        let content = toml::from_str(data)?;
+        Ok(content)
+    }
+
     pub fn update(&mut self, source: &dyn ConfigSource) {
         if let Some(source) = source.ignore_hidden() {
             self.ignore_hidden = Some(source);
