@@ -2,6 +2,7 @@
 #[macro_use]
 extern crate clap;
 
+use std::io::Read;
 use std::io::Write;
 
 use structopt::StructOpt;
@@ -41,6 +42,10 @@ struct Options {
     #[structopt(parse(from_os_str), default_value = ".")]
     /// Paths to check
     path: Vec<std::path::PathBuf>,
+
+    #[structopt(short = "c", long = "config")]
+    /// Custom config file
+    custom_config: Option<String>,
 
     #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
     /// Skip verifying spelling in file names.
@@ -252,6 +257,13 @@ fn run() -> Result<i32, failure::Error> {
     let options = Options::from_args().infer();
 
     let mut config = config::Config::default();
+    if let Some(path) = options.custom_config.as_ref() {
+        let mut file = std::fs::File::open(path)?;
+        let mut s = String::new();
+        file.read_to_string(&mut s)?;
+        let custom: config::Config = toml::from_str(&s)?;
+        config.update(&custom);
+    }
     config.update(&options);
 
     let mut builder = get_logging(options.verbose.log_level());
