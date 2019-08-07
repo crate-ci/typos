@@ -83,12 +83,6 @@ struct Args {
     )]
     pub format: Format,
 
-    #[structopt(long, raw(overrides_with = r#""no-binary""#))]
-    /// Search binary files.
-    binary: bool,
-    #[structopt(long, raw(overrides_with = r#""binary""#), raw(hidden = "true"))]
-    no_binary: bool,
-
     #[structopt(flatten)]
     config: ConfigArgs,
 
@@ -127,15 +121,6 @@ impl Args {
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
     }
-
-    pub fn binary(&self) -> Option<bool> {
-        match (self.binary, self.no_binary) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
 }
 
 #[derive(Debug, StructOpt)]
@@ -154,6 +139,12 @@ impl config::ConfigSource for ConfigArgs {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 struct WalkArgs {
+    #[structopt(long, raw(overrides_with = r#""no-binary""#))]
+    /// Search binary files.
+    binary: bool,
+    #[structopt(long, raw(overrides_with = r#""binary""#), raw(hidden = "true"))]
+    no_binary: bool,
+
     #[structopt(long, raw(overrides_with = r#""no-hidden""#))]
     /// Search hidden files and directories.
     hidden: bool,
@@ -200,6 +191,15 @@ struct WalkArgs {
 }
 
 impl config::WalkSource for WalkArgs {
+    fn binary(&self) -> Option<bool> {
+        match (self.binary, self.no_binary) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
     fn ignore_hidden(&self) -> Option<bool> {
         match (self.hidden, self.no_hidden) {
             (true, false) => Some(false),
@@ -282,18 +282,6 @@ fn run() -> Result<i32, failure::Error> {
     let mut builder = get_logging(args.verbose.log_level());
     builder.init();
 
-    let dictionary = typos::BuiltIn::new();
-
-    let parser = typos::tokens::ParserBuilder::new()
-        .ignore_hex(args.ignore_hex().unwrap_or(true))
-        .build();
-
-    let checks = typos::checks::CheckSettings::new()
-        .check_filenames(args.check_filenames().unwrap_or(true))
-        .check_files(args.check_files().unwrap_or(true))
-        .binary(args.binary().unwrap_or(false))
-        .build(&dictionary, &parser);
-
     let mut config = config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
         let custom = config::Config::from_file(path)?;
@@ -317,6 +305,18 @@ fn run() -> Result<i32, failure::Error> {
         }
         config.update(&args.config);
         let config = config;
+
+        let dictionary = typos::BuiltIn::new();
+
+        let parser = typos::tokens::ParserBuilder::new()
+            .ignore_hex(args.ignore_hex().unwrap_or(true))
+            .build();
+
+        let checks = typos::checks::CheckSettings::new()
+            .check_filenames(args.check_filenames().unwrap_or(true))
+            .check_files(args.check_files().unwrap_or(true))
+            .binary(config.files.binary())
+            .build(&dictionary, &parser);
 
         let mut walk = ignore::WalkBuilder::new(path);
         walk.hidden(config.files.ignore_hidden())

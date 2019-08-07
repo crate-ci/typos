@@ -5,6 +5,11 @@ pub trait ConfigSource {
 }
 
 pub trait WalkSource {
+    /// Search binary files.
+    fn binary(&self) -> Option<bool> {
+        None
+    }
+
     /// Skip hidden files and directories.
     fn ignore_hidden(&self) -> Option<bool> {
         None
@@ -81,6 +86,7 @@ impl ConfigSource for Config {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
+    pub binary: Option<bool>,
     pub ignore_hidden: Option<bool>,
     pub ignore_files: Option<bool>,
     pub ignore_dot: Option<bool>,
@@ -91,6 +97,9 @@ pub struct Walk {
 
 impl Walk {
     pub fn update(&mut self, source: &dyn WalkSource) {
+        if let Some(source) = source.binary() {
+            self.binary = Some(source);
+        }
         if let Some(source) = source.ignore_hidden() {
             self.ignore_hidden = Some(source);
         }
@@ -114,6 +123,10 @@ impl Walk {
         if let Some(source) = source.ignore_parent() {
             self.ignore_parent = Some(source);
         }
+    }
+
+    pub fn binary(&self) -> bool {
+        self.binary.unwrap_or(false)
     }
 
     pub fn ignore_hidden(&self) -> bool {
@@ -147,6 +160,10 @@ impl Walk {
 }
 
 impl WalkSource for Walk {
+    fn binary(&self) -> Option<bool> {
+        self.binary
+    }
+
     fn ignore_hidden(&self) -> Option<bool> {
         self.ignore_hidden
     }
