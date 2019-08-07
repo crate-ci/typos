@@ -6,7 +6,7 @@ pub enum Case {
     None,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ParserBuilder {
     ignore_hex: bool,
 }
@@ -30,6 +30,12 @@ impl ParserBuilder {
             words_bytes,
             ignore_hex: self.ignore_hex,
         }
+    }
+}
+
+impl Default for ParserBuilder {
+    fn default() -> Self {
+        Self { ignore_hex: false }
     }
 }
 
