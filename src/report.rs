@@ -10,7 +10,8 @@ pub enum Message<'m> {
     FilenameCorrection(FilenameCorrection<'m>),
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+#[derive(Clone, Debug, serde::Serialize, derive_more::Display)]
+#[display(fmt = "Skipping binary file {}", "path.display()")]
 pub struct BinaryFile<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
@@ -46,7 +47,7 @@ pub fn print_silent(_: Message) {}
 pub fn print_brief(msg: Message) {
     match msg {
         Message::BinaryFile(msg) => {
-            println!("Skipping binary file {}", msg.path.display(),);
+            println!("{}", msg);
         }
         Message::Correction(msg) => {
             println!(
@@ -67,7 +68,7 @@ pub fn print_brief(msg: Message) {
 pub fn print_long(msg: Message) {
     match msg {
         Message::BinaryFile(msg) => {
-            println!("Skipping binary file {}", msg.path.display(),);
+            println!("{}", msg);
         }
         Message::Correction(msg) => print_long_correction(msg),
         Message::FilenameCorrection(msg) => {
