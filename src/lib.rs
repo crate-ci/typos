@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate serde_derive;
-
 mod dict;
 mod dict_codegen;
 

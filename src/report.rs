@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::io::{self, Write};
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum Message<'m> {
@@ -28,14 +28,14 @@ impl<'m> From<FilenameCorrection<'m>> for Message<'m> {
     }
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct BinaryFile<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
     pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct Correction<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
@@ -48,7 +48,7 @@ pub struct Correction<'m> {
     pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct FilenameCorrection<'m> {
     pub path: &'m std::path::Path,
     pub typo: &'m str,

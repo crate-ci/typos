@@ -28,8 +28,7 @@ ignore = "0.4"
 phf = { version = "0.7", features = ["unicase"] }
 regex = "1.0"
 lazy_static = "1.2.0"
-serde = "1.0"
-serde_derive = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 itertools = "0.8"
 unicase = "1.1"
