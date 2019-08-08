@@ -314,6 +314,8 @@ fn run() -> Result<i32, failure::Error> {
 
         let parser = typos::tokens::ParserBuilder::new()
             .ignore_hex(config.default.ignore_hex())
+            .include_digits(config.default.identifier_include_digits())
+            .include_chars(config.default.identifier_include_chars().to_owned())
             .build();
 
         let checks = typos::checks::CheckSettings::new()

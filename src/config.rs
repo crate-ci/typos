@@ -62,6 +62,16 @@ pub trait FileSource {
     fn ignore_hex(&self) -> Option<bool> {
         None
     }
+
+    /// Allow identifiers to include digits, in addition to letters
+    fn identifier_include_digits(&self) -> Option<bool> {
+        None
+    }
+
+    /// Specify additional characters to be included in identifiers
+    fn identifier_include_chars(&self) -> Option<&str> {
+        None
+    }
 }
 
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
@@ -223,6 +233,8 @@ pub struct FileConfig {
     pub check_filename: Option<bool>,
     pub check_file: Option<bool>,
     pub ignore_hex: Option<bool>,
+    pub identifier_include_digits: Option<bool>,
+    pub identifier_include_chars: Option<String>,
 }
 
 impl FileConfig {
@@ -235,6 +247,12 @@ impl FileConfig {
         }
         if let Some(source) = source.ignore_hex() {
             self.ignore_hex = Some(source);
+        }
+        if let Some(source) = source.identifier_include_digits() {
+            self.identifier_include_digits = Some(source);
+        }
+        if let Some(source) = source.identifier_include_chars() {
+            self.identifier_include_chars = Some(source.to_owned());
         }
     }
 
@@ -249,6 +267,17 @@ impl FileConfig {
     pub fn ignore_hex(&self) -> bool {
         self.ignore_hex.unwrap_or(true)
     }
+
+    pub fn identifier_include_digits(&self) -> bool {
+        self.identifier_include_digits.unwrap_or(true)
+    }
+
+    pub fn identifier_include_chars(&self) -> &str {
+        self.identifier_include_chars
+            .as_ref()
+            .map(|s| s.as_str())
+            .unwrap_or("_'")
+    }
 }
 
 impl FileSource for FileConfig {
@@ -262,6 +291,14 @@ impl FileSource for FileConfig {
 
     fn ignore_hex(&self) -> Option<bool> {
         self.ignore_hex
+    }
+
+    fn identifier_include_digits(&self) -> Option<bool> {
+        self.identifier_include_digits
+    }
+
+    fn identifier_include_chars(&self) -> Option<&str> {
+        self.identifier_include_chars.as_ref().map(|s| s.as_str())
     }
 }
 
