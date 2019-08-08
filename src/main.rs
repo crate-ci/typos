@@ -67,12 +67,6 @@ struct Args {
     verbose: clap_verbosity_flag::Verbosity,
 }
 
-impl Args {
-    pub fn infer(self) -> Self {
-        self
-    }
-}
-
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub struct FileArgs {
@@ -286,7 +280,7 @@ pub fn get_logging(level: log::Level) -> env_logger::Builder {
 }
 
 fn run() -> Result<i32, failure::Error> {
-    let args = Args::from_args().infer();
+    let args = Args::from_args();
 
     let mut builder = get_logging(args.verbose.log_level());
     builder.init();
