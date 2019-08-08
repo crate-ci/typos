@@ -75,6 +75,65 @@ impl Args {
 
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
+pub struct FileArgs {
+    #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
+    /// Skip verifying spelling in file names.
+    no_check_filenames: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-check-filenames""#),
+        raw(hidden = "true")
+    )]
+    check_filenames: bool,
+
+    #[structopt(long, raw(overrides_with = r#""check-files""#))]
+    /// Skip verifying spelling in filess.
+    no_check_files: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-check-files""#),
+        raw(hidden = "true")
+    )]
+    check_files: bool,
+
+    #[structopt(long, raw(overrides_with = r#""hex""#))]
+    /// Don't try to detect that an identifier looks like hex
+    no_hex: bool,
+    #[structopt(long, raw(overrides_with = r#""no-hex""#), raw(hidden = "true"))]
+    hex: bool,
+}
+
+impl config::FileSource for FileArgs {
+    fn check_filename(&self) -> Option<bool> {
+        match (self.check_filenames, self.no_check_filenames) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn check_file(&self) -> Option<bool> {
+        match (self.check_files, self.no_check_files) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn ignore_hex(&self) -> Option<bool> {
+        match (self.hex, self.no_hex) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+}
+
+#[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
 struct ConfigArgs {
     #[structopt(flatten)]
     walk: WalkArgs,
@@ -199,65 +258,6 @@ impl config::WalkSource for WalkArgs {
         match (self.no_ignore_parent, self.ignore_parent) {
             (true, false) => Some(false),
             (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-}
-
-#[derive(Debug, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
-pub struct FileArgs {
-    #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
-    /// Skip verifying spelling in file names.
-    no_check_filenames: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-check-filenames""#),
-        raw(hidden = "true")
-    )]
-    check_filenames: bool,
-
-    #[structopt(long, raw(overrides_with = r#""check-files""#))]
-    /// Skip verifying spelling in filess.
-    no_check_files: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-check-files""#),
-        raw(hidden = "true")
-    )]
-    check_files: bool,
-
-    #[structopt(long, raw(overrides_with = r#""hex""#))]
-    /// Don't try to detect that an identifier looks like hex
-    no_hex: bool,
-    #[structopt(long, raw(overrides_with = r#""no-hex""#), raw(hidden = "true"))]
-    hex: bool,
-}
-
-impl config::FileSource for FileArgs {
-    fn check_filename(&self) -> Option<bool> {
-        match (self.check_filenames, self.no_check_filenames) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
-    fn check_file(&self) -> Option<bool> {
-        match (self.check_files, self.no_check_files) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
-    fn ignore_hex(&self) -> Option<bool> {
-        match (self.hex, self.no_hex) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
