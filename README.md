@@ -23,5 +23,5 @@ Licensed under either of
 
 at your option.
 
-[Crates.io]: https://crates.io/crates/typos
+[Crates.io]: https://crates.io/crates/typos-cli
 [Documentation]: https://docs.rs/typos
