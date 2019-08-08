@@ -7,6 +7,7 @@ use crate::report;
 use crate::tokens;
 use crate::Dictionary;
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CheckSettings {
     check_filenames: bool,
     check_files: bool,
@@ -58,6 +59,7 @@ impl Default for CheckSettings {
     }
 }
 
+#[derive(Clone)]
 pub struct Checks<'d, 'p> {
     dictionary: &'d Dictionary,
     parser: &'p tokens::Parser,
@@ -168,5 +170,16 @@ impl<'d, 'p> Checks<'d, 'p> {
         }
 
         Ok(typos_found)
+    }
+}
+
+impl std::fmt::Debug for Checks<'_, '_> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+        fmt.debug_struct("Checks")
+            .field("parser", self.parser)
+            .field("check_filenames", &self.check_filenames)
+            .field("check_files", &self.check_files)
+            .field("binary", &self.binary)
+            .finish()
     }
 }
