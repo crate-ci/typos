@@ -1,7 +1,13 @@
 use std::io::Read;
 
 pub trait ConfigSource {
-    fn walk(&self) -> Option<&dyn WalkSource>;
+    fn walk(&self) -> Option<&dyn WalkSource> {
+        None
+    }
+
+    fn default(&self) -> Option<&dyn FileSource> {
+        None
+    }
 }
 
 pub trait WalkSource {
@@ -41,11 +47,29 @@ pub trait WalkSource {
     }
 }
 
+pub trait FileSource {
+    /// Verifying spelling in file names.
+    fn check_filename(&self) -> Option<bool> {
+        None
+    }
+
+    /// Verifying spelling in filess.
+    fn check_file(&self) -> Option<bool> {
+        None
+    }
+
+    /// Do not check identifiers that appear to be hexadecimal values
+    fn ignore_hex(&self) -> Option<bool> {
+        None
+    }
+}
+
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
     pub files: Walk,
+    pub default: FileConfig,
 }
 
 impl Config {
@@ -72,6 +96,9 @@ impl Config {
     pub fn update(&mut self, source: &dyn ConfigSource) {
         if let Some(walk) = source.walk() {
             self.files.update(walk);
+        }
+        if let Some(default) = source.default() {
+            self.default.update(default);
         }
     }
 }
@@ -186,6 +213,55 @@ impl WalkSource for Walk {
 
     fn ignore_parent(&self) -> Option<bool> {
         self.ignore_parent
+    }
+}
+
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct FileConfig {
+    pub check_filename: Option<bool>,
+    pub check_file: Option<bool>,
+    pub ignore_hex: Option<bool>,
+}
+
+impl FileConfig {
+    pub fn update(&mut self, source: &dyn FileSource) {
+        if let Some(source) = source.check_filename() {
+            self.check_filename = Some(source);
+        }
+        if let Some(source) = source.check_file() {
+            self.check_file = Some(source);
+        }
+        if let Some(source) = source.ignore_hex() {
+            self.ignore_hex = Some(source);
+        }
+    }
+
+    pub fn check_filename(&self) -> bool {
+        self.check_filename.unwrap_or(true)
+    }
+
+    pub fn check_file(&self) -> bool {
+        self.check_file.unwrap_or(true)
+    }
+
+    pub fn ignore_hex(&self) -> bool {
+        self.ignore_hex.unwrap_or(true)
+    }
+}
+
+impl FileSource for FileConfig {
+    fn check_filename(&self) -> Option<bool> {
+        self.check_filename
+    }
+
+    fn check_file(&self) -> Option<bool> {
+        self.check_file
+    }
+
+    fn ignore_hex(&self) -> Option<bool> {
+        self.ignore_hex
     }
 }
 

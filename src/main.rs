@@ -50,31 +50,8 @@ struct Args {
     /// Ignore implicit configuration files.
     isolated: bool,
 
-    #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
-    /// Skip verifying spelling in file names.
-    no_check_filenames: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-check-filenames""#),
-        raw(hidden = "true")
-    )]
-    check_filenames: bool,
-
-    #[structopt(long, raw(overrides_with = r#""check-files""#))]
-    /// Skip verifying spelling in filess.
-    no_check_files: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-check-files""#),
-        raw(hidden = "true")
-    )]
-    check_files: bool,
-
-    #[structopt(long, raw(overrides_with = r#""hex""#))]
-    /// Don't try to detect that an identifier looks like hex
-    no_hex: bool,
-    #[structopt(long, raw(overrides_with = r#""no-hex""#), raw(hidden = "true"))]
-    hex: bool,
+    #[structopt(flatten)]
+    overrides: FileArgs,
 
     #[structopt(
         long = "format",
@@ -93,33 +70,6 @@ struct Args {
 impl Args {
     pub fn infer(self) -> Self {
         self
-    }
-
-    pub fn check_files(&self) -> Option<bool> {
-        match (self.check_files, self.no_check_files) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
-    pub fn check_filenames(&self) -> Option<bool> {
-        match (self.check_filenames, self.no_check_filenames) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
-    pub fn ignore_hex(&self) -> Option<bool> {
-        match (self.no_hex, self.hex) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
     }
 }
 
@@ -255,6 +205,65 @@ impl config::WalkSource for WalkArgs {
     }
 }
 
+#[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
+pub struct FileArgs {
+    #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
+    /// Skip verifying spelling in file names.
+    no_check_filenames: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-check-filenames""#),
+        raw(hidden = "true")
+    )]
+    check_filenames: bool,
+
+    #[structopt(long, raw(overrides_with = r#""check-files""#))]
+    /// Skip verifying spelling in filess.
+    no_check_files: bool,
+    #[structopt(
+        long,
+        raw(overrides_with = r#""no-check-files""#),
+        raw(hidden = "true")
+    )]
+    check_files: bool,
+
+    #[structopt(long, raw(overrides_with = r#""hex""#))]
+    /// Don't try to detect that an identifier looks like hex
+    no_hex: bool,
+    #[structopt(long, raw(overrides_with = r#""no-hex""#), raw(hidden = "true"))]
+    hex: bool,
+}
+
+impl config::FileSource for FileArgs {
+    fn check_filename(&self) -> Option<bool> {
+        match (self.check_filenames, self.no_check_filenames) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn check_file(&self) -> Option<bool> {
+        match (self.check_files, self.no_check_files) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn ignore_hex(&self) -> Option<bool> {
+        match (self.hex, self.no_hex) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+}
+
 pub fn get_logging(level: log::Level) -> env_logger::Builder {
     let mut builder = env_logger::Builder::new();
 
@@ -304,17 +313,18 @@ fn run() -> Result<i32, failure::Error> {
             config.update(&derived);
         }
         config.update(&args.config);
+        config.default.update(&args.overrides);
         let config = config;
 
         let dictionary = typos::BuiltIn::new();
 
         let parser = typos::tokens::ParserBuilder::new()
-            .ignore_hex(args.ignore_hex().unwrap_or(true))
+            .ignore_hex(config.default.ignore_hex())
             .build();
 
         let checks = typos::checks::CheckSettings::new()
-            .check_filenames(args.check_filenames().unwrap_or(true))
-            .check_files(args.check_files().unwrap_or(true))
+            .check_filenames(config.default.check_filename())
+            .check_files(config.default.check_file())
             .binary(config.files.binary())
             .build(&dictionary, &parser);
 
