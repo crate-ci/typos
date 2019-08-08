@@ -1,12 +1,10 @@
-[workspace]
-members = ["typos", "typos-dict"]
-
 [package]
-name = "typos-cli"
+name = "typos-dict"
 version = "0.1.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/epage/typos"
+documentation = "https://docs.rs/typos-dict"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
@@ -22,17 +20,12 @@ appveyor  = { repository = "epage/typos" }
 iterate_unstable = []
 
 [dependencies]
-typos = { version = "0.1", path = "typos" }
-typos-dict = { version = "0.1", path = "typos-dict" }
-failure = "0.1"
-structopt = "0.2"
-clap = "2"
-clap-verbosity-flag = "0.2.0"
-ignore = "0.4"
-serde = { version = "1.0", features = ["derive"] }
-toml = "0.4"
+typos = { version = "0.1", path = "../typos" }
+phf = { version = "0.7", features = ["unicase"] }
+unicase = "1.1"
 log = "0.4"
-env_logger = "0.6"
 
-[dev-dependencies]
-assert_fs = "0.10"
+[build-dependencies]
+phf_codegen = "0.7"
+csv = "1.0"
+unicase = "1.1"

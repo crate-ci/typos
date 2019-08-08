@@ -28,4 +28,4 @@ fn main() {
 }
 ";
 
-pub const CORPUS: &str = include_str!("../typos/assets/words.csv");
+pub const CORPUS: &str = include_str!("../typos-dict/assets/words.csv");
