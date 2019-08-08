@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::io::{self, Write};
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize, derive_more::From)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
 pub enum Message<'m> {
@@ -10,32 +10,15 @@ pub enum Message<'m> {
     FilenameCorrection(FilenameCorrection<'m>),
 }
 
-impl<'m> From<BinaryFile<'m>> for Message<'m> {
-    fn from(msg: BinaryFile<'m>) -> Self {
-        Message::BinaryFile(msg)
-    }
-}
-
-impl<'m> From<Correction<'m>> for Message<'m> {
-    fn from(msg: Correction<'m>) -> Self {
-        Message::Correction(msg)
-    }
-}
-
-impl<'m> From<FilenameCorrection<'m>> for Message<'m> {
-    fn from(msg: FilenameCorrection<'m>) -> Self {
-        Message::FilenameCorrection(msg)
-    }
-}
-
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize, derive_more::Display)]
+#[display(fmt = "Skipping binary file {}", "path.display()")]
 pub struct BinaryFile<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
     pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct Correction<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
@@ -48,7 +31,7 @@ pub struct Correction<'m> {
     pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, Serialize)]
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct FilenameCorrection<'m> {
     pub path: &'m std::path::Path,
     pub typo: &'m str,
@@ -64,7 +47,7 @@ pub fn print_silent(_: Message) {}
 pub fn print_brief(msg: Message) {
     match msg {
         Message::BinaryFile(msg) => {
-            println!("Skipping binary file {}", msg.path.display(),);
+            println!("{}", msg);
         }
         Message::Correction(msg) => {
             println!(
@@ -85,7 +68,7 @@ pub fn print_brief(msg: Message) {
 pub fn print_long(msg: Message) {
     match msg {
         Message::BinaryFile(msg) => {
-            println!("Skipping binary file {}", msg.path.display(),);
+            println!("{}", msg);
         }
         Message::Correction(msg) => print_long_correction(msg),
         Message::FilenameCorrection(msg) => {

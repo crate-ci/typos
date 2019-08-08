@@ -6,6 +6,8 @@ use std::io::Write;
 
 use structopt::StructOpt;
 
+mod config;
+
 arg_enum! {
     #[derive(Debug, Copy, Clone, PartialEq, Eq)]
     enum Format {
@@ -35,11 +37,39 @@ impl Default for Format {
 
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
-struct Options {
+struct Args {
     #[structopt(parse(from_os_str), default_value = ".")]
     /// Paths to check
     path: Vec<std::path::PathBuf>,
 
+    #[structopt(short = "c", long = "config")]
+    /// Custom config file
+    custom_config: Option<std::path::PathBuf>,
+
+    #[structopt(long = "isolated")]
+    /// Ignore implicit configuration files.
+    isolated: bool,
+
+    #[structopt(flatten)]
+    overrides: FileArgs,
+
+    #[structopt(
+        long = "format",
+        raw(possible_values = "&Format::variants()", case_insensitive = "true"),
+        default_value = "long"
+    )]
+    pub format: Format,
+
+    #[structopt(flatten)]
+    config: ConfigArgs,
+
+    #[structopt(flatten)]
+    verbose: clap_verbosity_flag::Verbosity,
+}
+
+#[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
+pub struct FileArgs {
     #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
     /// Skip verifying spelling in file names.
     no_check_filenames: bool,
@@ -65,14 +95,53 @@ struct Options {
     no_hex: bool,
     #[structopt(long, raw(overrides_with = r#""no-hex""#), raw(hidden = "true"))]
     hex: bool,
+}
 
-    #[structopt(
-        long = "format",
-        raw(possible_values = "&Format::variants()", case_insensitive = "true"),
-        default_value = "long"
-    )]
-    pub format: Format,
+impl config::FileSource for FileArgs {
+    fn check_filename(&self) -> Option<bool> {
+        match (self.check_filenames, self.no_check_filenames) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
 
+    fn check_file(&self) -> Option<bool> {
+        match (self.check_files, self.no_check_files) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn ignore_hex(&self) -> Option<bool> {
+        match (self.hex, self.no_hex) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+}
+
+#[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
+struct ConfigArgs {
+    #[structopt(flatten)]
+    walk: WalkArgs,
+}
+
+impl config::ConfigSource for ConfigArgs {
+    fn walk(&self) -> Option<&dyn config::WalkSource> {
+        Some(&self.walk)
+    }
+}
+
+#[derive(Debug, StructOpt)]
+#[structopt(rename_all = "kebab-case")]
+struct WalkArgs {
     #[structopt(long, raw(overrides_with = r#""no-binary""#))]
     /// Search binary files.
     binary: bool,
@@ -122,44 +191,10 @@ struct Options {
     no_ignore_vcs: bool,
     #[structopt(long, raw(overrides_with = r#""no-ignore-vcs""#), raw(hidden = "true"))]
     ignore_vcs: bool,
-
-    #[structopt(flatten)]
-    verbose: clap_verbosity_flag::Verbosity,
 }
 
-impl Options {
-    pub fn infer(self) -> Self {
-        self
-    }
-
-    pub fn check_files(&self) -> Option<bool> {
-        match (self.check_files, self.no_check_files) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
-    pub fn check_filenames(&self) -> Option<bool> {
-        match (self.check_filenames, self.no_check_filenames) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
-    pub fn ignore_hex(&self) -> Option<bool> {
-        match (self.no_hex, self.hex) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
-    pub fn binary(&self) -> Option<bool> {
+impl config::WalkSource for WalkArgs {
+    fn binary(&self) -> Option<bool> {
         match (self.binary, self.no_binary) {
             (true, false) => Some(true),
             (false, true) => Some(false),
@@ -168,7 +203,7 @@ impl Options {
         }
     }
 
-    pub fn ignore_hidden(&self) -> Option<bool> {
+    fn ignore_hidden(&self) -> Option<bool> {
         match (self.hidden, self.no_hidden) {
             (true, false) => Some(false),
             (false, true) => Some(true),
@@ -177,49 +212,44 @@ impl Options {
         }
     }
 
-    pub fn ignore_dot(&self) -> Option<bool> {
+    fn ignore_files(&self) -> Option<bool> {
+        match (self.no_ignore, self.ignore) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn ignore_dot(&self) -> Option<bool> {
         match (self.no_ignore_dot, self.ignore_dot) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
-        .or_else(|| self.ignore_files())
     }
 
-    pub fn ignore_global(&self) -> Option<bool> {
-        match (self.no_ignore_global, self.ignore_global) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-        .or_else(|| self.ignore_vcs())
-        .or_else(|| self.ignore_files())
-    }
-
-    pub fn ignore_parent(&self) -> Option<bool> {
-        match (self.no_ignore_parent, self.ignore_parent) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-        .or_else(|| self.ignore_files())
-    }
-
-    pub fn ignore_vcs(&self) -> Option<bool> {
+    fn ignore_vcs(&self) -> Option<bool> {
         match (self.no_ignore_vcs, self.ignore_vcs) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
-        .or_else(|| self.ignore_files())
     }
 
-    fn ignore_files(&self) -> Option<bool> {
-        match (self.no_ignore, self.ignore) {
+    fn ignore_global(&self) -> Option<bool> {
+        match (self.no_ignore_global, self.ignore_global) {
+            (true, false) => Some(false),
+            (false, true) => Some(true),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
+    fn ignore_parent(&self) -> Option<bool> {
+        match (self.no_ignore_parent, self.ignore_parent) {
             (true, false) => Some(false),
             (false, true) => Some(true),
             (false, false) => None,
@@ -250,52 +280,67 @@ pub fn get_logging(level: log::Level) -> env_logger::Builder {
 }
 
 fn run() -> Result<i32, failure::Error> {
-    let options = Options::from_args().infer();
+    let args = Args::from_args();
 
-    let mut builder = get_logging(options.verbose.log_level());
+    let mut builder = get_logging(args.verbose.log_level());
     builder.init();
 
-    let check_filenames = options.check_filenames().unwrap_or(true);
-    let check_files = options.check_files().unwrap_or(true);
-    let ignore_hex = options.ignore_hex().unwrap_or(true);
-    let binary = options.binary().unwrap_or(false);
-
-    let dictionary = typos::BuiltIn::new();
-
-    let parser = typos::tokens::ParserBuilder::new()
-        .ignore_hex(ignore_hex)
-        .build();
-
-    let checks = typos::checks::CheckSettings::new()
-        .check_filenames(check_filenames)
-        .check_files(check_files)
-        .binary(binary)
-        .build(&dictionary, &parser);
-
-    let first_path = &options
-        .path
-        .get(0)
-        .expect("arg parsing enforces at least one");
-    let mut walk = ignore::WalkBuilder::new(first_path);
-    for path in &options.path[1..] {
-        walk.add(path);
+    let mut config = config::Config::default();
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = config::Config::from_file(path)?;
+        config.update(&custom);
     }
-    walk.hidden(options.ignore_hidden().unwrap_or(true))
-        .ignore(options.ignore_dot().unwrap_or(true))
-        .git_global(options.ignore_global().unwrap_or(true))
-        .git_ignore(options.ignore_vcs().unwrap_or(true))
-        .git_exclude(options.ignore_vcs().unwrap_or(true))
-        .parents(options.ignore_parent().unwrap_or(true));
+    let config = config;
+
     let mut typos_found = false;
-    for entry in walk.build() {
-        let entry = entry?;
-        if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-            let explicit = entry.depth() == 0;
-            if checks.check_filename(entry.path(), options.format.report())? {
-                typos_found = true;
-            }
-            if checks.check_file(entry.path(), explicit, options.format.report())? {
-                typos_found = true;
+    for path in args.path.iter() {
+        let path = path.canonicalize()?;
+        let cwd = if path.is_file() {
+            path.parent().unwrap()
+        } else {
+            path.as_path()
+        };
+
+        let mut config = config.clone();
+        if !args.isolated {
+            let derived = config::Config::derive(cwd)?;
+            config.update(&derived);
+        }
+        config.update(&args.config);
+        config.default.update(&args.overrides);
+        let config = config;
+
+        let dictionary = typos::BuiltIn::new();
+
+        let parser = typos::tokens::ParserBuilder::new()
+            .ignore_hex(config.default.ignore_hex())
+            .include_digits(config.default.identifier_include_digits())
+            .include_chars(config.default.identifier_include_chars().to_owned())
+            .build();
+
+        let checks = typos::checks::CheckSettings::new()
+            .check_filenames(config.default.check_filename())
+            .check_files(config.default.check_file())
+            .binary(config.files.binary())
+            .build(&dictionary, &parser);
+
+        let mut walk = ignore::WalkBuilder::new(path);
+        walk.hidden(config.files.ignore_hidden())
+            .ignore(config.files.ignore_dot())
+            .git_global(config.files.ignore_global())
+            .git_ignore(config.files.ignore_vcs())
+            .git_exclude(config.files.ignore_vcs())
+            .parents(config.files.ignore_parent());
+        for entry in walk.build() {
+            let entry = entry?;
+            if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
+                let explicit = entry.depth() == 0;
+                if checks.check_filename(entry.path(), args.format.report())? {
+                    typos_found = true;
+                }
+                if checks.check_file(entry.path(), explicit, args.format.report())? {
+                    typos_found = true;
+                }
             }
         }
     }

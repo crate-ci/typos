@@ -6,9 +6,11 @@ pub enum Case {
     None,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ParserBuilder {
     ignore_hex: bool,
+    include_digits: bool,
+    include_chars: String,
 }
 
 impl ParserBuilder {
@@ -21,14 +23,44 @@ impl ParserBuilder {
         self
     }
 
+    pub fn include_digits(&mut self, yes: bool) -> &mut Self {
+        self.include_digits = yes;
+        self
+    }
+
+    pub fn include_chars(&mut self, chars: String) -> &mut Self {
+        self.include_chars = chars;
+        self
+    }
+
     pub fn build(&self) -> Parser {
-        let pattern = r#"\b(\p{Alphabetic}|\d|_|')+\b"#;
-        let words_str = regex::Regex::new(pattern).unwrap();
-        let words_bytes = regex::bytes::Regex::new(pattern).unwrap();
+        let mut pattern = r#"\b(\p{Alphabetic}"#.to_owned();
+        if self.include_digits {
+            pattern.push_str(r#"|\d"#);
+        }
+        for grapheme in
+            unicode_segmentation::UnicodeSegmentation::graphemes(self.include_chars.as_str(), true)
+        {
+            let escaped = regex::escape(&grapheme);
+            pattern.push_str(&format!("|{}", escaped));
+        }
+        pattern.push_str(r#")+\b"#);
+        let words_str = regex::Regex::new(&pattern).unwrap();
+        let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
         Parser {
             words_str,
             words_bytes,
             ignore_hex: self.ignore_hex,
+        }
+    }
+}
+
+impl Default for ParserBuilder {
+    fn default() -> Self {
+        Self {
+            ignore_hex: true,
+            include_digits: true,
+            include_chars: "_'".to_owned(),
         }
     }
 }
