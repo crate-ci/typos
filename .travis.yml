@@ -11,22 +11,22 @@ matrix:
     install:
       - rustup component add rustfmt
     script:
-      - cargo fmt -- --check
+      - cargo fmt --all -- --check
   - env: RUSTFLAGS="-D warnings"
     rust: 1.35.0  # `stable`: Locking down for consistent behavior
     install:
     script:
-    - cargo check --tests
+    - cargo check --tests --all
   - env: CLIPPY
     rust: 1.35.0  # `stable`: Locking down for consistent behavior
     install:
       - rustup component add clippy
     script:
-      - cargo clippy --all-features
+      - cargo clippy --all-features --all
   - env: BENCH
     rust: nightly
     script:
-      - cargo bench
+      - cargo bench --all
 
 install:
 - rustc -Vv
@@ -34,8 +34,8 @@ install:
 - export PATH=$HOME/.cargo/bin:$PATH
 
 script:
-- cargo check --verbose
-- cargo test  --verbose
+- cargo check --verbose --all
+- cargo test  --verbose --all
 
 branches:
   only:
