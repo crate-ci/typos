@@ -2,16 +2,7 @@ use std::borrow::Cow;
 
 use unicase::UniCase;
 
-use crate::tokens::Case;
-
-pub trait Dictionary {
-    fn correct_ident<'s, 'w>(
-        &'s self,
-        _ident: crate::tokens::Identifier<'w>,
-    ) -> Option<Cow<'s, str>>;
-
-    fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Cow<'s, str>>;
-}
+use typos::tokens::Case;
 
 #[derive(Default)]
 pub struct BuiltIn {}
@@ -23,26 +14,26 @@ impl BuiltIn {
 
     pub fn correct_ident<'s, 'w>(
         &'s self,
-        _ident: crate::tokens::Identifier<'w>,
+        _ident: typos::tokens::Identifier<'w>,
     ) -> Option<Cow<'s, str>> {
         None
     }
 
-    pub fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Cow<'s, str>> {
+    pub fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Cow<'s, str>> {
         map_lookup(&crate::dict_codegen::WORD_DICTIONARY, word.token())
             .map(|s| case_correct(s, word.case()))
     }
 }
 
-impl Dictionary for BuiltIn {
+impl typos::Dictionary for BuiltIn {
     fn correct_ident<'s, 'w>(
         &'s self,
-        ident: crate::tokens::Identifier<'w>,
+        ident: typos::tokens::Identifier<'w>,
     ) -> Option<Cow<'s, str>> {
         BuiltIn::correct_ident(self, ident)
     }
 
-    fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Cow<'s, str>> {
+    fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Cow<'s, str>> {
         BuiltIn::correct_word(self, word)
     }
 }

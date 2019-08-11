@@ -26,8 +26,8 @@ install:
 - cargo -V
 
 test_script:
-- cargo check --verbose
-- cargo test  --verbose
+- cargo check --verbose --all
+- cargo test  --verbose --all
 
 branches:
   only:

@@ -310,7 +310,7 @@ fn run() -> Result<i32, failure::Error> {
         config.default.update(&args.overrides);
         let config = config;
 
-        let dictionary = typos::BuiltIn::new();
+        let dictionary = typos_dict::BuiltIn::new();
 
         let parser = typos::tokens::ParserBuilder::new()
             .ignore_hex(config.default.ignore_hex())
