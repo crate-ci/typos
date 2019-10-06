@@ -36,7 +36,7 @@ impl CheckSettings {
 
     pub fn build<'d, 'p>(
         &self,
-        dictionary: &'d Dictionary,
+        dictionary: &'d dyn Dictionary,
         parser: &'p tokens::Parser,
     ) -> Checks<'d, 'p> {
         Checks {
@@ -61,7 +61,7 @@ impl Default for CheckSettings {
 
 #[derive(Clone)]
 pub struct Checks<'d, 'p> {
-    dictionary: &'d Dictionary,
+    dictionary: &'d dyn Dictionary,
     parser: &'p tokens::Parser,
     check_filenames: bool,
     check_files: bool,
