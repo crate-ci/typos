@@ -1,5 +1,5 @@
 [workspace]
-members = ["typos", "typos-dict"]
+members = ["codegen", "typos", "typos-dict"]
 
 [package]
 name = "typos-cli"

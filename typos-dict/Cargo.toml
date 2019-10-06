@@ -24,8 +24,3 @@ typos = { version = "0.1", path = "../typos" }
 phf = { version = "0.7", features = ["unicase"] }
 unicase = "1.1"
 log = "0.4"
-
-[build-dependencies]
-phf_codegen = "0.7"
-csv = "1.0"
-unicase = "1.1"
