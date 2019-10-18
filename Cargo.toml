@@ -25,9 +25,9 @@ iterate_unstable = []
 typos = { version = "0.1", path = "typos" }
 typos-dict = { version = "0.1", path = "typos-dict" }
 failure = "0.1"
-structopt = "0.2"
+structopt = "0.3"
 clap = "2"
-clap-verbosity-flag = "0.2.0"
+clap-verbosity-flag = "0.3"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.4"

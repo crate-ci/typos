@@ -46,7 +46,7 @@ struct Args {
     /// Custom config file
     custom_config: Option<std::path::PathBuf>,
 
-    #[structopt(long = "isolated")]
+    #[structopt(long)]
     /// Ignore implicit configuration files.
     isolated: bool,
 
@@ -54,9 +54,10 @@ struct Args {
     overrides: FileArgs,
 
     #[structopt(
-        long = "format",
-        raw(possible_values = "&Format::variants()", case_insensitive = "true"),
-        default_value = "long"
+        long,
+        possible_values(&Format::variants()),
+        case_insensitive(true),
+        default_value("long")
     )]
     pub format: Format,
 
@@ -70,30 +71,22 @@ struct Args {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub struct FileArgs {
-    #[structopt(long, raw(overrides_with = r#""check-filenames""#))]
+    #[structopt(long, overrides_with("check-filenames"))]
     /// Skip verifying spelling in file names.
     no_check_filenames: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-check-filenames""#),
-        raw(hidden = "true")
-    )]
+    #[structopt(long, overrides_with("no-check-filenames"), hidden(true))]
     check_filenames: bool,
 
-    #[structopt(long, raw(overrides_with = r#""check-files""#))]
+    #[structopt(long, overrides_with("check-files"))]
     /// Skip verifying spelling in filess.
     no_check_files: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-check-files""#),
-        raw(hidden = "true")
-    )]
+    #[structopt(long, overrides_with("no-check-files"), hidden(true))]
     check_files: bool,
 
-    #[structopt(long, raw(overrides_with = r#""hex""#))]
+    #[structopt(long, overrides_with("hex"))]
     /// Don't try to detect that an identifier looks like hex
     no_hex: bool,
-    #[structopt(long, raw(overrides_with = r#""no-hex""#), raw(hidden = "true"))]
+    #[structopt(long, overrides_with("no-hex"), hidden(true))]
     hex: bool,
 }
 
@@ -142,54 +135,46 @@ impl config::ConfigSource for ConfigArgs {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 struct WalkArgs {
-    #[structopt(long, raw(overrides_with = r#""no-binary""#))]
+    #[structopt(long, overrides_with("no-binary"))]
     /// Search binary files.
     binary: bool,
-    #[structopt(long, raw(overrides_with = r#""binary""#), raw(hidden = "true"))]
+    #[structopt(long, overrides_with("binary"), hidden(true))]
     no_binary: bool,
 
-    #[structopt(long, raw(overrides_with = r#""no-hidden""#))]
+    #[structopt(long, overrides_with("no-hidden"))]
     /// Search hidden files and directories.
     hidden: bool,
-    #[structopt(long, raw(overrides_with = r#""hidden""#), raw(hidden = "true"))]
+    #[structopt(long, overrides_with("hidden"), hidden(true))]
     no_hidden: bool,
 
-    #[structopt(long, raw(overrides_with = r#""ignore""#))]
+    #[structopt(long, overrides_with("ignore"))]
     /// Don't respect ignore files.
     no_ignore: bool,
-    #[structopt(long, raw(overrides_with = r#""no-ignore""#), raw(hidden = "true"))]
+    #[structopt(long, overrides_with("no-ignore"), hidden(true))]
     ignore: bool,
 
-    #[structopt(long, raw(overrides_with = r#""ignore-dot""#))]
+    #[structopt(long, overrides_with("ignore-dot"))]
     /// Don't respect .ignore files.
     no_ignore_dot: bool,
-    #[structopt(long, raw(overrides_with = r#""no-ignore-dot""#), raw(hidden = "true"))]
+    #[structopt(long, overrides_with("no-ignore-dot"), hidden(true))]
     ignore_dot: bool,
 
-    #[structopt(long, raw(overrides_with = r#""ignore-global""#))]
+    #[structopt(long, overrides_with("ignore-global"))]
     /// Don't respect global ignore files.
     no_ignore_global: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-ignore-global""#),
-        raw(hidden = "true")
-    )]
+    #[structopt(long, overrides_with("no-ignore-global"), hidden(true))]
     ignore_global: bool,
 
-    #[structopt(long, raw(overrides_with = r#""ignore-parent""#))]
+    #[structopt(long, overrides_with("ignore-parent"))]
     /// Don't respect ignore files in parent directories.
     no_ignore_parent: bool,
-    #[structopt(
-        long,
-        raw(overrides_with = r#""no-ignore-parent""#),
-        raw(hidden = "true")
-    )]
+    #[structopt(long, overrides_with("no-ignore-parent"), hidden(true))]
     ignore_parent: bool,
 
-    #[structopt(long, raw(overrides_with = r#""ignore-vcs""#))]
+    #[structopt(long, overrides_with("ignore-vcs"))]
     /// Don't respect ignore files in vcs directories.
     no_ignore_vcs: bool,
-    #[structopt(long, raw(overrides_with = r#""no-ignore-vcs""#), raw(hidden = "true"))]
+    #[structopt(long, overrides_with("no-ignore-vcs"), hidden(true))]
     ignore_vcs: bool,
 }
 
@@ -258,32 +243,33 @@ impl config::WalkSource for WalkArgs {
     }
 }
 
-pub fn get_logging(level: log::Level) -> env_logger::Builder {
-    let mut builder = env_logger::Builder::new();
+pub fn init_logging(level: Option<log::Level>) {
+    if let Some(level) = level {
+        let mut builder = env_logger::Builder::new();
 
-    builder.filter(None, level.to_level_filter());
+        builder.filter(None, level.to_level_filter());
 
-    if level == log::LevelFilter::Trace {
-        builder.default_format_timestamp(false);
-    } else {
-        builder.format(|f, record| {
-            writeln!(
-                f,
-                "[{}] {}",
-                record.level().to_string().to_lowercase(),
-                record.args()
-            )
-        });
+        if level == log::LevelFilter::Trace {
+            builder.default_format_timestamp(false);
+        } else {
+            builder.format(|f, record| {
+                writeln!(
+                    f,
+                    "[{}] {}",
+                    record.level().to_string().to_lowercase(),
+                    record.args()
+                )
+            });
+        }
+
+        builder.init();
     }
-
-    builder
 }
 
 fn run() -> Result<i32, failure::Error> {
     let args = Args::from_args();
 
-    let mut builder = get_logging(args.verbose.log_level());
-    builder.init();
+    init_logging(args.verbose.log_level());
 
     let mut config = config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
