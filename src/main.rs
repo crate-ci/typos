@@ -79,11 +79,25 @@ struct Args {
     )]
     pub format: Format,
 
+    #[structopt(short = "j", long = "threads", default_value = "0")]
+    /// The approximate number of threads to use.
+    threads: usize,
+
     #[structopt(flatten)]
     config: ConfigArgs,
 
     #[structopt(flatten)]
     verbose: clap_verbosity_flag::Verbosity,
+}
+
+impl Args {
+    pub fn infer(mut self) -> Self {
+        if self.path.len() == 1 && self.path[0].is_file() {
+            self.threads = 1;
+        }
+
+        self
+    }
 }
 
 #[derive(Debug, StructOpt)]
@@ -421,7 +435,7 @@ fn check_entry(
 }
 
 fn run() -> Result<i32, anyhow::Error> {
-    let args = Args::from_args();
+    let args = Args::from_args().infer();
 
     init_logging(args.verbose.log_level());
 
@@ -468,7 +482,8 @@ fn run() -> Result<i32, anyhow::Error> {
             .binary(config.files.binary());
 
         let mut walk = ignore::WalkBuilder::new(path);
-        walk.hidden(config.files.ignore_hidden())
+        walk.threads(args.threads)
+            .hidden(config.files.ignore_hidden())
             .ignore(config.files.ignore_dot())
             .git_global(config.files.ignore_global())
             .git_ignore(config.files.ignore_vcs())
