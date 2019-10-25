@@ -36,7 +36,7 @@ See also [benchmarks](../benchsuite/runs).
 
 |                | typos                 | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] | [codespell] | [scspell3k] |
 |----------------|-----------------------|---------------------------------|---------------------------------|-------------|-------------|
-| "Runtime"      | Rust ([#18][def-18])  | Rust                            | None                            | Python      | Python      |
+| Runtime        | \-                    | \-                              | \-                              | Python      | Python      |
 | Dictionary     | Blacklist             | Blacklist                       | Blacklist                       | Blacklist   | Whitelist   |
 | Custom Dict    | No ([#9][def-9])      | No                              | ?                               | Yes         | Yes         |
 | Per-Lang Dict  | No ([#14][def-14])    | No                              | ?                               | No          | Yes         |
@@ -58,8 +58,8 @@ See also [benchmarks](../benchsuite/runs).
 [misspell-rs]: https://gitlab.com/bloom42/misspell
 [misspell-go]: https://github.com/client9/misspell
 [codespell]: https://github.com/codespell-project/codespell
-[def-9]: https://github.com/epage/typos/issues/9
-[def-14]: https://github.com/epage/typos/issues/14
-[def-17]: https://github.com/epage/typos/issues/17
-[def-18]: https://github.com/epage/typos/issues/18
-[def-3]: https://github.com/epage/typos/issues/3
+[def-9]: https://github.com/crate-ci/typos/issues/9
+[def-14]: https://github.com/crate-ci/typos/issues/14
+[def-17]: https://github.com/crate-ci/typos/issues/17
+[def-18]: https://github.com/crate-ci/typos/issues/18
+[def-3]: https://github.com/crate-ci/typos/issues/3
