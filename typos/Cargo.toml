@@ -3,8 +3,7 @@ name = "typos"
 version = "0.1.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
-repository = "https://github.com/epage/typos"
-documentation = "https://docs.rs/typos"
+repository = "https://github.com/crate-ci/typos"
 readme = "../README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
@@ -12,8 +11,8 @@ license = "MIT"
 edition = "2018"
 
 [badges]
-travis-ci = { repository = "epage/typos" }
-appveyor  = { repository = "epage/typos" }
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
 failure = "0.1"

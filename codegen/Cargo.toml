@@ -3,8 +3,7 @@ name = "typos-codegen"
 version = "1.0.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
-repository = "https://github.com/crate-ci/imperative"
-documentation = "https://docs.rs/imperative"
+repository = "https://github.com/crate-ci/typos"
 readme = "../README.md"
 categories = ["text-processing"]
 license = "MIT"
@@ -12,8 +11,8 @@ edition = "2018"
 publish = false
 
 [badges]
-travis-ci = { repository = "epage/typos" }
-appveyor  = { repository = "epage/typos" }
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
 phf = { version = "0.7", features = ["unicase"] }
