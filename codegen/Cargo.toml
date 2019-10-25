@@ -18,6 +18,6 @@ codecov = { repository = "crate-ci/typos" }
 phf = { version = "0.7", features = ["unicase"] }
 phf_codegen = "0.7"
 csv = "1.0"
-unicase = "1.1"
+unicase = "2.5"
 codegenrs = "0.1"
 structopt = "0.3"
