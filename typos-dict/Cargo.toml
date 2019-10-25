@@ -15,10 +15,6 @@ edition = "2018"
 travis-ci = { repository = "epage/typos" }
 appveyor  = { repository = "epage/typos" }
 
-[features]
-# Support quickly iterating
-iterate_unstable = []
-
 [dependencies]
 typos = { version = "0.1", path = "../typos" }
 phf = { version = "0.7", features = ["unicase"] }

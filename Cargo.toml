@@ -22,10 +22,6 @@ doc = false
 azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
-[features]
-# Support quickly iterating
-iterate_unstable = []
-
 [dependencies]
 typos = { version = "0.1", path = "typos" }
 typos-dict = { version = "0.1", path = "typos-dict" }
