@@ -3,6 +3,7 @@
 extern crate clap;
 
 use std::io::Write;
+use std::sync::atomic;
 
 use structopt::StructOpt;
 
@@ -275,7 +276,7 @@ impl config::WalkSource for WalkArgs {
     }
 }
 
-trait Checks {
+trait Checks: Send + Sync {
     fn check_filename(
         &self,
         path: &std::path::Path,
@@ -392,7 +393,7 @@ fn check_path(
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
-) -> Result<(bool, bool), anyhow::Error> {
+) -> (bool, bool) {
     let mut typos_found = false;
     let mut errors_found = false;
 
@@ -408,7 +409,35 @@ fn check_path(
         }
     }
 
-    Ok((typos_found, errors_found))
+    (typos_found, errors_found)
+}
+
+fn check_path_parallel(
+    walk: ignore::WalkParallel,
+    format: Format,
+    checks: &dyn Checks,
+    parser: &typos::tokens::Parser,
+    dictionary: &dyn typos::Dictionary,
+) -> (bool, bool) {
+    let typos_found = atomic::AtomicBool::new(false);
+    let errors_found = atomic::AtomicBool::new(false);
+
+    walk.run(|| {
+        Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
+            match check_entry(entry, format, checks, parser, dictionary) {
+                Ok(true) => typos_found.store(true, atomic::Ordering::Relaxed),
+                Err(err) => {
+                    let msg = typos::report::Error::new(err.to_string());
+                    format.report()(msg.into());
+                    errors_found.store(true, atomic::Ordering::Relaxed);
+                }
+                _ => (),
+            }
+            ignore::WalkState::Continue
+        })
+    });
+
+    (typos_found.into_inner(), errors_found.into_inner())
 }
 
 fn check_entry(
@@ -489,24 +518,56 @@ fn run() -> Result<i32, anyhow::Error> {
             .git_ignore(config.files.ignore_vcs())
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
+        let single_threaded = args.threads == 1;
         if args.files {
-            for entry in walk.build() {
-                match entry {
-                    Ok(entry) => {
-                        let msg = typos::report::File::new(entry.path());
-                        args.format.report()(msg.into());
-                    }
-                    Err(err) => {
-                        let msg = typos::report::Error::new(err.to_string());
-                        args.format.report()(msg.into());
-                        errors_found = true
+            if single_threaded {
+                for entry in walk.build() {
+                    match entry {
+                        Ok(entry) => {
+                            let msg = typos::report::File::new(entry.path());
+                            args.format.report()(msg.into());
+                        }
+                        Err(err) => {
+                            let msg = typos::report::Error::new(err.to_string());
+                            args.format.report()(msg.into());
+                            errors_found = true
+                        }
                     }
                 }
+            } else {
+                let format = args.format;
+                let atomic_errors = atomic::AtomicBool::new(errors_found);
+                walk.build_parallel().run(|| {
+                    Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
+                        match entry {
+                            Ok(entry) => {
+                                let msg = typos::report::File::new(entry.path());
+                                format.report()(msg.into());
+                            }
+                            Err(err) => {
+                                let msg = typos::report::Error::new(err.to_string());
+                                format.report()(msg.into());
+                                atomic_errors.store(true, atomic::Ordering::Relaxed);
+                            }
+                        }
+                        ignore::WalkState::Continue
+                    })
+                });
+                errors_found = atomic_errors.into_inner();
             }
         } else if args.identifiers {
             let checks = settings.build_identifier_parser();
-            let (cur_typos, cur_errors) =
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)?;
+            let (cur_typos, cur_errors) = if single_threaded {
+                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
+            } else {
+                check_path_parallel(
+                    walk.build_parallel(),
+                    args.format,
+                    &checks,
+                    &parser,
+                    &dictionary,
+                )
+            };
             if cur_typos {
                 typos_found = true;
             }
@@ -515,8 +576,17 @@ fn run() -> Result<i32, anyhow::Error> {
             }
         } else if args.words {
             let checks = settings.build_word_parser();
-            let (cur_typos, cur_errors) =
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)?;
+            let (cur_typos, cur_errors) = if single_threaded {
+                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
+            } else {
+                check_path_parallel(
+                    walk.build_parallel(),
+                    args.format,
+                    &checks,
+                    &parser,
+                    &dictionary,
+                )
+            };
             if cur_typos {
                 typos_found = true;
             }
@@ -525,8 +595,17 @@ fn run() -> Result<i32, anyhow::Error> {
             }
         } else {
             let checks = settings.build_checks();
-            let (cur_typos, cur_errors) =
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)?;
+            let (cur_typos, cur_errors) = if single_threaded {
+                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
+            } else {
+                check_path_parallel(
+                    walk.build_parallel(),
+                    args.format,
+                    &checks,
+                    &parser,
+                    &dictionary,
+                )
+            };
             if cur_typos {
                 typos_found = true;
             }
