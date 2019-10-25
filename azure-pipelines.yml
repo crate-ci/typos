@@ -1,0 +1,128 @@
+trigger:
+  branches:
+    include: ['master']
+  tags:
+    include: ['v*']
+schedules:
+- cron: "3 3 3 * *"
+  displayName: Monthly Build
+  branches:
+    include:
+    - master
+
+stages:
+- template: azure/stages.yml@templates
+  parameters:
+    minrust: 1.36.0
+    codecov_token: $(CODECOV_TOKEN_SECRET)
+- stage: committed
+  displayName: Lint History
+  dependsOn: []
+  jobs:
+  - job: "Committed"
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - checkout: self
+    - template: v1/azdo-step.yml@gh-install
+      parameters:
+        git: crate-ci/committed
+        target: 'x86_64-unknown-linux-gnu'
+        to: $(Build.StagingDirectory)/tools
+    - script: |
+        echo "This project uses Conventional style, see https://www.conventionalcommits.org"
+        $(Build.StagingDirectory)/tools/committed HEAD~..HEAD^2 --no-merge-commit -vv
+      displayName: Committed
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+ - stage: Release
+   dependsOn: test
+   condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+   jobs:
+   - job:
+     strategy:
+       matrix:
+         windows:
+           imageName: 'vs2017-win2016'
+           target: 'x86_64-pc-windows-msvc'
+           crate_name: typos
+         mac:
+           imageName: 'macos-10.14'
+           target: 'x86_64-apple-darwin'
+           crate_name: typos
+         linux:
+           imageName: 'ubuntu-16.04'
+           target: 'x86_64-unknown-linux-gnu'
+           crate_name: typos
+     pool:
+       vmImage: $(imageName)
+     steps:
+     - template: azure/install-rust.yml@templates
+     - script: |
+         cargo rustc --target $(TARGET) --release --bin $(CRATE_NAME)-cli -- -C lto
+       displayName: Build
+     - task: CopyFiles@2
+       displayName: Stage assets
+       condition: ne( variables['Agent.OS'], 'Windows_NT' )
+       inputs:
+         sourceFolder: '$(Build.SourcesDirectory)/target/$(TARGET)/release'
+         contents: $(crate_name)
+         targetFolder: '$(Build.BinariesDirectory)/'
+     - task: CopyFiles@2
+       displayName: Stage assets on Windows
+       condition: eq( variables['Agent.OS'], 'Windows_NT' )
+       inputs:
+         sourceFolder: '$(Build.SourcesDirectory)/target/$(TARGET)/release'
+         contents: $(crate_name).exe
+         targetFolder: '$(Build.BinariesDirectory)/'
+     - task: ArchiveFiles@2
+       displayName: Tarball assets
+       condition: ne( variables['Agent.OS'], 'Windows_NT' )
+       inputs:
+         rootFolderOrFile: '$(Build.BinariesDirectory)/$(crate_name)'
+         archiveType: 'tar'
+         tarCompression: 'gz'
+         archiveFile: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).tar.gz'
+     - task: GithubRelease@0
+       condition: ne( variables['Agent.OS'], 'Windows_NT' )
+       inputs:
+         gitHubConnection: 'crate-ci-token'
+         repositoryName: 'crate-ci/typos'
+         action: 'edit'
+         target: '$(build.sourceVersion)'
+         tagSource: 'manual'
+         tag: '$(Build.SourceBranchName)'
+         assets: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).tar.gz'
+         title: '$(Build.SourceBranchName)'
+         assetUploadMode: 'replace'
+         addChangeLog: true
+     - task: ArchiveFiles@2
+       displayName: Zip assets
+       condition: eq( variables['Agent.OS'], 'Windows_NT' )
+       inputs:
+         rootFolderOrFile: '$(Build.BinariesDirectory)/$(crate_name).exe'
+         archiveType: 'zip'
+         archiveFile: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).zip'
+     - task: GithubRelease@0
+       condition: eq( variables['Agent.OS'], 'Windows_NT' )
+       inputs:
+         gitHubConnection: 'crate-ci-token'
+         repositoryName: 'crate-ci/typos'
+         action: 'edit'
+         target: '$(build.sourceVersion)'
+         tagSource: 'manual'
+         tag: '$(Build.SourceBranchName)'
+         assets: '$(Build.ArtifactStagingDirectory)/$(crate_name)-$(Build.SourceBranchName)-$(TARGET).zip'
+         title: '$(Build.SourceBranchName)'
+         assetUploadMode: 'replace'
+         addChangeLog: true
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: crate-ci/azure-pipelines
+      endpoint: crate-ci
+    - repository: gh-install
+      type: github
+      name: crate-ci/gh-install
+      endpoint: crate-ci
