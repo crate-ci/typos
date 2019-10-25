@@ -13,6 +13,11 @@ keywords = ["development", "spelling"]
 license = "MIT"
 edition = "2018"
 
+[[bin]]
+name = "typos"
+path = "src/main.rs"
+doc = false
+
 [badges]
 travis-ci = { repository = "epage/typos" }
 appveyor  = { repository = "epage/typos" }
