@@ -17,7 +17,7 @@ appveyor  = { repository = "epage/typos" }
 
 [dependencies]
 phf = { version = "0.7", features = ["unicase"] }
-phf_codegen = "0.7"
+phf_codegen = "0.8"
 csv = "1.0"
 unicase = "1.1"
 codegenrs = "0.1"
