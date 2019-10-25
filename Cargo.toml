@@ -3,7 +3,7 @@ members = ["codegen", "typos", "typos-dict"]
 
 [package]
 name = "typos-cli"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
