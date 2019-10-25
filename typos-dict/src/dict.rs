@@ -50,7 +50,7 @@ fn map_lookup(
     // See https://github.com/rust-lang/rust/issues/28853#issuecomment-158735548
     unsafe {
         let key = ::std::mem::transmute::<_, &'static str>(key);
-        map.get(&UniCase(key)).cloned()
+        map.get(&UniCase::new(key)).cloned()
     }
 }
 
