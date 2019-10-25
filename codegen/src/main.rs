@@ -22,9 +22,10 @@ fn generate<W: std::io::Write>(input: &[u8], file: &mut W) {
         .collect();
     for record in &records {
         let value = format!(r#""{}""#, &record[1]);
-        builder.entry(unicase::UniCase(&record[0]), &value);
+        builder.entry(unicase::UniCase::new(&record[0]), &value);
     }
-    builder.build(file).unwrap();
+    let codegenned = builder.build();
+    writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
 }
 
