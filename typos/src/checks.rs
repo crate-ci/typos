@@ -1,6 +1,3 @@
-use std::fs::File;
-use std::io::Read;
-
 use bstr::ByteSlice;
 
 use crate::report;
@@ -91,17 +88,18 @@ impl<'d, 'p> Checks<'d, 'p> {
                     };
                     report(msg.into());
                     typos_found = true;
-                }
-                for word in ident.split() {
-                    if let Some(correction) = self.dictionary.correct_word(word) {
-                        let msg = report::FilenameCorrection {
-                            path,
-                            typo: word.token(),
-                            correction,
-                            non_exhaustive: (),
-                        };
-                        report(msg.into());
-                        typos_found = true;
+                } else {
+                    for word in ident.split() {
+                        if let Some(correction) = self.dictionary.correct_word(word) {
+                            let msg = report::FilenameCorrection {
+                                path,
+                                typo: word.token(),
+                                correction,
+                                non_exhaustive: (),
+                            };
+                            report(msg.into());
+                            typos_found = true;
+                        }
                     }
                 }
             }
@@ -122,9 +120,9 @@ impl<'d, 'p> Checks<'d, 'p> {
             return Ok(typos_found);
         }
 
-        let mut buffer = Vec::new();
-        File::open(path)?.read_to_end(&mut buffer)?;
-        if !explicit && !self.binary && buffer.find_byte(b'\0').is_some() {
+        let buffer = std::fs::read(path)?;
+        let null_max = std::cmp::min(buffer.len(), 1024);
+        if !explicit && !self.binary && buffer[0..null_max].find_byte(b'\0').is_some() {
             let msg = report::BinaryFile {
                 path,
                 non_exhaustive: (),
@@ -149,21 +147,22 @@ impl<'d, 'p> Checks<'d, 'p> {
                     };
                     typos_found = true;
                     report(msg.into());
-                }
-                for word in ident.split() {
-                    if let Some(correction) = self.dictionary.correct_word(word) {
-                        let col_num = word.offset();
-                        let msg = report::Correction {
-                            path,
-                            line,
-                            line_num,
-                            col_num,
-                            typo: word.token(),
-                            correction,
-                            non_exhaustive: (),
-                        };
-                        typos_found = true;
-                        report(msg.into());
+                } else {
+                    for word in ident.split() {
+                        if let Some(correction) = self.dictionary.correct_word(word) {
+                            let col_num = word.offset();
+                            let msg = report::Correction {
+                                path,
+                                line,
+                                line_num,
+                                col_num,
+                                typo: word.token(),
+                                correction,
+                                non_exhaustive: (),
+                            };
+                            typos_found = true;
+                            report(msg.into());
+                        }
                     }
                 }
             }
