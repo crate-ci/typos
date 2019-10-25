@@ -88,17 +88,18 @@ impl<'d, 'p> Checks<'d, 'p> {
                     };
                     report(msg.into());
                     typos_found = true;
-                }
-                for word in ident.split() {
-                    if let Some(correction) = self.dictionary.correct_word(word) {
-                        let msg = report::FilenameCorrection {
-                            path,
-                            typo: word.token(),
-                            correction,
-                            non_exhaustive: (),
-                        };
-                        report(msg.into());
-                        typos_found = true;
+                } else {
+                    for word in ident.split() {
+                        if let Some(correction) = self.dictionary.correct_word(word) {
+                            let msg = report::FilenameCorrection {
+                                path,
+                                typo: word.token(),
+                                correction,
+                                non_exhaustive: (),
+                            };
+                            report(msg.into());
+                            typos_found = true;
+                        }
                     }
                 }
             }
@@ -145,21 +146,22 @@ impl<'d, 'p> Checks<'d, 'p> {
                     };
                     typos_found = true;
                     report(msg.into());
-                }
-                for word in ident.split() {
-                    if let Some(correction) = self.dictionary.correct_word(word) {
-                        let col_num = word.offset();
-                        let msg = report::Correction {
-                            path,
-                            line,
-                            line_num,
-                            col_num,
-                            typo: word.token(),
-                            correction,
-                            non_exhaustive: (),
-                        };
-                        typos_found = true;
-                        report(msg.into());
+                } else {
+                    for word in ident.split() {
+                        if let Some(correction) = self.dictionary.correct_word(word) {
+                            let col_num = word.offset();
+                            let msg = report::Correction {
+                                path,
+                                line,
+                                line_num,
+                                col_num,
+                                typo: word.token(),
+                                correction,
+                                non_exhaustive: (),
+                            };
+                            typos_found = true;
+                            report(msg.into());
+                        }
                     }
                 }
             }
