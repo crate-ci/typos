@@ -25,7 +25,7 @@ stages:
     steps:
     - template: azure/install-rust.yml@templates
     - script: |
-        cargo run --package typos-codegen -- --output typos-dict/src/dict_codegen.rs --check
+        cargo run --package typos-codegen -- --input typos-dict/assets/words.csv --output typos-dict/src/dict_codegen.rs --check
       displayName: Verify Code-gen
 - stage: committed
   displayName: Lint History
