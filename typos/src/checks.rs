@@ -1,6 +1,3 @@
-use std::fs::File;
-use std::io::Read;
-
 use bstr::ByteSlice;
 
 use crate::report;
@@ -122,8 +119,7 @@ impl<'d, 'p> Checks<'d, 'p> {
             return Ok(typos_found);
         }
 
-        let mut buffer = Vec::new();
-        File::open(path)?.read_to_end(&mut buffer)?;
+        let buffer = std::fs::read(path)?;
         if !explicit && !self.binary && buffer.find_byte(b'\0').is_some() {
             let msg = report::BinaryFile {
                 path,
