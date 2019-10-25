@@ -7,7 +7,7 @@ mod data;
 pub use assert_fs::prelude::*;
 
 #[bench]
-fn process_empty(b: &mut test::Bencher) {
+fn check_file_empty(b: &mut test::Bencher) {
     let temp = assert_fs::TempDir::new().unwrap();
     let sample_path = temp.child("sample");
     sample_path.write_str(data::EMPTY).unwrap();
@@ -21,7 +21,7 @@ fn process_empty(b: &mut test::Bencher) {
 }
 
 #[bench]
-fn process_no_tokens(b: &mut test::Bencher) {
+fn check_file_no_tokens(b: &mut test::Bencher) {
     let temp = assert_fs::TempDir::new().unwrap();
     let sample_path = temp.child("sample");
     sample_path.write_str(data::NO_TOKENS).unwrap();
@@ -35,7 +35,7 @@ fn process_no_tokens(b: &mut test::Bencher) {
 }
 
 #[bench]
-fn process_single_token(b: &mut test::Bencher) {
+fn check_file_single_token(b: &mut test::Bencher) {
     let temp = assert_fs::TempDir::new().unwrap();
     let sample_path = temp.child("sample");
     sample_path.write_str(data::SINGLE_TOKEN).unwrap();
@@ -49,7 +49,7 @@ fn process_single_token(b: &mut test::Bencher) {
 }
 
 #[bench]
-fn process_sherlock(b: &mut test::Bencher) {
+fn check_file_sherlock(b: &mut test::Bencher) {
     let temp = assert_fs::TempDir::new().unwrap();
     let sample_path = temp.child("sample");
     sample_path.write_str(data::SHERLOCK).unwrap();
@@ -63,7 +63,7 @@ fn process_sherlock(b: &mut test::Bencher) {
 }
 
 #[bench]
-fn process_code(b: &mut test::Bencher) {
+fn check_file_code(b: &mut test::Bencher) {
     let temp = assert_fs::TempDir::new().unwrap();
     let sample_path = temp.child("sample");
     sample_path.write_str(data::CODE).unwrap();
@@ -77,7 +77,7 @@ fn process_code(b: &mut test::Bencher) {
 }
 
 #[bench]
-fn process_corpus(b: &mut test::Bencher) {
+fn check_file_corpus(b: &mut test::Bencher) {
     let temp = assert_fs::TempDir::new().unwrap();
     let sample_path = temp.child("sample");
     sample_path.write_str(data::CORPUS).unwrap();
