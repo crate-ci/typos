@@ -876,7 +876,7 @@ dependencies = [
  "structopt 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "toml 0.4.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "typos 0.1.1",
- "typos-dict 0.1.0",
+ "typos-dict 0.1.1",
 ]
 
 [[package]]
@@ -893,7 +893,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "phf 0.7.24 (registry+https://github.com/rust-lang/crates.io-index)",
