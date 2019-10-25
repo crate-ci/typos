@@ -121,7 +121,8 @@ impl<'d, 'p> Checks<'d, 'p> {
         }
 
         let buffer = std::fs::read(path)?;
-        if !explicit && !self.binary && buffer.find_byte(b'\0').is_some() {
+        let null_max = std::cmp::min(buffer.len(), 1024);
+        if !explicit && !self.binary && buffer[0..null_max].find_byte(b'\0').is_some() {
             let msg = report::BinaryFile {
                 path,
                 non_exhaustive: (),
