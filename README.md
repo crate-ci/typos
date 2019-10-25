@@ -8,9 +8,11 @@
 ![License](https://img.shields.io/crates/l/typos.svg)
 [![Crates Status](https://img.shields.io/crates/v/typos.svg)](https://crates.io/crates/typos)
 
+## [About](docs/about.md)
+
 ## [Install](docs/install.md)
 
-## [About](docs/about.md)
+## [Reference](docs/reference.md)
 
 ## [Contribute](CONTRIBUTING.md)
 
