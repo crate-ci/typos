@@ -238,72 +238,100 @@ impl WordMode {
     }
 }
 
-fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
-    let mut result = vec![];
+struct SplitIdent<'s> {
+    ident: &'s str,
+    offset: usize,
 
-    let mut char_indices = ident.char_indices().peekable();
-    let mut start = 0;
-    let mut start_mode = WordMode::Boundary;
-    let mut last_mode = WordMode::Boundary;
-    while let Some((i, c)) = char_indices.next() {
-        let cur_mode = WordMode::classify(c);
-        if cur_mode == WordMode::Boundary {
-            assert!(start_mode == WordMode::Boundary);
-            continue;
-        }
-        if start_mode == WordMode::Boundary {
-            start_mode = cur_mode;
-            start = i;
-        }
+    char_indices: std::iter::Peekable<std::str::CharIndices<'s>>,
+    start: usize,
+    start_mode: WordMode,
+    last_mode: WordMode,
+}
 
-        if let Some(&(next_i, next)) = char_indices.peek() {
-            // The mode including the current character, assuming the current character does
-            // not result in a word boundary.
-            let next_mode = WordMode::classify(next);
-
-            match (last_mode, cur_mode, next_mode) {
-                // cur_mode is last of current word
-                (_, _, WordMode::Boundary)
-                | (_, WordMode::Lowercase, WordMode::Number)
-                | (_, WordMode::Uppercase, WordMode::Number)
-                | (_, WordMode::Number, WordMode::Lowercase)
-                | (_, WordMode::Number, WordMode::Uppercase)
-                | (_, WordMode::Lowercase, WordMode::Uppercase) => {
-                    let case = start_mode.case(cur_mode);
-                    result.push(Word::new_unchecked(
-                        &ident[start..next_i],
-                        case,
-                        start + offset,
-                    ));
-                    start = next_i;
-                    start_mode = WordMode::Boundary;
-                    last_mode = WordMode::Boundary;
-                }
-                // cur_mode is start of next word
-                (WordMode::Uppercase, WordMode::Uppercase, WordMode::Lowercase) => {
-                    result.push(Word::new_unchecked(
-                        &ident[start..i],
-                        Case::Scream,
-                        start + offset,
-                    ));
-                    start = i;
-                    start_mode = cur_mode;
-                    last_mode = WordMode::Boundary;
-                }
-                // No word boundary
-                (_, _, _) => {
-                    last_mode = cur_mode;
-                }
-            }
-        } else {
-            // Collect trailing characters as a word
-            let case = start_mode.case(cur_mode);
-            result.push(Word::new_unchecked(&ident[start..], case, start + offset));
-            break;
+impl<'s> SplitIdent<'s> {
+    fn new(ident: &'s str, offset: usize) -> Self {
+        Self {
+            ident,
+            offset,
+            char_indices: ident.char_indices().peekable(),
+            start: 0,
+            start_mode: WordMode::Boundary,
+            last_mode: WordMode::Boundary,
         }
     }
+}
 
-    result.into_iter()
+impl<'s> Iterator for SplitIdent<'s> {
+    type Item = Word<'s>;
+
+    fn next(&mut self) -> Option<Word<'s>> {
+        while let Some((i, c)) = self.char_indices.next() {
+            let cur_mode = WordMode::classify(c);
+            if cur_mode == WordMode::Boundary {
+                assert!(self.start_mode == WordMode::Boundary);
+                continue;
+            }
+            if self.start_mode == WordMode::Boundary {
+                self.start_mode = cur_mode;
+                self.start = i;
+            }
+
+            if let Some(&(next_i, next)) = self.char_indices.peek() {
+                // The mode including the current character, assuming the current character does
+                // not result in a word boundary.
+                let next_mode = WordMode::classify(next);
+
+                match (self.last_mode, cur_mode, next_mode) {
+                    // cur_mode is last of current word
+                    (_, _, WordMode::Boundary)
+                    | (_, WordMode::Lowercase, WordMode::Number)
+                    | (_, WordMode::Uppercase, WordMode::Number)
+                    | (_, WordMode::Number, WordMode::Lowercase)
+                    | (_, WordMode::Number, WordMode::Uppercase)
+                    | (_, WordMode::Lowercase, WordMode::Uppercase) => {
+                        let case = self.start_mode.case(cur_mode);
+                        let result = Word::new_unchecked(
+                            &self.ident[self.start..next_i],
+                            case,
+                            self.start + self.offset,
+                        );
+                        self.start = next_i;
+                        self.start_mode = WordMode::Boundary;
+                        self.last_mode = WordMode::Boundary;
+                        return Some(result);
+                    }
+                    // cur_mode is start of next word
+                    (WordMode::Uppercase, WordMode::Uppercase, WordMode::Lowercase) => {
+                        let result = Word::new_unchecked(
+                            &self.ident[self.start..i],
+                            Case::Scream,
+                            self.start + self.offset,
+                        );
+                        self.start = i;
+                        self.start_mode = cur_mode;
+                        self.last_mode = WordMode::Boundary;
+                        return Some(result);
+                    }
+                    // No word boundary
+                    (_, _, _) => {
+                        self.last_mode = cur_mode;
+                    }
+                }
+            } else {
+                // Collect trailing characters as a word
+                let case = self.start_mode.case(cur_mode);
+                let result =
+                    Word::new_unchecked(&self.ident[self.start..], case, self.start + self.offset);
+                return Some(result);
+            }
+        }
+
+        None
+    }
+}
+
+fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
+    SplitIdent::new(ident, offset)
 }
 
 #[cfg(test)]
