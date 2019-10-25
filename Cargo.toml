@@ -19,8 +19,8 @@ path = "src/main.rs"
 doc = false
 
 [badges]
-travis-ci = { repository = "epage/typos" }
-appveyor  = { repository = "epage/typos" }
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
 
 [features]
 # Support quickly iterating
