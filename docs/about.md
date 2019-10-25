@@ -32,6 +32,8 @@ Whitelist: A confidence rating is given for how close a word is to one in the wh
 
 ## Related Spell Checkers
 
+See also [benchmarks](../benchsuite/runs).
+
 |                | typos                 | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] | [codespell] | [scspell3k] |
 |----------------|-----------------------|---------------------------------|---------------------------------|-------------|-------------|
 | "Runtime"      | Rust ([#18][def-18])  | Rust                            | None                            | Python      | Python      |
