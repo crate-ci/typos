@@ -11,6 +11,7 @@ $ ./benchsuite.sh . Nightblood
 
 Spell checkers:
 - ripgrep 11.0.1 (rev 973de50c9e) -SIMD -AVX (compiled) +SIMD +AVX (runtime)
+  - Though not a spell checker, present to be a theoretical lower bound
 - typos-cli 0.1.0 w/ cargo 1.38.0 (23ef9a4ef 2019-08-20)
 - misspell 0.2.0 w/ cargo 1.38.0 (23ef9a4ef 2019-08-20)
 - misspell_go 0.3.4

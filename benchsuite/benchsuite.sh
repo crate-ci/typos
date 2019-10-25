@@ -68,6 +68,7 @@ if [[ -z $rg_path ]]; then
 else
   echo "- $rg_version" >> $report_path
 fi
+echo "  - Though not a spell checker, present to be a theoretical lower bound" >> $report_path
 
 typos_path=`$current_dir/uut/typos.sh path $base_dir`
 typos_version=`$current_dir/uut/typos.sh version $base_dir`
