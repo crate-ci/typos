@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-pub trait Dictionary {
+pub trait Dictionary: Send + Sync {
     fn correct_ident<'s, 'w>(
         &'s self,
         _ident: crate::tokens::Identifier<'w>,
