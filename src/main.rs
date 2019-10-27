@@ -266,6 +266,27 @@ pub fn init_logging(level: Option<log::Level>) {
     }
 }
 
+fn check_entry(
+    entry: Result<ignore::DirEntry, ignore::Error>,
+    args: &Args,
+    checks: &typos::checks::Checks,
+) -> Result<bool, failure::Error> {
+    let mut typos_found = false;
+
+    let entry = entry?;
+    if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
+        let explicit = entry.depth() == 0;
+        if checks.check_filename(entry.path(), args.format.report())? {
+            typos_found = true;
+        }
+        if checks.check_file(entry.path(), explicit, args.format.report())? {
+            typos_found = true;
+        }
+    }
+
+    Ok(typos_found)
+}
+
 fn run() -> Result<i32, failure::Error> {
     let args = Args::from_args();
 
@@ -279,6 +300,7 @@ fn run() -> Result<i32, failure::Error> {
     let config = config;
 
     let mut typos_found = false;
+    let mut errors_found = false;
     for path in args.path.iter() {
         let path = path.canonicalize()?;
         let cwd = if path.is_file() {
@@ -318,20 +340,21 @@ fn run() -> Result<i32, failure::Error> {
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
         for entry in walk.build() {
-            let entry = entry?;
-            if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-                let explicit = entry.depth() == 0;
-                if checks.check_filename(entry.path(), args.format.report())? {
-                    typos_found = true;
+            match check_entry(entry, &args, &checks) {
+                Ok(true) => typos_found = true,
+                Err(err) => {
+                    let msg = typos::report::Error::new(err.to_string());
+                    args.format.report()(msg.into());
+                    errors_found = true
                 }
-                if checks.check_file(entry.path(), explicit, args.format.report())? {
-                    typos_found = true;
-                }
+                _ => (),
             }
         }
     }
 
-    if typos_found {
+    if errors_found {
+        Ok(2)
+    } else if typos_found {
         Ok(1)
     } else {
         Ok(0)

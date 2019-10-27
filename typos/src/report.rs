@@ -8,6 +8,8 @@ pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
     Correction(Correction<'m>),
     FilenameCorrection(FilenameCorrection<'m>),
+    PathError(PathError<'m>),
+    Error(Error),
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::Display)]
@@ -40,6 +42,30 @@ pub struct FilenameCorrection<'m> {
     pub(crate) non_exhaustive: (),
 }
 
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct PathError<'m> {
+    pub path: &'m std::path::Path,
+    pub msg: String,
+    #[serde(skip)]
+    pub(crate) non_exhaustive: (),
+}
+
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct Error {
+    pub msg: String,
+    #[serde(skip)]
+    pub(crate) non_exhaustive: (),
+}
+
+impl Error {
+    pub fn new(msg: String) -> Self {
+        Self {
+            msg,
+            non_exhaustive: (),
+        }
+    }
+}
+
 pub type Report = fn(msg: Message);
 
 pub fn print_silent(_: Message) {}
@@ -62,6 +88,12 @@ pub fn print_brief(msg: Message) {
         Message::FilenameCorrection(msg) => {
             println!("{}: {} -> {}", msg.path.display(), msg.typo, msg.correction);
         }
+        Message::PathError(msg) => {
+            println!("{}: {}", msg.path.display(), msg.msg);
+        }
+        Message::Error(msg) => {
+            println!("{}", msg.msg);
+        }
     }
 }
 
@@ -78,6 +110,12 @@ pub fn print_long(msg: Message) {
                 msg.typo,
                 msg.correction
             );
+        }
+        Message::PathError(msg) => {
+            println!("{}: {}", msg.path.display(), msg.msg);
+        }
+        Message::Error(msg) => {
+            println!("{}", msg.msg);
         }
     }
 }
