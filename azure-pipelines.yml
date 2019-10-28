@@ -33,6 +33,9 @@ stages:
     - script: |
         cargo run --package misspell-codegen -- --output dict/misspell/src/dict_codegen.rs --check
       displayName: Verify misspell-dict
+    - script: |
+        cargo run --package wikipedia-codegen -- --output dict/wikipedia/src/dict_codegen.rs --check
+      displayName: Verify wikipedia-dict
 - stage: committed
   displayName: Lint History
   dependsOn: []

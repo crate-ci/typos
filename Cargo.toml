@@ -4,6 +4,7 @@ members = [
     "dict/typos", "dict/typos/codegen",
     "dict/codespell", "dict/codespell/codegen",
     "dict/misspell", "dict/misspell/codegen",
+    "dict/wikipedia", "dict/wikipedia/codegen",
 ]
 
 [package]
