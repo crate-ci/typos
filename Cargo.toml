@@ -1,5 +1,5 @@
 [workspace]
-members = ["codegen", "typos", "typos-dict"]
+members = ["typos", "dict/typos", "dict/typos/codegen"]
 
 [package]
 name = "typos-cli"
@@ -24,7 +24,7 @@ codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
 typos = { version = "0.1", path = "typos" }
-typos-dict = { version = "0.1", path = "typos-dict" }
+typos-dict = { version = "0.1", path = "dict/typos" }
 failure = "0.1"
 structopt = "0.3"
 clap = "2"
