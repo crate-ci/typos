@@ -30,6 +30,9 @@ stages:
     - script: |
         cargo run --package codespell-codegen -- --output dict/codespell/src/dict_codegen.rs --check
       displayName: Verify codespell-dict
+    - script: |
+        cargo run --package misspell-codegen -- --output dict/misspell/src/dict_codegen.rs --check
+      displayName: Verify misspell-dict
 - stage: committed
   displayName: Lint History
   dependsOn: []

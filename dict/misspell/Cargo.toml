@@ -1,0 +1,20 @@
+[package]
+name = "misspell-dict"
+version = "0.1.1"
+authors = ["Ed Page <eopage@gmail.com>"]
+description = "Source Code Spelling Correction"
+repository = "https://github.com/crate-ci/typos"
+readme = "README.md"
+categories = ["development-tools", "text-processing"]
+keywords = ["development", "spelling"]
+license = "MIT"
+edition = "2018"
+
+[badges]
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
+
+[dependencies]
+phf = { version = "0.8", features = ["unicase"] }
+unicase = "2.5"
+log = "0.4"
