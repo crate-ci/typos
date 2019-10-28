@@ -25,7 +25,7 @@ stages:
     steps:
     - template: azure/install-rust.yml@templates
     - script: |
-        cargo run --package typos-codegen -- --input dict/typos/assets/words.csv --output dict/typos/src/dict_codegen.rs --check
+        cargo run --package typos-codegen -- --output dict/typos/src/dict_codegen.rs --check
       displayName: Verify typos-dict
     - script: |
         cargo run --package codespell-codegen -- --output dict/codespell/src/dict_codegen.rs --check

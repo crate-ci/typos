@@ -804,6 +804,7 @@ dependencies = [
  "phf 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "phf_codegen 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "structopt 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "typos-dict 0.1.1",
  "unicase 2.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
