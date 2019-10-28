@@ -1,7 +1,7 @@
 // This file is code-genned by codespell-codegen
 
 use unicase::UniCase;
-pub(crate) static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> =
+pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> =
     ::phf::Map {
         key: 3213172566270843353,
         disps: ::phf::Slice::Static(&[

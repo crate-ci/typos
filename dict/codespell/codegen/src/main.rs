@@ -37,7 +37,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
 
     writeln!(
         file,
-        "pub(crate) static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> = ",
+        "pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> = ",
     )
     .unwrap();
     let mut builder = phf_codegen::Map::new();

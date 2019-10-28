@@ -7,6 +7,7 @@ use std::io::Write;
 use structopt::StructOpt;
 
 mod config;
+mod dict;
 
 arg_enum! {
     #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -318,7 +319,7 @@ fn run() -> Result<i32, failure::Error> {
         config.default.update(&args.overrides);
         let config = config;
 
-        let dictionary = typos_dict::BuiltIn::new();
+        let dictionary = crate::dict::BuiltIn::new();
 
         let parser = typos::tokens::ParserBuilder::new()
             .ignore_hex(config.default.ignore_hex())

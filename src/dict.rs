@@ -20,9 +20,7 @@ impl BuiltIn {
     }
 
     pub fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Cow<'s, str>> {
-        // HACK: Just assuming the first element is "good enough"
-        map_lookup(&crate::dict_codegen::WORD_DICTIONARY, word.token())
-            .map(|s| case_correct(s[0], word.case()))
+        map_lookup(&typos_dict::WORD_DICTIONARY, word.token()).map(|s| case_correct(s, word.case()))
     }
 }
 
@@ -40,9 +38,9 @@ impl typos::Dictionary for BuiltIn {
 }
 
 fn map_lookup(
-    map: &'static phf::Map<UniCase<&'static str>, &'static [&'static str]>,
+    map: &'static phf::Map<UniCase<&'static str>, &'static str>,
     key: &str,
-) -> Option<&'static [&'static str]> {
+) -> Option<&'static str> {
     // This transmute should be safe as `get` will not store the reference with
     // the expanded lifetime. This is due to `Borrow` being overly strict and
     // can't have an impl for `&'static str` to `Borrow<&'a str>`.
