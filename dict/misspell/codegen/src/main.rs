@@ -31,7 +31,7 @@ fn parse_dict(
             current = &mut american;
         } else if line.contains("DictBritish") {
             current = &mut british;
-        } else if line.contains("}") {
+        } else if line.contains('}') {
             current = &mut bad;
         } else {
             let captures = mapping.captures(line);
@@ -78,7 +78,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     let codegenned = builder.build();
     writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
-    writeln!(file, "").unwrap();
+    writeln!(file).unwrap();
 
     writeln!(
         file,
@@ -94,7 +94,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     let codegenned = builder.build();
     writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
-    writeln!(file, "").unwrap();
+    writeln!(file).unwrap();
 
     writeln!(
         file,
@@ -110,7 +110,6 @@ fn generate<W: std::io::Write>(file: &mut W) {
     let codegenned = builder.build();
     writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
-    writeln!(file, "").unwrap();
 }
 
 #[derive(Debug, StructOpt)]

@@ -9,7 +9,7 @@ fn parse_dict(raw: &str) -> impl Iterator<Item = (&str, Vec<&str>)> {
         let corrections = parts
             .next()
             .unwrap()
-            .split(",")
+            .split(',')
             .filter_map(|c| {
                 let c = c.trim();
                 if c.is_empty() {
@@ -49,7 +49,6 @@ fn generate<W: std::io::Write>(file: &mut W) {
     let codegenned = builder.build();
     writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
-    writeln!(file, "").unwrap();
 }
 
 #[derive(Debug, StructOpt)]
