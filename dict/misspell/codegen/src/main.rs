@@ -21,9 +21,7 @@ fn parse_dict(raw: &str) -> Words {
     let mut current = &mut bad;
     for line in raw.lines() {
         let line = line.splitn(2, "//").next().unwrap().trim();
-        if line.is_empty() {
-            continue;
-        } else if line.starts_with("package") {
+        if line.is_empty() || line.starts_with("package") {
             continue;
         } else if line.contains("DictMain") {
             current = &mut main;
