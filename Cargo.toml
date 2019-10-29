@@ -30,7 +30,7 @@ codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
 typos = { version = "0.1", path = "typos" }
-typos-dict = { version = "0.1", path = "dict/typos" }
+typos-dict = { version = "^0.2", path = "dict/typos" }
 phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
 failure = "0.1"
