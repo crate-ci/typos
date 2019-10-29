@@ -4,13 +4,13 @@ use structopt::StructOpt;
 
 pub const DICT: &str = include_str!("../../assets/words.go");
 
-fn parse_dict(
-    raw: &str,
-) -> (
-    HashMap<&str, Vec<&str>>,
-    HashMap<&str, Vec<&str>>,
-    HashMap<&str, Vec<&str>>,
-) {
+struct Words<'s> {
+    main: HashMap<&'s str, Vec<&'s str>>,
+    american: HashMap<&'s str, Vec<&'s str>>,
+    british: HashMap<&'s str, Vec<&'s str>>,
+}
+
+fn parse_dict(raw: &str) -> Words {
     let mut bad = HashMap::new();
     let mut main = HashMap::new();
     let mut american = HashMap::new();
@@ -49,7 +49,12 @@ fn parse_dict(
     if !bad.is_empty() {
         panic!("Failed parsing; found extra words: {:#?}", bad);
     }
-    (main, american, british)
+
+    Words {
+        main,
+        american,
+        british,
+    }
 }
 
 fn generate<W: std::io::Write>(file: &mut W) {
@@ -63,7 +68,11 @@ fn generate<W: std::io::Write>(file: &mut W) {
     writeln!(file).unwrap();
     writeln!(file, "use unicase::UniCase;").unwrap();
 
-    let (main, american, british) = parse_dict(DICT);
+    let Words {
+        main,
+        american,
+        british,
+    } = parse_dict(DICT);
 
     writeln!(
         file,
