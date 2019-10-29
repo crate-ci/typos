@@ -148,20 +148,23 @@ pub struct Word<'t> {
 }
 
 impl<'t> Word<'t> {
-    pub fn new(token: &'t str, offset: usize) -> Result<Self, anyhow::Error> {
+    pub fn new(token: &'t str, offset: usize) -> Result<Self, crate::Error> {
         let mut itr = split_ident(token, 0);
-        let mut item = itr
-            .next()
-            .ok_or_else(|| anyhow::anyhow!("Invalid word (none found): {:?}", token))?;
+        let mut item = itr.next().ok_or_else(|| {
+            crate::ErrorKind::InvalidWord
+                .into_error()
+                .with_message(format!("{:?} is nothing", token))
+        })?;
         if item.offset != 0 {
-            return Err(anyhow::anyhow!("Invalid word (padding found): {:?}", token));
+            return Err(crate::ErrorKind::InvalidWord
+                .into_error()
+                .with_message(format!("{:?} has padding", token)));
         }
         item.offset += offset;
         if itr.next().is_some() {
-            return Err(anyhow::anyhow!(
-                "Invalid word (contains more than one): {:?}",
-                token
-            ));
+            return Err(crate::ErrorKind::InvalidWord
+                .into_error()
+                .with_message(format!("{:?} is multiple words", token)));
         }
         Ok(item)
     }

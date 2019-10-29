@@ -70,7 +70,7 @@ impl<'d, 'p> Checks<'d, 'p> {
         &self,
         path: &std::path::Path,
         report: report::Report,
-    ) -> Result<bool, anyhow::Error> {
+    ) -> Result<bool, crate::Error> {
         let mut typos_found = false;
 
         if !self.check_filenames {
@@ -113,14 +113,15 @@ impl<'d, 'p> Checks<'d, 'p> {
         path: &std::path::Path,
         explicit: bool,
         report: report::Report,
-    ) -> Result<bool, anyhow::Error> {
+    ) -> Result<bool, crate::Error> {
         let mut typos_found = false;
 
         if !self.check_files {
             return Ok(typos_found);
         }
 
-        let buffer = std::fs::read(path)?;
+        let buffer = std::fs::read(path)
+            .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
         let null_max = std::cmp::min(buffer.len(), 1024);
         if !explicit && !self.binary && buffer[0..null_max].find_byte(b'\0').is_some() {
             let msg = report::BinaryFile {
