@@ -25,8 +25,17 @@ stages:
     steps:
     - template: azure/install-rust.yml@templates
     - script: |
-        cargo run --package typos-codegen -- --input typos-dict/assets/words.csv --output typos-dict/src/dict_codegen.rs --check
-      displayName: Verify Code-gen
+        cargo run --package typos-codegen -- --output dict/typos/src/dict_codegen.rs --check
+      displayName: Verify typos-dict
+    - script: |
+        cargo run --package codespell-codegen -- --output dict/codespell/src/dict_codegen.rs --check
+      displayName: Verify codespell-dict
+    - script: |
+        cargo run --package misspell-codegen -- --output dict/misspell/src/dict_codegen.rs --check
+      displayName: Verify misspell-dict
+    - script: |
+        cargo run --package wikipedia-codegen -- --output dict/wikipedia/src/dict_codegen.rs --check
+      displayName: Verify wikipedia-dict
 - stage: committed
   displayName: Lint History
   dependsOn: []

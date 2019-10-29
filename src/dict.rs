@@ -20,8 +20,7 @@ impl BuiltIn {
     }
 
     pub fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Cow<'s, str>> {
-        map_lookup(&crate::dict_codegen::WORD_DICTIONARY, word.token())
-            .map(|s| case_correct(s, word.case()))
+        map_lookup(&typos_dict::WORD_DICTIONARY, word.token()).map(|s| case_correct(s, word.case()))
     }
 }
 

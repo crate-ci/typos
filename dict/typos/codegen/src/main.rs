@@ -1,22 +1,25 @@
 use structopt::StructOpt;
 
-fn generate<W: std::io::Write>(input: &[u8], file: &mut W) {
+pub const DICT: &[u8] = include_bytes!("../../assets/words.csv");
+
+fn generate<W: std::io::Write>(file: &mut W) {
     writeln!(
         file,
         "// This file is code-genned by {}",
         env!("CARGO_PKG_NAME")
     )
     .unwrap();
+    writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
     writeln!(file, "use unicase::UniCase;").unwrap();
 
     writeln!(
         file,
-        "pub(crate) static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
+        "pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
     )
     .unwrap();
     let mut builder = phf_codegen::Map::new();
-    let records: Vec<_> = csv::Reader::from_reader(input)
+    let records: Vec<_> = csv::Reader::from_reader(DICT)
         .records()
         .map(|r| r.unwrap())
         .collect();
@@ -32,8 +35,6 @@ fn generate<W: std::io::Write>(input: &[u8], file: &mut W) {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 struct Options {
-    #[structopt(long, parse(from_os_str))]
-    input: std::path::PathBuf,
     #[structopt(flatten)]
     codegen: codegenrs::CodeGenArgs,
     #[structopt(flatten)]
@@ -43,12 +44,8 @@ struct Options {
 fn run() -> Result<i32, Box<dyn std::error::Error>> {
     let options = Options::from_args();
 
-    let content = {
-        let mut content = vec![];
-        let input = std::fs::read(&options.input)?;
-        generate(&input, &mut content);
-        content
-    };
+    let mut content = vec![];
+    generate(&mut content);
 
     let content = String::from_utf8(content)?;
     let content = options.rustmft.reformat(&content)?;

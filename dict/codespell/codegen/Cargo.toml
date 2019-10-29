@@ -1,21 +1,23 @@
 [package]
-name = "typos-dict"
+name = "codespell-codegen"
 version = "0.1.1"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
 readme = "../README.md"
-categories = ["development-tools", "text-processing"]
-keywords = ["development", "spelling"]
+categories = ["text-processing"]
 license = "MIT"
 edition = "2018"
+publish = false
 
 [badges]
 azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-typos = { version = "0.1", path = "../typos" }
 phf = { version = "0.8", features = ["unicase"] }
+phf_codegen = "0.8"
 unicase = "2.5"
-log = "0.4"
+itertools = "0.8"
+codegenrs = "0.1"
+structopt = "0.3"
