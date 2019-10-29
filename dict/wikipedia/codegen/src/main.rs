@@ -30,6 +30,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
         env!("CARGO_PKG_NAME")
     )
     .unwrap();
+    writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
     writeln!(file, "use unicase::UniCase;").unwrap();
 

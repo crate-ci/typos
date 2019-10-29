@@ -1,4 +1,5 @@
 // This file is code-genned by misspell-codegen
+#![allow(clippy::unreadable_literal)]
 
 use unicase::UniCase;
 pub static MAIN_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> =

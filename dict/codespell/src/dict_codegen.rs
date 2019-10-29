@@ -1,4 +1,5 @@
 // This file is code-genned by codespell-codegen
+#![allow(clippy::unreadable_literal)]
 
 use unicase::UniCase;
 pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> =
