@@ -148,7 +148,7 @@ function bench_file() {
     fi
     scspell_command=""
     if [[ ! -z $scspell_path ]]; then
-      scspell_command="$scspell_path $subtitles_ru_small_path"
+      scspell_command="$scspell_path $path"
     fi
     codespell_command=""
     if [[ ! -z $codespell_path ]]; then
@@ -190,4 +190,4 @@ bench_dir "ripgrep_built" "$ripgrep_built_version" "$ripgrep_built_path" "$repor
 
 subtitles_ru_small_path=`$current_dir/fixtures/subtitles_ru_small.sh path $base_dir`
 subtitles_ru_small_version=`$current_dir/fixtures/subtitles_ru_small.sh version $base_dir`
-bench_file "subtitles_ru_small" "$subtitles_ru_smal_version" "$subtitles_ru_smal_path" "$report_path"
+bench_file "subtitles_ru_small" "$subtitles_ru_smal_version" "$subtitles_ru_small_path" "$report_path"
