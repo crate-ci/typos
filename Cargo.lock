@@ -781,7 +781,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "typos"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "bstr 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "derive_more 0.15.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -812,7 +812,7 @@ dependencies = [
  "serde 1.0.101 (registry+https://github.com/rust-lang/crates.io-index)",
  "structopt 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "toml 0.4.10 (registry+https://github.com/rust-lang/crates.io-index)",
- "typos 0.1.1",
+ "typos 0.2.0",
  "typos-dict 0.2.0",
  "unicase 2.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
