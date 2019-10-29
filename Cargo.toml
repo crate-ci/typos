@@ -33,7 +33,7 @@ typos = { version = "^0.2", path = "typos" }
 typos-dict = { version = "^0.2", path = "dict/typos" }
 phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
-failure = "0.1"
+anyhow = "1.0"
 structopt = "0.3"
 clap = "2"
 clap-verbosity-flag = "0.3"

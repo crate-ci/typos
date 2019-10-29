@@ -271,7 +271,7 @@ fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     args: &Args,
     checks: &typos::checks::Checks,
-) -> Result<bool, failure::Error> {
+) -> Result<bool, anyhow::Error> {
     let mut typos_found = false;
 
     let entry = entry?;
@@ -288,7 +288,7 @@ fn check_entry(
     Ok(typos_found)
 }
 
-fn run() -> Result<i32, failure::Error> {
+fn run() -> Result<i32, anyhow::Error> {
     let args = Args::from_args();
 
     init_logging(args.verbose.log_level());

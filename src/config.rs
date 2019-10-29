@@ -83,19 +83,19 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn from_file(path: &std::path::Path) -> Result<Self, failure::Error> {
+    pub fn from_file(path: &std::path::Path) -> Result<Self, anyhow::Error> {
         let mut file = std::fs::File::open(path)?;
         let mut s = String::new();
         file.read_to_string(&mut s)?;
         Self::from_toml(&s)
     }
 
-    pub fn from_toml(data: &str) -> Result<Self, failure::Error> {
+    pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
         let content = toml::from_str(data)?;
         Ok(content)
     }
 
-    pub fn derive(cwd: &std::path::Path) -> Result<Self, failure::Error> {
+    pub fn derive(cwd: &std::path::Path) -> Result<Self, anyhow::Error> {
         if let Some(path) = find_project_file(cwd.to_owned(), "typos.toml") {
             Self::from_file(&path)
         } else {

@@ -70,7 +70,7 @@ impl<'d, 'p> Checks<'d, 'p> {
         &self,
         path: &std::path::Path,
         report: report::Report,
-    ) -> Result<bool, failure::Error> {
+    ) -> Result<bool, anyhow::Error> {
         let mut typos_found = false;
 
         if !self.check_filenames {
@@ -113,7 +113,7 @@ impl<'d, 'p> Checks<'d, 'p> {
         path: &std::path::Path,
         explicit: bool,
         report: report::Report,
-    ) -> Result<bool, failure::Error> {
+    ) -> Result<bool, anyhow::Error> {
         let mut typos_found = false;
 
         if !self.check_files {

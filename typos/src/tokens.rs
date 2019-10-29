@@ -148,20 +148,17 @@ pub struct Word<'t> {
 }
 
 impl<'t> Word<'t> {
-    pub fn new(token: &'t str, offset: usize) -> Result<Self, failure::Error> {
+    pub fn new(token: &'t str, offset: usize) -> Result<Self, anyhow::Error> {
         let mut itr = split_ident(token, 0);
         let mut item = itr
             .next()
-            .ok_or_else(|| failure::format_err!("Invalid word (none found): {:?}", token))?;
+            .ok_or_else(|| anyhow::anyhow!("Invalid word (none found): {:?}", token))?;
         if item.offset != 0 {
-            return Err(failure::format_err!(
-                "Invalid word (padding found): {:?}",
-                token
-            ));
+            return Err(anyhow::anyhow!("Invalid word (padding found): {:?}", token));
         }
         item.offset += offset;
         if itr.next().is_some() {
-            return Err(failure::format_err!(
+            return Err(anyhow::anyhow!(
                 "Invalid word (contains more than one): {:?}",
                 token
             ));
