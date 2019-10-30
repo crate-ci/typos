@@ -38,6 +38,11 @@ impl Default for Format {
 
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
+#[structopt(
+        setting = structopt::clap::AppSettings::UnifiedHelpMessage,
+        setting = structopt::clap::AppSettings::DeriveDisplayOrder,
+        setting = structopt::clap::AppSettings::DontCollapseArgsInUsage
+    )]
 struct Args {
     #[structopt(parse(from_os_str), default_value = ".")]
     /// Paths to check
