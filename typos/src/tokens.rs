@@ -123,7 +123,7 @@ impl<'t> Identifier<'t> {
         Self { token, offset }
     }
 
-    pub fn token(&self) -> &str {
+    pub fn token(&self) -> &'t str {
         self.token
     }
 
@@ -135,7 +135,7 @@ impl<'t> Identifier<'t> {
         self.offset
     }
 
-    pub fn split(&self) -> impl Iterator<Item = Word<'_>> {
+    pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
         split_ident(self.token, self.offset)
     }
 }
@@ -177,7 +177,7 @@ impl<'t> Word<'t> {
         }
     }
 
-    pub fn token(&self) -> &str {
+    pub fn token(&self) -> &'t str {
         self.token
     }
 

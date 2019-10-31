@@ -5,13 +5,13 @@ use crate::tokens;
 use crate::Dictionary;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct CheckSettings {
+pub struct TyposSettings {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
 }
 
-impl CheckSettings {
+impl TyposSettings {
     pub fn new() -> Self {
         Default::default()
     }
@@ -31,7 +31,7 @@ impl CheckSettings {
         self
     }
 
-    pub fn build<'d, 'p>(
+    pub fn build_checks<'d, 'p>(
         &self,
         dictionary: &'d dyn Dictionary,
         parser: &'p tokens::Parser,
@@ -44,15 +44,203 @@ impl CheckSettings {
             binary: self.binary,
         }
     }
+
+    pub fn build_identifier_parser<'p>(&self, parser: &'p tokens::Parser) -> ParseIdentifiers<'p> {
+        ParseIdentifiers {
+            parser,
+            check_filenames: self.check_filenames,
+            check_files: self.check_files,
+            binary: self.binary,
+        }
+    }
+
+    pub fn build_word_parser<'p>(&self, parser: &'p tokens::Parser) -> ParseWords<'p> {
+        ParseWords {
+            parser,
+            check_filenames: self.check_filenames,
+            check_files: self.check_files,
+            binary: self.binary,
+        }
+    }
 }
 
-impl Default for CheckSettings {
+impl Default for TyposSettings {
     fn default() -> Self {
         Self {
             check_filenames: true,
             check_files: true,
             binary: false,
         }
+    }
+}
+
+#[derive(Clone)]
+pub struct ParseIdentifiers<'p> {
+    parser: &'p tokens::Parser,
+    check_filenames: bool,
+    check_files: bool,
+    binary: bool,
+}
+
+impl<'p> ParseIdentifiers<'p> {
+    pub fn check_filename(
+        &self,
+        path: &std::path::Path,
+        report: report::Report,
+    ) -> Result<bool, crate::Error> {
+        let typos_found = false;
+
+        if !self.check_filenames {
+            return Ok(typos_found);
+        }
+
+        for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
+            let msg = report::Parse {
+                path,
+                kind: report::ParseKind::Identifier,
+                data: self.parser.parse(part).map(|i| i.token()).collect(),
+                non_exhaustive: (),
+            };
+            report(msg.into());
+        }
+
+        Ok(typos_found)
+    }
+
+    pub fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        report: report::Report,
+    ) -> Result<bool, crate::Error> {
+        let typos_found = false;
+
+        if !self.check_files {
+            return Ok(typos_found);
+        }
+
+        let buffer = std::fs::read(path)
+            .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
+        if !explicit && !self.binary && is_binary(&buffer) {
+            let msg = report::BinaryFile {
+                path,
+                non_exhaustive: (),
+            };
+            report(msg.into());
+            return Ok(typos_found);
+        }
+
+        for line in buffer.lines() {
+            let msg = report::Parse {
+                path,
+                kind: report::ParseKind::Identifier,
+                data: self.parser.parse_bytes(line).map(|i| i.token()).collect(),
+                non_exhaustive: (),
+            };
+            report(msg.into());
+        }
+
+        Ok(typos_found)
+    }
+}
+
+impl std::fmt::Debug for ParseIdentifiers<'_> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+        fmt.debug_struct("Checks")
+            .field("parser", self.parser)
+            .field("check_filenames", &self.check_filenames)
+            .field("check_files", &self.check_files)
+            .field("binary", &self.binary)
+            .finish()
+    }
+}
+
+#[derive(Clone)]
+pub struct ParseWords<'p> {
+    parser: &'p tokens::Parser,
+    check_filenames: bool,
+    check_files: bool,
+    binary: bool,
+}
+
+impl<'p> ParseWords<'p> {
+    pub fn check_filename(
+        &self,
+        path: &std::path::Path,
+        report: report::Report,
+    ) -> Result<bool, crate::Error> {
+        let typos_found = false;
+
+        if !self.check_filenames {
+            return Ok(typos_found);
+        }
+
+        for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
+            let msg = report::Parse {
+                path,
+                kind: report::ParseKind::Word,
+                data: self
+                    .parser
+                    .parse(part)
+                    .flat_map(|ident| ident.split().map(|i| i.token()))
+                    .collect(),
+                non_exhaustive: (),
+            };
+            report(msg.into());
+        }
+
+        Ok(typos_found)
+    }
+
+    pub fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        report: report::Report,
+    ) -> Result<bool, crate::Error> {
+        let typos_found = false;
+
+        if !self.check_files {
+            return Ok(typos_found);
+        }
+
+        let buffer = std::fs::read(path)
+            .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
+        if !explicit && !self.binary && is_binary(&buffer) {
+            let msg = report::BinaryFile {
+                path,
+                non_exhaustive: (),
+            };
+            report(msg.into());
+            return Ok(typos_found);
+        }
+
+        for line in buffer.lines() {
+            let msg = report::Parse {
+                path,
+                kind: report::ParseKind::Word,
+                data: self
+                    .parser
+                    .parse_bytes(line)
+                    .flat_map(|ident| ident.split().map(|i| i.token()))
+                    .collect(),
+                non_exhaustive: (),
+            };
+            report(msg.into());
+        }
+
+        Ok(typos_found)
+    }
+}
+
+impl std::fmt::Debug for ParseWords<'_> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+        fmt.debug_struct("Checks")
+            .field("parser", self.parser)
+            .field("check_filenames", &self.check_filenames)
+            .field("check_files", &self.check_files)
+            .field("binary", &self.binary)
+            .finish()
     }
 }
 
@@ -122,8 +310,7 @@ impl<'d, 'p> Checks<'d, 'p> {
 
         let buffer = std::fs::read(path)
             .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
-        let null_max = std::cmp::min(buffer.len(), 1024);
-        if !explicit && !self.binary && buffer[0..null_max].find_byte(b'\0').is_some() {
+        if !explicit && !self.binary && is_binary(&buffer) {
             let msg = report::BinaryFile {
                 path,
                 non_exhaustive: (),
@@ -182,4 +369,9 @@ impl std::fmt::Debug for Checks<'_, '_> {
             .field("binary", &self.binary)
             .finish()
     }
+}
+
+fn is_binary(buffer: &[u8]) -> bool {
+    let null_max = std::cmp::min(buffer.len(), 1024);
+    buffer[0..null_max].find_byte(b'\0').is_some()
 }

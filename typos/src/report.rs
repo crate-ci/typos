@@ -8,8 +8,12 @@ pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
     Correction(Correction<'m>),
     FilenameCorrection(FilenameCorrection<'m>),
+    File(File<'m>),
+    Parse(Parse<'m>),
     PathError(PathError<'m>),
     Error(Error),
+    #[serde(skip)]
+    __NonExhaustive,
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::Display)]
@@ -38,6 +42,39 @@ pub struct FilenameCorrection<'m> {
     pub path: &'m std::path::Path,
     pub typo: &'m str,
     pub correction: Cow<'m, str>,
+    #[serde(skip)]
+    pub(crate) non_exhaustive: (),
+}
+
+#[derive(Copy, Clone, Debug, serde::Serialize)]
+pub enum ParseKind {
+    Identifier,
+    Word,
+    #[doc(hidden)]
+    __NonExhaustive,
+}
+
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct File<'m> {
+    pub path: &'m std::path::Path,
+    #[serde(skip)]
+    pub(crate) non_exhaustive: (),
+}
+
+impl<'m> File<'m> {
+    pub fn new(path: &'m std::path::Path) -> Self {
+        Self {
+            path,
+            non_exhaustive: (),
+        }
+    }
+}
+
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct Parse<'m> {
+    pub path: &'m std::path::Path,
+    pub kind: ParseKind,
+    pub data: Vec<&'m str>,
     #[serde(skip)]
     pub(crate) non_exhaustive: (),
 }
@@ -88,11 +125,20 @@ pub fn print_brief(msg: Message) {
         Message::FilenameCorrection(msg) => {
             println!("{}: {} -> {}", msg.path.display(), msg.typo, msg.correction);
         }
+        Message::File(msg) => {
+            println!("{}", msg.path.display());
+        }
+        Message::Parse(msg) => {
+            println!("{}", itertools::join(msg.data.iter(), " "));
+        }
         Message::PathError(msg) => {
             println!("{}: {}", msg.path.display(), msg.msg);
         }
         Message::Error(msg) => {
             println!("{}", msg.msg);
+        }
+        Message::__NonExhaustive => {
+            unreachable!("Non-creatable case");
         }
     }
 }
@@ -111,11 +157,20 @@ pub fn print_long(msg: Message) {
                 msg.correction
             );
         }
+        Message::File(msg) => {
+            println!("{}", msg.path.display());
+        }
+        Message::Parse(msg) => {
+            println!("{}", itertools::join(msg.data.iter(), " "));
+        }
         Message::PathError(msg) => {
             println!("{}: {}", msg.path.display(), msg.msg);
         }
         Message::Error(msg) => {
             println!("{}", msg.msg);
+        }
+        Message::__NonExhaustive => {
+            unreachable!("Non-creatable case");
         }
     }
 }

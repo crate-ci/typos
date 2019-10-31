@@ -56,6 +56,18 @@ struct Args {
     /// Ignore implicit configuration files.
     isolated: bool,
 
+    #[structopt(long)]
+    /// Print each file that would be spellchecked.
+    files: bool,
+
+    #[structopt(long)]
+    /// Print each identifier that would be spellchecked.
+    identifiers: bool,
+
+    #[structopt(long)]
+    /// Print each word that would be spellchecked.
+    words: bool,
+
     #[structopt(flatten)]
     overrides: FileArgs,
 
@@ -249,7 +261,79 @@ impl config::WalkSource for WalkArgs {
     }
 }
 
-pub fn init_logging(level: Option<log::Level>) {
+trait Checks {
+    fn check_filename(
+        &self,
+        path: &std::path::Path,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error>;
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error>;
+}
+
+impl<'p> Checks for typos::checks::ParseIdentifiers<'p> {
+    fn check_filename(
+        &self,
+        path: &std::path::Path,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error> {
+        self.check_filename(path, report)
+    }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error> {
+        self.check_file(path, explicit, report)
+    }
+}
+
+impl<'p> Checks for typos::checks::ParseWords<'p> {
+    fn check_filename(
+        &self,
+        path: &std::path::Path,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error> {
+        self.check_filename(path, report)
+    }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error> {
+        self.check_file(path, explicit, report)
+    }
+}
+
+impl<'d, 'p> Checks for typos::checks::Checks<'d, 'p> {
+    fn check_filename(
+        &self,
+        path: &std::path::Path,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error> {
+        self.check_filename(path, report)
+    }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        report: typos::report::Report,
+    ) -> Result<bool, typos::Error> {
+        self.check_file(path, explicit, report)
+    }
+}
+
+fn init_logging(level: Option<log::Level>) {
     if let Some(level) = level {
         let mut builder = env_logger::Builder::new();
 
@@ -274,18 +358,18 @@ pub fn init_logging(level: Option<log::Level>) {
 
 fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
-    args: &Args,
-    checks: &typos::checks::Checks,
+    format: Format,
+    checks: &dyn Checks,
 ) -> Result<bool, anyhow::Error> {
     let mut typos_found = false;
 
     let entry = entry?;
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        if checks.check_filename(entry.path(), args.format.report())? {
+        if checks.check_filename(entry.path(), format.report())? {
             typos_found = true;
         }
-        if checks.check_file(entry.path(), explicit, args.format.report())? {
+        if checks.check_file(entry.path(), explicit, format.report())? {
             typos_found = true;
         }
     }
@@ -332,11 +416,11 @@ fn run() -> Result<i32, anyhow::Error> {
             .include_chars(config.default.identifier_include_chars().to_owned())
             .build();
 
-        let checks = typos::checks::CheckSettings::new()
+        let mut settings = typos::checks::TyposSettings::new();
+        settings
             .check_filenames(config.default.check_filename())
             .check_files(config.default.check_file())
-            .binary(config.files.binary())
-            .build(&dictionary, &parser);
+            .binary(config.files.binary());
 
         let mut walk = ignore::WalkBuilder::new(path);
         walk.hidden(config.files.ignore_hidden())
@@ -345,15 +429,58 @@ fn run() -> Result<i32, anyhow::Error> {
             .git_ignore(config.files.ignore_vcs())
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
-        for entry in walk.build() {
-            match check_entry(entry, &args, &checks) {
-                Ok(true) => typos_found = true,
-                Err(err) => {
-                    let msg = typos::report::Error::new(err.to_string());
-                    args.format.report()(msg.into());
-                    errors_found = true
+        if args.files {
+            for entry in walk.build() {
+                match entry {
+                    Ok(entry) => {
+                        let msg = typos::report::File::new(entry.path());
+                        args.format.report()(msg.into());
+                    }
+                    Err(err) => {
+                        let msg = typos::report::Error::new(err.to_string());
+                        args.format.report()(msg.into());
+                        errors_found = true
+                    }
                 }
-                _ => (),
+            }
+        } else if args.identifiers {
+            let checks = settings.build_identifier_parser(&parser);
+            for entry in walk.build() {
+                match check_entry(entry, args.format, &checks) {
+                    Ok(true) => typos_found = true,
+                    Err(err) => {
+                        let msg = typos::report::Error::new(err.to_string());
+                        args.format.report()(msg.into());
+                        errors_found = true
+                    }
+                    _ => (),
+                }
+            }
+        } else if args.words {
+            let checks = settings.build_word_parser(&parser);
+            for entry in walk.build() {
+                match check_entry(entry, args.format, &checks) {
+                    Ok(true) => typos_found = true,
+                    Err(err) => {
+                        let msg = typos::report::Error::new(err.to_string());
+                        args.format.report()(msg.into());
+                        errors_found = true
+                    }
+                    _ => (),
+                }
+            }
+        } else {
+            let checks = settings.build_checks(&dictionary, &parser);
+            for entry in walk.build() {
+                match check_entry(entry, args.format, &checks) {
+                    Ok(true) => typos_found = true,
+                    Err(err) => {
+                        let msg = typos::report::Error::new(err.to_string());
+                        args.format.report()(msg.into());
+                        errors_found = true
+                    }
+                    _ => (),
+                }
             }
         }
     }
