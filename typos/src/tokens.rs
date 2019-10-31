@@ -78,22 +78,32 @@ impl Parser {
     }
 
     pub fn parse<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
-        let ignore_hex = self.ignore_hex;
         self.words_str
             .find_iter(content)
-            .filter(move |m| !ignore_hex || !is_hex(m.as_str().as_bytes()))
+            .filter(move |m| self.accept(m.as_str().as_bytes()))
             .map(|m| Identifier::new_unchecked(m.as_str(), m.start()))
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
-        let ignore_hex = self.ignore_hex;
         self.words_bytes
             .find_iter(content)
-            .filter(move |m| !ignore_hex || !is_hex(m.as_bytes()))
+            .filter(move |m| self.accept(m.as_bytes()))
             .filter_map(|m| {
                 let s = std::str::from_utf8(m.as_bytes()).ok();
                 s.map(|s| Identifier::new_unchecked(s, m.start()))
             })
+    }
+
+    fn accept(&self, contents: &[u8]) -> bool {
+        if is_number(contents) {
+            return false;
+        };
+
+        if self.ignore_hex {
+            return !is_hex(contents);
+        }
+
+        true
     }
 }
 
@@ -101,6 +111,15 @@ impl Default for Parser {
     fn default() -> Self {
         Self::new()
     }
+}
+
+fn is_number(ident: &[u8]) -> bool {
+    lazy_static::lazy_static! {
+        // `_`: number literal separator in Rust and other languages
+        // `'`: number literal separator in C++
+        static ref DIGITS: regex::bytes::Regex = regex::bytes::Regex::new(r#"^[0-9_']+$"#).unwrap();
+    }
+    DIGITS.is_match(ident)
 }
 
 fn is_hex(ident: &[u8]) -> bool {
