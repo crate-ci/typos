@@ -50,7 +50,7 @@ impl ParserBuilder {
         Parser {
             words_str,
             words_bytes,
-            ignore_hex: self.ignore_hex,
+            ignore_hex: self.ignore_hex && self.include_digits,
         }
     }
 }
