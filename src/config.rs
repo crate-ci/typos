@@ -53,7 +53,7 @@ pub trait FileSource {
         None
     }
 
-    /// Verifying spelling in filess.
+    /// Verifying spelling in files.
     fn check_file(&self) -> Option<bool> {
         None
     }
