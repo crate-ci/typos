@@ -52,32 +52,32 @@ fn bench_split_lines(data: &str, b: &mut test::Bencher) {
 }
 
 #[bench]
-fn parse_words_lines_empty(b: &mut test::Bencher) {
+fn parse_lines_empty(b: &mut test::Bencher) {
     bench_split_lines(data::EMPTY, b);
 }
 
 #[bench]
-fn parse_words_lines_no_tokens(b: &mut test::Bencher) {
+fn parse_lines_no_tokens(b: &mut test::Bencher) {
     bench_split_lines(data::NO_TOKENS, b);
 }
 
 #[bench]
-fn parse_words_lines_single_token(b: &mut test::Bencher) {
+fn parse_lines_single_token(b: &mut test::Bencher) {
     bench_split_lines(data::SINGLE_TOKEN, b);
 }
 
 #[bench]
-fn parse_words_lines_sherlock(b: &mut test::Bencher) {
+fn parse_lines_sherlock(b: &mut test::Bencher) {
     bench_split_lines(data::SHERLOCK, b);
 }
 
 #[bench]
-fn parse_words_lines_code(b: &mut test::Bencher) {
+fn parse_lines_code(b: &mut test::Bencher) {
     bench_split_lines(data::CODE, b);
 }
 
 #[bench]
-fn parse_words_lines_corpus(b: &mut test::Bencher) {
+fn parse_lines_corpus(b: &mut test::Bencher) {
     bench_split_lines(data::CORPUS, b);
 }
 
