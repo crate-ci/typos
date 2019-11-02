@@ -58,17 +58,27 @@ pub trait FileSource {
         None
     }
 
-    /// Do not check identifiers that appear to be hexadecimal values
+    /// Do not check identifiers that appear to be hexadecimal values.
     fn ignore_hex(&self) -> Option<bool> {
         None
     }
 
-    /// Allow identifiers to include digits, in addition to letters
+    /// Allow identifiers to start with digits, in addition to letters.
+    fn identifier_leading_digits(&self) -> Option<bool> {
+        None
+    }
+
+    /// Allow identifiers to start with one of these characters.
+    fn identifier_leading_chars(&self) -> Option<&str> {
+        None
+    }
+
+    /// Allow identifiers to include digits, in addition to letters.
     fn identifier_include_digits(&self) -> Option<bool> {
         None
     }
 
-    /// Specify additional characters to be included in identifiers
+    /// Allow identifiers to include these characters.
     fn identifier_include_chars(&self) -> Option<&str> {
         None
     }
@@ -233,6 +243,8 @@ pub struct FileConfig {
     pub check_filename: Option<bool>,
     pub check_file: Option<bool>,
     pub ignore_hex: Option<bool>,
+    pub identifier_leading_digits: Option<bool>,
+    pub identifier_leading_chars: Option<String>,
     pub identifier_include_digits: Option<bool>,
     pub identifier_include_chars: Option<String>,
 }
@@ -247,6 +259,12 @@ impl FileConfig {
         }
         if let Some(source) = source.ignore_hex() {
             self.ignore_hex = Some(source);
+        }
+        if let Some(source) = source.identifier_leading_digits() {
+            self.identifier_leading_digits = Some(source);
+        }
+        if let Some(source) = source.identifier_leading_chars() {
+            self.identifier_leading_chars = Some(source.to_owned());
         }
         if let Some(source) = source.identifier_include_digits() {
             self.identifier_include_digits = Some(source);
@@ -266,6 +284,17 @@ impl FileConfig {
 
     pub fn ignore_hex(&self) -> bool {
         self.ignore_hex.unwrap_or(true)
+    }
+
+    pub fn identifier_leading_digits(&self) -> bool {
+        self.identifier_leading_digits.unwrap_or(false)
+    }
+
+    pub fn identifier_leading_chars(&self) -> &str {
+        self.identifier_leading_chars
+            .as_ref()
+            .map(|s| s.as_str())
+            .unwrap_or("_")
     }
 
     pub fn identifier_include_digits(&self) -> bool {
@@ -291,6 +320,14 @@ impl FileSource for FileConfig {
 
     fn ignore_hex(&self) -> Option<bool> {
         self.ignore_hex
+    }
+
+    fn identifier_leading_digits(&self) -> Option<bool> {
+        self.identifier_leading_digits
+    }
+
+    fn identifier_leading_chars(&self) -> Option<&str> {
+        self.identifier_leading_chars.as_ref().map(|s| s.as_str())
     }
 
     fn identifier_include_digits(&self) -> Option<bool> {
