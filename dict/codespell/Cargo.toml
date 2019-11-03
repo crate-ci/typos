@@ -1,6 +1,6 @@
 [package]
 name = "codespell-dict"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
