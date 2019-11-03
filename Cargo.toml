@@ -29,7 +29,7 @@ azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-typos = { version = "^0.2", path = "typos" }
+typos = { version = "^0.3", path = "typos" }
 typos-dict = { version = "^0.2", path = "dict/typos" }
 phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
