@@ -117,7 +117,7 @@ dependencies = [
 
 [[package]]
 name = "codespell-codegen"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "codegenrs 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "itertools 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
