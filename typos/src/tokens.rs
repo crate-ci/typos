@@ -9,6 +9,8 @@ pub enum Case {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ParserBuilder {
     ignore_hex: bool,
+    leading_digits: bool,
+    leading_chars: String,
     include_digits: bool,
     include_chars: String,
 }
@@ -23,6 +25,16 @@ impl ParserBuilder {
         self
     }
 
+    pub fn leading_digits(&mut self, yes: bool) -> &mut Self {
+        self.leading_digits = yes;
+        self
+    }
+
+    pub fn leading_chars(&mut self, chars: String) -> &mut Self {
+        self.leading_chars = chars;
+        self
+    }
+
     pub fn include_digits(&mut self, yes: bool) -> &mut Self {
         self.include_digits = yes;
         self
@@ -34,24 +46,35 @@ impl ParserBuilder {
     }
 
     pub fn build(&self) -> Parser {
-        let mut pattern = r#"\b(\p{Alphabetic}"#.to_owned();
-        if self.include_digits {
-            pattern.push_str(r#"|\d"#);
-        }
-        for grapheme in
-            unicode_segmentation::UnicodeSegmentation::graphemes(self.include_chars.as_str(), true)
-        {
-            let escaped = regex::escape(&grapheme);
-            pattern.push_str(&format!("|{}", escaped));
-        }
-        pattern.push_str(r#")+\b"#);
+        let mut pattern = r#"\b("#.to_owned();
+        Self::push_pattern(&mut pattern, self.leading_digits, &self.leading_chars);
+        Self::push_pattern(&mut pattern, self.include_digits, &self.include_chars);
+        pattern.push_str(r#"*)\b"#);
+        let pattern = dbg!(pattern);
+
         let words_str = regex::Regex::new(&pattern).unwrap();
         let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
+
         Parser {
             words_str,
             words_bytes,
-            ignore_hex: self.ignore_hex && self.include_digits,
+            // `leading_digits` let's us bypass the regexes since you can't have a decimal or
+            // hexadecimal number without a leading digit.
+            ignore_numbers: self.leading_digits,
+            ignore_hex: self.ignore_hex && self.leading_digits,
         }
+    }
+
+    fn push_pattern(pattern: &mut String, digits: bool, chars: &str) {
+        pattern.push_str(r#"(\p{Alphabetic}"#);
+        if digits {
+            pattern.push_str(r#"|\d"#);
+        }
+        for grapheme in unicode_segmentation::UnicodeSegmentation::graphemes(chars, true) {
+            let escaped = regex::escape(&grapheme);
+            pattern.push_str(&format!("|{}", escaped));
+        }
+        pattern.push_str(r#")"#);
     }
 }
 
@@ -59,6 +82,8 @@ impl Default for ParserBuilder {
     fn default() -> Self {
         Self {
             ignore_hex: true,
+            leading_digits: false,
+            leading_chars: "_".to_owned(),
             include_digits: true,
             include_chars: "_'".to_owned(),
         }
@@ -69,6 +94,7 @@ impl Default for ParserBuilder {
 pub struct Parser {
     words_str: regex::Regex,
     words_bytes: regex::bytes::Regex,
+    ignore_numbers: bool,
     ignore_hex: bool,
 }
 
@@ -95,12 +121,12 @@ impl Parser {
     }
 
     fn accept(&self, contents: &[u8]) -> bool {
-        if is_number(contents) {
+        if self.ignore_numbers && is_number(contents) {
             return false;
-        };
+        }
 
-        if self.ignore_hex {
-            return !is_hex(contents);
+        if self.ignore_hex && is_hex(contents) {
+            return false;
         }
 
         true
@@ -455,7 +481,10 @@ mod test {
 
     #[test]
     fn tokenize_ignore_hex_disabled() {
-        let parser = ParserBuilder::new().ignore_hex(false).build();
+        let parser = ParserBuilder::new()
+            .ignore_hex(false)
+            .leading_digits(true)
+            .build();
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
