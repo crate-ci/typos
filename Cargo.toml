@@ -9,7 +9,7 @@ members = [
 
 [package]
 name = "typos-cli"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
