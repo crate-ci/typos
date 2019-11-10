@@ -50,7 +50,6 @@ impl ParserBuilder {
         Self::push_pattern(&mut pattern, self.leading_digits, &self.leading_chars);
         Self::push_pattern(&mut pattern, self.include_digits, &self.include_chars);
         pattern.push_str(r#"*)\b"#);
-        let pattern = dbg!(pattern);
 
         let words_str = regex::Regex::new(&pattern).unwrap();
         let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
