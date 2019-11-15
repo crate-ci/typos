@@ -372,6 +372,31 @@ fn init_logging(level: Option<log::Level>) {
     }
 }
 
+fn check_path(
+    mut walk: ignore::Walk,
+    format: Format,
+    checks: &dyn Checks,
+    parser: &typos::tokens::Parser,
+    dictionary: &dyn typos::Dictionary,
+) -> Result<(bool, bool), anyhow::Error> {
+    let mut typos_found = false;
+    let mut errors_found = false;
+
+    for entry in walk {
+        match check_entry(entry, format, checks, parser, dictionary) {
+            Ok(true) => typos_found = true,
+            Err(err) => {
+                let msg = typos::report::Error::new(err.to_string());
+                format.report()(msg.into());
+                errors_found = true
+            }
+            _ => (),
+        }
+    }
+
+    Ok((typos_found, errors_found))
+}
+
 fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     format: Format,
@@ -465,42 +490,33 @@ fn run() -> Result<i32, anyhow::Error> {
             }
         } else if args.identifiers {
             let checks = settings.build_identifier_parser();
-            for entry in walk.build() {
-                match check_entry(entry, args.format, &checks, &parser, &dictionary) {
-                    Ok(true) => typos_found = true,
-                    Err(err) => {
-                        let msg = typos::report::Error::new(err.to_string());
-                        args.format.report()(msg.into());
-                        errors_found = true
-                    }
-                    _ => (),
-                }
+            let (cur_typos, cur_errors) =
+                check_path(walk.build(), args.format, &checks, &parser, &dictionary)?;
+            if cur_typos {
+                typos_found = true;
+            }
+            if cur_errors {
+                errors_found = true;
             }
         } else if args.words {
             let checks = settings.build_word_parser();
-            for entry in walk.build() {
-                match check_entry(entry, args.format, &checks, &parser, &dictionary) {
-                    Ok(true) => typos_found = true,
-                    Err(err) => {
-                        let msg = typos::report::Error::new(err.to_string());
-                        args.format.report()(msg.into());
-                        errors_found = true
-                    }
-                    _ => (),
-                }
+            let (cur_typos, cur_errors) =
+                check_path(walk.build(), args.format, &checks, &parser, &dictionary)?;
+            if cur_typos {
+                typos_found = true;
+            }
+            if cur_errors {
+                errors_found = true;
             }
         } else {
             let checks = settings.build_checks();
-            for entry in walk.build() {
-                match check_entry(entry, args.format, &checks, &parser, &dictionary) {
-                    Ok(true) => typos_found = true,
-                    Err(err) => {
-                        let msg = typos::report::Error::new(err.to_string());
-                        args.format.report()(msg.into());
-                        errors_found = true
-                    }
-                    _ => (),
-                }
+            let (cur_typos, cur_errors) =
+                check_path(walk.build(), args.format, &checks, &parser, &dictionary)?;
+            if cur_typos {
+                typos_found = true;
+            }
+            if cur_errors {
+                errors_found = true;
             }
         }
     }
