@@ -265,6 +265,8 @@ trait Checks {
     fn check_filename(
         &self,
         path: &std::path::Path,
+        parser: &typos::tokens::Parser,
+        dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error>;
 
@@ -272,64 +274,78 @@ trait Checks {
         &self,
         path: &std::path::Path,
         explicit: bool,
+        parser: &typos::tokens::Parser,
+        dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error>;
 }
 
-impl<'p> Checks for typos::checks::ParseIdentifiers<'p> {
+impl<'p> Checks for typos::checks::ParseIdentifiers {
     fn check_filename(
         &self,
         path: &std::path::Path,
+        parser: &typos::tokens::Parser,
+        _dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error> {
-        self.check_filename(path, report)
+        self.check_filename(path, parser, report)
     }
 
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        parser: &typos::tokens::Parser,
+        _dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error> {
-        self.check_file(path, explicit, report)
+        self.check_file(path, explicit, parser, report)
     }
 }
 
-impl<'p> Checks for typos::checks::ParseWords<'p> {
+impl<'p> Checks for typos::checks::ParseWords {
     fn check_filename(
         &self,
         path: &std::path::Path,
+        parser: &typos::tokens::Parser,
+        _dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error> {
-        self.check_filename(path, report)
+        self.check_filename(path, parser, report)
     }
 
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        parser: &typos::tokens::Parser,
+        _dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error> {
-        self.check_file(path, explicit, report)
+        self.check_file(path, explicit, parser, report)
     }
 }
 
-impl<'d, 'p> Checks for typos::checks::Checks<'d, 'p> {
+impl<'d, 'p> Checks for typos::checks::Checks {
     fn check_filename(
         &self,
         path: &std::path::Path,
+        parser: &typos::tokens::Parser,
+        dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error> {
-        self.check_filename(path, report)
+        self.check_filename(path, parser, dictionary, report)
     }
 
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        parser: &typos::tokens::Parser,
+        dictionary: &dyn typos::Dictionary,
         report: typos::report::Report,
     ) -> Result<bool, typos::Error> {
-        self.check_file(path, explicit, report)
+        self.check_file(path, explicit, parser, dictionary, report)
     }
 }
 
@@ -360,16 +376,18 @@ fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     format: Format,
     checks: &dyn Checks,
+    parser: &typos::tokens::Parser,
+    dictionary: &dyn typos::Dictionary,
 ) -> Result<bool, anyhow::Error> {
     let mut typos_found = false;
 
     let entry = entry?;
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        if checks.check_filename(entry.path(), format.report())? {
+        if checks.check_filename(entry.path(), parser, dictionary, format.report())? {
             typos_found = true;
         }
-        if checks.check_file(entry.path(), explicit, format.report())? {
+        if checks.check_file(entry.path(), explicit, parser, dictionary, format.report())? {
             typos_found = true;
         }
     }
@@ -408,8 +426,6 @@ fn run() -> Result<i32, anyhow::Error> {
         config.default.update(&args.overrides);
         let config = config;
 
-        let dictionary = crate::dict::BuiltIn::new();
-
         let parser = typos::tokens::ParserBuilder::new()
             .ignore_hex(config.default.ignore_hex())
             .leading_digits(config.default.identifier_leading_digits())
@@ -417,6 +433,8 @@ fn run() -> Result<i32, anyhow::Error> {
             .include_digits(config.default.identifier_include_digits())
             .include_chars(config.default.identifier_include_chars().to_owned())
             .build();
+
+        let dictionary = crate::dict::BuiltIn::new();
 
         let mut settings = typos::checks::TyposSettings::new();
         settings
@@ -446,9 +464,9 @@ fn run() -> Result<i32, anyhow::Error> {
                 }
             }
         } else if args.identifiers {
-            let checks = settings.build_identifier_parser(&parser);
+            let checks = settings.build_identifier_parser();
             for entry in walk.build() {
-                match check_entry(entry, args.format, &checks) {
+                match check_entry(entry, args.format, &checks, &parser, &dictionary) {
                     Ok(true) => typos_found = true,
                     Err(err) => {
                         let msg = typos::report::Error::new(err.to_string());
@@ -459,9 +477,9 @@ fn run() -> Result<i32, anyhow::Error> {
                 }
             }
         } else if args.words {
-            let checks = settings.build_word_parser(&parser);
+            let checks = settings.build_word_parser();
             for entry in walk.build() {
-                match check_entry(entry, args.format, &checks) {
+                match check_entry(entry, args.format, &checks, &parser, &dictionary) {
                     Ok(true) => typos_found = true,
                     Err(err) => {
                         let msg = typos::report::Error::new(err.to_string());
@@ -472,9 +490,9 @@ fn run() -> Result<i32, anyhow::Error> {
                 }
             }
         } else {
-            let checks = settings.build_checks(&dictionary, &parser);
+            let checks = settings.build_checks();
             for entry in walk.build() {
-                match check_entry(entry, args.format, &checks) {
+                match check_entry(entry, args.format, &checks, &parser, &dictionary) {
                     Ok(true) => typos_found = true,
                     Err(err) => {
                         let msg = typos::report::Error::new(err.to_string());

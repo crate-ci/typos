@@ -87,8 +87,15 @@ fn bench_parse_ident(data: &str, b: &mut test::Bencher) {
     sample_path.write_str(data).unwrap();
 
     let parser = typos::tokens::Parser::new();
-    let checks = typos::checks::TyposSettings::new().build_identifier_parser(&parser);
-    b.iter(|| checks.check_file(sample_path.path(), true, typos::report::print_silent));
+    let checks = typos::checks::TyposSettings::new().build_identifier_parser();
+    b.iter(|| {
+        checks.check_file(
+            sample_path.path(),
+            true,
+            &parser,
+            typos::report::print_silent,
+        )
+    });
 
     temp.close().unwrap();
 }
@@ -129,8 +136,15 @@ fn bench_parse_word(data: &str, b: &mut test::Bencher) {
     sample_path.write_str(data).unwrap();
 
     let parser = typos::tokens::Parser::new();
-    let checks = typos::checks::TyposSettings::new().build_word_parser(&parser);
-    b.iter(|| checks.check_file(sample_path.path(), true, typos::report::print_silent));
+    let checks = typos::checks::TyposSettings::new().build_word_parser();
+    b.iter(|| {
+        checks.check_file(
+            sample_path.path(),
+            true,
+            &parser,
+            typos::report::print_silent,
+        )
+    });
 
     temp.close().unwrap();
 }
@@ -172,8 +186,16 @@ fn bench_check_file(data: &str, b: &mut test::Bencher) {
 
     let corrections = typos_cli::dict::BuiltIn::new();
     let parser = typos::tokens::Parser::new();
-    let checks = typos::checks::TyposSettings::new().build_checks(&corrections, &parser);
-    b.iter(|| checks.check_file(sample_path.path(), true, typos::report::print_silent));
+    let checks = typos::checks::TyposSettings::new().build_checks();
+    b.iter(|| {
+        checks.check_file(
+            sample_path.path(),
+            true,
+            &parser,
+            &corrections,
+            typos::report::print_silent,
+        )
+    });
 
     temp.close().unwrap();
 }
