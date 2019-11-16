@@ -31,32 +31,24 @@ impl TyposSettings {
         self
     }
 
-    pub fn build_checks<'d, 'p>(
-        &self,
-        dictionary: &'d dyn Dictionary,
-        parser: &'p tokens::Parser,
-    ) -> Checks<'d, 'p> {
+    pub fn build_checks(&self) -> Checks {
         Checks {
-            dictionary,
-            parser,
             check_filenames: self.check_filenames,
             check_files: self.check_files,
             binary: self.binary,
         }
     }
 
-    pub fn build_identifier_parser<'p>(&self, parser: &'p tokens::Parser) -> ParseIdentifiers<'p> {
+    pub fn build_identifier_parser(&self) -> ParseIdentifiers {
         ParseIdentifiers {
-            parser,
             check_filenames: self.check_filenames,
             check_files: self.check_files,
             binary: self.binary,
         }
     }
 
-    pub fn build_word_parser<'p>(&self, parser: &'p tokens::Parser) -> ParseWords<'p> {
+    pub fn build_word_parser(&self) -> ParseWords {
         ParseWords {
-            parser,
             check_filenames: self.check_filenames,
             check_files: self.check_files,
             binary: self.binary,
@@ -74,18 +66,18 @@ impl Default for TyposSettings {
     }
 }
 
-#[derive(Clone)]
-pub struct ParseIdentifiers<'p> {
-    parser: &'p tokens::Parser,
+#[derive(Debug, Clone)]
+pub struct ParseIdentifiers {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
 }
 
-impl<'p> ParseIdentifiers<'p> {
+impl ParseIdentifiers {
     pub fn check_filename(
         &self,
         path: &std::path::Path,
+        parser: &tokens::Parser,
         report: report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
@@ -98,7 +90,7 @@ impl<'p> ParseIdentifiers<'p> {
             let msg = report::Parse {
                 path,
                 kind: report::ParseKind::Identifier,
-                data: self.parser.parse(part).map(|i| i.token()).collect(),
+                data: parser.parse(part).map(|i| i.token()).collect(),
                 non_exhaustive: (),
             };
             report(msg.into());
@@ -111,6 +103,7 @@ impl<'p> ParseIdentifiers<'p> {
         &self,
         path: &std::path::Path,
         explicit: bool,
+        parser: &tokens::Parser,
         report: report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
@@ -134,7 +127,7 @@ impl<'p> ParseIdentifiers<'p> {
             let msg = report::Parse {
                 path,
                 kind: report::ParseKind::Identifier,
-                data: self.parser.parse_bytes(line).map(|i| i.token()).collect(),
+                data: parser.parse_bytes(line).map(|i| i.token()).collect(),
                 non_exhaustive: (),
             };
             report(msg.into());
@@ -144,29 +137,18 @@ impl<'p> ParseIdentifiers<'p> {
     }
 }
 
-impl std::fmt::Debug for ParseIdentifiers<'_> {
-    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
-        fmt.debug_struct("Checks")
-            .field("parser", self.parser)
-            .field("check_filenames", &self.check_filenames)
-            .field("check_files", &self.check_files)
-            .field("binary", &self.binary)
-            .finish()
-    }
-}
-
-#[derive(Clone)]
-pub struct ParseWords<'p> {
-    parser: &'p tokens::Parser,
+#[derive(Debug, Clone)]
+pub struct ParseWords {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
 }
 
-impl<'p> ParseWords<'p> {
+impl ParseWords {
     pub fn check_filename(
         &self,
         path: &std::path::Path,
+        parser: &tokens::Parser,
         report: report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
@@ -179,8 +161,7 @@ impl<'p> ParseWords<'p> {
             let msg = report::Parse {
                 path,
                 kind: report::ParseKind::Word,
-                data: self
-                    .parser
+                data: parser
                     .parse(part)
                     .flat_map(|ident| ident.split().map(|i| i.token()))
                     .collect(),
@@ -196,6 +177,7 @@ impl<'p> ParseWords<'p> {
         &self,
         path: &std::path::Path,
         explicit: bool,
+        parser: &tokens::Parser,
         report: report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
@@ -219,8 +201,7 @@ impl<'p> ParseWords<'p> {
             let msg = report::Parse {
                 path,
                 kind: report::ParseKind::Word,
-                data: self
-                    .parser
+                data: parser
                     .parse_bytes(line)
                     .flat_map(|ident| ident.split().map(|i| i.token()))
                     .collect(),
@@ -233,30 +214,19 @@ impl<'p> ParseWords<'p> {
     }
 }
 
-impl std::fmt::Debug for ParseWords<'_> {
-    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
-        fmt.debug_struct("Checks")
-            .field("parser", self.parser)
-            .field("check_filenames", &self.check_filenames)
-            .field("check_files", &self.check_files)
-            .field("binary", &self.binary)
-            .finish()
-    }
-}
-
-#[derive(Clone)]
-pub struct Checks<'d, 'p> {
-    dictionary: &'d dyn Dictionary,
-    parser: &'p tokens::Parser,
+#[derive(Debug, Clone)]
+pub struct Checks {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
 }
 
-impl<'d, 'p> Checks<'d, 'p> {
+impl Checks {
     pub fn check_filename(
         &self,
         path: &std::path::Path,
+        parser: &tokens::Parser,
+        dictionary: &dyn Dictionary,
         report: report::Report,
     ) -> Result<bool, crate::Error> {
         let mut typos_found = false;
@@ -266,8 +236,8 @@ impl<'d, 'p> Checks<'d, 'p> {
         }
 
         for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
-            for ident in self.parser.parse(part) {
-                if let Some(correction) = self.dictionary.correct_ident(ident) {
+            for ident in parser.parse(part) {
+                if let Some(correction) = dictionary.correct_ident(ident) {
                     let msg = report::FilenameCorrection {
                         path,
                         typo: ident.token(),
@@ -278,7 +248,7 @@ impl<'d, 'p> Checks<'d, 'p> {
                     typos_found = true;
                 } else {
                     for word in ident.split() {
-                        if let Some(correction) = self.dictionary.correct_word(word) {
+                        if let Some(correction) = dictionary.correct_word(word) {
                             let msg = report::FilenameCorrection {
                                 path,
                                 typo: word.token(),
@@ -300,6 +270,8 @@ impl<'d, 'p> Checks<'d, 'p> {
         &self,
         path: &std::path::Path,
         explicit: bool,
+        parser: &tokens::Parser,
+        dictionary: &dyn Dictionary,
         report: report::Report,
     ) -> Result<bool, crate::Error> {
         let mut typos_found = false;
@@ -321,8 +293,8 @@ impl<'d, 'p> Checks<'d, 'p> {
 
         for (line_idx, line) in buffer.lines().enumerate() {
             let line_num = line_idx + 1;
-            for ident in self.parser.parse_bytes(line) {
-                if let Some(correction) = self.dictionary.correct_ident(ident) {
+            for ident in parser.parse_bytes(line) {
+                if let Some(correction) = dictionary.correct_ident(ident) {
                     let col_num = ident.offset();
                     let msg = report::Correction {
                         path,
@@ -337,7 +309,7 @@ impl<'d, 'p> Checks<'d, 'p> {
                     report(msg.into());
                 } else {
                     for word in ident.split() {
-                        if let Some(correction) = self.dictionary.correct_word(word) {
+                        if let Some(correction) = dictionary.correct_word(word) {
                             let col_num = word.offset();
                             let msg = report::Correction {
                                 path,
@@ -357,17 +329,6 @@ impl<'d, 'p> Checks<'d, 'p> {
         }
 
         Ok(typos_found)
-    }
-}
-
-impl std::fmt::Debug for Checks<'_, '_> {
-    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
-        fmt.debug_struct("Checks")
-            .field("parser", self.parser)
-            .field("check_filenames", &self.check_filenames)
-            .field("check_files", &self.check_files)
-            .field("binary", &self.binary)
-            .finish()
     }
 }
 
