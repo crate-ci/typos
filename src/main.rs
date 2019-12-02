@@ -356,7 +356,7 @@ fn init_logging(level: Option<log::Level>) {
         builder.filter(None, level.to_level_filter());
 
         if level == log::LevelFilter::Trace {
-            builder.default_format_timestamp(false);
+            builder.format_timestamp_secs();
         } else {
             builder.format(|f, record| {
                 writeln!(
@@ -373,7 +373,7 @@ fn init_logging(level: Option<log::Level>) {
 }
 
 fn check_path(
-    mut walk: ignore::Walk,
+    walk: ignore::Walk,
     format: Format,
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
