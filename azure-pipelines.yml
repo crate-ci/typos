@@ -11,10 +11,11 @@ schedules:
     - master
 
 stages:
-- template: default.yml@templates
-  parameters:
-    minrust: 1.36.0
-    codecov_token: $(CODECOV_TOKEN_SECRET)
+- stage: test
+  - template: default.yml@templates
+    parameters:
+      minrust: 1.36.0
+      codecov_token: $(CODECOV_TOKEN_SECRET)
 - stage: codegen
   displayName: Verify Code-gen
   dependsOn: []
