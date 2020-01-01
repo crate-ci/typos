@@ -80,7 +80,7 @@ stages:
     pool:
       vmImage: $(imageName)
     steps:
-    - template: azure/install-rust.yml@templates
+    - template: install-rust.yml@templates
     - script: |
         cargo rustc --target $(TARGET) --release --bin $(CRATE_NAME) -- -C lto
       displayName: Build
