@@ -26,7 +26,7 @@ stages:
     pool:
       vmImage: 'ubuntu-16.04'
     steps:
-    - template: azure/install-rust.yml@templates
+    - template: install-rust.yml@templates
     - script: |
         cargo run --package typos-codegen -- --output dict/typos/src/dict_codegen.rs --check
       displayName: Verify typos-dict
