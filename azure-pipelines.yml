@@ -11,7 +11,7 @@ schedules:
     - master
 
 stages:
-- template: azure/stages.yml@templates
+- template: default.yml@templates
   parameters:
     minrust: 1.36.0
     codecov_token: $(CODECOV_TOKEN_SECRET)
