@@ -17,7 +17,7 @@ codecov = { repository = "crate-ci/typos" }
 [dependencies]
 phf = { version = "0.8", features = ["unicase"] }
 phf_codegen = "0.8"
-unicase = "2.5"
+unicase = "2.6"
 itertools = "0.8"
 codegenrs = "0.1"
 structopt = "0.3"
