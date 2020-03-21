@@ -468,12 +468,11 @@ fn run() -> Result<i32, anyhow::Error> {
 
     init_logging(args.verbose.log_level());
 
-    let mut config = config::Config::default();
-    if let Some(path) = args.custom_config.as_ref() {
-        let custom = config::Config::from_file(path)?;
-        config.update(&custom);
-    }
-    let config = config;
+    let config = if let Some(path) = args.custom_config.as_ref() {
+        config::Config::from_file(path)?
+    } else {
+        config::Config::default()
+    };
 
     let mut typos_found = false;
     let mut errors_found = false;
