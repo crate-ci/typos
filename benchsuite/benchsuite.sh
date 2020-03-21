@@ -90,12 +90,16 @@ function bench_dir() {
     echo "$name: $version" >> $output
     echo "" >> $output
     rg_command=""
+    rg_j1_command=""
     if [[ ! -z $rg_path ]]; then
       rg_command="$rg_path bin $path"
+      rg_j1_command="$rg_path --threads 1 bin $path"
     fi
     typos_command=""
+    typos_j1_command=""
     if [[ ! -z $typos_path ]]; then
       typos_command="$typos_path $path"
+      typos_j1_command="$typos_path --threads 1 $path"
     fi
     misspell_rs_command=""
     if [[ ! -z $misspell_rs_path ]]; then
@@ -110,7 +114,7 @@ function bench_dir() {
     if [[ ! -z $codespell_path ]]; then
       codespell_command="$codespell_path $path"
     fi
-    hyperfine --warmup 1 -i --export-json $report_prefix-rg.json --export-markdown $report_prefix-rg.md "$rg_command" "$typos_command" "$misspell_rs_command" "$misspell_go_command" "$codespell_command"
+    hyperfine --warmup 1 -i --export-json $report_prefix-rg.json --export-markdown $report_prefix-rg.md "$rg_command" "$rg_j1_command" "$typos_command" "$typos_j1_command" "$misspell_rs_command" "$misspell_go_command" "$codespell_command"
     cat $report_prefix-rg.md >> $output
   fi
   echo "" >> $output
