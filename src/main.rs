@@ -20,13 +20,18 @@ arg_enum! {
     }
 }
 
+const PRINT_SILENT: typos::report::PrintSilent = typos::report::PrintSilent;
+const PRINT_BRIEF: typos::report::PrintBrief = typos::report::PrintBrief;
+const PRINT_LONG: typos::report::PrintLong = typos::report::PrintLong;
+const PRINT_JSON: typos::report::PrintJson = typos::report::PrintJson;
+
 impl Format {
-    fn report(self) -> typos::report::Report {
+    fn reporter(self) -> &'static dyn typos::report::Report {
         match self {
-            Format::Silent => typos::report::print_silent,
-            Format::Brief => typos::report::print_brief,
-            Format::Long => typos::report::print_long,
-            Format::Json => typos::report::print_json,
+            Format::Silent => &PRINT_SILENT,
+            Format::Brief => &PRINT_BRIEF,
+            Format::Long => &PRINT_LONG,
+            Format::Json => &PRINT_JSON,
         }
     }
 }
@@ -282,7 +287,7 @@ trait Checks: Send + Sync {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error>;
 
     fn check_file(
@@ -291,7 +296,7 @@ trait Checks: Send + Sync {
         explicit: bool,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error>;
 }
 
@@ -301,7 +306,7 @@ impl<'p> Checks for typos::checks::ParseIdentifiers {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_filename(path, parser, report)
     }
@@ -312,7 +317,7 @@ impl<'p> Checks for typos::checks::ParseIdentifiers {
         explicit: bool,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_file(path, explicit, parser, report)
     }
@@ -324,7 +329,7 @@ impl<'p> Checks for typos::checks::ParseWords {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_filename(path, parser, report)
     }
@@ -335,7 +340,7 @@ impl<'p> Checks for typos::checks::ParseWords {
         explicit: bool,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_file(path, explicit, parser, report)
     }
@@ -347,7 +352,7 @@ impl<'d, 'p> Checks for typos::checks::Checks {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_filename(path, parser, dictionary, report)
     }
@@ -358,7 +363,7 @@ impl<'d, 'p> Checks for typos::checks::Checks {
         explicit: bool,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_file(path, explicit, parser, dictionary, report)
     }
@@ -402,7 +407,7 @@ fn check_path(
             Ok(true) => typos_found = true,
             Err(err) => {
                 let msg = typos::report::Error::new(err.to_string());
-                format.report()(msg.into());
+                format.reporter().report(msg.into());
                 errors_found = true
             }
             _ => (),
@@ -428,7 +433,7 @@ fn check_path_parallel(
                 Ok(true) => typos_found.store(true, atomic::Ordering::Relaxed),
                 Err(err) => {
                     let msg = typos::report::Error::new(err.to_string());
-                    format.report()(msg.into());
+                    format.reporter().report(msg.into());
                     errors_found.store(true, atomic::Ordering::Relaxed);
                 }
                 _ => (),
@@ -452,10 +457,16 @@ fn check_entry(
     let entry = entry?;
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        if checks.check_filename(entry.path(), parser, dictionary, format.report())? {
+        if checks.check_filename(entry.path(), parser, dictionary, format.reporter())? {
             typos_found = true;
         }
-        if checks.check_file(entry.path(), explicit, parser, dictionary, format.report())? {
+        if checks.check_file(
+            entry.path(),
+            explicit,
+            parser,
+            dictionary,
+            format.reporter(),
+        )? {
             typos_found = true;
         }
     }
@@ -524,11 +535,11 @@ fn run() -> Result<i32, anyhow::Error> {
                     match entry {
                         Ok(entry) => {
                             let msg = typos::report::File::new(entry.path());
-                            args.format.report()(msg.into());
+                            args.format.reporter().report(msg.into());
                         }
                         Err(err) => {
                             let msg = typos::report::Error::new(err.to_string());
-                            args.format.report()(msg.into());
+                            args.format.reporter().report(msg.into());
                             errors_found = true
                         }
                     }
@@ -541,11 +552,11 @@ fn run() -> Result<i32, anyhow::Error> {
                         match entry {
                             Ok(entry) => {
                                 let msg = typos::report::File::new(entry.path());
-                                format.report()(msg.into());
+                                format.reporter().report(msg.into());
                             }
                             Err(err) => {
                                 let msg = typos::report::Error::new(err.to_string());
-                                format.report()(msg.into());
+                                format.reporter().report(msg.into());
                                 atomic_errors.store(true, atomic::Ordering::Relaxed);
                             }
                         }
