@@ -394,20 +394,20 @@ fn init_logging(level: Option<log::Level>) {
 
 fn check_path(
     walk: ignore::Walk,
-    format: Format,
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
+    reporter: &dyn typos::report::Report,
 ) -> (bool, bool) {
     let mut typos_found = false;
     let mut errors_found = false;
 
     for entry in walk {
-        match check_entry(entry, format, checks, parser, dictionary) {
+        match check_entry(entry, checks, parser, dictionary, reporter) {
             Ok(true) => typos_found = true,
             Err(err) => {
                 let msg = typos::report::Error::new(err.to_string());
-                format.reporter().report(msg.into());
+                reporter.report(msg.into());
                 errors_found = true
             }
             _ => (),
@@ -419,21 +419,21 @@ fn check_path(
 
 fn check_path_parallel(
     walk: ignore::WalkParallel,
-    format: Format,
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
+    reporter: &dyn typos::report::Report,
 ) -> (bool, bool) {
     let typos_found = atomic::AtomicBool::new(false);
     let errors_found = atomic::AtomicBool::new(false);
 
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match check_entry(entry, format, checks, parser, dictionary) {
+            match check_entry(entry, checks, parser, dictionary, reporter) {
                 Ok(true) => typos_found.store(true, atomic::Ordering::Relaxed),
                 Err(err) => {
                     let msg = typos::report::Error::new(err.to_string());
-                    format.reporter().report(msg.into());
+                    reporter.report(msg.into());
                     errors_found.store(true, atomic::Ordering::Relaxed);
                 }
                 _ => (),
@@ -447,26 +447,20 @@ fn check_path_parallel(
 
 fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
-    format: Format,
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
+    reporter: &dyn typos::report::Report,
 ) -> Result<bool, anyhow::Error> {
     let mut typos_found = false;
 
     let entry = entry?;
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        if checks.check_filename(entry.path(), parser, dictionary, format.reporter())? {
+        if checks.check_filename(entry.path(), parser, dictionary, reporter)? {
             typos_found = true;
         }
-        if checks.check_file(
-            entry.path(),
-            explicit,
-            parser,
-            dictionary,
-            format.reporter(),
-        )? {
+        if checks.check_file(entry.path(), explicit, parser, dictionary, reporter)? {
             typos_found = true;
         }
     }
@@ -528,35 +522,38 @@ fn run() -> Result<i32, anyhow::Error> {
             .git_ignore(config.files.ignore_vcs())
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
+
+        let reporter = args.format.reporter();
+
         let single_threaded = args.threads == 1;
+
         if args.files {
             if single_threaded {
                 for entry in walk.build() {
                     match entry {
                         Ok(entry) => {
                             let msg = typos::report::File::new(entry.path());
-                            args.format.reporter().report(msg.into());
+                            reporter.report(msg.into());
                         }
                         Err(err) => {
                             let msg = typos::report::Error::new(err.to_string());
-                            args.format.reporter().report(msg.into());
+                            reporter.report(msg.into());
                             errors_found = true
                         }
                     }
                 }
             } else {
-                let format = args.format;
                 let atomic_errors = atomic::AtomicBool::new(errors_found);
                 walk.build_parallel().run(|| {
                     Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
                         match entry {
                             Ok(entry) => {
                                 let msg = typos::report::File::new(entry.path());
-                                format.reporter().report(msg.into());
+                                reporter.report(msg.into());
                             }
                             Err(err) => {
                                 let msg = typos::report::Error::new(err.to_string());
-                                format.reporter().report(msg.into());
+                                reporter.report(msg.into());
                                 atomic_errors.store(true, atomic::Ordering::Relaxed);
                             }
                         }
@@ -568,14 +565,14 @@ fn run() -> Result<i32, anyhow::Error> {
         } else if args.identifiers {
             let checks = settings.build_identifier_parser();
             let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
+                check_path(walk.build(), &checks, &parser, &dictionary, reporter)
             } else {
                 check_path_parallel(
                     walk.build_parallel(),
-                    args.format,
                     &checks,
                     &parser,
                     &dictionary,
+                    reporter,
                 )
             };
             if cur_typos {
@@ -587,14 +584,14 @@ fn run() -> Result<i32, anyhow::Error> {
         } else if args.words {
             let checks = settings.build_word_parser();
             let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
+                check_path(walk.build(), &checks, &parser, &dictionary, reporter)
             } else {
                 check_path_parallel(
                     walk.build_parallel(),
-                    args.format,
                     &checks,
                     &parser,
                     &dictionary,
+                    reporter,
                 )
             };
             if cur_typos {
@@ -606,14 +603,14 @@ fn run() -> Result<i32, anyhow::Error> {
         } else {
             let checks = settings.build_checks();
             let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
+                check_path(walk.build(), &checks, &parser, &dictionary, reporter)
             } else {
                 check_path_parallel(
                     walk.build_parallel(),
-                    args.format,
                     &checks,
                     &parser,
                     &dictionary,
+                    reporter,
                 )
             };
             if cur_typos {
