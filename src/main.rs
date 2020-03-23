@@ -562,52 +562,31 @@ fn run() -> Result<i32, anyhow::Error> {
                 });
                 errors_found = atomic_errors.into_inner();
             }
-        } else if args.identifiers {
-            let checks = settings.build_identifier_parser();
-            let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), &checks, &parser, &dictionary, reporter)
-            } else {
-                check_path_parallel(
-                    walk.build_parallel(),
-                    &checks,
-                    &parser,
-                    &dictionary,
-                    reporter,
-                )
-            };
-            if cur_typos {
-                typos_found = true;
-            }
-            if cur_errors {
-                errors_found = true;
-            }
-        } else if args.words {
-            let checks = settings.build_word_parser();
-            let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), &checks, &parser, &dictionary, reporter)
-            } else {
-                check_path_parallel(
-                    walk.build_parallel(),
-                    &checks,
-                    &parser,
-                    &dictionary,
-                    reporter,
-                )
-            };
-            if cur_typos {
-                typos_found = true;
-            }
-            if cur_errors {
-                errors_found = true;
-            }
         } else {
-            let checks = settings.build_checks();
+            let (identifier_parser, word_parser, checks);
+            let selected_checks: &dyn Checks = if args.identifiers {
+                identifier_parser = settings.build_identifier_parser();
+                &identifier_parser
+            } else if args.words {
+                word_parser = settings.build_word_parser();
+                &word_parser
+            } else {
+                checks = settings.build_checks();
+                &checks
+            };
+
             let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), &checks, &parser, &dictionary, reporter)
+                check_path(
+                    walk.build(),
+                    selected_checks,
+                    &parser,
+                    &dictionary,
+                    reporter,
+                )
             } else {
                 check_path_parallel(
                     walk.build_parallel(),
-                    &checks,
+                    selected_checks,
                     &parser,
                     &dictionary,
                     reporter,
