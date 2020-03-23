@@ -103,74 +103,88 @@ impl Error {
     }
 }
 
-pub type Report = fn(msg: Message);
+pub trait Report: Send + Sync {
+    fn report(&self, msg: Message);
+}
 
-pub fn print_silent(_: Message) {}
+pub struct PrintSilent;
 
-pub fn print_brief(msg: Message) {
-    match msg {
-        Message::BinaryFile(msg) => {
-            println!("{}", msg);
-        }
-        Message::Correction(msg) => {
-            println!(
-                "{}:{}:{}: {} -> {}",
-                msg.path.display(),
-                msg.line_num,
-                msg.col_num,
-                msg.typo,
-                msg.correction
-            );
-        }
-        Message::FilenameCorrection(msg) => {
-            println!("{}: {} -> {}", msg.path.display(), msg.typo, msg.correction);
-        }
-        Message::File(msg) => {
-            println!("{}", msg.path.display());
-        }
-        Message::Parse(msg) => {
-            println!("{}", itertools::join(msg.data.iter(), " "));
-        }
-        Message::PathError(msg) => {
-            println!("{}: {}", msg.path.display(), msg.msg);
-        }
-        Message::Error(msg) => {
-            println!("{}", msg.msg);
-        }
-        Message::__NonExhaustive => {
-            unreachable!("Non-creatable case");
+impl Report for PrintSilent {
+    fn report(&self, _msg: Message) {}
+}
+
+pub struct PrintBrief;
+
+impl Report for PrintBrief {
+    fn report(&self, msg: Message) {
+        match msg {
+            Message::BinaryFile(msg) => {
+                println!("{}", msg);
+            }
+            Message::Correction(msg) => {
+                println!(
+                    "{}:{}:{}: {} -> {}",
+                    msg.path.display(),
+                    msg.line_num,
+                    msg.col_num,
+                    msg.typo,
+                    msg.correction
+                );
+            }
+            Message::FilenameCorrection(msg) => {
+                println!("{}: {} -> {}", msg.path.display(), msg.typo, msg.correction);
+            }
+            Message::File(msg) => {
+                println!("{}", msg.path.display());
+            }
+            Message::Parse(msg) => {
+                println!("{}", itertools::join(msg.data.iter(), " "));
+            }
+            Message::PathError(msg) => {
+                println!("{}: {}", msg.path.display(), msg.msg);
+            }
+            Message::Error(msg) => {
+                println!("{}", msg.msg);
+            }
+            Message::__NonExhaustive => {
+                unreachable!("Non-creatable case");
+            }
         }
     }
 }
 
-pub fn print_long(msg: Message) {
-    match msg {
-        Message::BinaryFile(msg) => {
-            println!("{}", msg);
-        }
-        Message::Correction(msg) => print_long_correction(msg),
-        Message::FilenameCorrection(msg) => {
-            println!(
-                "{}: error: `{}` should be `{}`",
-                msg.path.display(),
-                msg.typo,
-                msg.correction
-            );
-        }
-        Message::File(msg) => {
-            println!("{}", msg.path.display());
-        }
-        Message::Parse(msg) => {
-            println!("{}", itertools::join(msg.data.iter(), " "));
-        }
-        Message::PathError(msg) => {
-            println!("{}: {}", msg.path.display(), msg.msg);
-        }
-        Message::Error(msg) => {
-            println!("{}", msg.msg);
-        }
-        Message::__NonExhaustive => {
-            unreachable!("Non-creatable case");
+pub struct PrintLong;
+
+impl Report for PrintLong {
+    fn report(&self, msg: Message) {
+        match msg {
+            Message::BinaryFile(msg) => {
+                println!("{}", msg);
+            }
+            Message::Correction(msg) => print_long_correction(msg),
+            Message::FilenameCorrection(msg) => {
+                println!(
+                    "{}: error: `{}` should be `{}`",
+                    msg.path.display(),
+                    msg.typo,
+                    msg.correction
+                );
+            }
+            Message::File(msg) => {
+                println!("{}", msg.path.display());
+            }
+            Message::Parse(msg) => {
+                println!("{}", itertools::join(msg.data.iter(), " "));
+            }
+            Message::PathError(msg) => {
+                println!("{}: {}", msg.path.display(), msg.msg);
+            }
+            Message::Error(msg) => {
+                println!("{}", msg.msg);
+            }
+            Message::__NonExhaustive => {
+                unreachable!("Non-creatable case");
+            }
         }
     }
 }
@@ -208,6 +222,10 @@ fn print_long_correction(msg: Correction) {
     writeln!(handle, "{} |", line_indent).unwrap();
 }
 
-pub fn print_json(msg: Message) {
-    println!("{}", serde_json::to_string(&msg).unwrap());
+pub struct PrintJson;
+
+impl Report for PrintJson {
+    fn report(&self, msg: Message) {
+        println!("{}", serde_json::to_string(&msg).unwrap());
+    }
 }
