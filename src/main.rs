@@ -20,13 +20,18 @@ arg_enum! {
     }
 }
 
+const PRINT_SILENT: typos::report::PrintSilent = typos::report::PrintSilent;
+const PRINT_BRIEF: typos::report::PrintBrief = typos::report::PrintBrief;
+const PRINT_LONG: typos::report::PrintLong = typos::report::PrintLong;
+const PRINT_JSON: typos::report::PrintJson = typos::report::PrintJson;
+
 impl Format {
-    fn report(self) -> typos::report::Report {
+    fn reporter(self) -> &'static dyn typos::report::Report {
         match self {
-            Format::Silent => typos::report::print_silent,
-            Format::Brief => typos::report::print_brief,
-            Format::Long => typos::report::print_long,
-            Format::Json => typos::report::print_json,
+            Format::Silent => &PRINT_SILENT,
+            Format::Brief => &PRINT_BRIEF,
+            Format::Long => &PRINT_LONG,
+            Format::Json => &PRINT_JSON,
         }
     }
 }
@@ -89,16 +94,6 @@ struct Args {
 
     #[structopt(flatten)]
     verbose: clap_verbosity_flag::Verbosity,
-}
-
-impl Args {
-    pub fn infer(mut self) -> Self {
-        if self.path.len() == 1 && self.path[0].is_file() {
-            self.threads = 1;
-        }
-
-        self
-    }
 }
 
 #[derive(Debug, StructOpt)]
@@ -282,7 +277,7 @@ trait Checks: Send + Sync {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error>;
 
     fn check_file(
@@ -291,7 +286,7 @@ trait Checks: Send + Sync {
         explicit: bool,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error>;
 }
 
@@ -301,7 +296,7 @@ impl<'p> Checks for typos::checks::ParseIdentifiers {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_filename(path, parser, report)
     }
@@ -312,7 +307,7 @@ impl<'p> Checks for typos::checks::ParseIdentifiers {
         explicit: bool,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_file(path, explicit, parser, report)
     }
@@ -324,7 +319,7 @@ impl<'p> Checks for typos::checks::ParseWords {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_filename(path, parser, report)
     }
@@ -335,7 +330,7 @@ impl<'p> Checks for typos::checks::ParseWords {
         explicit: bool,
         parser: &typos::tokens::Parser,
         _dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_file(path, explicit, parser, report)
     }
@@ -347,7 +342,7 @@ impl<'d, 'p> Checks for typos::checks::Checks {
         path: &std::path::Path,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_filename(path, parser, dictionary, report)
     }
@@ -358,7 +353,7 @@ impl<'d, 'p> Checks for typos::checks::Checks {
         explicit: bool,
         parser: &typos::tokens::Parser,
         dictionary: &dyn typos::Dictionary,
-        report: typos::report::Report,
+        report: &dyn typos::report::Report,
     ) -> Result<bool, typos::Error> {
         self.check_file(path, explicit, parser, dictionary, report)
     }
@@ -389,20 +384,20 @@ fn init_logging(level: Option<log::Level>) {
 
 fn check_path(
     walk: ignore::Walk,
-    format: Format,
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
+    reporter: &dyn typos::report::Report,
 ) -> (bool, bool) {
     let mut typos_found = false;
     let mut errors_found = false;
 
     for entry in walk {
-        match check_entry(entry, format, checks, parser, dictionary) {
+        match check_entry(entry, checks, parser, dictionary, reporter) {
             Ok(true) => typos_found = true,
             Err(err) => {
                 let msg = typos::report::Error::new(err.to_string());
-                format.report()(msg.into());
+                reporter.report(msg.into());
                 errors_found = true
             }
             _ => (),
@@ -414,21 +409,21 @@ fn check_path(
 
 fn check_path_parallel(
     walk: ignore::WalkParallel,
-    format: Format,
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
+    reporter: &dyn typos::report::Report,
 ) -> (bool, bool) {
     let typos_found = atomic::AtomicBool::new(false);
     let errors_found = atomic::AtomicBool::new(false);
 
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match check_entry(entry, format, checks, parser, dictionary) {
+            match check_entry(entry, checks, parser, dictionary, reporter) {
                 Ok(true) => typos_found.store(true, atomic::Ordering::Relaxed),
                 Err(err) => {
                     let msg = typos::report::Error::new(err.to_string());
-                    format.report()(msg.into());
+                    reporter.report(msg.into());
                     errors_found.store(true, atomic::Ordering::Relaxed);
                 }
                 _ => (),
@@ -442,20 +437,20 @@ fn check_path_parallel(
 
 fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
-    format: Format,
     checks: &dyn Checks,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
+    reporter: &dyn typos::report::Report,
 ) -> Result<bool, anyhow::Error> {
     let mut typos_found = false;
 
     let entry = entry?;
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        if checks.check_filename(entry.path(), parser, dictionary, format.report())? {
+        if checks.check_filename(entry.path(), parser, dictionary, reporter)? {
             typos_found = true;
         }
-        if checks.check_file(entry.path(), explicit, parser, dictionary, format.report())? {
+        if checks.check_file(entry.path(), explicit, parser, dictionary, reporter)? {
             typos_found = true;
         }
     }
@@ -464,7 +459,7 @@ fn check_entry(
 }
 
 fn run() -> Result<i32, anyhow::Error> {
-    let args = Args::from_args().infer();
+    let args = Args::from_args();
 
     init_logging(args.verbose.log_level());
 
@@ -509,6 +504,9 @@ fn run() -> Result<i32, anyhow::Error> {
             .check_files(config.default.check_file())
             .binary(config.files.binary());
 
+        let threads = if path.is_file() { 1 } else { args.threads };
+        let single_threaded = threads == 1;
+
         let mut walk = ignore::WalkBuilder::new(path);
         walk.threads(args.threads)
             .hidden(config.files.ignore_hidden())
@@ -517,35 +515,36 @@ fn run() -> Result<i32, anyhow::Error> {
             .git_ignore(config.files.ignore_vcs())
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
-        let single_threaded = args.threads == 1;
+
+        let reporter = args.format.reporter();
+
         if args.files {
             if single_threaded {
                 for entry in walk.build() {
                     match entry {
                         Ok(entry) => {
                             let msg = typos::report::File::new(entry.path());
-                            args.format.report()(msg.into());
+                            reporter.report(msg.into());
                         }
                         Err(err) => {
                             let msg = typos::report::Error::new(err.to_string());
-                            args.format.report()(msg.into());
+                            reporter.report(msg.into());
                             errors_found = true
                         }
                     }
                 }
             } else {
-                let format = args.format;
                 let atomic_errors = atomic::AtomicBool::new(errors_found);
                 walk.build_parallel().run(|| {
                     Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
                         match entry {
                             Ok(entry) => {
                                 let msg = typos::report::File::new(entry.path());
-                                format.report()(msg.into());
+                                reporter.report(msg.into());
                             }
                             Err(err) => {
                                 let msg = typos::report::Error::new(err.to_string());
-                                format.report()(msg.into());
+                                reporter.report(msg.into());
                                 atomic_errors.store(true, atomic::Ordering::Relaxed);
                             }
                         }
@@ -554,55 +553,34 @@ fn run() -> Result<i32, anyhow::Error> {
                 });
                 errors_found = atomic_errors.into_inner();
             }
-        } else if args.identifiers {
-            let checks = settings.build_identifier_parser();
-            let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
-            } else {
-                check_path_parallel(
-                    walk.build_parallel(),
-                    args.format,
-                    &checks,
-                    &parser,
-                    &dictionary,
-                )
-            };
-            if cur_typos {
-                typos_found = true;
-            }
-            if cur_errors {
-                errors_found = true;
-            }
-        } else if args.words {
-            let checks = settings.build_word_parser();
-            let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
-            } else {
-                check_path_parallel(
-                    walk.build_parallel(),
-                    args.format,
-                    &checks,
-                    &parser,
-                    &dictionary,
-                )
-            };
-            if cur_typos {
-                typos_found = true;
-            }
-            if cur_errors {
-                errors_found = true;
-            }
         } else {
-            let checks = settings.build_checks();
+            let (identifier_parser, word_parser, checks);
+            let selected_checks: &dyn Checks = if args.identifiers {
+                identifier_parser = settings.build_identifier_parser();
+                &identifier_parser
+            } else if args.words {
+                word_parser = settings.build_word_parser();
+                &word_parser
+            } else {
+                checks = settings.build_checks();
+                &checks
+            };
+
             let (cur_typos, cur_errors) = if single_threaded {
-                check_path(walk.build(), args.format, &checks, &parser, &dictionary)
+                check_path(
+                    walk.build(),
+                    selected_checks,
+                    &parser,
+                    &dictionary,
+                    reporter,
+                )
             } else {
                 check_path_parallel(
                     walk.build_parallel(),
-                    args.format,
-                    &checks,
+                    selected_checks,
                     &parser,
                     &dictionary,
+                    reporter,
                 )
             };
             if cur_typos {

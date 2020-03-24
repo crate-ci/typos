@@ -78,7 +78,7 @@ impl ParseIdentifiers {
         &self,
         path: &std::path::Path,
         parser: &tokens::Parser,
-        report: report::Report,
+        reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
 
@@ -93,7 +93,7 @@ impl ParseIdentifiers {
                 data: parser.parse(part).map(|i| i.token()).collect(),
                 non_exhaustive: (),
             };
-            report(msg.into());
+            reporter.report(msg.into());
         }
 
         Ok(typos_found)
@@ -104,7 +104,7 @@ impl ParseIdentifiers {
         path: &std::path::Path,
         explicit: bool,
         parser: &tokens::Parser,
-        report: report::Report,
+        reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
 
@@ -119,7 +119,7 @@ impl ParseIdentifiers {
                 path,
                 non_exhaustive: (),
             };
-            report(msg.into());
+            reporter.report(msg.into());
             return Ok(typos_found);
         }
 
@@ -130,7 +130,7 @@ impl ParseIdentifiers {
                 data: parser.parse_bytes(line).map(|i| i.token()).collect(),
                 non_exhaustive: (),
             };
-            report(msg.into());
+            reporter.report(msg.into());
         }
 
         Ok(typos_found)
@@ -149,7 +149,7 @@ impl ParseWords {
         &self,
         path: &std::path::Path,
         parser: &tokens::Parser,
-        report: report::Report,
+        reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
 
@@ -167,7 +167,7 @@ impl ParseWords {
                     .collect(),
                 non_exhaustive: (),
             };
-            report(msg.into());
+            reporter.report(msg.into());
         }
 
         Ok(typos_found)
@@ -178,7 +178,7 @@ impl ParseWords {
         path: &std::path::Path,
         explicit: bool,
         parser: &tokens::Parser,
-        report: report::Report,
+        reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
         let typos_found = false;
 
@@ -193,7 +193,7 @@ impl ParseWords {
                 path,
                 non_exhaustive: (),
             };
-            report(msg.into());
+            reporter.report(msg.into());
             return Ok(typos_found);
         }
 
@@ -207,7 +207,7 @@ impl ParseWords {
                     .collect(),
                 non_exhaustive: (),
             };
-            report(msg.into());
+            reporter.report(msg.into());
         }
 
         Ok(typos_found)
@@ -227,7 +227,7 @@ impl Checks {
         path: &std::path::Path,
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
-        report: report::Report,
+        reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
         let mut typos_found = false;
 
@@ -244,7 +244,7 @@ impl Checks {
                         correction,
                         non_exhaustive: (),
                     };
-                    report(msg.into());
+                    reporter.report(msg.into());
                     typos_found = true;
                 } else {
                     for word in ident.split() {
@@ -255,7 +255,7 @@ impl Checks {
                                 correction,
                                 non_exhaustive: (),
                             };
-                            report(msg.into());
+                            reporter.report(msg.into());
                             typos_found = true;
                         }
                     }
@@ -272,7 +272,7 @@ impl Checks {
         explicit: bool,
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
-        report: report::Report,
+        reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
         let mut typos_found = false;
 
@@ -287,7 +287,7 @@ impl Checks {
                 path,
                 non_exhaustive: (),
             };
-            report(msg.into());
+            reporter.report(msg.into());
             return Ok(typos_found);
         }
 
@@ -306,7 +306,7 @@ impl Checks {
                         non_exhaustive: (),
                     };
                     typos_found = true;
-                    report(msg.into());
+                    reporter.report(msg.into());
                 } else {
                     for word in ident.split() {
                         if let Some(correction) = dictionary.correct_word(word) {
@@ -321,7 +321,7 @@ impl Checks {
                                 non_exhaustive: (),
                             };
                             typos_found = true;
-                            report(msg.into());
+                            reporter.report(msg.into());
                         }
                     }
                 }
