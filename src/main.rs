@@ -12,27 +12,9 @@ mod checks;
 mod config;
 mod dict;
 
-fn init_logging(level: Option<log::Level>) {
-    if let Some(level) = level {
-        let mut builder = env_logger::Builder::new();
-
-        builder.filter(None, level.to_level_filter());
-
-        if level == log::LevelFilter::Trace {
-            builder.format_timestamp_secs();
-        } else {
-            builder.format(|f, record| {
-                writeln!(
-                    f,
-                    "[{}] {}",
-                    record.level().to_string().to_lowercase(),
-                    record.args()
-                )
-            });
-        }
-
-        builder.init();
-    }
+fn main() {
+    let code = run().unwrap();
+    std::process::exit(code);
 }
 
 fn run() -> Result<i32, anyhow::Error> {
@@ -178,7 +160,25 @@ fn run() -> Result<i32, anyhow::Error> {
     }
 }
 
-fn main() {
-    let code = run().unwrap();
-    std::process::exit(code);
+fn init_logging(level: Option<log::Level>) {
+    if let Some(level) = level {
+        let mut builder = env_logger::Builder::new();
+
+        builder.filter(None, level.to_level_filter());
+
+        if level == log::LevelFilter::Trace {
+            builder.format_timestamp_secs();
+        } else {
+            builder.format(|f, record| {
+                writeln!(
+                    f,
+                    "[{}] {}",
+                    record.level().to_string().to_lowercase(),
+                    record.args()
+                )
+            });
+        }
+
+        builder.init();
+    }
 }
