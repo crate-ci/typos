@@ -96,16 +96,6 @@ struct Args {
     verbose: clap_verbosity_flag::Verbosity,
 }
 
-impl Args {
-    pub fn infer(mut self) -> Self {
-        if self.path.len() == 1 && self.path[0].is_file() {
-            self.threads = 1;
-        }
-
-        self
-    }
-}
-
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub struct FileArgs {
@@ -469,7 +459,7 @@ fn check_entry(
 }
 
 fn run() -> Result<i32, anyhow::Error> {
-    let args = Args::from_args().infer();
+    let args = Args::from_args();
 
     init_logging(args.verbose.log_level());
 
@@ -514,6 +504,9 @@ fn run() -> Result<i32, anyhow::Error> {
             .check_files(config.default.check_file())
             .binary(config.files.binary());
 
+        let threads = if path.is_file() { 1 } else { args.threads };
+        let single_threaded = threads == 1;
+
         let mut walk = ignore::WalkBuilder::new(path);
         walk.threads(args.threads)
             .hidden(config.files.ignore_hidden())
@@ -524,8 +517,6 @@ fn run() -> Result<i32, anyhow::Error> {
             .parents(config.files.ignore_parent());
 
         let reporter = args.format.reporter();
-
-        let single_threaded = args.threads == 1;
 
         if args.files {
             if single_threaded {
