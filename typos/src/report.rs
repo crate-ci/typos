@@ -107,12 +107,14 @@ pub trait Report: Send + Sync {
     fn report(&self, msg: Message);
 }
 
+#[derive(Copy, Clone, Debug)]
 pub struct PrintSilent;
 
 impl Report for PrintSilent {
     fn report(&self, _msg: Message) {}
 }
 
+#[derive(Copy, Clone, Debug)]
 pub struct PrintBrief;
 
 impl Report for PrintBrief {
@@ -153,6 +155,7 @@ impl Report for PrintBrief {
     }
 }
 
+#[derive(Copy, Clone, Debug)]
 pub struct PrintLong;
 
 impl Report for PrintLong {
@@ -222,6 +225,7 @@ fn print_long_correction(msg: Correction) {
     writeln!(handle, "{} |", line_indent).unwrap();
 }
 
+#[derive(Copy, Clone, Debug)]
 pub struct PrintJson;
 
 impl Report for PrintJson {
