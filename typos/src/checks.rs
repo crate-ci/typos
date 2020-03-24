@@ -91,7 +91,6 @@ impl ParseIdentifiers {
                 path,
                 kind: report::ParseKind::Identifier,
                 data: parser.parse(part).map(|i| i.token()).collect(),
-                non_exhaustive: (),
             };
             reporter.report(msg.into());
         }
@@ -115,10 +114,7 @@ impl ParseIdentifiers {
         let buffer = std::fs::read(path)
             .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
         if !explicit && !self.binary && is_binary(&buffer) {
-            let msg = report::BinaryFile {
-                path,
-                non_exhaustive: (),
-            };
+            let msg = report::BinaryFile { path };
             reporter.report(msg.into());
             return Ok(typos_found);
         }
@@ -128,7 +124,6 @@ impl ParseIdentifiers {
                 path,
                 kind: report::ParseKind::Identifier,
                 data: parser.parse_bytes(line).map(|i| i.token()).collect(),
-                non_exhaustive: (),
             };
             reporter.report(msg.into());
         }
@@ -165,7 +160,6 @@ impl ParseWords {
                     .parse(part)
                     .flat_map(|ident| ident.split().map(|i| i.token()))
                     .collect(),
-                non_exhaustive: (),
             };
             reporter.report(msg.into());
         }
@@ -189,10 +183,7 @@ impl ParseWords {
         let buffer = std::fs::read(path)
             .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
         if !explicit && !self.binary && is_binary(&buffer) {
-            let msg = report::BinaryFile {
-                path,
-                non_exhaustive: (),
-            };
+            let msg = report::BinaryFile { path };
             reporter.report(msg.into());
             return Ok(typos_found);
         }
@@ -205,7 +196,6 @@ impl ParseWords {
                     .parse_bytes(line)
                     .flat_map(|ident| ident.split().map(|i| i.token()))
                     .collect(),
-                non_exhaustive: (),
             };
             reporter.report(msg.into());
         }
@@ -244,7 +234,6 @@ impl Checks {
                         byte_offset,
                         typo: ident.token(),
                         correction,
-                        non_exhaustive: (),
                     };
                     reporter.report(msg.into());
                     typos_found = true;
@@ -257,7 +246,6 @@ impl Checks {
                                 byte_offset,
                                 typo: word.token(),
                                 correction,
-                                non_exhaustive: (),
                             };
                             reporter.report(msg.into());
                             typos_found = true;
@@ -287,10 +275,7 @@ impl Checks {
         let buffer = std::fs::read(path)
             .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
         if !explicit && !self.binary && is_binary(&buffer) {
-            let msg = report::BinaryFile {
-                path,
-                non_exhaustive: (),
-            };
+            let msg = report::BinaryFile { path };
             reporter.report(msg.into());
             return Ok(typos_found);
         }
@@ -307,7 +292,6 @@ impl Checks {
                         byte_offset,
                         typo: ident.token(),
                         correction,
-                        non_exhaustive: (),
                     };
                     typos_found = true;
                     reporter.report(msg.into());
@@ -322,7 +306,6 @@ impl Checks {
                                 byte_offset,
                                 typo: word.token(),
                                 correction,
-                                non_exhaustive: (),
                             };
                             typos_found = true;
                             reporter.report(msg.into());

@@ -11,6 +11,7 @@ mod args;
 mod checks;
 mod config;
 mod dict;
+mod replace;
 
 fn main() {
     let code = run().unwrap();
@@ -75,7 +76,11 @@ fn run() -> Result<i32, anyhow::Error> {
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
 
-        let reporter = args.format.reporter();
+        let mut reporter = args.format.reporter();
+        let replace_reporter = replace::Replace::new(reporter);
+        if args.write_changes {
+            reporter = &replace_reporter;
+        }
 
         if args.files {
             if single_threaded {
@@ -148,6 +153,10 @@ fn run() -> Result<i32, anyhow::Error> {
             if cur_errors {
                 errors_found = true;
             }
+        }
+
+        if args.write_changes {
+            replace_reporter.write()?;
         }
     }
 
