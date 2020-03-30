@@ -235,7 +235,7 @@ impl Checks {
             return Ok(typos_found);
         }
 
-        for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
+        if let Some(part) = path.file_name().and_then(|s| s.to_str()) {
             for ident in parser.parse(part) {
                 if let Some(correction) = dictionary.correct_ident(ident) {
                     let msg = report::FilenameCorrection {
