@@ -238,7 +238,7 @@ impl Checks {
         if let Some(part) = path.file_name().and_then(|s| s.to_str()) {
             for ident in parser.parse(part) {
                 if let Some(correction) = dictionary.correct_ident(ident) {
-                    let msg = report::FilenameCorrection {
+                    let msg = report::PathCorrection {
                         path,
                         typo: ident.token(),
                         correction,
@@ -249,7 +249,7 @@ impl Checks {
                 } else {
                     for word in ident.split() {
                         if let Some(correction) = dictionary.correct_word(word) {
-                            let msg = report::FilenameCorrection {
+                            let msg = report::PathCorrection {
                                 path,
                                 typo: word.token(),
                                 correction,
