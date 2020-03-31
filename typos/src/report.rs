@@ -7,7 +7,7 @@ use std::io::{self, Write};
 pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
     Correction(Correction<'m>),
-    FilenameCorrection(FilenameCorrection<'m>),
+    PathCorrection(PathCorrection<'m>),
     File(File<'m>),
     Parse(Parse<'m>),
     PathError(PathError<'m>),
@@ -38,7 +38,7 @@ pub struct Correction<'m> {
 }
 
 #[derive(Clone, Debug, serde::Serialize)]
-pub struct FilenameCorrection<'m> {
+pub struct PathCorrection<'m> {
     pub path: &'m std::path::Path,
     pub typo: &'m str,
     pub correction: Cow<'m, str>,
@@ -133,7 +133,7 @@ impl Report for PrintBrief {
                     msg.correction
                 );
             }
-            Message::FilenameCorrection(msg) => {
+            Message::PathCorrection(msg) => {
                 println!("{}: {} -> {}", msg.path.display(), msg.typo, msg.correction);
             }
             Message::File(msg) => {
@@ -165,7 +165,7 @@ impl Report for PrintLong {
                 println!("{}", msg);
             }
             Message::Correction(msg) => print_long_correction(msg),
-            Message::FilenameCorrection(msg) => {
+            Message::PathCorrection(msg) => {
                 println!(
                     "{}: error: `{}` should be `{}`",
                     msg.path.display(),
