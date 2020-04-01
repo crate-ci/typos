@@ -238,8 +238,10 @@ impl Checks {
         if let Some(part) = path.file_name().and_then(|s| s.to_str()) {
             for ident in parser.parse(part) {
                 if let Some(correction) = dictionary.correct_ident(ident) {
+                    let col_num = ident.offset();
                     let msg = report::PathCorrection {
                         path,
+                        col_num,
                         typo: ident.token(),
                         correction,
                         non_exhaustive: (),
@@ -249,8 +251,10 @@ impl Checks {
                 } else {
                     for word in ident.split() {
                         if let Some(correction) = dictionary.correct_word(word) {
+                            let col_num = word.offset();
                             let msg = report::PathCorrection {
                                 path,
+                                col_num,
                                 typo: word.token(),
                                 correction,
                                 non_exhaustive: (),

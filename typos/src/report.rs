@@ -40,6 +40,7 @@ pub struct Correction<'m> {
 #[derive(Clone, Debug, serde::Serialize)]
 pub struct PathCorrection<'m> {
     pub path: &'m std::path::Path,
+    pub col_num: usize,
     pub typo: &'m str,
     pub correction: Cow<'m, str>,
     #[serde(skip)]
