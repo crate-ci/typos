@@ -238,10 +238,10 @@ impl Checks {
         if let Some(part) = path.file_name().and_then(|s| s.to_str()) {
             for ident in parser.parse(part) {
                 if let Some(correction) = dictionary.correct_ident(ident) {
-                    let col_num = ident.offset();
+                    let byte_offset = ident.offset();
                     let msg = report::PathCorrection {
                         path,
-                        col_num,
+                        byte_offset,
                         typo: ident.token(),
                         correction,
                         non_exhaustive: (),
@@ -251,10 +251,10 @@ impl Checks {
                 } else {
                     for word in ident.split() {
                         if let Some(correction) = dictionary.correct_word(word) {
-                            let col_num = word.offset();
+                            let byte_offset = word.offset();
                             let msg = report::PathCorrection {
                                 path,
-                                col_num,
+                                byte_offset,
                                 typo: word.token(),
                                 correction,
                                 non_exhaustive: (),
@@ -299,12 +299,12 @@ impl Checks {
             let line_num = line_idx + 1;
             for ident in parser.parse_bytes(line) {
                 if let Some(correction) = dictionary.correct_ident(ident) {
-                    let col_num = ident.offset();
+                    let byte_offset = ident.offset();
                     let msg = report::Correction {
                         path,
                         line,
                         line_num,
-                        col_num,
+                        byte_offset,
                         typo: ident.token(),
                         correction,
                         non_exhaustive: (),
@@ -314,12 +314,12 @@ impl Checks {
                 } else {
                     for word in ident.split() {
                         if let Some(correction) = dictionary.correct_word(word) {
-                            let col_num = word.offset();
+                            let byte_offset = word.offset();
                             let msg = report::Correction {
                                 path,
                                 line,
                                 line_num,
-                                col_num,
+                                byte_offset,
                                 typo: word.token(),
                                 correction,
                                 non_exhaustive: (),
