@@ -30,7 +30,7 @@ pub struct Correction<'m> {
     #[serde(skip)]
     pub line: &'m [u8],
     pub line_num: usize,
-    pub col_num: usize,
+    pub byte_offset: usize,
     pub typo: &'m str,
     pub correction: Cow<'m, str>,
     #[serde(skip)]
@@ -40,7 +40,7 @@ pub struct Correction<'m> {
 #[derive(Clone, Debug, serde::Serialize)]
 pub struct PathCorrection<'m> {
     pub path: &'m std::path::Path,
-    pub col_num: usize,
+    pub byte_offset: usize,
     pub typo: &'m str,
     pub correction: Cow<'m, str>,
     #[serde(skip)]
@@ -129,7 +129,7 @@ impl Report for PrintBrief {
                     "{}:{}:{}: {} -> {}",
                     msg.path.display(),
                     msg.line_num,
-                    msg.col_num,
+                    msg.byte_offset,
                     msg.typo,
                     msg.correction
                 );
@@ -197,7 +197,7 @@ fn print_long_correction(msg: Correction) {
     let line_num = msg.line_num.to_string();
     let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
-    let hl_indent: String = itertools::repeat_n(" ", msg.col_num).collect();
+    let hl_indent: String = itertools::repeat_n(" ", msg.byte_offset).collect();
     let hl: String = itertools::repeat_n("^", msg.typo.len()).collect();
 
     let line = String::from_utf8_lossy(msg.line);
@@ -217,7 +217,7 @@ fn print_long_correction(msg: Correction) {
         "  --> {}:{}:{}",
         msg.path.display(),
         msg.line_num,
-        msg.col_num
+        msg.byte_offset
     )
     .unwrap();
     writeln!(handle, "{} |", line_indent).unwrap();
