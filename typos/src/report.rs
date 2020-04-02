@@ -164,7 +164,7 @@ impl Report for PrintBrief {
     fn report(&self, msg: Message) {
         match msg {
             Message::BinaryFile(msg) => {
-                println!("{}", msg);
+                log::info!("{}", msg);
             }
             Message::Correction(msg) => {
                 println!(
@@ -186,10 +186,10 @@ impl Report for PrintBrief {
                 println!("{}", itertools::join(msg.data.iter(), " "));
             }
             Message::PathError(msg) => {
-                println!("{}: {}", msg.path.display(), msg.msg);
+                log::error!("{}: {}", msg.path.display(), msg.msg);
             }
             Message::Error(msg) => {
-                println!("{}", msg.msg);
+                log::error!("{}", msg.msg);
             }
         }
     }
@@ -202,7 +202,7 @@ impl Report for PrintLong {
     fn report(&self, msg: Message) {
         match msg {
             Message::BinaryFile(msg) => {
-                println!("{}", msg);
+                log::info!("{}", msg);
             }
             Message::Correction(msg) => print_long_correction(msg),
             Message::PathCorrection(msg) => {
@@ -220,10 +220,10 @@ impl Report for PrintLong {
                 println!("{}", itertools::join(msg.data.iter(), " "));
             }
             Message::PathError(msg) => {
-                println!("{}: {}", msg.path.display(), msg.msg);
+                log::error!("{}: {}", msg.path.display(), msg.msg);
             }
             Message::Error(msg) => {
-                println!("{}", msg.msg);
+                log::error!("{}", msg.msg);
             }
         }
     }
