@@ -54,6 +54,10 @@ pub(crate) struct Args {
     /// Ignore implicit configuration files.
     pub(crate) isolated: bool,
 
+    #[structopt(long, short = "w")]
+    /// Write corrections out
+    pub(crate) write_changes: bool,
+
     #[structopt(long)]
     /// Print each file that would be spellchecked.
     pub(crate) files: bool,

@@ -4,6 +4,7 @@ use std::io::{self, Write};
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "type")]
+#[non_exhaustive]
 pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
     Correction(Correction<'m>),
@@ -12,19 +13,17 @@ pub enum Message<'m> {
     Parse(Parse<'m>),
     PathError(PathError<'m>),
     Error(Error),
-    #[serde(skip)]
-    __NonExhaustive,
 }
 
-#[derive(Clone, Debug, serde::Serialize, derive_more::Display)]
+#[derive(Clone, Debug, serde::Serialize, derive_more::Display, derive_setters::Setters)]
 #[display(fmt = "Skipping binary file {}", "path.display()")]
+#[non_exhaustive]
 pub struct BinaryFile<'m> {
     pub path: &'m std::path::Path,
-    #[serde(skip)]
-    pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
 pub struct Correction<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
@@ -33,74 +32,117 @@ pub struct Correction<'m> {
     pub byte_offset: usize,
     pub typo: &'m str,
     pub correction: Cow<'m, str>,
-    #[serde(skip)]
-    pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+impl<'m> Default for Correction<'m> {
+    fn default() -> Self {
+        Self {
+            path: std::path::Path::new("-"),
+            line: b"",
+            line_num: 0,
+            byte_offset: 0,
+            typo: "",
+            correction: Cow::Borrowed(""),
+        }
+    }
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
 pub struct PathCorrection<'m> {
     pub path: &'m std::path::Path,
     pub byte_offset: usize,
     pub typo: &'m str,
     pub correction: Cow<'m, str>,
-    #[serde(skip)]
-    pub(crate) non_exhaustive: (),
 }
 
-#[derive(Copy, Clone, Debug, serde::Serialize)]
-pub enum ParseKind {
-    Identifier,
-    Word,
-    #[doc(hidden)]
-    __NonExhaustive,
-}
-
-#[derive(Clone, Debug, serde::Serialize)]
-pub struct File<'m> {
-    pub path: &'m std::path::Path,
-    #[serde(skip)]
-    pub(crate) non_exhaustive: (),
-}
-
-impl<'m> File<'m> {
-    pub fn new(path: &'m std::path::Path) -> Self {
+impl<'m> Default for PathCorrection<'m> {
+    fn default() -> Self {
         Self {
-            path,
-            non_exhaustive: (),
+            path: std::path::Path::new("-"),
+            byte_offset: 0,
+            typo: "",
+            correction: Cow::Borrowed(""),
         }
     }
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+#[derive(Copy, Clone, Debug, serde::Serialize)]
+#[non_exhaustive]
+pub enum ParseKind {
+    Identifier,
+    Word,
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
+pub struct File<'m> {
+    pub path: &'m std::path::Path,
+}
+
+impl<'m> File<'m> {
+    pub fn new(path: &'m std::path::Path) -> Self {
+        Self { path }
+    }
+}
+
+impl<'m> Default for File<'m> {
+    fn default() -> Self {
+        Self {
+            path: std::path::Path::new("-"),
+        }
+    }
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
 pub struct Parse<'m> {
     pub path: &'m std::path::Path,
     pub kind: ParseKind,
     pub data: Vec<&'m str>,
-    #[serde(skip)]
-    pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+impl<'m> Default for Parse<'m> {
+    fn default() -> Self {
+        Self {
+            path: std::path::Path::new("-"),
+            kind: ParseKind::Identifier,
+            data: vec![],
+        }
+    }
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
 pub struct PathError<'m> {
     pub path: &'m std::path::Path,
     pub msg: String,
-    #[serde(skip)]
-    pub(crate) non_exhaustive: (),
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+impl<'m> Default for PathError<'m> {
+    fn default() -> Self {
+        Self {
+            path: std::path::Path::new("-"),
+            msg: "".to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
 pub struct Error {
     pub msg: String,
-    #[serde(skip)]
-    pub(crate) non_exhaustive: (),
 }
 
 impl Error {
     pub fn new(msg: String) -> Self {
-        Self {
-            msg,
-            non_exhaustive: (),
-        }
+        Self { msg }
+    }
+}
+
+impl Default for Error {
+    fn default() -> Self {
+        Self { msg: "".to_owned() }
     }
 }
 
@@ -149,9 +191,6 @@ impl Report for PrintBrief {
             Message::Error(msg) => {
                 println!("{}", msg.msg);
             }
-            Message::__NonExhaustive => {
-                unreachable!("Non-creatable case");
-            }
         }
     }
 }
@@ -185,9 +224,6 @@ impl Report for PrintLong {
             }
             Message::Error(msg) => {
                 println!("{}", msg.msg);
-            }
-            Message::__NonExhaustive => {
-                unreachable!("Non-creatable case");
             }
         }
     }
