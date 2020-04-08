@@ -1,6 +1,6 @@
 use structopt::StructOpt;
 
-pub const DICT: &[u8] = include_bytes!("../../assets/words.csv");
+const DICT: &[u8] = include_bytes!("../../assets/words.csv");
 
 fn generate<W: std::io::Write>(file: &mut W) {
     writeln!(
