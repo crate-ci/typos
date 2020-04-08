@@ -1,0 +1,23 @@
+[package]
+name = "varcon-dict"
+version = "0.2.1"
+authors = ["Ed Page <eopage@gmail.com>"]
+description = "Source Code Spelling Correction"
+repository = "https://github.com/crate-ci/typos"
+readme = "../../README.md"
+categories = ["development-tools", "text-processing"]
+keywords = ["development", "spelling"]
+license = "MIT"
+edition = "2018"
+
+[badges]
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
+
+[features]
+default = ["all"]
+all = ["flags"]
+flags = ["enumflags2"]
+
+[dependencies]
+enumflags2 = { version = "0.6", optional = true }
