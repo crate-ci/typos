@@ -1,10 +1,10 @@
 [workspace]
 members = [
-    "typos",
-    "dict/typos", "dict/typos/codegen",
-    "dict/codespell", "dict/codespell/codegen",
-    "dict/misspell", "dict/misspell/codegen",
-    "dict/wikipedia", "dict/wikipedia/codegen",
+    "crates/typos",
+    "crates/typos-dict", "crates/typos-dict/codegen",
+    "crates/codespell-dict", "crates/codespell-dict/codegen",
+    "crates/misspell-dict", "crates/misspell-dict/codegen",
+    "crates/wikipedia-dict", "crates/wikipedia-dict/codegen",
 ]
 
 [package]
@@ -29,8 +29,8 @@ azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-typos = { version = "^0.3", path = "typos" }
-typos-dict = { version = "^0.2", path = "dict/typos" }
+typos = { version = "^0.3", path = "crates/typos" }
+typos-dict = { version = "^0.2", path = "crates/typos-dict" }
 phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
 anyhow = "1.0"
