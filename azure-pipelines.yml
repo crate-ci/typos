@@ -39,6 +39,9 @@ stages:
     - script: |
         cargo run --package wikipedia-codegen -- --output crates/wikipedia-dict/src/dict_codegen.rs --check
       displayName: Verify wikipedia-dict
+    - script: |
+        cargo run --package varcon-codegen -- --output crates/varcon/src/codegen.rs --check
+      displayName: Verify varcon-dict
 - stage: committed
   displayName: Lint History
   dependsOn: []

@@ -1,0 +1,17 @@
+[package]
+name = "varcon-parser"
+version = "1.0.0"
+authors = ["Ed Page <eopage@gmail.com>"]
+description = "Parse varcon.txt file"
+repository = "https://github.com/crate-ci/typos"
+readme = "../../../README.md"
+categories = ["text-processing"]
+license = "MIT"
+edition = "2018"
+
+[badges]
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
+
+[dependencies]
+nom = "5.1.1"
