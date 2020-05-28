@@ -2,14 +2,14 @@ mod codegen;
 
 pub use codegen::*;
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Cluster {
     pub header: Option<&'static str>,
     pub entries: &'static [Entry],
     pub notes: &'static [&'static str],
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Entry {
     pub variants: &'static [Variant],
     pub pos: Option<Pos>,
@@ -19,13 +19,13 @@ pub struct Entry {
     pub comment: Option<&'static str>,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Variant {
     pub types: &'static [Type],
     pub word: &'static str,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Type {
     pub category: Category,
     pub tag: Option<Tag>,
