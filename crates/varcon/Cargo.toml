@@ -1,5 +1,5 @@
 [package]
-name = "varcon-dict"
+name = "varcon"
 version = "0.2.1"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
