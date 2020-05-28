@@ -1095,7 +1095,7 @@ checksum = "826e7639553986605ec5979c7dd957c7895e93eabed50ab2ffa7f6128a75097c"
 name = "varcon"
 version = "0.2.1"
 dependencies = [
- "enumflags2",
+ "varcon-core",
 ]
 
 [[package]]
@@ -1104,13 +1104,14 @@ version = "1.0.2"
 dependencies = [
  "codegenrs",
  "structopt",
- "varcon-parser",
+ "varcon-core",
 ]
 
 [[package]]
-name = "varcon-parser"
+name = "varcon-core"
 version = "1.0.0"
 dependencies = [
+ "enumflags2",
  "nom",
 ]
 
