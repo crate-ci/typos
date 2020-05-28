@@ -2,7 +2,7 @@ mod parser;
 
 pub use parser::ClusterIter;
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Cluster {
     pub header: Option<String>,
     pub entries: Vec<Entry>,
@@ -17,7 +17,7 @@ impl Cluster {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Entry {
     pub variants: Vec<Variant>,
     pub pos: Option<Pos>,
@@ -66,13 +66,13 @@ fn imply(variants: &mut Vec<Variant>, required: Category, missing: Category) {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Variant {
     pub types: Vec<Type>,
     pub word: String,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Type {
     pub category: Category,
     pub tag: Option<Tag>,
@@ -89,7 +89,7 @@ pub enum Category {
     Other,
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, Debug)]
 pub enum Tag {
     Eq,
     Variant,
