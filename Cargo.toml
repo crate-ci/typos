@@ -5,7 +5,7 @@ members = [
     "crates/codespell-dict", "crates/codespell-dict/codegen",
     "crates/misspell-dict", "crates/misspell-dict/codegen",
     "crates/wikipedia-dict", "crates/wikipedia-dict/codegen",
-    "crates/varcon", "crates/varcon/codegen", "crates/varcon-parser",
+    "crates/varcon", "crates/varcon/codegen", "crates/varcon-core",
 ]
 
 [package]

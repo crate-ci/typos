@@ -1,8 +1,8 @@
 [package]
-name = "varcon-parser"
+name = "varcon-core"
 version = "1.0.0"
 authors = ["Ed Page <eopage@gmail.com>"]
-description = "Parse varcon.txt file"
+description = "Varcon-relevant data structures"
 repository = "https://github.com/crate-ci/typos"
 readme = "../../../README.md"
 categories = ["text-processing"]
@@ -13,5 +13,14 @@ edition = "2018"
 azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
+[features]
+default = []
+parser = ["nom"]
+flags = ["enumflags2"]
+
 [dependencies]
-nom = "5.1.1"
+nom = { version = "5.1.1", optional = true }
+enumflags2 = { version = "0.6", optional = true }
+
+[package.metadata.docs.rs]
+features = [ "parser", "flags" ]

@@ -4,7 +4,7 @@ const DICT: &[u8] = include_bytes!("../../assets/varcon.txt");
 
 fn generate<W: std::io::Write>(file: &mut W) {
     let dict = String::from_utf8_lossy(DICT);
-    let clusters = varcon_parser::ClusterIter::new(&dict);
+    let clusters = varcon_core::ClusterIter::new(&dict);
 
     writeln!(
         file,
