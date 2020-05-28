@@ -112,6 +112,12 @@ pub(crate) struct FileArgs {
     no_hex: bool,
     #[structopt(long, overrides_with("no-hex"), hidden(true))]
     hex: bool,
+
+    #[structopt(
+        long,
+        possible_values(&config::Locale::variants()),
+    )]
+    pub(crate) locale: Option<config::Locale>,
 }
 
 impl config::FileSource for FileArgs {
@@ -140,6 +146,10 @@ impl config::FileSource for FileArgs {
             (false, false) => None,
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
+    }
+
+    fn locale(&self) -> Option<config::Locale> {
+        self.locale
     }
 }
 

@@ -5,11 +5,15 @@ use unicase::UniCase;
 use typos::tokens::Case;
 
 #[derive(Default)]
-pub struct BuiltIn {}
+pub struct BuiltIn {
+    locale: Option<typos_vars::Category>,
+}
 
 impl BuiltIn {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(locale: crate::config::Locale) -> Self {
+        Self {
+            locale: locale.category(),
+        }
     }
 
     pub fn correct_ident<'s, 'w>(
@@ -19,11 +23,65 @@ impl BuiltIn {
         Vec::new()
     }
 
-    pub fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Vec<Cow<'s, str>> {
-        map_lookup(&typos_dict::WORD_DICTIONARY, word.token())
-            .map(|s| case_correct(s, word.case()))
+    pub fn correct_word<'s, 'w>(
+        &'s self,
+        word_token: typos::tokens::Word<'w>,
+    ) -> Vec<Cow<'s, str>> {
+        let word = word_token.token();
+        let corrections = if let Some(correction) = self.correct_with_dict(word) {
+            self.correct_with_vars(word)
+                .unwrap_or_else(|| vec![correction])
+        } else {
+            self.correct_with_vars(word).unwrap_or_else(Vec::new)
+        };
+        corrections
             .into_iter()
+            .map(|s| case_correct(s, word_token.case()))
             .collect()
+    }
+
+    fn correct_with_dict(&self, word: &str) -> Option<&'static str> {
+        map_lookup(&typos_dict::WORD_DICTIONARY, word)
+    }
+
+    fn correct_with_vars(&self, word: &str) -> Option<Vec<&'static str>> {
+        let variants = map_lookup(&typos_vars::VARS_DICTIONARY, word)?;
+        self.select_variant(variants)
+    }
+
+    fn select_variant(
+        &self,
+        vars: &'static [(u8, &'static typos_vars::VariantsMap)],
+    ) -> Option<Vec<&'static str>> {
+        let var = vars[0];
+        let var_categories = unsafe {
+            // Code-genned from a checked category-set, so known to be safe
+            typos_vars::CategorySet::new(var.0)
+        };
+        if let Some(locale) = self.locale {
+            if var_categories.contains(locale) {
+                // Already valid for the current locale.
+                None
+            } else {
+                Some(
+                    typos_vars::corrections(locale, *var.1)
+                        .iter()
+                        .copied()
+                        .collect(),
+                )
+            }
+        } else {
+            // All locales are valid
+            if var_categories.is_empty() {
+                // But the word is never valid.
+                let mut unique: Vec<_> = var.1.iter().flat_map(|v| v.iter()).copied().collect();
+                unique.sort_unstable();
+                unique.dedup();
+                Some(unique)
+            } else {
+                None
+            }
+        }
     }
 }
 
@@ -37,10 +95,7 @@ impl typos::Dictionary for BuiltIn {
     }
 }
 
-fn map_lookup(
-    map: &'static phf::Map<UniCase<&'static str>, &'static str>,
-    key: &str,
-) -> Option<&'static str> {
+fn map_lookup<V: Clone>(map: &'static phf::Map<UniCase<&'static str>, V>, key: &str) -> Option<V> {
     // This transmute should be safe as `get` will not store the reference with
     // the expanded lifetime. This is due to `Borrow` being overly strict and
     // can't have an impl for `&'static str` to `Borrow<&'a str>`.

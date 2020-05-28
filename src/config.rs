@@ -82,6 +82,10 @@ pub trait FileSource {
     fn identifier_include_chars(&self) -> Option<&str> {
         None
     }
+
+    fn locale(&self) -> Option<Locale> {
+        None
+    }
 }
 
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
@@ -247,6 +251,7 @@ pub struct FileConfig {
     pub identifier_leading_chars: Option<String>,
     pub identifier_include_digits: Option<bool>,
     pub identifier_include_chars: Option<String>,
+    pub locale: Option<Locale>,
 }
 
 impl FileConfig {
@@ -271,6 +276,9 @@ impl FileConfig {
         }
         if let Some(source) = source.identifier_include_chars() {
             self.identifier_include_chars = Some(source.to_owned());
+        }
+        if let Some(source) = source.locale() {
+            self.locale = Some(source);
         }
     }
 
@@ -300,6 +308,10 @@ impl FileConfig {
 
     pub fn identifier_include_chars(&self) -> &str {
         self.identifier_include_chars.as_deref().unwrap_or("_'")
+    }
+
+    pub fn locale(&self) -> Locale {
+        self.locale.unwrap_or_default()
     }
 }
 
@@ -331,6 +343,10 @@ impl FileSource for FileConfig {
     fn identifier_include_chars(&self) -> Option<&str> {
         self.identifier_include_chars.as_deref()
     }
+
+    fn locale(&self) -> Option<Locale> {
+        self.locale
+    }
 }
 
 fn find_project_file(dir: std::path::PathBuf, name: &str) -> Option<std::path::PathBuf> {
@@ -345,4 +361,63 @@ fn find_project_file(dir: std::path::PathBuf, name: &str) -> Option<std::path::P
         file_path.push(name);
     }
     Some(file_path)
+}
+
+#[derive(Debug, Copy, Clone, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Locale {
+    En,
+    EnUs,
+    EnGb,
+    EnCa,
+    EnAu,
+}
+
+impl Locale {
+    pub fn category(self) -> Option<typos_vars::Category> {
+        match self {
+            Locale::En => None,
+            Locale::EnUs => Some(typos_vars::Category::American),
+            Locale::EnGb => Some(typos_vars::Category::BritishIse),
+            Locale::EnCa => Some(typos_vars::Category::Canadian),
+            Locale::EnAu => Some(typos_vars::Category::Australian),
+        }
+    }
+
+    pub fn variants() -> [&'static str; 5] {
+        ["en", "en-us", "en-gb", "en-ca", "en-au"]
+    }
+}
+
+impl Default for Locale {
+    fn default() -> Self {
+        Locale::En
+    }
+}
+
+impl std::str::FromStr for Locale {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        match s {
+            "en" => Ok(Locale::En),
+            "en-us" => Ok(Locale::EnUs),
+            "en-gb" => Ok(Locale::EnGb),
+            "en-ca" => Ok(Locale::EnCa),
+            "en-au" => Ok(Locale::EnAu),
+            _ => Err("valid values: en, en-us, en-gb, en-ca, en-au".to_owned()),
+        }
+    }
+}
+
+impl std::fmt::Display for Locale {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match *self {
+            Locale::En => write!(f, "en"),
+            Locale::EnUs => write!(f, "en-us"),
+            Locale::EnGb => write!(f, "en-gb"),
+            Locale::EnCa => write!(f, "en-ca"),
+            Locale::EnAu => write!(f, "en-au"),
+        }
+    }
 }
