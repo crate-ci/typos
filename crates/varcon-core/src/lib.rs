@@ -1,8 +1,12 @@
+pub mod borrowed;
+
+#[cfg(feature = "parser")]
 mod parser;
 
-pub use parser::ClusterIter;
+#[cfg(feature = "parser")]
+pub use crate::parser::ClusterIter;
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Cluster {
     pub header: Option<String>,
     pub entries: Vec<Entry>,
@@ -17,7 +21,7 @@ impl Cluster {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Entry {
     pub variants: Vec<Variant>,
     pub pos: Option<Pos>,
@@ -66,13 +70,13 @@ fn imply(variants: &mut Vec<Variant>, required: Category, missing: Category) {
     }
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Variant {
     pub types: Vec<Type>,
     pub word: String,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Type {
     pub category: Category,
     pub tag: Option<Tag>,
@@ -80,28 +84,43 @@ pub struct Type {
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "flags", derive(enumflags2::BitFlags))]
+#[repr(u8)]
 pub enum Category {
-    American,
-    BritishIse,
-    BritishIze,
-    Canadian,
-    Australian,
-    Other,
+    American = 0x01,
+    BritishIse = 0x02,
+    BritishIze = 0x04,
+    Canadian = 0x08,
+    Australian = 0x10,
+    Other = 0x20,
 }
+
+#[cfg(feature = "flags")]
+pub type CategorySet = enumflags2::BitFlags<Category>;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[cfg_attr(feature = "flags", derive(enumflags2::BitFlags))]
+#[repr(u8)]
 pub enum Tag {
-    Eq,
-    Variant,
-    Seldom,
-    Possible,
-    Improper,
+    Eq = 0x01,
+    Variant = 0x02,
+    Seldom = 0x04,
+    Possible = 0x08,
+    Improper = 0x10,
 }
 
+#[cfg(feature = "flags")]
+pub type TagSet = enumflags2::BitFlags<Tag>;
+
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "flags", derive(enumflags2::BitFlags))]
+#[repr(u8)]
 pub enum Pos {
-    Noun,
-    Verb,
-    Adjective,
-    Adverb,
+    Noun = 0x01,
+    Verb = 0x02,
+    Adjective = 0x04,
+    Adverb = 0x08,
 }
+
+#[cfg(feature = "flags")]
+pub type PosSet = enumflags2::BitFlags<Pos>;

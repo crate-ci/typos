@@ -1092,25 +1092,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "826e7639553986605ec5979c7dd957c7895e93eabed50ab2ffa7f6128a75097c"
 
 [[package]]
+name = "varcon"
+version = "0.2.1"
+dependencies = [
+ "varcon-core",
+]
+
+[[package]]
 name = "varcon-codegen"
 version = "1.0.2"
 dependencies = [
  "codegenrs",
  "structopt",
- "varcon-parser",
+ "varcon-core",
 ]
 
 [[package]]
-name = "varcon-dict"
-version = "0.2.1"
-dependencies = [
- "enumflags2",
-]
-
-[[package]]
-name = "varcon-parser"
+name = "varcon-core"
 version = "1.0.0"
 dependencies = [
+ "enumflags2",
  "nom",
 ]
 

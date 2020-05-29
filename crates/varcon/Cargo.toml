@@ -1,5 +1,5 @@
 [package]
-name = "varcon-dict"
+name = "varcon"
 version = "0.2.1"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
@@ -17,7 +17,7 @@ codecov = { repository = "crate-ci/typos" }
 [features]
 default = ["all"]
 all = ["flags"]
-flags = ["enumflags2"]
+flags = ["varcon-core/flags"]
 
 [dependencies]
-enumflags2 = { version = "0.6", optional = true }
+varcon-core = { version = "1.0", path = "../varcon-core" }
