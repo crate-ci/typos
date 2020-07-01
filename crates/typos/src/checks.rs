@@ -227,24 +227,26 @@ impl Checks {
 
         if let Some(part) = path.file_name().and_then(|s| s.to_str()) {
             for ident in parser.parse(part) {
-                if let Some(correction) = dictionary.correct_ident(ident) {
+                let corrections = dictionary.correct_ident(ident);
+                if !corrections.is_empty() {
                     let byte_offset = ident.offset();
                     let msg = report::PathCorrection {
                         path,
                         byte_offset,
                         typo: ident.token(),
-                        correction,
+                        corrections,
                     };
                     typos_found |= reporter.report(msg.into());
                 } else {
                     for word in ident.split() {
-                        if let Some(correction) = dictionary.correct_word(word) {
+                        let corrections = dictionary.correct_word(word);
+                        if !corrections.is_empty() {
                             let byte_offset = word.offset();
                             let msg = report::PathCorrection {
                                 path,
                                 byte_offset,
                                 typo: word.token(),
-                                correction,
+                                corrections,
                             };
                             typos_found |= reporter.report(msg.into());
                         }
@@ -281,7 +283,8 @@ impl Checks {
         for (line_idx, line) in buffer.lines().enumerate() {
             let line_num = line_idx + 1;
             for ident in parser.parse_bytes(line) {
-                if let Some(correction) = dictionary.correct_ident(ident) {
+                let corrections = dictionary.correct_ident(ident);
+                if !corrections.is_empty() {
                     let byte_offset = ident.offset();
                     let msg = report::Correction {
                         path,
@@ -289,12 +292,13 @@ impl Checks {
                         line_num,
                         byte_offset,
                         typo: ident.token(),
-                        correction,
+                        corrections,
                     };
                     typos_found |= reporter.report(msg.into());
                 } else {
                     for word in ident.split() {
-                        if let Some(correction) = dictionary.correct_word(word) {
+                        let corrections = dictionary.correct_word(word);
+                        if !corrections.is_empty() {
                             let byte_offset = word.offset();
                             let msg = report::Correction {
                                 path,
@@ -302,7 +306,7 @@ impl Checks {
                                 line_num,
                                 byte_offset,
                                 typo: word.token(),
-                                correction,
+                                corrections,
                             };
                             typos_found |= reporter.report(msg.into());
                         }

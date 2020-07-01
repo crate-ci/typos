@@ -58,26 +58,36 @@ impl<'r> typos::report::Report for Replace<'r> {
     fn report(&self, msg: typos::report::Message<'_>) -> bool {
         match msg {
             typos::report::Message::Correction(msg) => {
-                let path = msg.path.to_owned();
-                let line_num = msg.line_num;
-                let correction = Correction::from_content(msg);
-                let mut deferred = self.deferred.lock().unwrap();
-                let content = deferred
-                    .content
-                    .entry(path)
-                    .or_insert_with(BTreeMap::new)
-                    .entry(line_num)
-                    .or_insert_with(Vec::new);
-                content.push(correction);
-                false
+                if msg.corrections.len() == 1 {
+                    let path = msg.path.to_owned();
+                    let line_num = msg.line_num;
+                    let correction = Correction::from_content(msg);
+                    let mut deferred = self.deferred.lock().unwrap();
+                    let content = deferred
+                        .content
+                        .entry(path)
+                        .or_insert_with(BTreeMap::new)
+                        .entry(line_num)
+                        .or_insert_with(Vec::new);
+                    content.push(correction);
+                    false
+                } else {
+                    self.reporter
+                        .report(typos::report::Message::Correction(msg))
+                }
             }
             typos::report::Message::PathCorrection(msg) => {
-                let path = msg.path.to_owned();
-                let correction = Correction::from_path(msg);
-                let mut deferred = self.deferred.lock().unwrap();
-                let content = deferred.paths.entry(path).or_insert_with(Vec::new);
-                content.push(correction);
-                false
+                if msg.corrections.len() == 1 {
+                    let path = msg.path.to_owned();
+                    let correction = Correction::from_path(msg);
+                    let mut deferred = self.deferred.lock().unwrap();
+                    let content = deferred.paths.entry(path).or_insert_with(Vec::new);
+                    content.push(correction);
+                    false
+                } else {
+                    self.reporter
+                        .report(typos::report::Message::PathCorrection(msg))
+                }
             }
             _ => self.reporter.report(msg),
         }
@@ -99,18 +109,20 @@ struct Correction {
 
 impl Correction {
     fn from_content(other: typos::report::Correction<'_>) -> Self {
+        assert_eq!(other.corrections.len(), 1);
         Self {
             byte_offset: other.byte_offset,
             typo: other.typo.as_bytes().to_vec(),
-            correction: other.correction.as_bytes().to_vec(),
+            correction: other.corrections[0].as_bytes().to_vec(),
         }
     }
 
     fn from_path(other: typos::report::PathCorrection<'_>) -> Self {
+        assert_eq!(other.corrections.len(), 1);
         Self {
             byte_offset: other.byte_offset,
             typo: other.typo.as_bytes().to_vec(),
-            correction: other.correction.as_bytes().to_vec(),
+            correction: other.corrections[0].as_bytes().to_vec(),
         }
     }
 }
@@ -210,7 +222,7 @@ mod test {
                 .line_num(1)
                 .byte_offset(2)
                 .typo("foo")
-                .correction(std::borrow::Cow::Borrowed("bar"))
+                .corrections(vec![std::borrow::Cow::Borrowed("bar")])
                 .into(),
         );
         replace.write().unwrap();
@@ -231,7 +243,7 @@ mod test {
                 .path(input_file.path())
                 .byte_offset(0)
                 .typo("foo")
-                .correction(std::borrow::Cow::Borrowed("bar"))
+                .corrections(vec![std::borrow::Cow::Borrowed("bar")])
                 .into(),
         );
         replace.write().unwrap();
