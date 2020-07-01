@@ -15,6 +15,32 @@ pub enum Message<'m> {
     Error(Error),
 }
 
+impl<'m> Message<'m> {
+    pub fn is_correction(&self) -> bool {
+        match self {
+            Message::BinaryFile(_) => false,
+            Message::Correction(_) => true,
+            Message::PathCorrection(_) => true,
+            Message::File(_) => false,
+            Message::Parse(_) => false,
+            Message::PathError(_) => false,
+            Message::Error(_) => false,
+        }
+    }
+
+    pub fn is_error(&self) -> bool {
+        match self {
+            Message::BinaryFile(_) => false,
+            Message::Correction(_) => false,
+            Message::PathCorrection(_) => false,
+            Message::File(_) => false,
+            Message::Parse(_) => false,
+            Message::PathError(_) => true,
+            Message::Error(_) => true,
+        }
+    }
+}
+
 #[derive(Clone, Debug, serde::Serialize, derive_more::Display, derive_setters::Setters)]
 #[display(fmt = "Skipping binary file {}", "path.display()")]
 #[non_exhaustive]
@@ -147,22 +173,24 @@ impl Default for Error {
 }
 
 pub trait Report: Send + Sync {
-    fn report(&self, msg: Message);
+    fn report(&self, msg: Message) -> bool;
 }
 
 #[derive(Copy, Clone, Debug)]
 pub struct PrintSilent;
 
 impl Report for PrintSilent {
-    fn report(&self, _msg: Message) {}
+    fn report(&self, msg: Message) -> bool {
+        msg.is_correction()
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
 pub struct PrintBrief;
 
 impl Report for PrintBrief {
-    fn report(&self, msg: Message) {
-        match msg {
+    fn report(&self, msg: Message) -> bool {
+        match &msg {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
@@ -192,6 +220,7 @@ impl Report for PrintBrief {
                 log::error!("{}", msg.msg);
             }
         }
+        msg.is_correction()
     }
 }
 
@@ -199,8 +228,8 @@ impl Report for PrintBrief {
 pub struct PrintLong;
 
 impl Report for PrintLong {
-    fn report(&self, msg: Message) {
-        match msg {
+    fn report(&self, msg: Message) -> bool {
+        match &msg {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
@@ -226,10 +255,11 @@ impl Report for PrintLong {
                 log::error!("{}", msg.msg);
             }
         }
+        msg.is_correction()
     }
 }
 
-fn print_long_correction(msg: Correction) {
+fn print_long_correction(msg: &Correction) {
     let line_num = msg.line_num.to_string();
     let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
@@ -266,7 +296,8 @@ fn print_long_correction(msg: Correction) {
 pub struct PrintJson;
 
 impl Report for PrintJson {
-    fn report(&self, msg: Message) {
+    fn report(&self, msg: Message) -> bool {
         println!("{}", serde_json::to_string(&msg).unwrap());
+        msg.is_correction()
     }
 }

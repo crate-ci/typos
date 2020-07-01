@@ -235,8 +235,7 @@ impl Checks {
                         typo: ident.token(),
                         correction,
                     };
-                    reporter.report(msg.into());
-                    typos_found = true;
+                    typos_found |= reporter.report(msg.into());
                 } else {
                     for word in ident.split() {
                         if let Some(correction) = dictionary.correct_word(word) {
@@ -247,8 +246,7 @@ impl Checks {
                                 typo: word.token(),
                                 correction,
                             };
-                            reporter.report(msg.into());
-                            typos_found = true;
+                            typos_found |= reporter.report(msg.into());
                         }
                     }
                 }
@@ -293,8 +291,7 @@ impl Checks {
                         typo: ident.token(),
                         correction,
                     };
-                    typos_found = true;
-                    reporter.report(msg.into());
+                    typos_found |= reporter.report(msg.into());
                 } else {
                     for word in ident.split() {
                         if let Some(correction) = dictionary.correct_word(word) {
@@ -307,8 +304,7 @@ impl Checks {
                                 typo: word.token(),
                                 correction,
                             };
-                            typos_found = true;
-                            reporter.report(msg.into());
+                            typos_found |= reporter.report(msg.into());
                         }
                     }
                 }

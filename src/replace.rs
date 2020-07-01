@@ -55,7 +55,7 @@ impl<'r> Replace<'r> {
 }
 
 impl<'r> typos::report::Report for Replace<'r> {
-    fn report(&self, msg: typos::report::Message<'_>) {
+    fn report(&self, msg: typos::report::Message<'_>) -> bool {
         match msg {
             typos::report::Message::Correction(msg) => {
                 let path = msg.path.to_owned();
@@ -69,6 +69,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                     .entry(line_num)
                     .or_insert_with(Vec::new);
                 content.push(correction);
+                false
             }
             typos::report::Message::PathCorrection(msg) => {
                 let path = msg.path.to_owned();
@@ -76,6 +77,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                 let mut deferred = self.deferred.lock().unwrap();
                 let content = deferred.paths.entry(path).or_insert_with(Vec::new);
                 content.push(correction);
+                false
             }
             _ => self.reporter.report(msg),
         }
