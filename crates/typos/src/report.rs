@@ -57,7 +57,7 @@ pub struct Correction<'m> {
     pub line_num: usize,
     pub byte_offset: usize,
     pub typo: &'m str,
-    pub correction: Cow<'m, str>,
+    pub corrections: Vec<Cow<'m, str>>,
 }
 
 impl<'m> Default for Correction<'m> {
@@ -68,7 +68,7 @@ impl<'m> Default for Correction<'m> {
             line_num: 0,
             byte_offset: 0,
             typo: "",
-            correction: Cow::Borrowed(""),
+            corrections: Vec::new(),
         }
     }
 }
@@ -79,7 +79,7 @@ pub struct PathCorrection<'m> {
     pub path: &'m std::path::Path,
     pub byte_offset: usize,
     pub typo: &'m str,
-    pub correction: Cow<'m, str>,
+    pub corrections: Vec<Cow<'m, str>>,
 }
 
 impl<'m> Default for PathCorrection<'m> {
@@ -88,7 +88,7 @@ impl<'m> Default for PathCorrection<'m> {
             path: std::path::Path::new("-"),
             byte_offset: 0,
             typo: "",
-            correction: Cow::Borrowed(""),
+            corrections: Vec::new(),
         }
     }
 }
@@ -201,11 +201,16 @@ impl Report for PrintBrief {
                     msg.line_num,
                     msg.byte_offset,
                     msg.typo,
-                    msg.correction
+                    itertools::join(msg.corrections.iter(), ", ")
                 );
             }
             Message::PathCorrection(msg) => {
-                println!("{}: {} -> {}", msg.path.display(), msg.typo, msg.correction);
+                println!(
+                    "{}: {} -> {}",
+                    msg.path.display(),
+                    msg.typo,
+                    itertools::join(msg.corrections.iter(), ", ")
+                );
             }
             Message::File(msg) => {
                 println!("{}", msg.path.display());
@@ -236,10 +241,10 @@ impl Report for PrintLong {
             Message::Correction(msg) => print_long_correction(msg),
             Message::PathCorrection(msg) => {
                 println!(
-                    "{}: error: `{}` should be `{}`",
+                    "{}: error: `{}` should be {}",
                     msg.path.display(),
                     msg.typo,
-                    msg.correction
+                    itertools::join(msg.corrections.iter().map(|c| format!("`{}`", c)), ", ")
                 );
             }
             Message::File(msg) => {
@@ -274,8 +279,9 @@ fn print_long_correction(msg: &Correction) {
 
     writeln!(
         handle,
-        "error: `{}` should be `{}`",
-        msg.typo, msg.correction
+        "error: `{}` should be {}",
+        msg.typo,
+        itertools::join(msg.corrections.iter().map(|c| format!("`{}`", c)), ", ")
     )
     .unwrap();
     writeln!(
