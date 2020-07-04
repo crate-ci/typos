@@ -93,7 +93,7 @@ fn bench_parse_ident(data: &str, b: &mut test::Bencher) {
             sample_path.path(),
             true,
             &parser,
-            typos::report::print_silent,
+            &typos::report::PrintSilent,
         )
     });
 
@@ -142,7 +142,7 @@ fn bench_parse_word(data: &str, b: &mut test::Bencher) {
             sample_path.path(),
             true,
             &parser,
-            typos::report::print_silent,
+            &typos::report::PrintSilent,
         )
     });
 
@@ -193,7 +193,7 @@ fn bench_check_file(data: &str, b: &mut test::Bencher) {
             true,
             &parser,
             &corrections,
-            typos::report::print_silent,
+            &typos::report::PrintSilent,
         )
     });
 

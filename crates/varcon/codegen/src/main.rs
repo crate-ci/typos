@@ -17,7 +17,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     writeln!(file, "use crate::*;").unwrap();
     writeln!(file).unwrap();
 
-    writeln!(file, "pub static VARCON: &'static [Cluster] = &[").unwrap();
+    writeln!(file, "pub static VARCON: &[Cluster] = &[").unwrap();
     for mut cluster in clusters {
         cluster.infer();
         writeln!(file, "Cluster {{").unwrap();
