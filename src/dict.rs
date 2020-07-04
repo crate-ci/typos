@@ -15,24 +15,24 @@ impl BuiltIn {
     pub fn correct_ident<'s, 'w>(
         &'s self,
         _ident: typos::tokens::Identifier<'w>,
-    ) -> Option<Cow<'s, str>> {
-        None
+    ) -> Vec<Cow<'s, str>> {
+        Vec::new()
     }
 
-    pub fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Cow<'s, str>> {
-        map_lookup(&typos_dict::WORD_DICTIONARY, word.token()).map(|s| case_correct(s, word.case()))
+    pub fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Vec<Cow<'s, str>> {
+        map_lookup(&typos_dict::WORD_DICTIONARY, word.token())
+            .map(|s| case_correct(s, word.case()))
+            .into_iter()
+            .collect()
     }
 }
 
 impl typos::Dictionary for BuiltIn {
-    fn correct_ident<'s, 'w>(
-        &'s self,
-        ident: typos::tokens::Identifier<'w>,
-    ) -> Option<Cow<'s, str>> {
+    fn correct_ident<'s, 'w>(&'s self, ident: typos::tokens::Identifier<'w>) -> Vec<Cow<'s, str>> {
         BuiltIn::correct_ident(self, ident)
     }
 
-    fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Cow<'s, str>> {
+    fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Vec<Cow<'s, str>> {
         BuiltIn::correct_word(self, word)
     }
 }
