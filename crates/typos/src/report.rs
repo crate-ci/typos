@@ -1,3 +1,5 @@
+#![allow(clippy::needless_update)]
+
 use std::borrow::Cow;
 use std::io::{self, Write};
 

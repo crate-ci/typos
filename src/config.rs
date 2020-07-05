@@ -291,10 +291,7 @@ impl FileConfig {
     }
 
     pub fn identifier_leading_chars(&self) -> &str {
-        self.identifier_leading_chars
-            .as_ref()
-            .map(|s| s.as_str())
-            .unwrap_or("_")
+        self.identifier_leading_chars.as_deref().unwrap_or("_")
     }
 
     pub fn identifier_include_digits(&self) -> bool {
@@ -302,10 +299,7 @@ impl FileConfig {
     }
 
     pub fn identifier_include_chars(&self) -> &str {
-        self.identifier_include_chars
-            .as_ref()
-            .map(|s| s.as_str())
-            .unwrap_or("_'")
+        self.identifier_include_chars.as_deref().unwrap_or("_'")
     }
 }
 
@@ -327,7 +321,7 @@ impl FileSource for FileConfig {
     }
 
     fn identifier_leading_chars(&self) -> Option<&str> {
-        self.identifier_leading_chars.as_ref().map(|s| s.as_str())
+        self.identifier_leading_chars.as_deref()
     }
 
     fn identifier_include_digits(&self) -> Option<bool> {
@@ -335,7 +329,7 @@ impl FileSource for FileConfig {
     }
 
     fn identifier_include_chars(&self) -> Option<&str> {
-        self.identifier_include_chars.as_ref().map(|s| s.as_str())
+        self.identifier_include_chars.as_deref()
     }
 }
 
