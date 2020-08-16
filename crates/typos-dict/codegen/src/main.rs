@@ -19,7 +19,9 @@ fn generate<W: std::io::Write>(file: &mut W) {
     )
     .unwrap();
     let mut builder = phf_codegen::Map::new();
-    let records: Vec<_> = csv::Reader::from_reader(DICT)
+    let records: Vec<_> = csv::ReaderBuilder::new()
+        .has_headers(false)
+        .from_reader(DICT)
         .records()
         .map(|r| r.unwrap())
         .collect();
