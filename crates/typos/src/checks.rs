@@ -113,10 +113,17 @@ impl ParseIdentifiers {
 
         let buffer = std::fs::read(path)
             .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
-        if !explicit && !self.binary && is_binary(&buffer) {
-            let msg = report::BinaryFile { path };
-            reporter.report(msg.into());
-            return Ok(typos_found);
+        if !explicit && !self.binary {
+            let content_type = content_inspector::inspect(&buffer);
+            if content_type.is_binary()
+                // HACK: We only support UTF-8 at the moment
+                || (content_type != content_inspector::ContentType::UTF_8_BOM
+                    && content_type != content_inspector::ContentType::UTF_8)
+            {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into());
+                return Ok(typos_found);
+            }
         }
 
         for line in buffer.lines() {
@@ -182,10 +189,17 @@ impl ParseWords {
 
         let buffer = std::fs::read(path)
             .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
-        if !explicit && !self.binary && is_binary(&buffer) {
-            let msg = report::BinaryFile { path };
-            reporter.report(msg.into());
-            return Ok(typos_found);
+        if !explicit && !self.binary {
+            let content_type = content_inspector::inspect(&buffer);
+            // HACK: We only support UTF-8 at the moment
+            if content_type.is_binary()
+                || (content_type != content_inspector::ContentType::UTF_8_BOM
+                    && content_type != content_inspector::ContentType::UTF_8)
+            {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into());
+                return Ok(typos_found);
+            }
         }
 
         for line in buffer.lines() {
@@ -274,10 +288,18 @@ impl Checks {
 
         let buffer = std::fs::read(path)
             .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
-        if !explicit && !self.binary && is_binary(&buffer) {
-            let msg = report::BinaryFile { path };
-            reporter.report(msg.into());
-            return Ok(typos_found);
+        if !explicit && !self.binary {
+            let content_type = content_inspector::inspect(&buffer);
+            // HACK: We only support UTF-8 at the moment
+            if content_type.is_binary()
+                || (content_type != content_inspector::ContentType::UTF_8_BOM
+                    && content_type != content_inspector::ContentType::UTF_8)
+            {
+                // HACK: we don't support alternative encodings atm
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into());
+                return Ok(typos_found);
+            }
         }
 
         for (line_idx, line) in buffer.lines().enumerate() {
@@ -317,9 +339,4 @@ impl Checks {
 
         Ok(typos_found)
     }
-}
-
-fn is_binary(buffer: &[u8]) -> bool {
-    let null_max = std::cmp::min(buffer.len(), 1024);
-    buffer[0..null_max].find_byte(b'\0').is_some()
 }
