@@ -14,15 +14,18 @@ Configuration is read from the following (in precedence order)
 
 | Field                  | Argument          | Format | Description |
 |------------------------|-------------------|--------|-------------|
-| files.binary           | --binary          | bool   |  |
-| files.ignore-hidden    | --hidden          | bool   |  |
-| files.ignore-files     | --ignore          | bool   |  |
-| files.ignore-dot       | --ignore-dot      | bool   |  |
-| files.ignore-vcs       | --ignore-vcs      | bool   |  |
-| files.ignore-global    | --ignore-global   | bool   |  |
-| files.ignore-parent    | --ignore-parent   | bool   |  |
-| default.check-filename | \-                | bool   |  |
-| default.check-file     | \-                | bool   |  |
-| default.ignore-hex     | \-                | bool   |  |
-| default.identifier-include-digits   | \-   | bool   |  |
-| default.identifier-include-chars    | \-   | string |  |
+| files.binary           | --binary          | bool   | Check binary files as text |
+| files.ignore-hidden    | --hidden          | bool   | Skip hidden files and directories. |
+| files.ignore-files     | --ignore          | bool   | Respect ignore files. |
+| files.ignore-dot       | --ignore-dot      | bool   | Respect .ignore files. |
+| files.ignore-vcs       | --ignore-vcs      | bool   | Respect ignore files in vcs directories. |
+| files.ignore-global    | --ignore-global   | bool   | Respect global ignore files. |
+| files.ignore-parent    | --ignore-parent   | bool   | Respect ignore files in parent directories. |
+| default.check-filename | \-                | bool   | Verifying spelling in file names. |
+| default.check-file     | \-                | bool   | Verifying spelling in files. |
+| default.ignore-hex     | \-                | bool   | Do not check identifiers that appear to be hexadecimal values. |
+| default.identifier-leading-digits   | \-   | bool   | Allow identifiers to start with digits, in addition to letters. |
+| default.identifier-include-digits   | \-   | bool   | Allow identifiers to include digits, in addition to letters. |
+| default.identifier-leading-chars    | \-   | string | Allow identifiers to start with one of these characters. |
+| default.identifier-include-chars    | \-   | string | Allow identifiers to include these characters. |
+| default.locale         | \-                | en, en-us, en-gb, en-ca, en-au   |  |

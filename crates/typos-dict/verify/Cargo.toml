@@ -1,0 +1,24 @@
+[package]
+name = "typos-dict-verify"
+version = "1.0.2"
+authors = ["Ed Page <eopage@gmail.com>"]
+description = "Source Code Spelling Correction"
+repository = "https://github.com/crate-ci/typos"
+readme = "../../../README.md"
+categories = ["text-processing"]
+license = "MIT"
+edition = "2018"
+publish = false
+
+[badges]
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
+
+[dependencies]
+csv = "1.0"
+unicase = "2.5"
+codegenrs = "0.1"
+structopt = "0.3"
+varcon = { version = "0.2", path = "../../varcon" }
+itertools = "0.9"
+edit-distance = "2.1"

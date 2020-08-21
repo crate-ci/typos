@@ -184,7 +184,7 @@ fn bench_check_file(data: &str, b: &mut test::Bencher) {
     let sample_path = temp.child("sample");
     sample_path.write_str(data).unwrap();
 
-    let corrections = typos_cli::dict::BuiltIn::new();
+    let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Parser::new();
     let checks = typos::checks::TyposSettings::new().build_checks();
     b.iter(|| {

@@ -1,7 +1,8 @@
 [workspace]
 members = [
     "crates/typos",
-    "crates/typos-dict", "crates/typos-dict/codegen",
+    "crates/typos-dict", "crates/typos-dict/codegen", "crates/typos-dict/verify",
+    "crates/typos-vars", "crates/typos-vars/codegen",
     "crates/codespell-dict", "crates/codespell-dict/codegen",
     "crates/misspell-dict", "crates/misspell-dict/codegen",
     "crates/wikipedia-dict", "crates/wikipedia-dict/codegen",
@@ -32,6 +33,7 @@ codecov = { repository = "crate-ci/typos" }
 [dependencies]
 typos = { version = "^0.3", path = "crates/typos" }
 typos-dict = { version = "^0.2", path = "crates/typos-dict" }
+typos-vars = { version = "^0.2", path = "crates/typos-vars" }
 phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
 anyhow = "1.0"

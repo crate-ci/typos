@@ -56,7 +56,7 @@ fn run() -> Result<i32, anyhow::Error> {
             .include_chars(config.default.identifier_include_chars().to_owned())
             .build();
 
-        let dictionary = crate::dict::BuiltIn::new();
+        let dictionary = crate::dict::BuiltIn::new(config.default.locale());
 
         let mut settings = typos::checks::TyposSettings::new();
         settings

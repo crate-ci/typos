@@ -1,0 +1,30 @@
+[package]
+name = "typos-vars-codegen"
+version = "1.0.2"
+authors = ["Ed Page <eopage@gmail.com>"]
+description = "Source Code Spelling Correction"
+repository = "https://github.com/crate-ci/typos"
+readme = "../../../README.md"
+categories = ["text-processing"]
+license = "MIT"
+edition = "2018"
+publish = false
+
+[badges]
+azure-devops = { project = "crate-ci", pipeline = "typos" }
+codecov = { repository = "crate-ci/typos" }
+
+[dependencies]
+phf = { version = "0.8", features = ["unicase"] }
+phf_codegen = "0.8"
+varcon = { version = "0.2", path = "../../varcon", features = ["flags"] }
+varcon-core = { version = "1.0", path = "../../varcon-core", features = ["flags"] }
+typos = { version = "^0.3", path = "../../typos" }
+unicase = "2.5"
+codegenrs = "0.1"
+structopt = "0.3"
+clap = "2"
+log = "0.4"
+env_logger = "0.7"
+clap-verbosity-flag = "0.3"
+itertools = "0.9"
