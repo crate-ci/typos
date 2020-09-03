@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::collections::HashSet;
 
 use unicase::UniCase;
 
@@ -127,6 +128,49 @@ fn case_correct(correction: &str, case: Case) -> Cow<'_, str> {
             .flat_map(|c| c.to_uppercase())
             .collect::<String>()
             .into(),
+    }
+}
+
+pub struct Override<'i, 'w, D> {
+    valid_identifiers: HashSet<&'i str>,
+    valid_words: HashSet<unicase::UniCase<&'w str>>,
+    inner: D,
+}
+
+impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
+    pub fn new(inner: D) -> Self {
+        Self {
+            valid_identifiers: Default::default(),
+            valid_words: Default::default(),
+            inner,
+        }
+    }
+
+    pub fn valid_identifiers<I: Iterator<Item = &'i str>>(&mut self, valid_identifiers: I) {
+        self.valid_identifiers = valid_identifiers.collect();
+    }
+
+    pub fn valid_words<I: Iterator<Item = &'w str>>(&mut self, valid_words: I) {
+        self.valid_words = valid_words.map(UniCase::new).collect();
+    }
+}
+
+impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
+    fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Vec<Cow<'s, str>> {
+        if self.valid_identifiers.contains(ident.token()) {
+            Vec::new()
+        } else {
+            self.inner.correct_ident(ident)
+        }
+    }
+
+    fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Vec<Cow<'s, str>> {
+        let w = UniCase::new(word.token());
+        if self.valid_words.contains(&w) {
+            Vec::new()
+        } else {
+            self.inner.correct_word(word)
+        }
     }
 }
 

@@ -29,4 +29,6 @@ Configuration is read from the following (in precedence order)
 | default.identifier-include-digits   | \-   | bool   | Allow identifiers to include digits, in addition to letters. |
 | default.identifier-leading-chars    | \-   | string | Allow identifiers to start with one of these characters. |
 | default.identifier-include-chars    | \-   | string | Allow identifiers to include these characters. |
-| default.locale         | \-                | en, en-us, en-gb, en-ca, en-au   |  |
+| default.locale         | \-                | en, en-us, en-gb, en-ca, en-au   | English dialect to correct to. |
+| default.extend-valid-identifiers    | \-   | list of strings | Identifiers to presume as correct, skipping spell checking.  This extends the list when layering configuration, rather than replacing it. |
+| default.extend-valid-words          | \-   | list of strings | Words to presume as correct, skipping spell checking.  This extends the list when layering configuration, rather than replacing it. |
