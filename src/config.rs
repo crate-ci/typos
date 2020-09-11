@@ -96,6 +96,14 @@ pub trait FileSource {
     fn locale(&self) -> Option<Locale> {
         None
     }
+
+    fn extend_valid_identifiers(&self) -> &[String] {
+        &[]
+    }
+
+    fn extend_valid_words(&self) -> &[String] {
+        &[]
+    }
 }
 
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
@@ -287,6 +295,8 @@ pub struct FileConfig {
     pub identifier_include_digits: Option<bool>,
     pub identifier_include_chars: Option<String>,
     pub locale: Option<Locale>,
+    pub extend_valid_identifiers: Vec<String>,
+    pub extend_valid_words: Vec<String>,
 }
 
 impl FileConfig {
@@ -315,6 +325,10 @@ impl FileConfig {
         if let Some(source) = source.locale() {
             self.locale = Some(source);
         }
+        self.extend_valid_identifiers
+            .extend(source.extend_valid_identifiers().iter().cloned());
+        self.extend_valid_words
+            .extend(source.extend_valid_words().iter().cloned());
     }
 
     pub fn check_filename(&self) -> bool {
@@ -347,6 +361,14 @@ impl FileConfig {
 
     pub fn locale(&self) -> Locale {
         self.locale.unwrap_or_default()
+    }
+
+    pub fn extend_valid_identifiers(&self) -> &[String] {
+        self.extend_valid_identifiers.as_slice()
+    }
+
+    pub fn extend_valid_words(&self) -> &[String] {
+        self.extend_valid_words.as_slice()
     }
 }
 
@@ -381,6 +403,14 @@ impl FileSource for FileConfig {
 
     fn locale(&self) -> Option<Locale> {
         self.locale
+    }
+
+    fn extend_valid_identifiers(&self) -> &[String] {
+        self.extend_valid_identifiers.as_slice()
+    }
+
+    fn extend_valid_words(&self) -> &[String] {
+        self.extend_valid_words.as_slice()
     }
 }
 
