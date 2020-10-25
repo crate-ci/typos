@@ -1,9 +1,10 @@
 use std::borrow::Cow;
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 use unicase::UniCase;
 
 use typos::tokens::Case;
+use typos::Status;
 
 #[derive(Default)]
 pub struct BuiltIn {
@@ -20,40 +21,40 @@ impl BuiltIn {
     pub fn correct_ident<'s, 'w>(
         &'s self,
         _ident: typos::tokens::Identifier<'w>,
-    ) -> Vec<Cow<'s, str>> {
-        Vec::new()
+    ) -> Option<Status<'s>> {
+        None
     }
 
     pub fn correct_word<'s, 'w>(
         &'s self,
         word_token: typos::tokens::Word<'w>,
-    ) -> Vec<Cow<'s, str>> {
+    ) -> Option<Status<'s>> {
         let word = word_token.token();
-        let corrections = if let Some(correction) = self.correct_with_dict(word) {
+        let mut corrections = if let Some(correction) = self.correct_with_dict(word) {
             self.correct_with_vars(word)
-                .unwrap_or_else(|| vec![correction])
+                .unwrap_or_else(|| Status::Corrections(vec![Cow::Borrowed(correction)]))
         } else {
-            self.correct_with_vars(word).unwrap_or_else(Vec::new)
+            self.correct_with_vars(word)?
         };
         corrections
-            .into_iter()
-            .map(|s| case_correct(s, word_token.case()))
-            .collect()
+            .corrections_mut()
+            .for_each(|mut s| case_correct(&mut s, word_token.case()));
+        Some(corrections)
     }
 
+    // Not using `Status` to avoid the allocations
     fn correct_with_dict(&self, word: &str) -> Option<&'static str> {
         map_lookup(&typos_dict::WORD_DICTIONARY, word)
     }
 
-    fn correct_with_vars(&self, word: &str) -> Option<Vec<&'static str>> {
-        let variants = map_lookup(&typos_vars::VARS_DICTIONARY, word)?;
-        self.select_variant(variants)
+    fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
+        map_lookup(&typos_vars::VARS_DICTIONARY, word).map(|variants| self.select_variant(variants))
     }
 
     fn select_variant(
         &self,
         vars: &'static [(u8, &'static typos_vars::VariantsMap)],
-    ) -> Option<Vec<&'static str>> {
+    ) -> Status<'static> {
         let var = vars[0];
         let var_categories = unsafe {
             // Code-genned from a checked category-set, so known to be safe
@@ -62,12 +63,13 @@ impl BuiltIn {
         if let Some(locale) = self.locale {
             if var_categories.contains(locale) {
                 // Already valid for the current locale.
-                None
+                Status::Valid
             } else {
-                Some(
+                Status::Corrections(
                     typos_vars::corrections(locale, *var.1)
                         .iter()
                         .copied()
+                        .map(Cow::Borrowed)
                         .collect(),
                 )
             }
@@ -75,23 +77,29 @@ impl BuiltIn {
             // All locales are valid
             if var_categories.is_empty() {
                 // But the word is never valid.
-                let mut unique: Vec<_> = var.1.iter().flat_map(|v| v.iter()).copied().collect();
+                let mut unique: Vec<_> = var
+                    .1
+                    .iter()
+                    .flat_map(|v| v.iter())
+                    .copied()
+                    .map(Cow::Borrowed)
+                    .collect();
                 unique.sort_unstable();
                 unique.dedup();
-                Some(unique)
+                Status::Corrections(unique)
             } else {
-                None
+                Status::Valid
             }
         }
     }
 }
 
 impl typos::Dictionary for BuiltIn {
-    fn correct_ident<'s, 'w>(&'s self, ident: typos::tokens::Identifier<'w>) -> Vec<Cow<'s, str>> {
+    fn correct_ident<'s, 'w>(&'s self, ident: typos::tokens::Identifier<'w>) -> Option<Status<'s>> {
         BuiltIn::correct_ident(self, ident)
     }
 
-    fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Vec<Cow<'s, str>> {
+    fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Status<'s>> {
         BuiltIn::correct_word(self, word)
     }
 }
@@ -109,68 +117,88 @@ fn map_lookup<V: Clone>(map: &'static phf::Map<UniCase<&'static str>, V>, key: &
     }
 }
 
-fn case_correct(correction: &str, case: Case) -> Cow<'_, str> {
+fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
     match case {
-        Case::Lower | Case::None => correction.into(),
-        Case::Title => {
-            let mut title = String::with_capacity(correction.as_bytes().len());
-            let mut char_indices = correction.char_indices();
-            if let Some((_, c)) = char_indices.next() {
-                title.extend(c.to_uppercase());
-                if let Some((i, _)) = char_indices.next() {
-                    title.push_str(&correction[i..]);
-                }
+        Case::Lower | Case::None => (),
+        Case::Title => match correction {
+            Cow::Borrowed(s) => {
+                let mut s = String::from(*s);
+                s[0..1].make_ascii_uppercase();
+                *correction = s.into();
             }
-            title.into()
-        }
-        Case::Scream => correction
-            .chars()
-            .flat_map(|c| c.to_uppercase())
-            .collect::<String>()
-            .into(),
+            Cow::Owned(s) => {
+                s[0..1].make_ascii_uppercase();
+            }
+        },
+        Case::Scream => match correction {
+            Cow::Borrowed(s) => {
+                let mut s = String::from(*s);
+                s.make_ascii_uppercase();
+                *correction = s.into();
+            }
+            Cow::Owned(s) => {
+                s.make_ascii_uppercase();
+            }
+        },
     }
 }
 
 pub struct Override<'i, 'w, D> {
-    valid_identifiers: HashSet<&'i str>,
-    valid_words: HashSet<unicase::UniCase<&'w str>>,
+    identifiers: HashMap<&'i str, Status<'i>>,
+    words: HashMap<unicase::UniCase<&'w str>, Status<'w>>,
     inner: D,
 }
 
 impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
     pub fn new(inner: D) -> Self {
         Self {
-            valid_identifiers: Default::default(),
-            valid_words: Default::default(),
+            identifiers: Default::default(),
+            words: Default::default(),
             inner,
         }
     }
 
-    pub fn valid_identifiers<I: Iterator<Item = &'i str>>(&mut self, valid_identifiers: I) {
-        self.valid_identifiers = valid_identifiers.collect();
+    pub fn identifiers<I: Iterator<Item = (&'i str, &'i str)>>(&mut self, identifiers: I) {
+        self.identifiers = Self::interpret(identifiers).collect();
     }
 
-    pub fn valid_words<I: Iterator<Item = &'w str>>(&mut self, valid_words: I) {
-        self.valid_words = valid_words.map(UniCase::new).collect();
+    pub fn words<I: Iterator<Item = (&'w str, &'w str)>>(&mut self, words: I) {
+        self.words = Self::interpret(words)
+            .map(|(k, v)| (UniCase::new(k), v))
+            .collect();
+    }
+
+    pub fn interpret<'z, I: Iterator<Item = (&'z str, &'z str)>>(
+        cases: I,
+    ) -> impl Iterator<Item = (&'z str, Status<'z>)> {
+        cases.map(|(typo, correction)| {
+            let correction = if typo == correction {
+                Status::Valid
+            } else if correction.is_empty() {
+                Status::Invalid
+            } else {
+                Status::Corrections(vec![Cow::Borrowed(correction)])
+            };
+            (typo, correction)
+        })
     }
 }
 
 impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
-    fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Vec<Cow<'s, str>> {
-        if self.valid_identifiers.contains(ident.token()) {
-            Vec::new()
-        } else {
-            self.inner.correct_ident(ident)
-        }
+    fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Option<Status<'s>> {
+        self.identifiers
+            .get(ident.token())
+            .map(|c| c.borrow())
+            .or_else(|| self.inner.correct_ident(ident))
     }
 
-    fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Vec<Cow<'s, str>> {
+    fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Option<Status<'s>> {
         let w = UniCase::new(word.token());
-        if self.valid_words.contains(&w) {
-            Vec::new()
-        } else {
-            self.inner.correct_word(word)
-        }
+        // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
+        self.words
+            .get(&w)
+            .cloned()
+            .or_else(|| self.inner.correct_word(word))
     }
 }
 
@@ -188,7 +216,12 @@ mod test {
             ("fOo", Case::None, "fOo"),
         ];
         for (correction, case, expected) in cases.iter() {
-            let actual = case_correct(correction, *case);
+            let mut actual = Cow::Borrowed(*correction);
+            case_correct(&mut actual, *case);
+            assert_eq!(*expected, actual);
+
+            let mut actual = Cow::Owned(String::from(*correction));
+            case_correct(&mut actual, *case);
             assert_eq!(*expected, actual);
         }
     }

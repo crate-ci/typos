@@ -58,20 +58,8 @@ fn run() -> Result<i32, anyhow::Error> {
 
         let dictionary = crate::dict::BuiltIn::new(config.default.locale());
         let mut dictionary = crate::dict::Override::new(dictionary);
-        dictionary.valid_identifiers(
-            config
-                .default
-                .extend_valid_identifiers()
-                .iter()
-                .map(|s| s.as_str()),
-        );
-        dictionary.valid_words(
-            config
-                .default
-                .extend_valid_words()
-                .iter()
-                .map(|s| s.as_str()),
-        );
+        dictionary.identifiers(config.default.extend_identifiers());
+        dictionary.words(config.default.extend_words());
 
         let mut settings = typos::checks::TyposSettings::new();
         settings
