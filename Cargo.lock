@@ -242,9 +242,9 @@ dependencies = [
 
 [[package]]
 name = "derive_more"
-version = "0.99.9"
+version = "0.99.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "298998b1cf6b5b2c8a7b023dfd45821825ce3ba8a8af55c921a0e734e4653f76"
+checksum = "41cb0e6161ad61ed084a36ba71fbba9e3ac5aee3606fb607fe08da6acbcf3d8c"
 dependencies = [
  "proc-macro2 1.0.19",
  "quote 1.0.7",
@@ -979,7 +979,7 @@ dependencies = [
  "anyhow",
  "bstr",
  "content_inspector",
- "derive_more 0.99.9",
+ "derive_more 0.99.11",
  "derive_setters",
  "itertools",
  "lazy_static",
