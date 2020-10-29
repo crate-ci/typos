@@ -73,7 +73,7 @@ impl ParserBuilder {
             let escaped = regex::escape(&grapheme);
             pattern.push_str(&format!("|{}", escaped));
         }
-        pattern.push_str(r#")"#);
+        pattern.push(')');
     }
 }
 

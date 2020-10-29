@@ -3,6 +3,7 @@ use bstr::ByteSlice;
 use crate::report;
 use crate::tokens;
 use crate::Dictionary;
+use crate::Status;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TyposSettings {
@@ -233,16 +234,20 @@ impl Checks {
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
-        let mut typos_found = false;
-
         if !self.check_filenames {
-            return Ok(typos_found);
+            return Ok(false);
         }
 
-        if let Some(part) = path.file_name().and_then(|s| s.to_str()) {
-            for ident in parser.parse(part) {
-                let corrections = dictionary.correct_ident(ident);
-                if !corrections.is_empty() {
+        let mut typos_found = false;
+        for ident in path
+            .file_name()
+            .and_then(|s| s.to_str())
+            .iter()
+            .flat_map(|part| parser.parse(part))
+        {
+            match dictionary.correct_ident(ident) {
+                Some(Status::Valid) => {}
+                Some(corrections) => {
                     let byte_offset = ident.offset();
                     let msg = report::PathCorrection {
                         path,
@@ -251,18 +256,22 @@ impl Checks {
                         corrections,
                     };
                     typos_found |= reporter.report(msg.into());
-                } else {
+                }
+                None => {
                     for word in ident.split() {
-                        let corrections = dictionary.correct_word(word);
-                        if !corrections.is_empty() {
-                            let byte_offset = word.offset();
-                            let msg = report::PathCorrection {
-                                path,
-                                byte_offset,
-                                typo: word.token(),
-                                corrections,
-                            };
-                            typos_found |= reporter.report(msg.into());
+                        match dictionary.correct_word(word) {
+                            Some(Status::Valid) => {}
+                            Some(corrections) => {
+                                let byte_offset = word.offset();
+                                let msg = report::PathCorrection {
+                                    path,
+                                    byte_offset,
+                                    typo: word.token(),
+                                    corrections,
+                                };
+                                typos_found |= reporter.report(msg.into());
+                            }
+                            None => {}
                         }
                     }
                 }
@@ -305,32 +314,38 @@ impl Checks {
         for (line_idx, line) in buffer.lines().enumerate() {
             let line_num = line_idx + 1;
             for ident in parser.parse_bytes(line) {
-                let corrections = dictionary.correct_ident(ident);
-                if !corrections.is_empty() {
-                    let byte_offset = ident.offset();
-                    let msg = report::Correction {
-                        path,
-                        line,
-                        line_num,
-                        byte_offset,
-                        typo: ident.token(),
-                        corrections,
-                    };
-                    typos_found |= reporter.report(msg.into());
-                } else {
-                    for word in ident.split() {
-                        let corrections = dictionary.correct_word(word);
-                        if !corrections.is_empty() {
-                            let byte_offset = word.offset();
-                            let msg = report::Correction {
-                                path,
-                                line,
-                                line_num,
-                                byte_offset,
-                                typo: word.token(),
-                                corrections,
-                            };
-                            typos_found |= reporter.report(msg.into());
+                match dictionary.correct_ident(ident) {
+                    Some(Status::Valid) => {}
+                    Some(corrections) => {
+                        let byte_offset = ident.offset();
+                        let msg = report::Correction {
+                            path,
+                            line,
+                            line_num,
+                            byte_offset,
+                            typo: ident.token(),
+                            corrections,
+                        };
+                        typos_found |= reporter.report(msg.into());
+                    }
+                    None => {
+                        for word in ident.split() {
+                            match dictionary.correct_word(word) {
+                                Some(Status::Valid) => {}
+                                Some(corrections) => {
+                                    let byte_offset = word.offset();
+                                    let msg = report::Correction {
+                                        path,
+                                        line,
+                                        line_num,
+                                        byte_offset,
+                                        typo: word.token(),
+                                        corrections,
+                                    };
+                                    typos_found |= reporter.report(msg.into());
+                                }
+                                None => {}
+                            }
                         }
                     }
                 }

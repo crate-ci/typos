@@ -13,7 +13,9 @@ fn correct_word_hit(b: &mut test::Bencher) {
     let input = typos::tokens::Word::new("successs", 0).unwrap();
     assert_eq!(
         corrections.correct_word(input),
-        vec![std::borrow::Cow::Borrowed("successes")]
+        Some(typos::Status::Corrections(vec![
+            std::borrow::Cow::Borrowed("successes")
+        ]))
     );
     b.iter(|| corrections.correct_word(input));
 }
@@ -22,6 +24,6 @@ fn correct_word_hit(b: &mut test::Bencher) {
 fn correct_word_miss(b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let input = typos::tokens::Word::new("success", 0).unwrap();
-    assert!(corrections.correct_word(input).is_empty());
+    assert!(corrections.correct_word(input).is_none());
     b.iter(|| corrections.correct_word(input));
 }

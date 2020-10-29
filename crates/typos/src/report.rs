@@ -1,6 +1,5 @@
 #![allow(clippy::needless_update)]
 
-use std::borrow::Cow;
 use std::io::{self, Write};
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]
@@ -21,8 +20,8 @@ impl<'m> Message<'m> {
     pub fn is_correction(&self) -> bool {
         match self {
             Message::BinaryFile(_) => false,
-            Message::Correction(_) => true,
-            Message::PathCorrection(_) => true,
+            Message::Correction(c) => c.corrections.is_correction(),
+            Message::PathCorrection(c) => c.corrections.is_correction(),
             Message::File(_) => false,
             Message::Parse(_) => false,
             Message::PathError(_) => false,
@@ -59,7 +58,7 @@ pub struct Correction<'m> {
     pub line_num: usize,
     pub byte_offset: usize,
     pub typo: &'m str,
-    pub corrections: Vec<Cow<'m, str>>,
+    pub corrections: crate::Status<'m>,
 }
 
 impl<'m> Default for Correction<'m> {
@@ -70,7 +69,7 @@ impl<'m> Default for Correction<'m> {
             line_num: 0,
             byte_offset: 0,
             typo: "",
-            corrections: Vec::new(),
+            corrections: crate::Status::Invalid,
         }
     }
 }
@@ -81,7 +80,7 @@ pub struct PathCorrection<'m> {
     pub path: &'m std::path::Path,
     pub byte_offset: usize,
     pub typo: &'m str,
-    pub corrections: Vec<Cow<'m, str>>,
+    pub corrections: crate::Status<'m>,
 }
 
 impl<'m> Default for PathCorrection<'m> {
@@ -90,7 +89,7 @@ impl<'m> Default for PathCorrection<'m> {
             path: std::path::Path::new("-"),
             byte_offset: 0,
             typo: "",
-            corrections: Vec::new(),
+            corrections: crate::Status::Invalid,
         }
     }
 }
@@ -196,24 +195,42 @@ impl Report for PrintBrief {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Correction(msg) => {
-                println!(
-                    "{}:{}:{}: {} -> {}",
-                    msg.path.display(),
-                    msg.line_num,
-                    msg.byte_offset,
-                    msg.typo,
-                    itertools::join(msg.corrections.iter(), ", ")
-                );
-            }
-            Message::PathCorrection(msg) => {
-                println!(
-                    "{}: {} -> {}",
-                    msg.path.display(),
-                    msg.typo,
-                    itertools::join(msg.corrections.iter(), ", ")
-                );
-            }
+            Message::Correction(msg) => match &msg.corrections {
+                crate::Status::Valid => {}
+                crate::Status::Invalid => {
+                    println!(
+                        "{}:{}:{}: {} is disallowed",
+                        msg.path.display(),
+                        msg.line_num,
+                        msg.byte_offset,
+                        msg.typo,
+                    );
+                }
+                crate::Status::Corrections(corrections) => {
+                    println!(
+                        "{}:{}:{}: {} -> {}",
+                        msg.path.display(),
+                        msg.line_num,
+                        msg.byte_offset,
+                        msg.typo,
+                        itertools::join(corrections.iter(), ", ")
+                    );
+                }
+            },
+            Message::PathCorrection(msg) => match &msg.corrections {
+                crate::Status::Valid => {}
+                crate::Status::Invalid => {
+                    println!("{}: {} is disallowed", msg.path.display(), msg.typo,);
+                }
+                crate::Status::Corrections(corrections) => {
+                    println!(
+                        "{}: {} -> {}",
+                        msg.path.display(),
+                        msg.typo,
+                        itertools::join(corrections.iter(), ", ")
+                    );
+                }
+            },
             Message::File(msg) => {
                 println!("{}", msg.path.display());
             }
@@ -241,14 +258,24 @@ impl Report for PrintLong {
                 log::info!("{}", msg);
             }
             Message::Correction(msg) => print_long_correction(msg),
-            Message::PathCorrection(msg) => {
-                println!(
-                    "{}: error: `{}` should be {}",
-                    msg.path.display(),
-                    msg.typo,
-                    itertools::join(msg.corrections.iter().map(|c| format!("`{}`", c)), ", ")
-                );
-            }
+            Message::PathCorrection(msg) => match &msg.corrections {
+                crate::Status::Valid => {}
+                crate::Status::Invalid => {
+                    println!(
+                        "{}: error: `{}` is disallowed",
+                        msg.path.display(),
+                        msg.typo,
+                    );
+                }
+                crate::Status::Corrections(corrections) => {
+                    println!(
+                        "{}: error: `{}` should be {}",
+                        msg.path.display(),
+                        msg.typo,
+                        itertools::join(corrections.iter().map(|c| format!("`{}`", c)), ", ")
+                    );
+                }
+            },
             Message::File(msg) => {
                 println!("{}", msg.path.display());
             }
@@ -278,14 +305,21 @@ fn print_long_correction(msg: &Correction) {
 
     let stdout = io::stdout();
     let mut handle = stdout.lock();
-
-    writeln!(
-        handle,
-        "error: `{}` should be {}",
-        msg.typo,
-        itertools::join(msg.corrections.iter().map(|c| format!("`{}`", c)), ", ")
-    )
-    .unwrap();
+    match &msg.corrections {
+        crate::Status::Valid => {}
+        crate::Status::Invalid => {
+            writeln!(handle, "error: `{}` is disallowed", msg.typo,).unwrap();
+        }
+        crate::Status::Corrections(corrections) => {
+            writeln!(
+                handle,
+                "error: `{}` should be {}",
+                msg.typo,
+                itertools::join(corrections.iter().map(|c| format!("`{}`", c)), ", ")
+            )
+            .unwrap();
+        }
+    }
     writeln!(
         handle,
         "  --> {}:{}:{}",

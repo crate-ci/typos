@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::io::Read;
 
 pub trait ConfigSource {
@@ -97,12 +98,12 @@ pub trait FileSource {
         None
     }
 
-    fn extend_valid_identifiers(&self) -> &[String] {
-        &[]
+    fn extend_identifiers(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
+        Box::new(None.into_iter())
     }
 
-    fn extend_valid_words(&self) -> &[String] {
-        &[]
+    fn extend_words(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
+        Box::new(None.into_iter())
     }
 }
 
@@ -220,28 +221,22 @@ impl Walk {
     }
 
     pub fn ignore_dot(&self) -> bool {
-        self.ignore_dot
-            .or_else(|| self.ignore_files)
-            .unwrap_or(true)
+        self.ignore_dot.or(self.ignore_files).unwrap_or(true)
     }
 
     pub fn ignore_vcs(&self) -> bool {
-        self.ignore_vcs
-            .or_else(|| self.ignore_files)
-            .unwrap_or(true)
+        self.ignore_vcs.or(self.ignore_files).unwrap_or(true)
     }
 
     pub fn ignore_global(&self) -> bool {
         self.ignore_global
-            .or_else(|| self.ignore_vcs)
-            .or_else(|| self.ignore_files)
+            .or(self.ignore_vcs)
+            .or(self.ignore_files)
             .unwrap_or(true)
     }
 
     pub fn ignore_parent(&self) -> bool {
-        self.ignore_parent
-            .or_else(|| self.ignore_files)
-            .unwrap_or(true)
+        self.ignore_parent.or(self.ignore_files).unwrap_or(true)
     }
 }
 
@@ -295,8 +290,8 @@ pub struct FileConfig {
     pub identifier_include_digits: Option<bool>,
     pub identifier_include_chars: Option<String>,
     pub locale: Option<Locale>,
-    pub extend_valid_identifiers: Vec<String>,
-    pub extend_valid_words: Vec<String>,
+    pub extend_identifiers: HashMap<String, String>,
+    pub extend_words: HashMap<String, String>,
 }
 
 impl FileConfig {
@@ -325,10 +320,16 @@ impl FileConfig {
         if let Some(source) = source.locale() {
             self.locale = Some(source);
         }
-        self.extend_valid_identifiers
-            .extend(source.extend_valid_identifiers().iter().cloned());
-        self.extend_valid_words
-            .extend(source.extend_valid_words().iter().cloned());
+        self.extend_identifiers.extend(
+            source
+                .extend_identifiers()
+                .map(|(k, v)| (k.to_owned(), v.to_owned())),
+        );
+        self.extend_words.extend(
+            source
+                .extend_words()
+                .map(|(k, v)| (k.to_owned(), v.to_owned())),
+        );
     }
 
     pub fn check_filename(&self) -> bool {
@@ -363,12 +364,20 @@ impl FileConfig {
         self.locale.unwrap_or_default()
     }
 
-    pub fn extend_valid_identifiers(&self) -> &[String] {
-        self.extend_valid_identifiers.as_slice()
+    pub fn extend_identifiers(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
+        Box::new(
+            self.extend_identifiers
+                .iter()
+                .map(|(k, v)| (k.as_str(), v.as_str())),
+        )
     }
 
-    pub fn extend_valid_words(&self) -> &[String] {
-        self.extend_valid_words.as_slice()
+    pub fn extend_words(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
+        Box::new(
+            self.extend_words
+                .iter()
+                .map(|(k, v)| (k.as_str(), v.as_str())),
+        )
     }
 }
 
@@ -405,12 +414,20 @@ impl FileSource for FileConfig {
         self.locale
     }
 
-    fn extend_valid_identifiers(&self) -> &[String] {
-        self.extend_valid_identifiers.as_slice()
+    fn extend_identifiers(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
+        Box::new(
+            self.extend_identifiers
+                .iter()
+                .map(|(k, v)| (k.as_str(), v.as_str())),
+        )
     }
 
-    fn extend_valid_words(&self) -> &[String] {
-        self.extend_valid_words.as_slice()
+    fn extend_words(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
+        Box::new(
+            self.extend_words
+                .iter()
+                .map(|(k, v)| (k.as_str(), v.as_str())),
+        )
     }
 }
 
