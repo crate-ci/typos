@@ -249,7 +249,7 @@ impl Checks {
                 Some(Status::Valid) => {}
                 Some(corrections) => {
                     let byte_offset = ident.offset();
-                    let msg = report::PathCorrection {
+                    let msg = report::PathTypo {
                         path,
                         byte_offset,
                         typo: ident.token(),
@@ -263,7 +263,7 @@ impl Checks {
                             Some(Status::Valid) => {}
                             Some(corrections) => {
                                 let byte_offset = word.offset();
-                                let msg = report::PathCorrection {
+                                let msg = report::PathTypo {
                                     path,
                                     byte_offset,
                                     typo: word.token(),
@@ -318,7 +318,7 @@ impl Checks {
                     Some(Status::Valid) => {}
                     Some(corrections) => {
                         let byte_offset = ident.offset();
-                        let msg = report::Correction {
+                        let msg = report::FileTypo {
                             path,
                             line,
                             line_num,
@@ -334,7 +334,7 @@ impl Checks {
                                 Some(Status::Valid) => {}
                                 Some(corrections) => {
                                     let byte_offset = word.offset();
-                                    let msg = report::Correction {
+                                    let msg = report::FileTypo {
                                         path,
                                         line,
                                         line_num,

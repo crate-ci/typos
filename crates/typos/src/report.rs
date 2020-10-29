@@ -8,8 +8,8 @@ use std::io::{self, Write};
 #[non_exhaustive]
 pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
-    Correction(Correction<'m>),
-    PathCorrection(PathCorrection<'m>),
+    FileTypo(FileTypo<'m>),
+    PathTypo(PathTypo<'m>),
     File(File<'m>),
     Parse(Parse<'m>),
     PathError(PathError<'m>),
@@ -20,8 +20,8 @@ impl<'m> Message<'m> {
     pub fn is_correction(&self) -> bool {
         match self {
             Message::BinaryFile(_) => false,
-            Message::Correction(c) => c.corrections.is_correction(),
-            Message::PathCorrection(c) => c.corrections.is_correction(),
+            Message::FileTypo(c) => c.corrections.is_correction(),
+            Message::PathTypo(c) => c.corrections.is_correction(),
             Message::File(_) => false,
             Message::Parse(_) => false,
             Message::PathError(_) => false,
@@ -32,8 +32,8 @@ impl<'m> Message<'m> {
     pub fn is_error(&self) -> bool {
         match self {
             Message::BinaryFile(_) => false,
-            Message::Correction(_) => false,
-            Message::PathCorrection(_) => false,
+            Message::FileTypo(_) => false,
+            Message::PathTypo(_) => false,
             Message::File(_) => false,
             Message::Parse(_) => false,
             Message::PathError(_) => true,
@@ -51,7 +51,7 @@ pub struct BinaryFile<'m> {
 
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
 #[non_exhaustive]
-pub struct Correction<'m> {
+pub struct FileTypo<'m> {
     pub path: &'m std::path::Path,
     #[serde(skip)]
     pub line: &'m [u8],
@@ -61,7 +61,7 @@ pub struct Correction<'m> {
     pub corrections: crate::Status<'m>,
 }
 
-impl<'m> Default for Correction<'m> {
+impl<'m> Default for FileTypo<'m> {
     fn default() -> Self {
         Self {
             path: std::path::Path::new("-"),
@@ -76,14 +76,14 @@ impl<'m> Default for Correction<'m> {
 
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
 #[non_exhaustive]
-pub struct PathCorrection<'m> {
+pub struct PathTypo<'m> {
     pub path: &'m std::path::Path,
     pub byte_offset: usize,
     pub typo: &'m str,
     pub corrections: crate::Status<'m>,
 }
 
-impl<'m> Default for PathCorrection<'m> {
+impl<'m> Default for PathTypo<'m> {
     fn default() -> Self {
         Self {
             path: std::path::Path::new("-"),
@@ -195,7 +195,7 @@ impl Report for PrintBrief {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Correction(msg) => match &msg.corrections {
+            Message::FileTypo(msg) => match &msg.corrections {
                 crate::Status::Valid => {}
                 crate::Status::Invalid => {
                     println!(
@@ -217,7 +217,7 @@ impl Report for PrintBrief {
                     );
                 }
             },
-            Message::PathCorrection(msg) => match &msg.corrections {
+            Message::PathTypo(msg) => match &msg.corrections {
                 crate::Status::Valid => {}
                 crate::Status::Invalid => {
                     println!("{}: {} is disallowed", msg.path.display(), msg.typo,);
@@ -257,8 +257,8 @@ impl Report for PrintLong {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Correction(msg) => print_long_correction(msg),
-            Message::PathCorrection(msg) => match &msg.corrections {
+            Message::FileTypo(msg) => print_long_correction(msg),
+            Message::PathTypo(msg) => match &msg.corrections {
                 crate::Status::Valid => {}
                 crate::Status::Invalid => {
                     println!(
@@ -293,7 +293,7 @@ impl Report for PrintLong {
     }
 }
 
-fn print_long_correction(msg: &Correction) {
+fn print_long_correction(msg: &FileTypo) {
     let line_num = msg.line_num.to_string();
     let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
