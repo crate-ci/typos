@@ -152,6 +152,10 @@ impl ConfigSource for Config {
     fn walk(&self) -> Option<&dyn WalkSource> {
         Some(&self.files)
     }
+
+    fn default(&self) -> Option<&dyn FileSource> {
+        Some(&self.default)
+    }
 }
 
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
