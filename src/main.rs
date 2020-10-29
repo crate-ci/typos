@@ -14,7 +14,13 @@ mod dict;
 mod replace;
 
 fn main() {
-    let code = run().unwrap();
+    let code = match run() {
+        Ok(code) => code,
+        Err(err) => {
+            eprintln!("{}", err);
+            1
+        }
+    };
     std::process::exit(code);
 }
 
