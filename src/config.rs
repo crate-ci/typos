@@ -131,7 +131,7 @@ impl Config {
     }
 
     pub fn derive(cwd: &std::path::Path) -> Result<Self, anyhow::Error> {
-        if let Some(path) = find_project_file(cwd.to_owned(), "typos.toml") {
+        if let Some(path) = find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"]) {
             Self::from_file(&path)
         } else {
             Ok(Default::default())
@@ -435,18 +435,17 @@ impl FileSource for FileConfig {
     }
 }
 
-fn find_project_file(dir: std::path::PathBuf, name: &str) -> Option<std::path::PathBuf> {
-    let mut file_path = dir;
-    file_path.push(name);
-    while !file_path.exists() {
-        file_path.pop(); // filename
-        let hit_bottom = !file_path.pop();
-        if hit_bottom {
-            return None;
+fn find_project_file(dir: &std::path::Path, names: &[&str]) -> Option<std::path::PathBuf> {
+    for ancestor in dir.ancestors() {
+        let mut file_path = ancestor.join("placeholder");
+        for name in names {
+            file_path.set_file_name(name);
+            if file_path.exists() {
+                return Some(file_path);
+            }
         }
-        file_path.push(name);
     }
-    Some(file_path)
+    None
 }
 
 #[derive(Debug, Copy, Clone, serde::Serialize, serde::Deserialize)]

@@ -8,7 +8,7 @@ Configuration is read from the following (in precedence order)
 
 - Command line arguments
 - File specified via `--config PATH`
-- Search parents of specified file / directory for `typos.toml`
+- Search parents of specified file / directory for one of `typos.toml`, `_typos.toml`, or `.typos.toml`
 
 ### Config Fields
 
