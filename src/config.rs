@@ -17,16 +17,6 @@ pub trait WalkSource {
         None
     }
 
-    /// The root for `ignore_patterns`
-    fn ignore_root(&self) -> Option<&std::path::Path> {
-        None
-    }
-
-    /// Ignore the specified patterns (gitignore syntax)
-    fn ignore_patterns(&self) -> Option<&[String]> {
-        None
-    }
-
     /// Skip hidden files and directories.
     fn ignore_hidden(&self) -> Option<bool> {
         None
@@ -120,9 +110,7 @@ impl Config {
         let mut file = std::fs::File::open(path)?;
         let mut s = String::new();
         file.read_to_string(&mut s)?;
-        let mut c = Self::from_toml(&s)?;
-        c.files.ignore_root = path.parent().map(|p| p.to_owned());
-        Ok(c)
+        Self::from_toml(&s)
     }
 
     pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
@@ -163,9 +151,6 @@ impl ConfigSource for Config {
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
     pub binary: Option<bool>,
-    #[serde(skip)]
-    pub ignore_root: Option<std::path::PathBuf>,
-    pub ignore_patterns: Option<Vec<String>>,
     pub ignore_hidden: Option<bool>,
     pub ignore_files: Option<bool>,
     pub ignore_dot: Option<bool>,
@@ -178,10 +163,6 @@ impl Walk {
     pub fn update(&mut self, source: &dyn WalkSource) {
         if let Some(source) = source.binary() {
             self.binary = Some(source);
-        }
-        if let (Some(root), Some(source)) = (source.ignore_root(), source.ignore_patterns()) {
-            self.ignore_root = Some(root.to_owned());
-            self.ignore_patterns = Some(source.to_owned());
         }
         if let Some(source) = source.ignore_hidden() {
             self.ignore_hidden = Some(source);
@@ -212,14 +193,6 @@ impl Walk {
         self.binary.unwrap_or(false)
     }
 
-    pub fn ignore_root(&self) -> Option<&std::path::Path> {
-        self.ignore_root.as_deref()
-    }
-
-    pub fn ignore_patterns(&self) -> Option<&[String]> {
-        self.ignore_patterns.as_deref()
-    }
-
     pub fn ignore_hidden(&self) -> bool {
         self.ignore_hidden.unwrap_or(true)
     }
@@ -247,14 +220,6 @@ impl Walk {
 impl WalkSource for Walk {
     fn binary(&self) -> Option<bool> {
         self.binary
-    }
-
-    fn ignore_root(&self) -> Option<&std::path::Path> {
-        self.ignore_root.as_deref()
-    }
-
-    fn ignore_patterns(&self) -> Option<&[String]> {
-        self.ignore_patterns.as_deref()
     }
 
     fn ignore_hidden(&self) -> Option<bool> {
