@@ -44,7 +44,7 @@ See also [benchmarks](../benchsuite/runs).
 | snake_case     | Yes                   | No                              | ?                               | No          | Yes         |
 | Ignore Hex     | Yes                   | No                              | ?                               | No          | Yes         |
 | C-Escapes      | No ([#20][def-3])     | No                              | ?                               | No          | Yes         |
-| Encodings      | UTF-8 ([#17][def-17]) | UTF-8                           | ?                               | Auto        | Auto        |
+| Encodings      | UTF-8 / UTF-16        | UTF-8                           | ?                               | Auto        | Auto        |
 | Whole-project  | Yes                   | Yes                             | Yes                             | Yes         | No          |
 | Ignores hidden | Yes                   | Yes                             | ?                               | Yes         | No          |
 | Respect gitignore | Yes                | Yes                             | ?                               | No          | No          |

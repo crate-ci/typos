@@ -1,4 +1,5 @@
 use bstr::ByteSlice;
+use encoding::Encoding;
 
 use crate::report;
 use typos::tokens;
@@ -208,7 +209,7 @@ impl FileChecker for FixTypos {
                 }
                 if !fixes.is_empty() {
                     let buffer = fix_buffer(buffer, fixes.into_iter());
-                    write_file(path, content_type, &buffer, reporter)?;
+                    write_file(path, content_type, buffer, reporter)?;
                 }
             }
         }
@@ -503,22 +504,30 @@ pub fn read_file(
     path: &std::path::Path,
     reporter: &dyn report::Report,
 ) -> Result<(Vec<u8>, content_inspector::ContentType), std::io::Error> {
-    let buffer = match std::fs::read(path) {
-        Ok(buffer) => buffer,
-        Err(err) => {
-            let msg = report::Error::new(err.to_string());
-            reporter.report(msg.into())?;
-            Vec::new()
-        }
-    };
+    let buffer = report_error(std::fs::read(path), reporter)?;
 
-    let mut content_type = content_inspector::inspect(&buffer);
-    // HACK: We only support UTF-8 at the moment
-    if content_type != content_inspector::ContentType::UTF_8_BOM
-        && content_type != content_inspector::ContentType::UTF_8
-    {
-        content_type = content_inspector::ContentType::BINARY;
-    }
+    let content_type = content_inspector::inspect(&buffer);
+
+    let (buffer, content_type) = match content_type {
+        content_inspector::ContentType::BINARY |
+        // HACK: We don't support UTF-32 yet
+        content_inspector::ContentType::UTF_32LE |
+        content_inspector::ContentType::UTF_32BE => {
+            (buffer, content_inspector::ContentType::BINARY)
+        },
+        content_inspector::ContentType::UTF_8 |
+        content_inspector::ContentType::UTF_8_BOM => {
+            (buffer, content_type)
+        },
+        content_inspector::ContentType::UTF_16LE => {
+            let buffer = report_error(encoding::all::UTF_16LE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
+            (buffer.into_bytes(), content_type)
+        }
+        content_inspector::ContentType::UTF_16BE => {
+            let buffer = report_error(encoding::all::UTF_16BE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
+            (buffer.into_bytes(), content_type)
+        },
+    };
 
     Ok((buffer, content_type))
 }
@@ -526,22 +535,59 @@ pub fn read_file(
 pub fn write_file(
     path: &std::path::Path,
     content_type: content_inspector::ContentType,
-    buffer: &[u8],
+    buffer: Vec<u8>,
     reporter: &dyn report::Report,
 ) -> Result<(), std::io::Error> {
-    assert!(
-        content_type == content_inspector::ContentType::UTF_8_BOM
-            || content_type == content_inspector::ContentType::UTF_8
-            || content_type == content_inspector::ContentType::BINARY
-    );
-    match std::fs::write(path, buffer) {
-        Ok(()) => (),
+    let buffer = match content_type {
+        // HACK: We don't support UTF-32 yet
+        content_inspector::ContentType::UTF_32LE | content_inspector::ContentType::UTF_32BE => {
+            unreachable!("read_file should prevent these from being passed along");
+        }
+        content_inspector::ContentType::BINARY
+        | content_inspector::ContentType::UTF_8
+        | content_inspector::ContentType::UTF_8_BOM => buffer,
+        content_inspector::ContentType::UTF_16LE => {
+            let buffer = report_error(String::from_utf8(buffer), reporter)?;
+            if buffer.is_empty() {
+                // Error occurred, don't clear out the file
+                return Ok(());
+            }
+            report_error(
+                encoding::all::UTF_16LE.encode(&buffer, encoding::EncoderTrap::Strict),
+                reporter,
+            )?
+        }
+        content_inspector::ContentType::UTF_16BE => {
+            let buffer = report_error(String::from_utf8(buffer), reporter)?;
+            if buffer.is_empty() {
+                // Error occurred, don't clear out the file
+                return Ok(());
+            }
+            report_error(
+                encoding::all::UTF_16BE.encode(&buffer, encoding::EncoderTrap::Strict),
+                reporter,
+            )?
+        }
+    };
+
+    report_error(std::fs::write(path, buffer), reporter)?;
+
+    Ok(())
+}
+
+fn report_error<T: Default, E: ToString>(
+    value: Result<T, E>,
+    reporter: &dyn report::Report,
+) -> Result<T, std::io::Error> {
+    let buffer = match value {
+        Ok(value) => value,
         Err(err) => {
             let msg = report::Error::new(err.to_string());
             reporter.report(msg.into())?;
+            Default::default()
         }
     };
-    Ok(())
+    Ok(buffer)
 }
 
 struct AccumulateLineNum {
