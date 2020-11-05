@@ -225,39 +225,38 @@ impl Checks {
         }
 
         let mut typos_found = false;
-        for ident in path
-            .file_name()
-            .and_then(|s| s.to_str())
-            .iter()
-            .flat_map(|part| parser.parse(part))
-        {
-            match dictionary.correct_ident(ident) {
-                Some(Status::Valid) => {}
-                Some(corrections) => {
-                    let byte_offset = ident.offset();
-                    let msg = report::PathTypo {
-                        path,
-                        byte_offset,
-                        typo: ident.token(),
-                        corrections,
-                    };
-                    typos_found |= reporter.report(msg.into());
-                }
-                None => {
-                    for word in ident.split() {
-                        match dictionary.correct_word(word) {
-                            Some(Status::Valid) => {}
-                            Some(corrections) => {
-                                let byte_offset = word.offset();
-                                let msg = report::PathTypo {
-                                    path,
-                                    byte_offset,
-                                    typo: word.token(),
-                                    corrections,
-                                };
-                                typos_found |= reporter.report(msg.into());
+        if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+            for ident in parser.parse(file_name) {
+                match dictionary.correct_ident(ident) {
+                    Some(Status::Valid) => {}
+                    Some(corrections) => {
+                        let byte_offset = ident.offset();
+                        let msg = report::Typo {
+                            context: report::PathContext { path }.into(),
+                            buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                            byte_offset,
+                            typo: ident.token(),
+                            corrections,
+                        };
+                        typos_found |= reporter.report(msg.into());
+                    }
+                    None => {
+                        for word in ident.split() {
+                            match dictionary.correct_word(word) {
+                                Some(Status::Valid) => {}
+                                Some(corrections) => {
+                                    let byte_offset = word.offset();
+                                    let msg = report::Typo {
+                                        context: report::PathContext { path }.into(),
+                                        buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                                        byte_offset,
+                                        typo: word.token(),
+                                        corrections,
+                                    };
+                                    typos_found |= reporter.report(msg.into());
+                                }
+                                None => {}
                             }
-                            None => {}
                         }
                     }
                 }
@@ -296,10 +295,9 @@ impl Checks {
                     Some(Status::Valid) => {}
                     Some(corrections) => {
                         let byte_offset = ident.offset();
-                        let msg = report::FileTypo {
-                            path,
-                            line,
-                            line_num,
+                        let msg = report::Typo {
+                            context: report::FileContext { path, line_num }.into(),
+                            buffer: std::borrow::Cow::Borrowed(line),
                             byte_offset,
                             typo: ident.token(),
                             corrections,
@@ -312,10 +310,9 @@ impl Checks {
                                 Some(Status::Valid) => {}
                                 Some(corrections) => {
                                     let byte_offset = word.offset();
-                                    let msg = report::FileTypo {
-                                        path,
-                                        line,
-                                        line_num,
+                                    let msg = report::Typo {
+                                        context: report::FileContext { path, line_num }.into(),
+                                        buffer: std::borrow::Cow::Borrowed(line),
                                         byte_offset,
                                         typo: word.token(),
                                         corrections,

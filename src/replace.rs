@@ -56,37 +56,41 @@ impl<'r> Replace<'r> {
 
 impl<'r> typos::report::Report for Replace<'r> {
     fn report(&self, msg: typos::report::Message<'_>) -> bool {
-        match msg {
-            typos::report::Message::FileTypo(msg) => match msg.corrections {
-                typos::Status::Corrections(corrections) if corrections.len() == 1 => {
-                    let path = msg.path.to_owned();
-                    let line_num = msg.line_num;
-                    let correction =
-                        Correction::new(msg.byte_offset, msg.typo, corrections[0].as_ref());
-                    let mut deferred = self.deferred.lock().unwrap();
-                    let content = deferred
-                        .content
-                        .entry(path)
-                        .or_insert_with(BTreeMap::new)
-                        .entry(line_num)
-                        .or_insert_with(Vec::new);
-                    content.push(correction);
-                    false
-                }
-                _ => self.reporter.report(typos::report::Message::FileTypo(msg)),
-            },
-            typos::report::Message::PathTypo(msg) => match msg.corrections {
-                typos::Status::Corrections(corrections) if corrections.len() == 1 => {
-                    let path = msg.path.to_owned();
-                    let correction =
-                        Correction::new(msg.byte_offset, msg.typo, corrections[0].as_ref());
-                    let mut deferred = self.deferred.lock().unwrap();
-                    let content = deferred.paths.entry(path).or_insert_with(Vec::new);
-                    content.push(correction);
-                    false
-                }
-                _ => self.reporter.report(typos::report::Message::PathTypo(msg)),
-            },
+        let typo = match &msg {
+            typos::report::Message::Typo(typo) => typo,
+            _ => return self.reporter.report(msg),
+        };
+
+        let corrections = match &typo.corrections {
+            typos::Status::Corrections(corrections) if corrections.len() == 1 => corrections,
+            _ => return self.reporter.report(msg),
+        };
+
+        match &typo.context {
+            typos::report::Context::File(file) => {
+                let path = file.path.to_owned();
+                let line_num = file.line_num;
+                let correction =
+                    Correction::new(typo.byte_offset, typo.typo, corrections[0].as_ref());
+                let mut deferred = self.deferred.lock().unwrap();
+                let content = deferred
+                    .content
+                    .entry(path)
+                    .or_insert_with(BTreeMap::new)
+                    .entry(line_num)
+                    .or_insert_with(Vec::new);
+                content.push(correction);
+                false
+            }
+            typos::report::Context::Path(path) => {
+                let path = path.path.to_owned();
+                let correction =
+                    Correction::new(typo.byte_offset, typo.typo, corrections[0].as_ref());
+                let mut deferred = self.deferred.lock().unwrap();
+                let content = deferred.paths.entry(path).or_insert_with(Vec::new);
+                content.push(correction);
+                false
+            }
             _ => self.reporter.report(msg),
         }
     }
@@ -204,10 +208,14 @@ mod test {
         let primary = typos::report::PrintSilent;
         let replace = Replace::new(&primary);
         replace.report(
-            typos::report::FileTypo::default()
-                .path(input_file.path())
-                .line(b"1 foo 2\n3 4 5")
-                .line_num(1)
+            typos::report::Typo::default()
+                .context(
+                    typos::report::FileContext::default()
+                        .path(input_file.path())
+                        .line_num(1)
+                        .into(),
+                )
+                .buffer(std::borrow::Cow::Borrowed(b"1 foo 2\n3 4 5"))
                 .byte_offset(2)
                 .typo("foo")
                 .corrections(typos::Status::Corrections(vec![
@@ -229,8 +237,13 @@ mod test {
         let primary = typos::report::PrintSilent;
         let replace = Replace::new(&primary);
         replace.report(
-            typos::report::PathTypo::default()
-                .path(input_file.path())
+            typos::report::Typo::default()
+                .context(
+                    typos::report::PathContext::default()
+                        .path(input_file.path())
+                        .into(),
+                )
+                .buffer(std::borrow::Cow::Borrowed(b"foo.txt"))
                 .byte_offset(0)
                 .typo("foo")
                 .corrections(typos::Status::Corrections(vec![

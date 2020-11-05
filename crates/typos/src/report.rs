@@ -1,5 +1,6 @@
 #![allow(clippy::needless_update)]
 
+use std::borrow::Cow;
 use std::io::{self, Write};
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]
@@ -8,8 +9,7 @@ use std::io::{self, Write};
 #[non_exhaustive]
 pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
-    FileTypo(FileTypo<'m>),
-    PathTypo(PathTypo<'m>),
+    Typo(Typo<'m>),
     File(File<'m>),
     Parse(Parse<'m>),
     PathError(PathError<'m>),
@@ -20,8 +20,7 @@ impl<'m> Message<'m> {
     pub fn is_correction(&self) -> bool {
         match self {
             Message::BinaryFile(_) => false,
-            Message::FileTypo(c) => c.corrections.is_correction(),
-            Message::PathTypo(c) => c.corrections.is_correction(),
+            Message::Typo(c) => c.corrections.is_correction(),
             Message::File(_) => false,
             Message::Parse(_) => false,
             Message::PathError(_) => false,
@@ -32,8 +31,7 @@ impl<'m> Message<'m> {
     pub fn is_error(&self) -> bool {
         match self {
             Message::BinaryFile(_) => false,
-            Message::FileTypo(_) => false,
-            Message::PathTypo(_) => false,
+            Message::Typo(_) => false,
             Message::File(_) => false,
             Message::Parse(_) => false,
             Message::PathError(_) => true,
@@ -51,22 +49,20 @@ pub struct BinaryFile<'m> {
 
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
 #[non_exhaustive]
-pub struct FileTypo<'m> {
-    pub path: &'m std::path::Path,
+pub struct Typo<'m> {
+    pub context: Context<'m>,
     #[serde(skip)]
-    pub line: &'m [u8],
-    pub line_num: usize,
+    pub buffer: Cow<'m, [u8]>,
     pub byte_offset: usize,
     pub typo: &'m str,
     pub corrections: crate::Status<'m>,
 }
 
-impl<'m> Default for FileTypo<'m> {
+impl<'m> Default for Typo<'m> {
     fn default() -> Self {
         Self {
-            path: std::path::Path::new("-"),
-            line: b"",
-            line_num: 0,
+            context: Context::None,
+            buffer: Cow::Borrowed(&[]),
             byte_offset: 0,
             typo: "",
             corrections: crate::Status::Invalid,
@@ -74,22 +70,56 @@ impl<'m> Default for FileTypo<'m> {
     }
 }
 
-#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[derive(Clone, Debug, serde::Serialize, derive_more::From)]
 #[non_exhaustive]
-pub struct PathTypo<'m> {
-    pub path: &'m std::path::Path,
-    pub byte_offset: usize,
-    pub typo: &'m str,
-    pub corrections: crate::Status<'m>,
+pub enum Context<'m> {
+    File(FileContext<'m>),
+    Path(PathContext<'m>),
+    None,
 }
 
-impl<'m> Default for PathTypo<'m> {
+impl<'m> Default for Context<'m> {
+    fn default() -> Self {
+        Context::None
+    }
+}
+
+impl<'m> std::fmt::Display for Context<'m> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+        match self {
+            Context::File(c) => write!(f, "{}:{}", c.path.display(), c.line_num),
+            Context::Path(c) => write!(f, "{}", c.path.display()),
+            Context::None => Ok(()),
+        }
+    }
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
+pub struct FileContext<'m> {
+    pub path: &'m std::path::Path,
+    pub line_num: usize,
+}
+
+impl<'m> Default for FileContext<'m> {
     fn default() -> Self {
         Self {
             path: std::path::Path::new("-"),
-            byte_offset: 0,
-            typo: "",
-            corrections: crate::Status::Invalid,
+            line_num: 0,
+        }
+    }
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
+pub struct PathContext<'m> {
+    pub path: &'m std::path::Path,
+}
+
+impl<'m> Default for PathContext<'m> {
+    fn default() -> Self {
+        Self {
+            path: std::path::Path::new("-"),
         }
     }
 }
@@ -195,42 +225,7 @@ impl Report for PrintBrief {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::FileTypo(msg) => match &msg.corrections {
-                crate::Status::Valid => {}
-                crate::Status::Invalid => {
-                    println!(
-                        "{}:{}:{}: {} is disallowed",
-                        msg.path.display(),
-                        msg.line_num,
-                        msg.byte_offset,
-                        msg.typo,
-                    );
-                }
-                crate::Status::Corrections(corrections) => {
-                    println!(
-                        "{}:{}:{}: {} -> {}",
-                        msg.path.display(),
-                        msg.line_num,
-                        msg.byte_offset,
-                        msg.typo,
-                        itertools::join(corrections.iter(), ", ")
-                    );
-                }
-            },
-            Message::PathTypo(msg) => match &msg.corrections {
-                crate::Status::Valid => {}
-                crate::Status::Invalid => {
-                    println!("{}: {} is disallowed", msg.path.display(), msg.typo,);
-                }
-                crate::Status::Corrections(corrections) => {
-                    println!(
-                        "{}: {} -> {}",
-                        msg.path.display(),
-                        msg.typo,
-                        itertools::join(corrections.iter(), ", ")
-                    );
-                }
-            },
+            Message::Typo(msg) => print_brief_correction(msg),
             Message::File(msg) => {
                 println!("{}", msg.path.display());
             }
@@ -257,25 +252,7 @@ impl Report for PrintLong {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::FileTypo(msg) => print_long_correction(msg),
-            Message::PathTypo(msg) => match &msg.corrections {
-                crate::Status::Valid => {}
-                crate::Status::Invalid => {
-                    println!(
-                        "{}: error: `{}` is disallowed",
-                        msg.path.display(),
-                        msg.typo,
-                    );
-                }
-                crate::Status::Corrections(corrections) => {
-                    println!(
-                        "{}: error: `{}` should be {}",
-                        msg.path.display(),
-                        msg.typo,
-                        itertools::join(corrections.iter().map(|c| format!("`{}`", c)), ", ")
-                    );
-                }
-            },
+            Message::Typo(msg) => print_long_correction(msg),
             Message::File(msg) => {
                 println!("{}", msg.path.display());
             }
@@ -293,45 +270,66 @@ impl Report for PrintLong {
     }
 }
 
-fn print_long_correction(msg: &FileTypo) {
-    let line_num = msg.line_num.to_string();
-    let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
+fn print_brief_correction(msg: &Typo) {
+    match &msg.corrections {
+        crate::Status::Valid => {}
+        crate::Status::Invalid => {
+            println!(
+                "{}:{}: {} is disallowed",
+                msg.context, msg.byte_offset, msg.typo,
+            );
+        }
+        crate::Status::Corrections(corrections) => {
+            println!(
+                "{}:{}: {} -> {}",
+                msg.context,
+                msg.byte_offset,
+                msg.typo,
+                itertools::join(corrections.iter(), ", ")
+            );
+        }
+    }
+}
 
-    let hl_indent: String = itertools::repeat_n(" ", msg.byte_offset).collect();
-    let hl: String = itertools::repeat_n("^", msg.typo.len()).collect();
-
-    let line = String::from_utf8_lossy(msg.line);
-    let line = line.replace("\t", " ");
-
+fn print_long_correction(msg: &Typo) {
     let stdout = io::stdout();
     let mut handle = stdout.lock();
     match &msg.corrections {
         crate::Status::Valid => {}
         crate::Status::Invalid => {
-            writeln!(handle, "error: `{}` is disallowed", msg.typo,).unwrap();
+            writeln!(
+                handle,
+                "{}:{}: {} is disallowed",
+                msg.context, msg.byte_offset, msg.typo,
+            )
+            .unwrap();
         }
         crate::Status::Corrections(corrections) => {
             writeln!(
                 handle,
                 "error: `{}` should be {}",
                 msg.typo,
-                itertools::join(corrections.iter().map(|c| format!("`{}`", c)), ", ")
+                itertools::join(corrections.iter(), ", ")
             )
             .unwrap();
         }
     }
-    writeln!(
-        handle,
-        "  --> {}:{}:{}",
-        msg.path.display(),
-        msg.line_num,
-        msg.byte_offset
-    )
-    .unwrap();
-    writeln!(handle, "{} |", line_indent).unwrap();
-    writeln!(handle, "{} | {}", msg.line_num, line.trim_end()).unwrap();
-    writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl).unwrap();
-    writeln!(handle, "{} |", line_indent).unwrap();
+    writeln!(handle, "  --> {}:{}", msg.context, msg.byte_offset).unwrap();
+
+    if let Context::File(context) = &msg.context {
+        let line_num = context.line_num.to_string();
+        let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
+
+        let hl_indent: String = itertools::repeat_n(" ", msg.byte_offset).collect();
+        let hl: String = itertools::repeat_n("^", msg.typo.len()).collect();
+
+        let line = String::from_utf8_lossy(msg.buffer.as_ref());
+        let line = line.replace("\t", " ");
+        writeln!(handle, "{} |", line_indent).unwrap();
+        writeln!(handle, "{} | {}", line_num, line.trim_end()).unwrap();
+        writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl).unwrap();
+        writeln!(handle, "{} |", line_indent).unwrap();
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
