@@ -112,19 +112,12 @@ impl ParseIdentifiers {
             return Ok(typos_found);
         }
 
-        let buffer = std::fs::read(path)
-            .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
-        if !explicit && !self.binary {
-            let content_type = content_inspector::inspect(&buffer);
-            if content_type.is_binary()
-                // HACK: We only support UTF-8 at the moment
-                || (content_type != content_inspector::ContentType::UTF_8_BOM
-                    && content_type != content_inspector::ContentType::UTF_8)
-            {
-                let msg = report::BinaryFile { path };
-                reporter.report(msg.into());
-                return Ok(typos_found);
-            }
+        let buffer = read_file(path)?;
+        let (buffer, content_type) = massage_data(buffer)?;
+        if !explicit && !self.binary && content_type.is_binary() {
+            let msg = report::BinaryFile { path };
+            reporter.report(msg.into());
+            return Ok(typos_found);
         }
 
         for line in buffer.lines() {
@@ -188,19 +181,12 @@ impl ParseWords {
             return Ok(typos_found);
         }
 
-        let buffer = std::fs::read(path)
-            .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
-        if !explicit && !self.binary {
-            let content_type = content_inspector::inspect(&buffer);
-            // HACK: We only support UTF-8 at the moment
-            if content_type.is_binary()
-                || (content_type != content_inspector::ContentType::UTF_8_BOM
-                    && content_type != content_inspector::ContentType::UTF_8)
-            {
-                let msg = report::BinaryFile { path };
-                reporter.report(msg.into());
-                return Ok(typos_found);
-            }
+        let buffer = read_file(path)?;
+        let (buffer, content_type) = massage_data(buffer)?;
+        if !explicit && !self.binary && content_type.is_binary() {
+            let msg = report::BinaryFile { path };
+            reporter.report(msg.into());
+            return Ok(typos_found);
         }
 
         for line in buffer.lines() {
@@ -295,20 +281,12 @@ impl Checks {
             return Ok(typos_found);
         }
 
-        let buffer = std::fs::read(path)
-            .map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))?;
-        if !explicit && !self.binary {
-            let content_type = content_inspector::inspect(&buffer);
-            // HACK: We only support UTF-8 at the moment
-            if content_type.is_binary()
-                || (content_type != content_inspector::ContentType::UTF_8_BOM
-                    && content_type != content_inspector::ContentType::UTF_8)
-            {
-                // HACK: we don't support alternative encodings atm
-                let msg = report::BinaryFile { path };
-                reporter.report(msg.into());
-                return Ok(typos_found);
-            }
+        let buffer = read_file(path)?;
+        let (buffer, content_type) = massage_data(buffer)?;
+        if !explicit && !self.binary && content_type.is_binary() {
+            let msg = report::BinaryFile { path };
+            reporter.report(msg.into());
+            return Ok(typos_found);
         }
 
         for (line_idx, line) in buffer.lines().enumerate() {
@@ -354,4 +332,23 @@ impl Checks {
 
         Ok(typos_found)
     }
+}
+
+fn read_file(path: &std::path::Path) -> Result<Vec<u8>, crate::Error> {
+    std::fs::read(path).map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))
+}
+
+fn massage_data(
+    buffer: Vec<u8>,
+) -> Result<(Vec<u8>, content_inspector::ContentType), crate::Error> {
+    let mut content_type = content_inspector::inspect(&buffer);
+
+    // HACK: We only support UTF-8 at the moment
+    if content_type != content_inspector::ContentType::UTF_8_BOM
+        && content_type != content_inspector::ContentType::UTF_8
+    {
+        content_type = content_inspector::ContentType::BINARY;
+    }
+
+    Ok((buffer, content_type))
 }
