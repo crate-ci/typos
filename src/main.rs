@@ -14,7 +14,13 @@ mod dict;
 mod replace;
 
 fn main() {
-    let code = run().unwrap();
+    let code = match run() {
+        Ok(code) => code,
+        Err(err) => {
+            eprintln!("{}", err);
+            1
+        }
+    };
     std::process::exit(code);
 }
 
@@ -78,16 +84,6 @@ fn run() -> Result<i32, anyhow::Error> {
             .git_ignore(config.files.ignore_vcs())
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
-        if let (Some(root), Some(patterns)) =
-            (config.files.ignore_root(), config.files.ignore_patterns())
-        {
-            let mut overrides = ignore::overrides::OverrideBuilder::new(root);
-            for pattern in patterns {
-                overrides.add(pattern)?;
-            }
-            let overrides = overrides.build()?;
-            walk.overrides(overrides);
-        }
 
         let mut reporter = args.format.reporter();
         let replace_reporter = replace::Replace::new(reporter);

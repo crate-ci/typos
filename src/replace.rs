@@ -57,7 +57,7 @@ impl<'r> Replace<'r> {
 impl<'r> typos::report::Report for Replace<'r> {
     fn report(&self, msg: typos::report::Message<'_>) -> bool {
         match msg {
-            typos::report::Message::Correction(msg) => match msg.corrections {
+            typos::report::Message::FileTypo(msg) => match msg.corrections {
                 typos::Status::Corrections(corrections) if corrections.len() == 1 => {
                     let path = msg.path.to_owned();
                     let line_num = msg.line_num;
@@ -73,11 +73,9 @@ impl<'r> typos::report::Report for Replace<'r> {
                     content.push(correction);
                     false
                 }
-                _ => self
-                    .reporter
-                    .report(typos::report::Message::Correction(msg)),
+                _ => self.reporter.report(typos::report::Message::FileTypo(msg)),
             },
-            typos::report::Message::PathCorrection(msg) => match msg.corrections {
+            typos::report::Message::PathTypo(msg) => match msg.corrections {
                 typos::Status::Corrections(corrections) if corrections.len() == 1 => {
                     let path = msg.path.to_owned();
                     let correction =
@@ -87,9 +85,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                     content.push(correction);
                     false
                 }
-                _ => self
-                    .reporter
-                    .report(typos::report::Message::PathCorrection(msg)),
+                _ => self.reporter.report(typos::report::Message::PathTypo(msg)),
             },
             _ => self.reporter.report(msg),
         }
@@ -208,7 +204,7 @@ mod test {
         let primary = typos::report::PrintSilent;
         let replace = Replace::new(&primary);
         replace.report(
-            typos::report::Correction::default()
+            typos::report::FileTypo::default()
                 .path(input_file.path())
                 .line(b"1 foo 2\n3 4 5")
                 .line_num(1)
@@ -233,7 +229,7 @@ mod test {
         let primary = typos::report::PrintSilent;
         let replace = Replace::new(&primary);
         replace.report(
-            typos::report::PathCorrection::default()
+            typos::report::PathTypo::default()
                 .path(input_file.path())
                 .byte_offset(0)
                 .typo("foo")
