@@ -149,6 +149,10 @@ impl TyposSettings {
             binary: self.binary,
         }
     }
+
+    pub fn build_files(&self) -> Files {
+        Files {}
+    }
 }
 
 impl Default for TyposSettings {
@@ -158,6 +162,123 @@ impl Default for TyposSettings {
             check_files: true,
             binary: false,
         }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Typos {
+    check_filenames: bool,
+    check_files: bool,
+    binary: bool,
+}
+
+impl Check for Typos {
+    fn check_str(
+        &self,
+        buffer: &str,
+        parser: &tokens::Parser,
+        dictionary: &dyn Dictionary,
+        reporter: &dyn report::Report,
+    ) -> Result<bool, crate::Error> {
+        let mut typos_found = false;
+
+        for ident in parser.parse_str(buffer) {
+            match dictionary.correct_ident(ident) {
+                Some(Status::Valid) => {}
+                Some(corrections) => {
+                    let byte_offset = ident.offset();
+                    let msg = report::Typo {
+                        context: report::Context::None,
+                        buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
+                        byte_offset,
+                        typo: ident.token(),
+                        corrections,
+                    };
+                    typos_found |= reporter.report(msg.into());
+                }
+                None => {
+                    for word in ident.split() {
+                        match dictionary.correct_word(word) {
+                            Some(Status::Valid) => {}
+                            Some(corrections) => {
+                                let byte_offset = word.offset();
+                                let msg = report::Typo {
+                                    context: report::Context::None,
+                                    buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
+                                    byte_offset,
+                                    typo: word.token(),
+                                    corrections,
+                                };
+                                typos_found |= reporter.report(msg.into());
+                            }
+                            None => {}
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(typos_found)
+    }
+
+    fn check_bytes(
+        &self,
+        buffer: &[u8],
+        parser: &tokens::Parser,
+        dictionary: &dyn Dictionary,
+        reporter: &dyn report::Report,
+    ) -> Result<bool, crate::Error> {
+        let mut typos_found = false;
+
+        for ident in parser.parse_bytes(buffer) {
+            match dictionary.correct_ident(ident) {
+                Some(Status::Valid) => {}
+                Some(corrections) => {
+                    let byte_offset = ident.offset();
+                    let msg = report::Typo {
+                        context: report::Context::None,
+                        buffer: std::borrow::Cow::Borrowed(buffer),
+                        byte_offset,
+                        typo: ident.token(),
+                        corrections,
+                    };
+                    typos_found |= reporter.report(msg.into());
+                }
+                None => {
+                    for word in ident.split() {
+                        match dictionary.correct_word(word) {
+                            Some(Status::Valid) => {}
+                            Some(corrections) => {
+                                let byte_offset = word.offset();
+                                let msg = report::Typo {
+                                    context: report::Context::None,
+                                    buffer: std::borrow::Cow::Borrowed(buffer),
+                                    byte_offset,
+                                    typo: word.token(),
+                                    corrections,
+                                };
+                                typos_found |= reporter.report(msg.into());
+                            }
+                            None => {}
+                        }
+                    }
+                }
+            }
+        }
+
+        Ok(typos_found)
+    }
+
+    fn check_filenames(&self) -> bool {
+        self.check_filenames
+    }
+
+    fn check_files(&self) -> bool {
+        self.check_files
+    }
+
+    fn binary(&self) -> bool {
+        self.binary
     }
 }
 
@@ -294,119 +415,68 @@ impl Check for ParseWords {
 }
 
 #[derive(Debug, Clone)]
-pub struct Typos {
-    check_filenames: bool,
-    check_files: bool,
-    binary: bool,
-}
+pub struct Files {}
 
-impl Check for Typos {
+impl Check for Files {
     fn check_str(
         &self,
-        buffer: &str,
-        parser: &tokens::Parser,
-        dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
+        _buffer: &str,
+        _parser: &tokens::Parser,
+        _dictionary: &dyn Dictionary,
+        _reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
-        let mut typos_found = false;
-
-        for ident in parser.parse_str(buffer) {
-            match dictionary.correct_ident(ident) {
-                Some(Status::Valid) => {}
-                Some(corrections) => {
-                    let byte_offset = ident.offset();
-                    let msg = report::Typo {
-                        context: report::Context::None,
-                        buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
-                        byte_offset,
-                        typo: ident.token(),
-                        corrections,
-                    };
-                    typos_found |= reporter.report(msg.into());
-                }
-                None => {
-                    for word in ident.split() {
-                        match dictionary.correct_word(word) {
-                            Some(Status::Valid) => {}
-                            Some(corrections) => {
-                                let byte_offset = word.offset();
-                                let msg = report::Typo {
-                                    context: report::Context::None,
-                                    buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
-                                    byte_offset,
-                                    typo: word.token(),
-                                    corrections,
-                                };
-                                typos_found |= reporter.report(msg.into());
-                            }
-                            None => {}
-                        }
-                    }
-                }
-            }
-        }
-
+        let typos_found = false;
         Ok(typos_found)
     }
 
     fn check_bytes(
         &self,
-        buffer: &[u8],
-        parser: &tokens::Parser,
-        dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
+        _buffer: &[u8],
+        _parser: &tokens::Parser,
+        _dictionary: &dyn Dictionary,
+        _reporter: &dyn report::Report,
     ) -> Result<bool, crate::Error> {
-        let mut typos_found = false;
-
-        for ident in parser.parse_bytes(buffer) {
-            match dictionary.correct_ident(ident) {
-                Some(Status::Valid) => {}
-                Some(corrections) => {
-                    let byte_offset = ident.offset();
-                    let msg = report::Typo {
-                        context: report::Context::None,
-                        buffer: std::borrow::Cow::Borrowed(buffer),
-                        byte_offset,
-                        typo: ident.token(),
-                        corrections,
-                    };
-                    typos_found |= reporter.report(msg.into());
-                }
-                None => {
-                    for word in ident.split() {
-                        match dictionary.correct_word(word) {
-                            Some(Status::Valid) => {}
-                            Some(corrections) => {
-                                let byte_offset = word.offset();
-                                let msg = report::Typo {
-                                    context: report::Context::None,
-                                    buffer: std::borrow::Cow::Borrowed(buffer),
-                                    byte_offset,
-                                    typo: word.token(),
-                                    corrections,
-                                };
-                                typos_found |= reporter.report(msg.into());
-                            }
-                            None => {}
-                        }
-                    }
-                }
-            }
-        }
-
+        let typos_found = false;
         Ok(typos_found)
     }
 
     fn check_filenames(&self) -> bool {
-        self.check_filenames
+        true
     }
 
     fn check_files(&self) -> bool {
-        self.check_files
+        true
     }
 
     fn binary(&self) -> bool {
-        self.binary
+        true
+    }
+
+    fn check_filename(
+        &self,
+        _path: &std::path::Path,
+        _parser: &tokens::Parser,
+        _dictionary: &dyn Dictionary,
+        _reporter: &dyn report::Report,
+    ) -> Result<bool, crate::Error> {
+        let typos_found = false;
+        Ok(typos_found)
+    }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        _explicit: bool,
+        _parser: &tokens::Parser,
+        _dictionary: &dyn Dictionary,
+        reporter: &dyn report::Report,
+    ) -> Result<bool, crate::Error> {
+        let typos_found = false;
+
+        let msg = report::File::new(path);
+        reporter.report(msg.into());
+
+        Ok(typos_found)
     }
 }
 
