@@ -183,7 +183,9 @@ impl Check for ParseIdentifiers {
             kind: report::ParseKind::Identifier,
             data: parser.parse_str(buffer).map(|i| i.token()).collect(),
         };
-        reporter.report(msg.into());
+        if !msg.data.is_empty() {
+            reporter.report(msg.into());
+        }
 
         Ok(typos_found)
     }
@@ -202,7 +204,9 @@ impl Check for ParseIdentifiers {
             kind: report::ParseKind::Identifier,
             data: parser.parse_bytes(buffer).map(|i| i.token()).collect(),
         };
-        reporter.report(msg.into());
+        if !msg.data.is_empty() {
+            reporter.report(msg.into());
+        }
 
         Ok(typos_found)
     }
@@ -245,7 +249,9 @@ impl Check for ParseWords {
                 .flat_map(|ident| ident.split().map(|i| i.token()))
                 .collect(),
         };
-        reporter.report(msg.into());
+        if !msg.data.is_empty() {
+            reporter.report(msg.into());
+        }
 
         Ok(typos_found)
     }
@@ -267,7 +273,9 @@ impl Check for ParseWords {
                 .flat_map(|ident| ident.split().map(|i| i.token()))
                 .collect(),
         };
-        reporter.report(msg.into());
+        if !msg.data.is_empty() {
+            reporter.report(msg.into());
+        }
 
         Ok(typos_found)
     }

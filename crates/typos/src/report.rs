@@ -64,6 +64,7 @@ pub struct BinaryFile<'m> {
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
 #[non_exhaustive]
 pub struct Typo<'m> {
+    #[serde(flatten)]
     pub context: Context<'m>,
     #[serde(skip)]
     pub buffer: Cow<'m, [u8]>,
@@ -85,6 +86,7 @@ impl<'m> Default for Typo<'m> {
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]
+#[serde(untagged)]
 #[non_exhaustive]
 pub enum Context<'m> {
     File(FileContext<'m>),
@@ -139,6 +141,7 @@ impl<'m> Default for PathContext<'m> {
 }
 
 #[derive(Copy, Clone, Debug, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
 #[non_exhaustive]
 pub enum ParseKind {
     Identifier,
@@ -168,6 +171,7 @@ impl<'m> Default for File<'m> {
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
 #[non_exhaustive]
 pub struct Parse<'m> {
+    #[serde(flatten)]
     pub context: Context<'m>,
     pub kind: ParseKind,
     pub data: Vec<&'m str>,
