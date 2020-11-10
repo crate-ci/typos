@@ -89,7 +89,7 @@ impl ParseIdentifiers {
 
         for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
             let msg = report::Parse {
-                path,
+                context: report::PathContext { path }.into(),
                 kind: report::ParseKind::Identifier,
                 data: parser.parse(part).map(|i| i.token()).collect(),
             };
@@ -120,9 +120,10 @@ impl ParseIdentifiers {
             return Ok(typos_found);
         }
 
-        for line in buffer.lines() {
+        for (line_idx, line) in buffer.lines().enumerate() {
+            let line_num = line_idx + 1;
             let msg = report::Parse {
-                path,
+                context: report::FileContext { path, line_num }.into(),
                 kind: report::ParseKind::Identifier,
                 data: parser.parse_bytes(line).map(|i| i.token()).collect(),
             };
@@ -155,7 +156,7 @@ impl ParseWords {
 
         for part in path.components().filter_map(|c| c.as_os_str().to_str()) {
             let msg = report::Parse {
-                path,
+                context: report::PathContext { path }.into(),
                 kind: report::ParseKind::Word,
                 data: parser
                     .parse(part)
@@ -189,9 +190,10 @@ impl ParseWords {
             return Ok(typos_found);
         }
 
-        for line in buffer.lines() {
+        for (line_idx, line) in buffer.lines().enumerate() {
+            let line_num = line_idx + 1;
             let msg = report::Parse {
-                path,
+                context: report::FileContext { path, line_num }.into(),
                 kind: report::ParseKind::Word,
                 data: parser
                     .parse_bytes(line)

@@ -154,7 +154,7 @@ impl<'m> Default for File<'m> {
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
 #[non_exhaustive]
 pub struct Parse<'m> {
-    pub path: &'m std::path::Path,
+    pub context: Context<'m>,
     pub kind: ParseKind,
     pub data: Vec<&'m str>,
 }
@@ -162,7 +162,7 @@ pub struct Parse<'m> {
 impl<'m> Default for Parse<'m> {
     fn default() -> Self {
         Self {
-            path: std::path::Path::new("-"),
+            context: Context::None,
             kind: ParseKind::Identifier,
             data: vec![],
         }
