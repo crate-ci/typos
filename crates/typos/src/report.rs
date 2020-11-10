@@ -38,6 +38,20 @@ impl<'m> Message<'m> {
             Message::Error(_) => true,
         }
     }
+
+    pub fn context(self, context: Context<'m>) -> Self {
+        match self {
+            Message::Typo(typo) => {
+                let typo = typo.context(context);
+                Message::Typo(typo)
+            }
+            Message::Parse(parse) => {
+                let parse = parse.context(context);
+                Message::Parse(parse)
+            }
+            _ => self,
+        }
+    }
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::Display, derive_setters::Setters)]

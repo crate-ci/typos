@@ -128,14 +128,14 @@ fn run() -> Result<i32, anyhow::Error> {
             }
         } else {
             let (identifier_parser, word_parser, checks);
-            let selected_checks: &dyn checks::Checks = if args.identifiers {
+            let selected_checks: &dyn typos::checks::Check = if args.identifiers {
                 identifier_parser = settings.build_identifier_parser();
                 &identifier_parser
             } else if args.words {
                 word_parser = settings.build_word_parser();
                 &word_parser
             } else {
-                checks = settings.build_checks();
+                checks = settings.build_typos();
                 &checks
             };
 

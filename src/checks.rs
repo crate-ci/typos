@@ -1,96 +1,8 @@
 use std::sync::atomic;
 
-pub(crate) trait Checks: Send + Sync {
-    fn check_filename(
-        &self,
-        path: &std::path::Path,
-        parser: &typos::tokens::Parser,
-        dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error>;
-
-    fn check_file(
-        &self,
-        path: &std::path::Path,
-        explicit: bool,
-        parser: &typos::tokens::Parser,
-        dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error>;
-}
-
-impl<'p> Checks for typos::checks::ParseIdentifiers {
-    fn check_filename(
-        &self,
-        path: &std::path::Path,
-        parser: &typos::tokens::Parser,
-        _dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error> {
-        self.check_filename(path, parser, report)
-    }
-
-    fn check_file(
-        &self,
-        path: &std::path::Path,
-        explicit: bool,
-        parser: &typos::tokens::Parser,
-        _dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error> {
-        self.check_file(path, explicit, parser, report)
-    }
-}
-
-impl<'p> Checks for typos::checks::ParseWords {
-    fn check_filename(
-        &self,
-        path: &std::path::Path,
-        parser: &typos::tokens::Parser,
-        _dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error> {
-        self.check_filename(path, parser, report)
-    }
-
-    fn check_file(
-        &self,
-        path: &std::path::Path,
-        explicit: bool,
-        parser: &typos::tokens::Parser,
-        _dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error> {
-        self.check_file(path, explicit, parser, report)
-    }
-}
-
-impl<'d, 'p> Checks for typos::checks::Checks {
-    fn check_filename(
-        &self,
-        path: &std::path::Path,
-        parser: &typos::tokens::Parser,
-        dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error> {
-        self.check_filename(path, parser, dictionary, report)
-    }
-
-    fn check_file(
-        &self,
-        path: &std::path::Path,
-        explicit: bool,
-        parser: &typos::tokens::Parser,
-        dictionary: &dyn typos::Dictionary,
-        report: &dyn typos::report::Report,
-    ) -> Result<bool, typos::Error> {
-        self.check_file(path, explicit, parser, dictionary, report)
-    }
-}
-
 pub(crate) fn check_path(
     walk: ignore::Walk,
-    checks: &dyn Checks,
+    checks: &dyn typos::checks::Check,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
@@ -115,7 +27,7 @@ pub(crate) fn check_path(
 
 pub(crate) fn check_path_parallel(
     walk: ignore::WalkParallel,
-    checks: &dyn Checks,
+    checks: &dyn typos::checks::Check,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
@@ -143,7 +55,7 @@ pub(crate) fn check_path_parallel(
 
 fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
-    checks: &dyn Checks,
+    checks: &dyn typos::checks::Check,
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
