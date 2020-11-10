@@ -38,7 +38,7 @@ See also [benchmarks](../benchsuite/runs).
 |----------------|-----------------------|---------------------------------|---------------------------------|-------------|-------------|
 | Runtime        | \-                    | \-                              | \-                              | Python      | Python      |
 | Dictionary     | Blacklist             | Blacklist                       | Blacklist                       | Blacklist   | Whitelist   |
-| Custom Dict    | No ([#9][def-9])      | No                              | ?                               | Yes         | Yes         |
+| Custom Dict    | Yes                   | No                              | ?                               | Yes         | Yes         |
 | Per-Lang Dict  | No ([#14][def-14])    | No                              | ?                               | No          | Yes         |
 | CamelCase      | Yes                   | No                              | ?                               | No          | Yes         |
 | snake_case     | Yes                   | No                              | ?                               | No          | Yes         |
