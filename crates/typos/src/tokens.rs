@@ -138,21 +138,21 @@ impl Default for Parser {
     }
 }
 
+// `_`: number literal separator in Rust and other languages
+// `'`: number literal separator in C++
+static DIGITS: once_cell::sync::Lazy<regex::bytes::Regex> =
+    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^[0-9_']+$"#).unwrap());
+
 fn is_number(ident: &[u8]) -> bool {
-    lazy_static::lazy_static! {
-        // `_`: number literal separator in Rust and other languages
-        // `'`: number literal separator in C++
-        static ref DIGITS: regex::bytes::Regex = regex::bytes::Regex::new(r#"^[0-9_']+$"#).unwrap();
-    }
     DIGITS.is_match(ident)
 }
 
+// `_`: number literal separator in Rust and other languages
+// `'`: number literal separator in C++
+static HEX: once_cell::sync::Lazy<regex::bytes::Regex> =
+    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap());
+
 fn is_hex(ident: &[u8]) -> bool {
-    lazy_static::lazy_static! {
-        // `_`: number literal separator in Rust and other languages
-        // `'`: number literal separator in C++
-        static ref HEX: regex::bytes::Regex = regex::bytes::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap();
-    }
     HEX.is_match(ident)
 }
 
