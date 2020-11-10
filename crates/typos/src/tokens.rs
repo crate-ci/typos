@@ -102,7 +102,7 @@ impl Parser {
         ParserBuilder::default().build()
     }
 
-    pub fn parse<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
+    pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
         self.words_str
             .find_iter(content)
             .filter(move |m| self.accept(m.as_str().as_bytes()))
@@ -138,21 +138,21 @@ impl Default for Parser {
     }
 }
 
+// `_`: number literal separator in Rust and other languages
+// `'`: number literal separator in C++
+static DIGITS: once_cell::sync::Lazy<regex::bytes::Regex> =
+    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^[0-9_']+$"#).unwrap());
+
 fn is_number(ident: &[u8]) -> bool {
-    lazy_static::lazy_static! {
-        // `_`: number literal separator in Rust and other languages
-        // `'`: number literal separator in C++
-        static ref DIGITS: regex::bytes::Regex = regex::bytes::Regex::new(r#"^[0-9_']+$"#).unwrap();
-    }
     DIGITS.is_match(ident)
 }
 
+// `_`: number literal separator in Rust and other languages
+// `'`: number literal separator in C++
+static HEX: once_cell::sync::Lazy<regex::bytes::Regex> =
+    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap());
+
 fn is_hex(ident: &[u8]) -> bool {
-    lazy_static::lazy_static! {
-        // `_`: number literal separator in Rust and other languages
-        // `'`: number literal separator in C++
-        static ref HEX: regex::bytes::Regex = regex::bytes::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap();
-    }
     HEX.is_match(ident)
 }
 
@@ -390,7 +390,7 @@ mod test {
         let expected: Vec<Identifier> = vec![];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -402,7 +402,7 @@ mod test {
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -417,7 +417,7 @@ mod test {
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -432,7 +432,7 @@ mod test {
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -447,7 +447,7 @@ mod test {
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -459,7 +459,7 @@ mod test {
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -474,7 +474,7 @@ mod test {
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 
@@ -493,7 +493,7 @@ mod test {
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse(input).collect();
+        let actual: Vec<_> = parser.parse_str(input).collect();
         assert_eq!(expected, actual);
     }
 

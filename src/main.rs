@@ -3,7 +3,6 @@
 extern crate clap;
 
 use std::io::Write;
-use std::sync::atomic;
 
 use structopt::StructOpt;
 
@@ -91,77 +90,43 @@ fn run() -> Result<i32, anyhow::Error> {
             reporter = &replace_reporter;
         }
 
-        if args.files {
-            if single_threaded {
-                for entry in walk.build() {
-                    match entry {
-                        Ok(entry) => {
-                            let msg = typos::report::File::new(entry.path());
-                            reporter.report(msg.into());
-                        }
-                        Err(err) => {
-                            let msg = typos::report::Error::new(err.to_string());
-                            reporter.report(msg.into());
-                            errors_found = true
-                        }
-                    }
-                }
-            } else {
-                let atomic_errors = atomic::AtomicBool::new(errors_found);
-                walk.build_parallel().run(|| {
-                    Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-                        match entry {
-                            Ok(entry) => {
-                                let msg = typos::report::File::new(entry.path());
-                                reporter.report(msg.into());
-                            }
-                            Err(err) => {
-                                let msg = typos::report::Error::new(err.to_string());
-                                reporter.report(msg.into());
-                                atomic_errors.store(true, atomic::Ordering::Relaxed);
-                            }
-                        }
-                        ignore::WalkState::Continue
-                    })
-                });
-                errors_found = atomic_errors.into_inner();
-            }
+        let (files, identifier_parser, word_parser, checks);
+        let selected_checks: &dyn typos::checks::Check = if args.files {
+            files = settings.build_files();
+            &files
+        } else if args.identifiers {
+            identifier_parser = settings.build_identifier_parser();
+            &identifier_parser
+        } else if args.words {
+            word_parser = settings.build_word_parser();
+            &word_parser
         } else {
-            let (identifier_parser, word_parser, checks);
-            let selected_checks: &dyn checks::Checks = if args.identifiers {
-                identifier_parser = settings.build_identifier_parser();
-                &identifier_parser
-            } else if args.words {
-                word_parser = settings.build_word_parser();
-                &word_parser
-            } else {
-                checks = settings.build_checks();
-                &checks
-            };
+            checks = settings.build_typos();
+            &checks
+        };
 
-            let (cur_typos, cur_errors) = if single_threaded {
-                checks::check_path(
-                    walk.build(),
-                    selected_checks,
-                    &parser,
-                    &dictionary,
-                    reporter,
-                )
-            } else {
-                checks::check_path_parallel(
-                    walk.build_parallel(),
-                    selected_checks,
-                    &parser,
-                    &dictionary,
-                    reporter,
-                )
-            };
-            if cur_typos {
-                typos_found = true;
-            }
-            if cur_errors {
-                errors_found = true;
-            }
+        let (cur_typos, cur_errors) = if single_threaded {
+            checks::check_path(
+                walk.build(),
+                selected_checks,
+                &parser,
+                &dictionary,
+                reporter,
+            )
+        } else {
+            checks::check_path_parallel(
+                walk.build_parallel(),
+                selected_checks,
+                &parser,
+                &dictionary,
+                reporter,
+            )
+        };
+        if cur_typos {
+            typos_found = true;
+        }
+        if cur_errors {
+            errors_found = true;
         }
 
         if args.write_changes {

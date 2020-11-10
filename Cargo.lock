@@ -524,6 +524,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "once_cell"
+version = "1.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "260e51e7efe62b592207e9e13a68e43692a7a279171d6ba57abd208bf23645ad"
+
+[[package]]
 name = "phf"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -982,8 +988,8 @@ dependencies = [
  "derive_more 0.99.11",
  "derive_setters",
  "itertools",
- "lazy_static",
  "log",
+ "once_cell",
  "regex",
  "serde",
  "serde_json",
