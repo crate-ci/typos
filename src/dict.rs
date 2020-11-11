@@ -144,8 +144,8 @@ fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
 }
 
 pub struct Override<'i, 'w, D> {
-    identifiers: HashMap<&'i str, Status<'i>>,
-    words: HashMap<unicase::UniCase<&'w str>, Status<'w>>,
+    identifiers: HashMap<&'i str, Status<'i>, ahash::RandomState>,
+    words: HashMap<unicase::UniCase<&'w str>, Status<'w>, ahash::RandomState>,
     inner: D,
 }
 
