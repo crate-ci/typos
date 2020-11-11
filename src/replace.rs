@@ -67,7 +67,7 @@ impl<'r> typos::report::Report for Replace<'r> {
         };
 
         match &typo.context {
-            typos::report::Context::File(file) => {
+            Some(typos::report::Context::File(file)) => {
                 let path = file.path.to_owned();
                 let line_num = file.line_num;
                 let correction =
@@ -82,7 +82,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                 content.push(correction);
                 false
             }
-            typos::report::Context::Path(path) => {
+            Some(typos::report::Context::Path(path)) => {
                 let path = path.path.to_owned();
                 let correction =
                     Correction::new(typo.byte_offset, typo.typo, corrections[0].as_ref());
@@ -209,12 +209,12 @@ mod test {
         let replace = Replace::new(&primary);
         replace.report(
             typos::report::Typo::default()
-                .context(
+                .context(Some(
                     typos::report::FileContext::default()
                         .path(input_file.path())
                         .line_num(1)
                         .into(),
-                )
+                ))
                 .buffer(std::borrow::Cow::Borrowed(b"1 foo 2\n3 4 5"))
                 .byte_offset(2)
                 .typo("foo")
@@ -238,11 +238,11 @@ mod test {
         let replace = Replace::new(&primary);
         replace.report(
             typos::report::Typo::default()
-                .context(
+                .context(Some(
                     typos::report::PathContext::default()
                         .path(input_file.path())
                         .into(),
-                )
+                ))
                 .buffer(std::borrow::Cow::Borrowed(b"foo.txt"))
                 .byte_offset(0)
                 .typo("foo")

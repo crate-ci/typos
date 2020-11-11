@@ -39,7 +39,7 @@ impl<'m> Message<'m> {
         }
     }
 
-    pub fn context(self, context: Context<'m>) -> Self {
+    pub fn context(self, context: Option<Context<'m>>) -> Self {
         match self {
             Message::Typo(typo) => {
                 let typo = typo.context(context);
@@ -65,7 +65,7 @@ pub struct BinaryFile<'m> {
 #[non_exhaustive]
 pub struct Typo<'m> {
     #[serde(flatten)]
-    pub context: Context<'m>,
+    pub context: Option<Context<'m>>,
     #[serde(skip)]
     pub buffer: Cow<'m, [u8]>,
     pub byte_offset: usize,
@@ -76,7 +76,7 @@ pub struct Typo<'m> {
 impl<'m> Default for Typo<'m> {
     fn default() -> Self {
         Self {
-            context: Context::None,
+            context: None,
             buffer: Cow::Borrowed(&[]),
             byte_offset: 0,
             typo: "",
@@ -91,13 +91,6 @@ impl<'m> Default for Typo<'m> {
 pub enum Context<'m> {
     File(FileContext<'m>),
     Path(PathContext<'m>),
-    None,
-}
-
-impl<'m> Default for Context<'m> {
-    fn default() -> Self {
-        Context::None
-    }
 }
 
 impl<'m> std::fmt::Display for Context<'m> {
@@ -105,7 +98,6 @@ impl<'m> std::fmt::Display for Context<'m> {
         match self {
             Context::File(c) => write!(f, "{}:{}", c.path.display(), c.line_num),
             Context::Path(c) => write!(f, "{}", c.path.display()),
-            Context::None => Ok(()),
         }
     }
 }
@@ -172,7 +164,7 @@ impl<'m> Default for File<'m> {
 #[non_exhaustive]
 pub struct Parse<'m> {
     #[serde(flatten)]
-    pub context: Context<'m>,
+    pub context: Option<Context<'m>>,
     pub kind: ParseKind,
     pub data: Vec<&'m str>,
 }
@@ -180,7 +172,7 @@ pub struct Parse<'m> {
 impl<'m> Default for Parse<'m> {
     fn default() -> Self {
         Self {
-            context: Context::None,
+            context: None,
             kind: ParseKind::Identifier,
             data: vec![],
         }
@@ -294,13 +286,15 @@ fn print_brief_correction(msg: &Typo) {
         crate::Status::Invalid => {
             println!(
                 "{}:{}: {} is disallowed",
-                msg.context, msg.byte_offset, msg.typo,
+                context_display(&msg.context),
+                msg.byte_offset,
+                msg.typo,
             );
         }
         crate::Status::Corrections(corrections) => {
             println!(
                 "{}:{}: {} -> {}",
-                msg.context,
+                context_display(&msg.context),
                 msg.byte_offset,
                 msg.typo,
                 itertools::join(corrections.iter(), ", ")
@@ -318,7 +312,9 @@ fn print_long_correction(msg: &Typo) {
             writeln!(
                 handle,
                 "{}:{}: {} is disallowed",
-                msg.context, msg.byte_offset, msg.typo,
+                context_display(&msg.context),
+                msg.byte_offset,
+                msg.typo,
             )
             .unwrap();
         }
@@ -332,9 +328,15 @@ fn print_long_correction(msg: &Typo) {
             .unwrap();
         }
     }
-    writeln!(handle, "  --> {}:{}", msg.context, msg.byte_offset).unwrap();
+    writeln!(
+        handle,
+        "  --> {}:{}",
+        context_display(&msg.context),
+        msg.byte_offset
+    )
+    .unwrap();
 
-    if let Context::File(context) = &msg.context {
+    if let Some(Context::File(context)) = &msg.context {
         let line_num = context.line_num.to_string();
         let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
@@ -348,6 +350,13 @@ fn print_long_correction(msg: &Typo) {
         writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl).unwrap();
         writeln!(handle, "{} |", line_indent).unwrap();
     }
+}
+
+fn context_display<'c>(context: &'c Option<Context<'c>>) -> &'c dyn std::fmt::Display {
+    context
+        .as_ref()
+        .map(|c| c as &dyn std::fmt::Display)
+        .unwrap_or(&"")
 }
 
 #[derive(Copy, Clone, Debug)]
