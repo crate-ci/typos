@@ -81,7 +81,7 @@ impl Cluster {
                 nom::character::streaming::line_ending,
             ),
         );
-        let cluster = nom::sequence::tuple((
+        let mut cluster = nom::sequence::tuple((
             nom::combinator::opt(header),
             nom::multi::many1(nom::sequence::terminated(
                 Entry::parse,
@@ -156,8 +156,7 @@ impl Entry {
             nom::bytes::streaming::tag("/"),
             nom::character::streaming::space0,
         ));
-        let (input, variants) =
-            nom::multi::separated_nonempty_list(var_sep, Variant::parse)(input)?;
+        let (input, variants) = nom::multi::separated_list1(var_sep, Variant::parse)(input)?;
 
         let desc_sep = nom::sequence::tuple((
             nom::character::streaming::space0,
@@ -320,8 +319,7 @@ mod test_entry {
 
 impl Variant {
     pub fn parse(input: &str) -> IResult<&str, Self> {
-        let types =
-            nom::multi::separated_nonempty_list(nom::character::streaming::space1, Type::parse);
+        let types = nom::multi::separated_list1(nom::character::streaming::space1, Type::parse);
         let sep = nom::sequence::tuple((
             nom::bytes::streaming::tag(":"),
             nom::character::streaming::space0,
