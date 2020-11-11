@@ -212,16 +212,14 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
 
     fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Option<Status<'s>> {
         // Skip hashing if we can
-        if !self.words.is_empty() {
+        let custom = if !self.words.is_empty() {
             let w = UniCase::new(word.token());
             // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
-            self.words
-                .get(&w)
-                .cloned()
-                .or_else(|| self.inner.correct_word(word))
+            self.words.get(&w).cloned()
         } else {
             None
-        }
+        };
+        custom.or_else(|| self.inner.correct_word(word))
     }
 }
 
