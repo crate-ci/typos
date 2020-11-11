@@ -44,11 +44,24 @@ impl BuiltIn {
 
     // Not using `Status` to avoid the allocations
     fn correct_with_dict(&self, word: &str) -> Option<&'static str> {
-        map_lookup(&typos_dict::WORD_DICTIONARY, word)
+        const WORD_RANGE: std::ops::RangeInclusive<usize> =
+            typos_dict::WORD_MIN..=typos_dict::WORD_MAX;
+        if WORD_RANGE.contains(&word.len()) {
+            map_lookup(&typos_dict::WORD_DICTIONARY, word)
+        } else {
+            None
+        }
     }
 
     fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
-        map_lookup(&typos_vars::VARS_DICTIONARY, word).map(|variants| self.select_variant(variants))
+        const WORD_RANGE: std::ops::RangeInclusive<usize> =
+            typos_vars::WORD_MIN..=typos_vars::WORD_MAX;
+        if WORD_RANGE.contains(&word.len()) {
+            map_lookup(&typos_vars::VARS_DICTIONARY, word)
+                .map(|variants| self.select_variant(variants))
+        } else {
+            None
+        }
     }
 
     fn select_variant(
@@ -144,8 +157,8 @@ fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
 }
 
 pub struct Override<'i, 'w, D> {
-    identifiers: HashMap<&'i str, Status<'i>>,
-    words: HashMap<unicase::UniCase<&'w str>, Status<'w>>,
+    identifiers: HashMap<&'i str, Status<'i>, ahash::RandomState>,
+    words: HashMap<unicase::UniCase<&'w str>, Status<'w>, ahash::RandomState>,
     inner: D,
 }
 
@@ -168,7 +181,7 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
             .collect();
     }
 
-    pub fn interpret<'z, I: Iterator<Item = (&'z str, &'z str)>>(
+    fn interpret<'z, I: Iterator<Item = (&'z str, &'z str)>>(
         cases: I,
     ) -> impl Iterator<Item = (&'z str, Status<'z>)> {
         cases.map(|(typo, correction)| {
@@ -186,19 +199,29 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
 
 impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
     fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Option<Status<'s>> {
-        self.identifiers
-            .get(ident.token())
-            .map(|c| c.borrow())
-            .or_else(|| self.inner.correct_ident(ident))
+        // Skip hashing if we can
+        if !self.identifiers.is_empty() {
+            self.identifiers
+                .get(ident.token())
+                .map(|c| c.borrow())
+                .or_else(|| self.inner.correct_ident(ident))
+        } else {
+            None
+        }
     }
 
     fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Option<Status<'s>> {
-        let w = UniCase::new(word.token());
-        // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
-        self.words
-            .get(&w)
-            .cloned()
-            .or_else(|| self.inner.correct_word(word))
+        // Skip hashing if we can
+        if !self.words.is_empty() {
+            let w = UniCase::new(word.token());
+            // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
+            self.words
+                .get(&w)
+                .cloned()
+                .or_else(|| self.inner.correct_word(word))
+        } else {
+            None
+        }
     }
 }
 
