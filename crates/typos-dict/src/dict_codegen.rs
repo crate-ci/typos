@@ -33648,3 +33648,6 @@ pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static st
         (UniCase::ascii("presumpton"), "presumption"),
     ]),
 };
+
+pub const WORD_MIN: usize = 3;
+pub const WORD_MAX: usize = 19;

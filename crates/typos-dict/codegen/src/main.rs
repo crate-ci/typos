@@ -13,6 +13,9 @@ fn generate<W: std::io::Write>(file: &mut W) {
     writeln!(file).unwrap();
     writeln!(file, "use unicase::UniCase;").unwrap();
 
+    let mut smallest = usize::MAX;
+    let mut largest = usize::MIN;
+
     writeln!(
         file,
         "pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
@@ -26,12 +29,17 @@ fn generate<W: std::io::Write>(file: &mut W) {
         .map(|r| r.unwrap())
         .collect();
     for record in &records {
+        smallest = std::cmp::min(smallest, record[0].len());
+        largest = std::cmp::max(largest, record[0].len());
         let value = format!(r#""{}""#, &record[1]);
         builder.entry(unicase::UniCase::new(&record[0]), &value);
     }
     let codegenned = builder.build();
     writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
+    writeln!(file).unwrap();
+    writeln!(file, "pub const WORD_MIN: usize = {};", smallest).unwrap();
+    writeln!(file, "pub const WORD_MAX: usize = {};", largest).unwrap();
 }
 
 #[derive(Debug, StructOpt)]
