@@ -168,7 +168,7 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
             .collect();
     }
 
-    pub fn interpret<'z, I: Iterator<Item = (&'z str, &'z str)>>(
+    fn interpret<'z, I: Iterator<Item = (&'z str, &'z str)>>(
         cases: I,
     ) -> impl Iterator<Item = (&'z str, Status<'z>)> {
         cases.map(|(typo, correction)| {
@@ -186,19 +186,29 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
 
 impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
     fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Option<Status<'s>> {
-        self.identifiers
-            .get(ident.token())
-            .map(|c| c.borrow())
-            .or_else(|| self.inner.correct_ident(ident))
+        // Skip hashing if we can
+        if !self.identifiers.is_empty() {
+            self.identifiers
+                .get(ident.token())
+                .map(|c| c.borrow())
+                .or_else(|| self.inner.correct_ident(ident))
+        } else {
+            None
+        }
     }
 
     fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Option<Status<'s>> {
-        let w = UniCase::new(word.token());
-        // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
-        self.words
-            .get(&w)
-            .cloned()
-            .or_else(|| self.inner.correct_word(word))
+        // Skip hashing if we can
+        if !self.words.is_empty() {
+            let w = UniCase::new(word.token());
+            // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
+            self.words
+                .get(&w)
+                .cloned()
+                .or_else(|| self.inner.correct_word(word))
+        } else {
+            None
+        }
     }
 }
 
