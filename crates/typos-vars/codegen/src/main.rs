@@ -76,6 +76,9 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
     writeln!(file, "}}").unwrap();
     writeln!(file).unwrap();
 
+    let mut smallest = usize::MAX;
+    let mut largest = usize::MIN;
+
     writeln!(
         file,
         "pub static VARS_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static [(u8, &VariantsMap)]> = "
@@ -92,10 +95,16 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
         referenced_symbols.extend(data.iter().map(|(s, _)| s));
         let value = generate_link(&data);
         builder.entry(unicase::UniCase::new(word), &value);
+        smallest = std::cmp::min(smallest, word.len());
+        largest = std::cmp::max(largest, word.len());
     }
     let codegenned = builder.build();
     writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
+
+    writeln!(file).unwrap();
+    writeln!(file, "pub const WORD_MIN: usize = {};", smallest).unwrap();
+    writeln!(file, "pub const WORD_MAX: usize = {};", largest).unwrap();
 
     for (symbol, entry) in entries.iter() {
         if !referenced_symbols.contains(symbol.as_str()) {

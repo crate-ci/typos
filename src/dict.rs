@@ -54,7 +54,14 @@ impl BuiltIn {
     }
 
     fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
-        map_lookup(&typos_vars::VARS_DICTIONARY, word).map(|variants| self.select_variant(variants))
+        const WORD_RANGE: std::ops::RangeInclusive<usize> =
+            typos_vars::WORD_MIN..=typos_vars::WORD_MAX;
+        if WORD_RANGE.contains(&word.len()) {
+            map_lookup(&typos_vars::VARS_DICTIONARY, word)
+                .map(|variants| self.select_variant(variants))
+        } else {
+            None
+        }
     }
 
     fn select_variant(
