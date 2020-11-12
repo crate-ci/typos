@@ -54,6 +54,10 @@ pub(crate) struct Args {
     /// Ignore implicit configuration files.
     pub(crate) isolated: bool,
 
+    #[structopt(long)]
+    /// Print a diff of what would change
+    pub(crate) diff: bool,
+
     #[structopt(long, short = "w")]
     /// Write corrections out
     pub(crate) write_changes: bool,

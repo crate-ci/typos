@@ -10,6 +10,7 @@ mod args;
 mod checks;
 mod config;
 mod dict;
+mod diff;
 mod replace;
 
 fn main() {
@@ -86,7 +87,10 @@ fn run() -> Result<i32, anyhow::Error> {
 
         let mut reporter = args.format.reporter();
         let replace_reporter = replace::Replace::new(reporter);
-        if args.write_changes {
+        let diff_reporter = diff::Diff::new(reporter);
+        if args.diff {
+            reporter = &diff_reporter;
+        } else if args.write_changes {
             reporter = &replace_reporter;
         }
 
@@ -129,7 +133,9 @@ fn run() -> Result<i32, anyhow::Error> {
             errors_found = true;
         }
 
-        if args.write_changes {
+        if args.diff {
+            diff_reporter.show()?;
+        } else if args.write_changes {
             replace_reporter.write()?;
         }
     }

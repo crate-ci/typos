@@ -97,20 +97,20 @@ impl<'r> typos::report::Report for Replace<'r> {
 }
 
 #[derive(Clone, Debug, Default)]
-struct Deferred {
-    content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
-    paths: BTreeMap<path::PathBuf, Vec<Correction>>,
+pub(crate) struct Deferred {
+    pub(crate) content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
+    pub(crate) paths: BTreeMap<path::PathBuf, Vec<Correction>>,
 }
 
 #[derive(Clone, Debug, PartialOrd, Ord, PartialEq, Eq)]
-struct Correction {
+pub(crate) struct Correction {
     pub byte_offset: usize,
     pub typo: Vec<u8>,
     pub correction: Vec<u8>,
 }
 
 impl Correction {
-    fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
+    pub(crate) fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
         Self {
             byte_offset,
             typo: typo.as_bytes().to_vec(),
@@ -119,7 +119,7 @@ impl Correction {
     }
 }
 
-fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
+pub(crate) fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
     let mut corrections: Vec<_> = corrections.iter().collect();
     corrections.sort_unstable();
     corrections.reverse();
