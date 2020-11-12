@@ -94,7 +94,7 @@ struct ReportContext<'m, 'r> {
 
 impl<'m, 'r> report::Report for ReportContext<'m, 'r> {
     fn report(&self, msg: report::Message) -> bool {
-        let msg = msg.context(self.context.clone());
+        let msg = msg.context(Some(self.context.clone()));
         self.reporter.report(msg)
     }
 }
@@ -188,7 +188,7 @@ impl Check for Typos {
                 Some(corrections) => {
                     let byte_offset = ident.offset();
                     let msg = report::Typo {
-                        context: report::Context::None,
+                        context: None,
                         buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
                         byte_offset,
                         typo: ident.token(),
@@ -203,7 +203,7 @@ impl Check for Typos {
                             Some(corrections) => {
                                 let byte_offset = word.offset();
                                 let msg = report::Typo {
-                                    context: report::Context::None,
+                                    context: None,
                                     buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
                                     byte_offset,
                                     typo: word.token(),
@@ -236,7 +236,7 @@ impl Check for Typos {
                 Some(corrections) => {
                     let byte_offset = ident.offset();
                     let msg = report::Typo {
-                        context: report::Context::None,
+                        context: None,
                         buffer: std::borrow::Cow::Borrowed(buffer),
                         byte_offset,
                         typo: ident.token(),
@@ -251,7 +251,7 @@ impl Check for Typos {
                             Some(corrections) => {
                                 let byte_offset = word.offset();
                                 let msg = report::Typo {
-                                    context: report::Context::None,
+                                    context: None,
                                     buffer: std::borrow::Cow::Borrowed(buffer),
                                     byte_offset,
                                     typo: word.token(),
@@ -300,7 +300,7 @@ impl Check for ParseIdentifiers {
         let typos_found = false;
 
         let msg = report::Parse {
-            context: report::Context::None,
+            context: None,
             kind: report::ParseKind::Identifier,
             data: parser.parse_str(buffer).map(|i| i.token()).collect(),
         };
@@ -321,7 +321,7 @@ impl Check for ParseIdentifiers {
         let typos_found = false;
 
         let msg = report::Parse {
-            context: report::Context::None,
+            context: None,
             kind: report::ParseKind::Identifier,
             data: parser.parse_bytes(buffer).map(|i| i.token()).collect(),
         };
@@ -363,7 +363,7 @@ impl Check for ParseWords {
         let typos_found = false;
 
         let msg = report::Parse {
-            context: report::Context::None,
+            context: None,
             kind: report::ParseKind::Word,
             data: parser
                 .parse_str(buffer)
@@ -387,7 +387,7 @@ impl Check for ParseWords {
         let typos_found = false;
 
         let msg = report::Parse {
-            context: report::Context::None,
+            context: None,
             kind: report::ParseKind::Word,
             data: parser
                 .parse_bytes(buffer)

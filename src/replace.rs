@@ -67,7 +67,7 @@ impl<'r> typos::report::Report for Replace<'r> {
         };
 
         match &typo.context {
-            typos::report::Context::File(file) => {
+            Some(typos::report::Context::File(file)) => {
                 let path = file.path.to_owned();
                 let line_num = file.line_num;
                 let correction =
@@ -82,7 +82,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                 content.push(correction);
                 false
             }
-            typos::report::Context::Path(path) => {
+            Some(typos::report::Context::Path(path)) => {
                 let path = path.path.to_owned();
                 let correction =
                     Correction::new(typo.byte_offset, typo.typo, corrections[0].as_ref());
@@ -97,20 +97,20 @@ impl<'r> typos::report::Report for Replace<'r> {
 }
 
 #[derive(Clone, Debug, Default)]
-struct Deferred {
-    content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
-    paths: BTreeMap<path::PathBuf, Vec<Correction>>,
+pub(crate) struct Deferred {
+    pub(crate) content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
+    pub(crate) paths: BTreeMap<path::PathBuf, Vec<Correction>>,
 }
 
 #[derive(Clone, Debug, PartialOrd, Ord, PartialEq, Eq)]
-struct Correction {
+pub(crate) struct Correction {
     pub byte_offset: usize,
     pub typo: Vec<u8>,
     pub correction: Vec<u8>,
 }
 
 impl Correction {
-    fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
+    pub(crate) fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
         Self {
             byte_offset,
             typo: typo.as_bytes().to_vec(),
@@ -119,7 +119,7 @@ impl Correction {
     }
 }
 
-fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
+pub(crate) fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
     let mut corrections: Vec<_> = corrections.iter().collect();
     corrections.sort_unstable();
     corrections.reverse();
@@ -209,12 +209,12 @@ mod test {
         let replace = Replace::new(&primary);
         replace.report(
             typos::report::Typo::default()
-                .context(
+                .context(Some(
                     typos::report::FileContext::default()
                         .path(input_file.path())
                         .line_num(1)
                         .into(),
-                )
+                ))
                 .buffer(std::borrow::Cow::Borrowed(b"1 foo 2\n3 4 5"))
                 .byte_offset(2)
                 .typo("foo")
@@ -238,11 +238,11 @@ mod test {
         let replace = Replace::new(&primary);
         replace.report(
             typos::report::Typo::default()
-                .context(
+                .context(Some(
                     typos::report::PathContext::default()
                         .path(input_file.path())
                         .into(),
-                )
+                ))
                 .buffer(std::borrow::Cow::Borrowed(b"foo.txt"))
                 .byte_offset(0)
                 .typo("foo")
