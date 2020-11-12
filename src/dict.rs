@@ -29,6 +29,10 @@ impl BuiltIn {
         &'s self,
         word_token: typos::tokens::Word<'w>,
     ) -> Option<Status<'s>> {
+        if word_token.case() == typos::tokens::Case::None {
+            return None;
+        }
+
         let word = word_token.token();
         let mut corrections = if let Some(correction) = self.correct_with_dict(word) {
             self.correct_with_vars(word)
@@ -211,6 +215,10 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
     }
 
     fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Option<Status<'s>> {
+        if word.case() == typos::tokens::Case::None {
+            return None;
+        }
+
         // Skip hashing if we can
         let custom = if !self.words.is_empty() {
             let w = UniCase::new(word.token());
