@@ -974,6 +974,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "sysexit"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a26991bb0e6ef939ac9a8d6b57979efa59921928a3aa0334d818fe6e458aa6a9"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "tap"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1092,6 +1101,7 @@ dependencies = [
  "predicates",
  "serde",
  "structopt",
+ "sysexit",
  "toml",
  "typos",
  "typos-dict",
