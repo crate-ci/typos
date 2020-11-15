@@ -11,26 +11,43 @@ mod checks;
 mod config;
 mod dict;
 mod diff;
+mod exit;
 mod replace;
+
+use exit::ChainCodeExt;
+use exit::ExitCodeResultAnyhowExt;
+use exit::ExitCodeResultErrorExt;
 
 fn main() {
     let code = match run() {
-        Ok(code) => code,
+        Ok(()) => sysexit::Code::Success,
         Err(err) => {
-            eprintln!("{}", err);
-            1
+            if let Some(error) = err.error {
+                eprintln!("{}", error);
+            }
+            err.code
         }
     };
-    std::process::exit(code);
+    std::process::exit(code as i32);
 }
 
-fn run() -> Result<i32, anyhow::Error> {
-    let args = args::Args::from_args();
+fn run() -> Result<(), exit::ExitCode> {
+    // clap's `get_matches` uses Failure rather than Usage, so bypass it for `get_matches_safe`.
+    let args = match args::Args::from_args_safe() {
+        Ok(args) => args,
+        Err(e) if e.use_stderr() => {
+            return Err(sysexit::Code::Usage.chain(e.into()));
+        }
+        Err(e) => {
+            println!("{}", e);
+            return Ok(());
+        }
+    };
 
     init_logging(args.verbose.log_level());
 
     let config = if let Some(path) = args.custom_config.as_ref() {
-        config::Config::from_file(path)?
+        config::Config::from_file(path).code(sysexit::Code::Config)?
     } else {
         config::Config::default()
     };
@@ -38,7 +55,7 @@ fn run() -> Result<i32, anyhow::Error> {
     let mut typos_found = false;
     let mut errors_found = false;
     for path in args.path.iter() {
-        let path = path.canonicalize()?;
+        let path = path.canonicalize().code(sysexit::Code::Usage)?;
         let cwd = if path.is_file() {
             path.parent().unwrap()
         } else {
@@ -47,7 +64,7 @@ fn run() -> Result<i32, anyhow::Error> {
 
         let mut config = config.clone();
         if !args.isolated {
-            let derived = config::Config::derive(cwd)?;
+            let derived = config::Config::derive(cwd).code(sysexit::Code::Config)?;
             config.update(&derived);
         }
         config.update(&args.config);
@@ -134,18 +151,18 @@ fn run() -> Result<i32, anyhow::Error> {
         }
 
         if args.diff {
-            diff_reporter.show()?;
+            diff_reporter.show().code(sysexit::Code::Unknown)?;
         } else if args.write_changes {
-            replace_reporter.write()?;
+            replace_reporter.write().code(sysexit::Code::Unknown)?;
         }
     }
 
     if errors_found {
-        Ok(2)
+        Err(sysexit::Code::Failure.error())
     } else if typos_found {
-        Ok(1)
+        Err(sysexit::Code::DataErr.error())
     } else {
-        Ok(0)
+        Ok(())
     }
 }
 
