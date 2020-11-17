@@ -12,10 +12,10 @@ arg_enum! {
     }
 }
 
-const PRINT_SILENT: typos::report::PrintSilent = typos::report::PrintSilent;
-const PRINT_BRIEF: typos::report::PrintBrief = typos::report::PrintBrief;
-const PRINT_LONG: typos::report::PrintLong = typos::report::PrintLong;
-const PRINT_JSON: typos::report::PrintJson = typos::report::PrintJson;
+pub const PRINT_SILENT: typos::report::PrintSilent = typos::report::PrintSilent;
+pub const PRINT_BRIEF: typos::report::PrintBrief = typos::report::PrintBrief;
+pub const PRINT_LONG: typos::report::PrintLong = typos::report::PrintLong;
+pub const PRINT_JSON: typos::report::PrintJson = typos::report::PrintJson;
 
 impl Format {
     pub(crate) fn reporter(self) -> &'static dyn typos::report::Report {

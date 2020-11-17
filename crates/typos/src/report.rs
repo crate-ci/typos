@@ -2,6 +2,7 @@
 
 use std::borrow::Cow;
 use std::io::{self, Write};
+use std::sync::atomic;
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]
 #[serde(rename_all = "snake_case")]
@@ -214,15 +215,49 @@ impl Default for Error {
 }
 
 pub trait Report: Send + Sync {
-    fn report(&self, msg: Message) -> bool;
+    fn report(&self, msg: Message) -> Result<(), std::io::Error>;
 }
 
-#[derive(Copy, Clone, Debug)]
+pub struct MessageStatus<'r> {
+    typos_found: atomic::AtomicBool,
+    errors_found: atomic::AtomicBool,
+    reporter: &'r dyn Report,
+}
+
+impl<'r> MessageStatus<'r> {
+    pub fn new(reporter: &'r dyn Report) -> Self {
+        Self {
+            typos_found: atomic::AtomicBool::new(false),
+            errors_found: atomic::AtomicBool::new(false),
+            reporter,
+        }
+    }
+
+    pub fn typos_found(&self) -> bool {
+        self.typos_found.load(atomic::Ordering::Relaxed)
+    }
+
+    pub fn errors_found(&self) -> bool {
+        self.errors_found.load(atomic::Ordering::Relaxed)
+    }
+}
+
+impl<'r> Report for MessageStatus<'r> {
+    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+        self.typos_found
+            .compare_and_swap(false, msg.is_correction(), atomic::Ordering::Relaxed);
+        self.errors_found
+            .compare_and_swap(false, msg.is_error(), atomic::Ordering::Relaxed);
+        self.reporter.report(msg)
+    }
+}
+
+#[derive(Debug, Default)]
 pub struct PrintSilent;
 
 impl Report for PrintSilent {
-    fn report(&self, msg: Message) -> bool {
-        msg.is_correction()
+    fn report(&self, _msg: Message) -> Result<(), std::io::Error> {
+        Ok(())
     }
 }
 
@@ -230,17 +265,17 @@ impl Report for PrintSilent {
 pub struct PrintBrief;
 
 impl Report for PrintBrief {
-    fn report(&self, msg: Message) -> bool {
+    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
         match &msg {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Typo(msg) => print_brief_correction(msg),
+            Message::Typo(msg) => print_brief_correction(msg)?,
             Message::File(msg) => {
-                println!("{}", msg.path.display());
+                writeln!(io::stdout(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                println!("{}", itertools::join(msg.data.iter(), " "));
+                writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
             }
             Message::PathError(msg) => {
                 log::error!("{}: {}", msg.path.display(), msg.msg);
@@ -249,7 +284,7 @@ impl Report for PrintBrief {
                 log::error!("{}", msg.msg);
             }
         }
-        msg.is_correction()
+        Ok(())
     }
 }
 
@@ -257,17 +292,17 @@ impl Report for PrintBrief {
 pub struct PrintLong;
 
 impl Report for PrintLong {
-    fn report(&self, msg: Message) -> bool {
+    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
         match &msg {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Typo(msg) => print_long_correction(msg),
+            Message::Typo(msg) => print_long_correction(msg)?,
             Message::File(msg) => {
-                println!("{}", msg.path.display());
+                writeln!(io::stdout(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                println!("{}", itertools::join(msg.data.iter(), " "));
+                writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
             }
             Message::PathError(msg) => {
                 log::error!("{}: {}", msg.path.display(), msg.msg);
@@ -276,34 +311,38 @@ impl Report for PrintLong {
                 log::error!("{}", msg.msg);
             }
         }
-        msg.is_correction()
+        Ok(())
     }
 }
 
-fn print_brief_correction(msg: &Typo) {
+fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
     match &msg.corrections {
         crate::Status::Valid => {}
         crate::Status::Invalid => {
-            println!(
+            writeln!(
+                io::stdout(),
                 "{}:{}: {} is disallowed",
                 context_display(&msg.context),
                 msg.byte_offset,
                 msg.typo,
-            );
+            )?;
         }
         crate::Status::Corrections(corrections) => {
-            println!(
+            writeln!(
+                io::stdout(),
                 "{}:{}: {} -> {}",
                 context_display(&msg.context),
                 msg.byte_offset,
                 msg.typo,
                 itertools::join(corrections.iter(), ", ")
-            );
+            )?;
         }
     }
+
+    Ok(())
 }
 
-fn print_long_correction(msg: &Typo) {
+fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
     let stdout = io::stdout();
     let mut handle = stdout.lock();
     match &msg.corrections {
@@ -315,8 +354,7 @@ fn print_long_correction(msg: &Typo) {
                 context_display(&msg.context),
                 msg.byte_offset,
                 msg.typo,
-            )
-            .unwrap();
+            )?;
         }
         crate::Status::Corrections(corrections) => {
             writeln!(
@@ -324,8 +362,7 @@ fn print_long_correction(msg: &Typo) {
                 "error: `{}` should be {}",
                 msg.typo,
                 itertools::join(corrections.iter(), ", ")
-            )
-            .unwrap();
+            )?;
         }
     }
     writeln!(
@@ -333,8 +370,7 @@ fn print_long_correction(msg: &Typo) {
         "  --> {}:{}",
         context_display(&msg.context),
         msg.byte_offset
-    )
-    .unwrap();
+    )?;
 
     if let Some(Context::File(context)) = &msg.context {
         let line_num = context.line_num.to_string();
@@ -345,11 +381,13 @@ fn print_long_correction(msg: &Typo) {
 
         let line = String::from_utf8_lossy(msg.buffer.as_ref());
         let line = line.replace("\t", " ");
-        writeln!(handle, "{} |", line_indent).unwrap();
-        writeln!(handle, "{} | {}", line_num, line.trim_end()).unwrap();
-        writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl).unwrap();
-        writeln!(handle, "{} |", line_indent).unwrap();
+        writeln!(handle, "{} |", line_indent)?;
+        writeln!(handle, "{} | {}", line_num, line.trim_end())?;
+        writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl)?;
+        writeln!(handle, "{} |", line_indent)?;
     }
+
+    Ok(())
 }
 
 fn context_display<'c>(context: &'c Option<Context<'c>>) -> &'c dyn std::fmt::Display {
@@ -363,8 +401,8 @@ fn context_display<'c>(context: &'c Option<Context<'c>>) -> &'c dyn std::fmt::Di
 pub struct PrintJson;
 
 impl Report for PrintJson {
-    fn report(&self, msg: Message) -> bool {
-        println!("{}", serde_json::to_string(&msg).unwrap());
-        msg.is_correction()
+    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+        writeln!(io::stdout(), "{}", serde_json::to_string(&msg).unwrap())?;
+        Ok(())
     }
 }

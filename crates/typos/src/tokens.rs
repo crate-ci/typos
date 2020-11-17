@@ -192,23 +192,26 @@ pub struct Word<'t> {
 }
 
 impl<'t> Word<'t> {
-    pub fn new(token: &'t str, offset: usize) -> Result<Self, crate::Error> {
+    pub fn new(token: &'t str, offset: usize) -> Result<Self, std::io::Error> {
         let mut itr = split_ident(token, 0);
         let mut item = itr.next().ok_or_else(|| {
-            crate::ErrorKind::InvalidWord
-                .into_error()
-                .with_message(format!("{:?} is nothing", token))
+            std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                format!("{:?} is nothing", token),
+            )
         })?;
         if item.offset != 0 {
-            return Err(crate::ErrorKind::InvalidWord
-                .into_error()
-                .with_message(format!("{:?} has padding", token)));
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                format!("{:?} has padding", token),
+            ));
         }
         item.offset += offset;
         if itr.next().is_some() {
-            return Err(crate::ErrorKind::InvalidWord
-                .into_error()
-                .with_message(format!("{:?} is multiple words", token)));
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                format!("{:?} is multiple words", token),
+            ));
         }
         Ok(item)
     }

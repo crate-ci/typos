@@ -57,7 +57,7 @@ impl<'r> Diff<'r> {
 }
 
 impl<'r> typos::report::Report for Diff<'r> {
-    fn report(&self, msg: typos::report::Message<'_>) -> bool {
+    fn report(&self, msg: typos::report::Message<'_>) -> Result<(), std::io::Error> {
         let typo = match &msg {
             typos::report::Message::Typo(typo) => typo,
             _ => return self.reporter.report(msg),
@@ -85,9 +85,9 @@ impl<'r> typos::report::Report for Diff<'r> {
                     .entry(line_num)
                     .or_insert_with(Vec::new);
                 content.push(correction);
-                false
+                Ok(())
             }
-            _ => msg.is_correction(),
+            _ => self.reporter.report(msg),
         }
     }
 }
