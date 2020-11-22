@@ -11,35 +11,24 @@ mod checks;
 mod config;
 mod dict;
 mod diff;
-mod exit;
 mod replace;
 
-use exit::ChainCodeExt;
-use exit::ExitCodeResultAnyhowExt;
-use exit::ExitCodeResultErrorExt;
+use proc_exit::ProcessExitResultExt;
+use proc_exit::WithCodeResultExt;
 
 fn main() {
-    let code = match run() {
-        Ok(()) => sysexit::Code::Success,
-        Err(err) => {
-            if let Some(error) = err.error {
-                eprintln!("{}", error);
-            }
-            err.code
-        }
-    };
-    std::process::exit(code as i32);
+    run().process_exit();
 }
 
-fn run() -> Result<(), exit::ExitCode> {
+fn run() -> Result<(), proc_exit::Exit> {
     // clap's `get_matches` uses Failure rather than Usage, so bypass it for `get_matches_safe`.
     let args = match args::Args::from_args_safe() {
         Ok(args) => args,
         Err(e) if e.use_stderr() => {
-            return Err(sysexit::Code::Usage.chain(e.into()));
+            return Err(proc_exit::Code::USAGE_ERR.with_message(e));
         }
         Err(e) => {
-            println!("{}", e);
+            writeln!(std::io::stdout(), "{}", e)?;
             return Ok(());
         }
     };
@@ -47,7 +36,7 @@ fn run() -> Result<(), exit::ExitCode> {
     init_logging(args.verbose.log_level());
 
     let config = if let Some(path) = args.custom_config.as_ref() {
-        config::Config::from_file(path).code(sysexit::Code::Config)?
+        config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?
     } else {
         config::Config::default()
     };
@@ -55,7 +44,7 @@ fn run() -> Result<(), exit::ExitCode> {
     let mut typos_found = false;
     let mut errors_found = false;
     for path in args.path.iter() {
-        let path = path.canonicalize().code(sysexit::Code::Usage)?;
+        let path = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
         let cwd = if path.is_file() {
             path.parent().unwrap()
         } else {
@@ -64,7 +53,7 @@ fn run() -> Result<(), exit::ExitCode> {
 
         let mut config = config.clone();
         if !args.isolated {
-            let derived = config::Config::derive(cwd).code(sysexit::Code::Config)?;
+            let derived = config::Config::derive(cwd).with_code(proc_exit::Code::CONFIG_ERR)?;
             config.update(&derived);
         }
         config.update(&args.config);
@@ -102,7 +91,14 @@ fn run() -> Result<(), exit::ExitCode> {
             .git_exclude(config.files.ignore_vcs())
             .parents(config.files.ignore_parent());
 
-        let mut reporter = args.format.reporter();
+        // HACK: Diff doesn't handle mixing content
+        let output_reporter = if args.diff {
+            &args::PRINT_SILENT
+        } else {
+            args.format.reporter()
+        };
+        let status_reporter = typos::report::MessageStatus::new(output_reporter);
+        let mut reporter: &dyn typos::report::Report = &status_reporter;
         let replace_reporter = replace::Replace::new(reporter);
         let diff_reporter = diff::Diff::new(reporter);
         if args.diff {
@@ -126,7 +122,7 @@ fn run() -> Result<(), exit::ExitCode> {
             &checks
         };
 
-        let (cur_typos, cur_errors) = if single_threaded {
+        if single_threaded {
             checks::check_path(
                 walk.build(),
                 selected_checks,
@@ -134,6 +130,7 @@ fn run() -> Result<(), exit::ExitCode> {
                 &dictionary,
                 reporter,
             )
+            .with_code(proc_exit::Code::FAILURE)?;
         } else {
             checks::check_path_parallel(
                 walk.build_parallel(),
@@ -142,27 +139,34 @@ fn run() -> Result<(), exit::ExitCode> {
                 &dictionary,
                 reporter,
             )
-        };
-        if cur_typos {
+            .with_code(proc_exit::Code::FAILURE)?;
+        }
+        if status_reporter.typos_found() {
             typos_found = true;
         }
-        if cur_errors {
+        if status_reporter.errors_found() {
             errors_found = true;
         }
 
         if args.diff {
-            diff_reporter.show().code(sysexit::Code::Unknown)?;
+            diff_reporter.show().with_code(proc_exit::Code::FAILURE)?;
         } else if args.write_changes {
-            replace_reporter.write().code(sysexit::Code::Unknown)?;
+            replace_reporter
+                .write()
+                .with_code(proc_exit::Code::FAILURE)?;
         }
     }
 
     if errors_found {
-        Err(sysexit::Code::Failure.error())
+        proc_exit::Code::FAILURE.ok()
     } else if typos_found {
-        Err(sysexit::Code::DataErr.error())
+        // Can;'t use `Failure` since its so prevalent, it could be easy to get a
+        // `Failure` from something else and get it mixed up with typos.
+        //
+        // Can't use DataErr or anything else an std::io::ErrorKind might map to.
+        proc_exit::Code::UNKNOWN.ok()
     } else {
-        Ok(())
+        proc_exit::Code::SUCCESS.ok()
     }
 }
 

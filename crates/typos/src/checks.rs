@@ -12,7 +12,7 @@ pub trait Check: Send + Sync {
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error>;
+    ) -> Result<(), std::io::Error>;
 
     fn check_bytes(
         &self,
@@ -20,7 +20,7 @@ pub trait Check: Send + Sync {
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error>;
+    ) -> Result<(), std::io::Error>;
 
     fn check_filenames(&self) -> bool;
 
@@ -34,11 +34,9 @@ pub trait Check: Send + Sync {
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let mut typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         if !self.check_filenames() {
-            return Ok(typos_found);
+            return Ok(());
         }
 
         if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
@@ -46,10 +44,10 @@ pub trait Check: Send + Sync {
                 reporter,
                 context: report::PathContext { path }.into(),
             };
-            typos_found |= self.check_str(file_name, parser, dictionary, &context_reporter)?;
+            self.check_str(file_name, parser, dictionary, &context_reporter)?;
         }
 
-        Ok(typos_found)
+        Ok(())
     }
 
     fn check_file(
@@ -59,19 +57,17 @@ pub trait Check: Send + Sync {
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let mut typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         if !self.check_files() {
-            return Ok(typos_found);
+            return Ok(());
         }
 
-        let buffer = read_file(path)?;
+        let buffer = read_file(path, reporter)?;
         let (buffer, content_type) = massage_data(buffer)?;
         if !explicit && !self.binary() && content_type.is_binary() {
             let msg = report::BinaryFile { path };
-            reporter.report(msg.into());
-            return Ok(typos_found);
+            reporter.report(msg.into())?;
+            return Ok(());
         }
 
         for (line_idx, line) in buffer.lines().enumerate() {
@@ -80,10 +76,10 @@ pub trait Check: Send + Sync {
                 reporter,
                 context: report::FileContext { path, line_num }.into(),
             };
-            typos_found |= self.check_bytes(line, parser, dictionary, &context_reporter)?;
+            self.check_bytes(line, parser, dictionary, &context_reporter)?;
         }
 
-        Ok(typos_found)
+        Ok(())
     }
 }
 
@@ -93,7 +89,7 @@ struct ReportContext<'m, 'r> {
 }
 
 impl<'m, 'r> report::Report for ReportContext<'m, 'r> {
-    fn report(&self, msg: report::Message) -> bool {
+    fn report(&self, msg: report::Message) -> Result<(), std::io::Error> {
         let msg = msg.context(Some(self.context.clone()));
         self.reporter.report(msg)
     }
@@ -179,9 +175,7 @@ impl Check for Typos {
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let mut typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         for ident in parser.parse_str(buffer) {
             match dictionary.correct_ident(ident) {
                 Some(Status::Valid) => {}
@@ -194,7 +188,7 @@ impl Check for Typos {
                         typo: ident.token(),
                         corrections,
                     };
-                    typos_found |= reporter.report(msg.into());
+                    reporter.report(msg.into())?;
                 }
                 None => {
                     for word in ident.split() {
@@ -209,7 +203,7 @@ impl Check for Typos {
                                     typo: word.token(),
                                     corrections,
                                 };
-                                typos_found |= reporter.report(msg.into());
+                                reporter.report(msg.into())?;
                             }
                             None => {}
                         }
@@ -217,8 +211,7 @@ impl Check for Typos {
                 }
             }
         }
-
-        Ok(typos_found)
+        Ok(())
     }
 
     fn check_bytes(
@@ -227,9 +220,7 @@ impl Check for Typos {
         parser: &tokens::Parser,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let mut typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         for ident in parser.parse_bytes(buffer) {
             match dictionary.correct_ident(ident) {
                 Some(Status::Valid) => {}
@@ -242,7 +233,7 @@ impl Check for Typos {
                         typo: ident.token(),
                         corrections,
                     };
-                    typos_found |= reporter.report(msg.into());
+                    reporter.report(msg.into())?;
                 }
                 None => {
                     for word in ident.split() {
@@ -257,7 +248,7 @@ impl Check for Typos {
                                     typo: word.token(),
                                     corrections,
                                 };
-                                typos_found |= reporter.report(msg.into());
+                                reporter.report(msg.into())?;
                             }
                             None => {}
                         }
@@ -266,7 +257,7 @@ impl Check for Typos {
             }
         }
 
-        Ok(typos_found)
+        Ok(())
     }
 
     fn check_filenames(&self) -> bool {
@@ -296,19 +287,17 @@ impl Check for ParseIdentifiers {
         parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         let msg = report::Parse {
             context: None,
             kind: report::ParseKind::Identifier,
             data: parser.parse_str(buffer).map(|i| i.token()).collect(),
         };
         if !msg.data.is_empty() {
-            reporter.report(msg.into());
+            reporter.report(msg.into())?;
         }
 
-        Ok(typos_found)
+        Ok(())
     }
 
     fn check_bytes(
@@ -317,19 +306,17 @@ impl Check for ParseIdentifiers {
         parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         let msg = report::Parse {
             context: None,
             kind: report::ParseKind::Identifier,
             data: parser.parse_bytes(buffer).map(|i| i.token()).collect(),
         };
         if !msg.data.is_empty() {
-            reporter.report(msg.into());
+            reporter.report(msg.into())?;
         }
 
-        Ok(typos_found)
+        Ok(())
     }
 
     fn check_filenames(&self) -> bool {
@@ -359,9 +346,7 @@ impl Check for ParseWords {
         parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         let msg = report::Parse {
             context: None,
             kind: report::ParseKind::Word,
@@ -371,10 +356,10 @@ impl Check for ParseWords {
                 .collect(),
         };
         if !msg.data.is_empty() {
-            reporter.report(msg.into());
+            reporter.report(msg.into())?;
         }
 
-        Ok(typos_found)
+        Ok(())
     }
 
     fn check_bytes(
@@ -383,9 +368,7 @@ impl Check for ParseWords {
         parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         let msg = report::Parse {
             context: None,
             kind: report::ParseKind::Word,
@@ -395,10 +378,10 @@ impl Check for ParseWords {
                 .collect(),
         };
         if !msg.data.is_empty() {
-            reporter.report(msg.into());
+            reporter.report(msg.into())?;
         }
 
-        Ok(typos_found)
+        Ok(())
     }
 
     fn check_filenames(&self) -> bool {
@@ -424,9 +407,8 @@ impl Check for Files {
         _parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         _reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-        Ok(typos_found)
+    ) -> Result<(), std::io::Error> {
+        Ok(())
     }
 
     fn check_bytes(
@@ -435,9 +417,8 @@ impl Check for Files {
         _parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         _reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-        Ok(typos_found)
+    ) -> Result<(), std::io::Error> {
+        Ok(())
     }
 
     fn check_filenames(&self) -> bool {
@@ -458,9 +439,8 @@ impl Check for Files {
         _parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         _reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-        Ok(typos_found)
+    ) -> Result<(), std::io::Error> {
+        Ok(())
     }
 
     fn check_file(
@@ -470,23 +450,32 @@ impl Check for Files {
         _parser: &tokens::Parser,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<bool, crate::Error> {
-        let typos_found = false;
-
+    ) -> Result<(), std::io::Error> {
         let msg = report::File::new(path);
-        reporter.report(msg.into());
+        reporter.report(msg.into())?;
 
-        Ok(typos_found)
+        Ok(())
     }
 }
 
-fn read_file(path: &std::path::Path) -> Result<Vec<u8>, crate::Error> {
-    std::fs::read(path).map_err(|e| crate::ErrorKind::IoError.into_error().with_source(e))
+fn read_file(
+    path: &std::path::Path,
+    reporter: &dyn report::Report,
+) -> Result<Vec<u8>, std::io::Error> {
+    let buffer = match std::fs::read(path) {
+        Ok(buffer) => buffer,
+        Err(err) => {
+            let msg = report::Error::new(err.to_string());
+            reporter.report(msg.into())?;
+            Vec::new()
+        }
+    };
+    Ok(buffer)
 }
 
 fn massage_data(
     buffer: Vec<u8>,
-) -> Result<(Vec<u8>, content_inspector::ContentType), crate::Error> {
+) -> Result<(Vec<u8>, content_inspector::ContentType), std::io::Error> {
     let mut content_type = content_inspector::inspect(&buffer);
 
     // HACK: We only support UTF-8 at the moment

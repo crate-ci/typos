@@ -55,7 +55,7 @@ impl<'r> Replace<'r> {
 }
 
 impl<'r> typos::report::Report for Replace<'r> {
-    fn report(&self, msg: typos::report::Message<'_>) -> bool {
+    fn report(&self, msg: typos::report::Message<'_>) -> Result<(), std::io::Error> {
         let typo = match &msg {
             typos::report::Message::Typo(typo) => typo,
             _ => return self.reporter.report(msg),
@@ -80,7 +80,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                     .entry(line_num)
                     .or_insert_with(Vec::new);
                 content.push(correction);
-                false
+                Ok(())
             }
             Some(typos::report::Context::Path(path)) => {
                 let path = path.path.to_owned();
@@ -89,7 +89,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                 let mut deferred = self.deferred.lock().unwrap();
                 let content = deferred.paths.entry(path).or_insert_with(Vec::new);
                 content.push(correction);
-                false
+                Ok(())
             }
             _ => self.reporter.report(msg),
         }
@@ -207,22 +207,24 @@ mod test {
 
         let primary = typos::report::PrintSilent;
         let replace = Replace::new(&primary);
-        replace.report(
-            typos::report::Typo::default()
-                .context(Some(
-                    typos::report::FileContext::default()
-                        .path(input_file.path())
-                        .line_num(1)
-                        .into(),
-                ))
-                .buffer(std::borrow::Cow::Borrowed(b"1 foo 2\n3 4 5"))
-                .byte_offset(2)
-                .typo("foo")
-                .corrections(typos::Status::Corrections(vec![
-                    std::borrow::Cow::Borrowed("bar"),
-                ]))
-                .into(),
-        );
+        replace
+            .report(
+                typos::report::Typo::default()
+                    .context(Some(
+                        typos::report::FileContext::default()
+                            .path(input_file.path())
+                            .line_num(1)
+                            .into(),
+                    ))
+                    .buffer(std::borrow::Cow::Borrowed(b"1 foo 2\n3 4 5"))
+                    .byte_offset(2)
+                    .typo("foo")
+                    .corrections(typos::Status::Corrections(vec![
+                        std::borrow::Cow::Borrowed("bar"),
+                    ]))
+                    .into(),
+            )
+            .unwrap();
         replace.write().unwrap();
 
         input_file.assert("1 bar 2\n3 4 5");
@@ -236,21 +238,23 @@ mod test {
 
         let primary = typos::report::PrintSilent;
         let replace = Replace::new(&primary);
-        replace.report(
-            typos::report::Typo::default()
-                .context(Some(
-                    typos::report::PathContext::default()
-                        .path(input_file.path())
-                        .into(),
-                ))
-                .buffer(std::borrow::Cow::Borrowed(b"foo.txt"))
-                .byte_offset(0)
-                .typo("foo")
-                .corrections(typos::Status::Corrections(vec![
-                    std::borrow::Cow::Borrowed("bar"),
-                ]))
-                .into(),
-        );
+        replace
+            .report(
+                typos::report::Typo::default()
+                    .context(Some(
+                        typos::report::PathContext::default()
+                            .path(input_file.path())
+                            .into(),
+                    ))
+                    .buffer(std::borrow::Cow::Borrowed(b"foo.txt"))
+                    .byte_offset(0)
+                    .typo("foo")
+                    .corrections(typos::Status::Corrections(vec![
+                        std::borrow::Cow::Borrowed("bar"),
+                    ]))
+                    .into(),
+            )
+            .unwrap();
         replace.write().unwrap();
 
         input_file.assert(predicates::path::missing());

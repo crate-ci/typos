@@ -669,6 +669,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "proc-exit"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1ac573c94c4d539e8c339d612c8fc9835d286989411f1381a84a304c0ac19b41"
+
+[[package]]
 name = "proc-macro-error"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -974,15 +980,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "sysexit"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a26991bb0e6ef939ac9a8d6b57979efa59921928a3aa0334d818fe6e458aa6a9"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "tap"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1099,9 +1096,9 @@ dependencies = [
  "log",
  "phf",
  "predicates",
+ "proc-exit",
  "serde",
  "structopt",
- "sysexit",
  "toml",
  "typos",
  "typos-dict",
