@@ -16,6 +16,7 @@ mod replace;
 use proc_exit::WithCodeResultExt;
 
 fn main() {
+    human_panic::setup_panic!();
     let result = run();
     proc_exit::exit(result);
 }
