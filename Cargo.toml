@@ -49,7 +49,14 @@ bstr = "0.2"
 ahash = "0.5.7"
 difflib = "0.4"
 proc-exit = "0.3"
+human-panic = "1.0.3"
 
 [dev-dependencies]
 assert_fs = "1.0"
 predicates = "1.0"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
