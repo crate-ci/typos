@@ -13,8 +13,7 @@ pub enum Message<'m> {
     Typo(Typo<'m>),
     File(File<'m>),
     Parse(Parse<'m>),
-    PathError(PathError<'m>),
-    Error(Error),
+    Error(Error<'m>),
 }
 
 impl<'m> Message<'m> {
@@ -24,7 +23,6 @@ impl<'m> Message<'m> {
             Message::Typo(c) => c.corrections.is_correction(),
             Message::File(_) => false,
             Message::Parse(_) => false,
-            Message::PathError(_) => false,
             Message::Error(_) => false,
         }
     }
@@ -35,7 +33,6 @@ impl<'m> Message<'m> {
             Message::Typo(_) => false,
             Message::File(_) => false,
             Message::Parse(_) => false,
-            Message::PathError(_) => true,
             Message::Error(_) => true,
         }
     }
@@ -49,6 +46,10 @@ impl<'m> Message<'m> {
             Message::Parse(parse) => {
                 let parse = parse.context(context);
                 Message::Parse(parse)
+            }
+            Message::Error(error) => {
+                let error = error.context(context);
+                Message::Error(error)
             }
             _ => self,
         }
@@ -182,35 +183,24 @@ impl<'m> Default for Parse<'m> {
 
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
 #[non_exhaustive]
-pub struct PathError<'m> {
-    pub path: &'m std::path::Path,
+pub struct Error<'m> {
+    #[serde(flatten)]
+    pub context: Option<Context<'m>>,
     pub msg: String,
 }
 
-impl<'m> Default for PathError<'m> {
+impl<'m> Error<'m> {
+    pub fn new(msg: String) -> Self {
+        Self { context: None, msg }
+    }
+}
+
+impl<'m> Default for Error<'m> {
     fn default() -> Self {
         Self {
-            path: std::path::Path::new("-"),
+            context: None,
             msg: "".to_owned(),
         }
-    }
-}
-
-#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
-#[non_exhaustive]
-pub struct Error {
-    pub msg: String,
-}
-
-impl Error {
-    pub fn new(msg: String) -> Self {
-        Self { msg }
-    }
-}
-
-impl Default for Error {
-    fn default() -> Self {
-        Self { msg: "".to_owned() }
     }
 }
 
@@ -277,11 +267,8 @@ impl Report for PrintBrief {
             Message::Parse(msg) => {
                 writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
             }
-            Message::PathError(msg) => {
-                log::error!("{}: {}", msg.path.display(), msg.msg);
-            }
             Message::Error(msg) => {
-                log::error!("{}", msg.msg);
+                log::error!("{}: {}", context_display(&msg.context), msg.msg);
             }
         }
         Ok(())
@@ -304,11 +291,8 @@ impl Report for PrintLong {
             Message::Parse(msg) => {
                 writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
             }
-            Message::PathError(msg) => {
-                log::error!("{}: {}", msg.path.display(), msg.msg);
-            }
             Message::Error(msg) => {
-                log::error!("{}", msg.msg);
+                log::error!("{}: {}", context_display(&msg.context), msg.msg);
             }
         }
         Ok(())
