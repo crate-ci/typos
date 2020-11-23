@@ -4,7 +4,7 @@ pub(crate) fn check_path(
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), ignore::Error> {
     for entry in walk {
         check_entry(entry, checks, parser, dictionary, reporter)?;
     }
@@ -17,8 +17,8 @@ pub(crate) fn check_path_parallel(
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
-) -> Result<(), anyhow::Error> {
-    let error: std::sync::Mutex<Result<(), anyhow::Error>> = std::sync::Mutex::new(Ok(()));
+) -> Result<(), ignore::Error> {
+    let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
             match check_entry(entry, checks, parser, dictionary, reporter) {
@@ -40,7 +40,7 @@ fn check_entry(
     parser: &typos::tokens::Parser,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), ignore::Error> {
     let entry = entry?;
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;

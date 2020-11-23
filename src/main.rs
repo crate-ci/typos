@@ -13,14 +13,14 @@ mod dict;
 mod diff;
 mod replace;
 
-use proc_exit::ProcessExitResultExt;
 use proc_exit::WithCodeResultExt;
 
 fn main() {
-    run().process_exit();
+    let result = run();
+    proc_exit::exit(result);
 }
 
-fn run() -> Result<(), proc_exit::Exit> {
+fn run() -> proc_exit::ExitResult {
     // clap's `get_matches` uses Failure rather than Usage, so bypass it for `get_matches_safe`.
     let args = match args::Args::from_args_safe() {
         Ok(args) => args,
@@ -29,7 +29,7 @@ fn run() -> Result<(), proc_exit::Exit> {
         }
         Err(e) => {
             writeln!(std::io::stdout(), "{}", e)?;
-            return Ok(());
+            return proc_exit::Code::SUCCESS.ok();
         }
     };
 
@@ -130,7 +130,6 @@ fn run() -> Result<(), proc_exit::Exit> {
                 &dictionary,
                 reporter,
             )
-            .with_code(proc_exit::Code::FAILURE)?;
         } else {
             checks::check_path_parallel(
                 walk.build_parallel(),
@@ -139,8 +138,13 @@ fn run() -> Result<(), proc_exit::Exit> {
                 &dictionary,
                 reporter,
             )
-            .with_code(proc_exit::Code::FAILURE)?;
         }
+        .map_err(|e| {
+            e.io_error()
+                .map(|i| proc_exit::Code::from(i.kind()))
+                .unwrap_or_default()
+                .with_message(e)
+        })?;
         if status_reporter.typos_found() {
             typos_found = true;
         }
