@@ -300,25 +300,32 @@ impl Report for PrintLong {
 }
 
 fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
+    let line = String::from_utf8_lossy(msg.buffer.as_ref());
+    let line = line.replace("\t", " ");
+    let column = unicode_segmentation::UnicodeSegmentation::graphemes(
+        line.get(0..msg.byte_offset).unwrap(),
+        true,
+    )
+    .count();
     match &msg.corrections {
         crate::Status::Valid => {}
         crate::Status::Invalid => {
             writeln!(
                 io::stdout(),
-                "{}:{}: {} is disallowed",
+                "{}:{}: `{}` is disallowed",
                 context_display(&msg.context),
-                msg.byte_offset,
+                column,
                 msg.typo,
             )?;
         }
         crate::Status::Corrections(corrections) => {
             writeln!(
                 io::stdout(),
-                "{}:{}: {} -> {}",
+                "{}:{}: `{}` -> {}",
                 context_display(&msg.context),
-                msg.byte_offset,
+                column,
                 msg.typo,
-                itertools::join(corrections.iter(), ", ")
+                itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
             )?;
         }
     }
@@ -329,42 +336,37 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
 fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
     let stdout = io::stdout();
     let mut handle = stdout.lock();
+
+    let line = String::from_utf8_lossy(msg.buffer.as_ref());
+    let line = line.replace("\t", " ");
+    let column = unicode_segmentation::UnicodeSegmentation::graphemes(
+        line.get(0..msg.byte_offset).unwrap(),
+        true,
+    )
+    .count();
     match &msg.corrections {
         crate::Status::Valid => {}
         crate::Status::Invalid => {
-            writeln!(
-                handle,
-                "{}:{}: {} is disallowed",
-                context_display(&msg.context),
-                msg.byte_offset,
-                msg.typo,
-            )?;
+            writeln!(handle, "error: `{}` is disallowed`", msg.typo,)?;
         }
         crate::Status::Corrections(corrections) => {
             writeln!(
                 handle,
                 "error: `{}` should be {}",
                 msg.typo,
-                itertools::join(corrections.iter(), ", ")
+                itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
             )?;
         }
     }
-    writeln!(
-        handle,
-        "  --> {}:{}",
-        context_display(&msg.context),
-        msg.byte_offset
-    )?;
+    writeln!(handle, "  --> {}:{}", context_display(&msg.context), column)?;
 
     if let Some(Context::File(context)) = &msg.context {
         let line_num = context.line_num.to_string();
         let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
-        let hl_indent: String = itertools::repeat_n(" ", msg.byte_offset).collect();
+        let hl_indent: String = itertools::repeat_n(" ", column).collect();
         let hl: String = itertools::repeat_n("^", msg.typo.len()).collect();
 
-        let line = String::from_utf8_lossy(msg.buffer.as_ref());
-        let line = line.replace("\t", " ");
         writeln!(handle, "{} |", line_indent)?;
         writeln!(handle, "{} | {}", line_num, line.trim_end())?;
         writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl)?;
