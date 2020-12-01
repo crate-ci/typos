@@ -15,7 +15,7 @@ azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-csv = "1.0"
+csv = "1.1"
 unicase = "2.5"
 codegenrs = "0.1"
 structopt = "0.3"
