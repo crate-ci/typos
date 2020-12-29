@@ -1,7 +1,7 @@
 pub(crate) fn check_path(
     walk: ignore::Walk,
     checks: &dyn typos::checks::Check,
-    parser: &typos::tokens::Parser,
+    parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
 ) -> Result<(), ignore::Error> {
@@ -14,7 +14,7 @@ pub(crate) fn check_path(
 pub(crate) fn check_path_parallel(
     walk: ignore::WalkParallel,
     checks: &dyn typos::checks::Check,
-    parser: &typos::tokens::Parser,
+    parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
 ) -> Result<(), ignore::Error> {
@@ -37,7 +37,7 @@ pub(crate) fn check_path_parallel(
 fn check_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     checks: &dyn typos::checks::Check,
-    parser: &typos::tokens::Parser,
+    parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn typos::report::Report,
 ) -> Result<(), ignore::Error> {

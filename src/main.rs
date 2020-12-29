@@ -61,7 +61,7 @@ fn run() -> proc_exit::ExitResult {
         config.default.update(&args.overrides);
         let config = config;
 
-        let parser = typos::tokens::ParserBuilder::new()
+        let parser = typos::tokens::TokenizerBuilder::new()
             .ignore_hex(config.default.ignore_hex())
             .leading_digits(config.default.identifier_leading_digits())
             .leading_chars(config.default.identifier_leading_chars().to_owned())

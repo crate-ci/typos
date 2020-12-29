@@ -9,7 +9,7 @@ use typos::checks::Check;
 
 fn bench_parse_ident_str(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     let checks = typos::checks::TyposSettings::new().build_identifier_parser();
     b.iter(|| checks.check_str(data, &parser, &corrections, &typos::report::PrintSilent));
 }
@@ -46,7 +46,7 @@ fn parse_idents_corpus_str(b: &mut test::Bencher) {
 
 fn bench_parse_ident_bytes(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     let checks = typos::checks::TyposSettings::new().build_identifier_parser();
     b.iter(|| {
         checks.check_bytes(
@@ -90,7 +90,7 @@ fn parse_idents_corpus_bytes(b: &mut test::Bencher) {
 
 fn bench_parse_word_str(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     let checks = typos::checks::TyposSettings::new().build_word_parser();
     b.iter(|| checks.check_str(data, &parser, &corrections, &typos::report::PrintSilent));
 }
@@ -127,7 +127,7 @@ fn parse_words_corpus(b: &mut test::Bencher) {
 
 fn bench_typos(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     let checks = typos::checks::TyposSettings::new().build_typos();
     b.iter(|| checks.check_str(data, &parser, &corrections, &typos::report::PrintSilent));
 }
@@ -168,7 +168,7 @@ fn bench_check_file(data: &str, b: &mut test::Bencher) {
     sample_path.write_str(data).unwrap();
 
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     let checks = typos::checks::TyposSettings::new().build_typos();
     b.iter(|| {
         checks.check_file(

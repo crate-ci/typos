@@ -6,19 +6,19 @@ mod data;
 
 #[bench]
 fn ident_parse_empty(b: &mut test::Bencher) {
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     b.iter(|| parser.parse_bytes(data::EMPTY.as_bytes()).last());
 }
 
 #[bench]
 fn ident_parse_no_tokens(b: &mut test::Bencher) {
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     b.iter(|| parser.parse_bytes(data::NO_TOKENS.as_bytes()).last());
 }
 
 #[bench]
 fn ident_parse_single_token(b: &mut test::Bencher) {
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     b.iter(|| {
         parser.parse_bytes(data::SINGLE_TOKEN.as_bytes()).last();
     });
@@ -26,19 +26,19 @@ fn ident_parse_single_token(b: &mut test::Bencher) {
 
 #[bench]
 fn ident_parse_sherlock(b: &mut test::Bencher) {
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     b.iter(|| parser.parse_bytes(data::SHERLOCK.as_bytes()).last());
 }
 
 #[bench]
 fn ident_parse_code(b: &mut test::Bencher) {
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     b.iter(|| parser.parse_bytes(data::CODE.as_bytes()).last());
 }
 
 #[bench]
 fn ident_parse_corpus(b: &mut test::Bencher) {
-    let parser = typos::tokens::Parser::new();
+    let parser = typos::tokens::Tokenizer::new();
     b.iter(|| parser.parse_bytes(data::CORPUS.as_bytes()).last());
 }
 

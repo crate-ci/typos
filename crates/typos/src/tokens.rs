@@ -1,5 +1,5 @@
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ParserBuilder {
+pub struct TokenizerBuilder {
     ignore_hex: bool,
     leading_digits: bool,
     leading_chars: String,
@@ -7,7 +7,7 @@ pub struct ParserBuilder {
     include_chars: String,
 }
 
-impl ParserBuilder {
+impl TokenizerBuilder {
     pub fn new() -> Self {
         Default::default()
     }
@@ -37,7 +37,7 @@ impl ParserBuilder {
         self
     }
 
-    pub fn build(&self) -> Parser {
+    pub fn build(&self) -> Tokenizer {
         let mut pattern = r#"\b("#.to_owned();
         Self::push_pattern(&mut pattern, self.leading_digits, &self.leading_chars);
         Self::push_pattern(&mut pattern, self.include_digits, &self.include_chars);
@@ -46,7 +46,7 @@ impl ParserBuilder {
         let words_str = regex::Regex::new(&pattern).unwrap();
         let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
 
-        Parser {
+        Tokenizer {
             words_str,
             words_bytes,
             // `leading_digits` let's us bypass the regexes since you can't have a decimal or
@@ -69,7 +69,7 @@ impl ParserBuilder {
     }
 }
 
-impl Default for ParserBuilder {
+impl Default for TokenizerBuilder {
     fn default() -> Self {
         Self {
             ignore_hex: true,
@@ -82,16 +82,16 @@ impl Default for ParserBuilder {
 }
 
 #[derive(Debug, Clone)]
-pub struct Parser {
+pub struct Tokenizer {
     words_str: regex::Regex,
     words_bytes: regex::bytes::Regex,
     ignore_numbers: bool,
     ignore_hex: bool,
 }
 
-impl Parser {
+impl Tokenizer {
     pub fn new() -> Self {
-        ParserBuilder::default().build()
+        TokenizerBuilder::default().build()
     }
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
@@ -124,7 +124,7 @@ impl Parser {
     }
 }
 
-impl Default for Parser {
+impl Default for Tokenizer {
     fn default() -> Self {
         Self::new()
     }
@@ -387,7 +387,7 @@ mod test {
 
     #[test]
     fn tokenize_empty_is_empty() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "";
         let expected: Vec<Identifier> = vec![];
@@ -399,7 +399,7 @@ mod test {
 
     #[test]
     fn tokenize_word_is_word() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "word";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", 0)];
@@ -411,7 +411,7 @@ mod test {
 
     #[test]
     fn tokenize_space_separated_words() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A B";
         let expected: Vec<Identifier> = vec![
@@ -426,7 +426,7 @@ mod test {
 
     #[test]
     fn tokenize_dot_separated_words() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A.B";
         let expected: Vec<Identifier> = vec![
@@ -441,7 +441,7 @@ mod test {
 
     #[test]
     fn tokenize_namespace_separated_words() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A::B";
         let expected: Vec<Identifier> = vec![
@@ -456,7 +456,7 @@ mod test {
 
     #[test]
     fn tokenize_underscore_doesnt_separate() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A_B";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
@@ -468,7 +468,7 @@ mod test {
 
     #[test]
     fn tokenize_ignore_hex_enabled() {
-        let parser = ParserBuilder::new().ignore_hex(true).build();
+        let parser = TokenizerBuilder::new().ignore_hex(true).build();
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
@@ -483,7 +483,7 @@ mod test {
 
     #[test]
     fn tokenize_ignore_hex_disabled() {
-        let parser = ParserBuilder::new()
+        let parser = TokenizerBuilder::new()
             .ignore_hex(false)
             .leading_digits(true)
             .build();
@@ -523,11 +523,11 @@ mod test {
                 &[("A", Case::Scream, 0), ("String", Case::Title, 1)],
             ),
             (
-                "SimpleXMLParser",
+                "SimpleXMLTokenizer",
                 &[
                     ("Simple", Case::Title, 0),
                     ("XML", Case::Scream, 6),
-                    ("Parser", Case::Title, 9),
+                    ("Tokenizer", Case::Title, 9),
                 ],
             ),
             (

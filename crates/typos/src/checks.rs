@@ -9,7 +9,7 @@ pub trait Check: Send + Sync {
     fn check_str(
         &self,
         buffer: &str,
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error>;
@@ -17,7 +17,7 @@ pub trait Check: Send + Sync {
     fn check_bytes(
         &self,
         buffer: &[u8],
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error>;
@@ -31,7 +31,7 @@ pub trait Check: Send + Sync {
     fn check_filename(
         &self,
         path: &std::path::Path,
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -54,7 +54,7 @@ pub trait Check: Send + Sync {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -172,7 +172,7 @@ impl Check for Typos {
     fn check_str(
         &self,
         buffer: &str,
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -217,7 +217,7 @@ impl Check for Typos {
     fn check_bytes(
         &self,
         buffer: &[u8],
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -284,7 +284,7 @@ impl Check for ParseIdentifiers {
     fn check_str(
         &self,
         buffer: &str,
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -303,7 +303,7 @@ impl Check for ParseIdentifiers {
     fn check_bytes(
         &self,
         buffer: &[u8],
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -343,7 +343,7 @@ impl Check for ParseWords {
     fn check_str(
         &self,
         buffer: &str,
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -365,7 +365,7 @@ impl Check for ParseWords {
     fn check_bytes(
         &self,
         buffer: &[u8],
-        parser: &tokens::Parser,
+        parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -404,7 +404,7 @@ impl Check for Files {
     fn check_str(
         &self,
         _buffer: &str,
-        _parser: &tokens::Parser,
+        _parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         _reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -414,7 +414,7 @@ impl Check for Files {
     fn check_bytes(
         &self,
         _buffer: &[u8],
-        _parser: &tokens::Parser,
+        _parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         _reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -436,7 +436,7 @@ impl Check for Files {
     fn check_filename(
         &self,
         _path: &std::path::Path,
-        _parser: &tokens::Parser,
+        _parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         _reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
@@ -447,7 +447,7 @@ impl Check for Files {
         &self,
         path: &std::path::Path,
         _explicit: bool,
-        _parser: &tokens::Parser,
+        _parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
