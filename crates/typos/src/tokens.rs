@@ -1,11 +1,3 @@
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Case {
-    Title,
-    Lower,
-    Scream,
-    None,
-}
-
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ParserBuilder {
     ignore_hex: bool,
@@ -237,52 +229,8 @@ impl<'t> Word<'t> {
     }
 }
 
-/// Tracks the current 'mode' of the transformation algorithm as it scans the input string.
-///
-/// The mode is a tri-state which tracks the case of the last cased character of the current
-/// word. If there is no cased character (either lowercase or uppercase) since the previous
-/// word boundary, than the mode is `Boundary`. If the last cased character is lowercase, then
-/// the mode is `Lowercase`. Otherrwise, the mode is `Uppercase`.
-#[derive(Clone, Copy, PartialEq, Debug)]
-enum WordMode {
-    /// There have been no lowercase or uppercase characters in the current word.
-    Boundary,
-    /// The previous cased character in the current word is lowercase.
-    Lowercase,
-    /// The previous cased character in the current word is uppercase.
-    Uppercase,
-    Number,
-}
-
-impl WordMode {
-    fn classify(c: char) -> Self {
-        if c.is_lowercase() {
-            WordMode::Lowercase
-        } else if c.is_uppercase() {
-            WordMode::Uppercase
-        } else if c.is_ascii_digit() {
-            WordMode::Number
-        } else {
-            // This assumes all characters are either lower or upper case.
-            WordMode::Boundary
-        }
-    }
-
-    fn case(self, last: WordMode) -> Case {
-        match (self, last) {
-            (WordMode::Uppercase, WordMode::Uppercase) => Case::Scream,
-            (WordMode::Uppercase, WordMode::Lowercase) => Case::Title,
-            (WordMode::Lowercase, WordMode::Lowercase) => Case::Lower,
-            (WordMode::Number, WordMode::Number) => Case::None,
-            (WordMode::Number, _)
-            | (_, WordMode::Number)
-            | (WordMode::Boundary, _)
-            | (_, WordMode::Boundary)
-            | (WordMode::Lowercase, WordMode::Uppercase) => {
-                unreachable!("Invalid case combination: ({:?}, {:?})", self, last)
-            }
-        }
-    }
+fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
+    SplitIdent::new(ident, offset)
 }
 
 struct SplitIdent<'s> {
@@ -377,8 +325,60 @@ impl<'s> Iterator for SplitIdent<'s> {
     }
 }
 
-fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
-    SplitIdent::new(ident, offset)
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Case {
+    Title,
+    Lower,
+    Scream,
+    None,
+}
+
+/// Tracks the current 'mode' of the transformation algorithm as it scans the input string.
+///
+/// The mode is a tri-state which tracks the case of the last cased character of the current
+/// word. If there is no cased character (either lowercase or uppercase) since the previous
+/// word boundary, than the mode is `Boundary`. If the last cased character is lowercase, then
+/// the mode is `Lowercase`. Otherrwise, the mode is `Uppercase`.
+#[derive(Clone, Copy, PartialEq, Debug)]
+enum WordMode {
+    /// There have been no lowercase or uppercase characters in the current word.
+    Boundary,
+    /// The previous cased character in the current word is lowercase.
+    Lowercase,
+    /// The previous cased character in the current word is uppercase.
+    Uppercase,
+    Number,
+}
+
+impl WordMode {
+    fn classify(c: char) -> Self {
+        if c.is_lowercase() {
+            WordMode::Lowercase
+        } else if c.is_uppercase() {
+            WordMode::Uppercase
+        } else if c.is_ascii_digit() {
+            WordMode::Number
+        } else {
+            // This assumes all characters are either lower or upper case.
+            WordMode::Boundary
+        }
+    }
+
+    fn case(self, last: WordMode) -> Case {
+        match (self, last) {
+            (WordMode::Uppercase, WordMode::Uppercase) => Case::Scream,
+            (WordMode::Uppercase, WordMode::Lowercase) => Case::Title,
+            (WordMode::Lowercase, WordMode::Lowercase) => Case::Lower,
+            (WordMode::Number, WordMode::Number) => Case::None,
+            (WordMode::Number, _)
+            | (_, WordMode::Number)
+            | (WordMode::Boundary, _)
+            | (_, WordMode::Boundary)
+            | (WordMode::Lowercase, WordMode::Uppercase) => {
+                unreachable!("Invalid case combination: ({:?}, {:?})", self, last)
+            }
+        }
+    }
 }
 
 #[cfg(test)]
