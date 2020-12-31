@@ -80,6 +80,19 @@ pub trait Check: Send + Sync {
 
         Ok(())
     }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        parser: &tokens::Tokenizer,
+        dictionary: &dyn Dictionary,
+        reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        self.check_filename(path, parser, dictionary, reporter)?;
+        self.check_file_content(path, explicit, parser, dictionary, reporter)?;
+        Ok(())
+    }
 }
 
 struct ReportContext<'m, 'r> {
@@ -491,8 +504,7 @@ fn check_entry(
     let entry = entry?;
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        checks.check_filename(entry.path(), parser, dictionary, reporter)?;
-        checks.check_file_content(entry.path(), explicit, parser, dictionary, reporter)?;
+        checks.check_file(entry.path(), explicit, parser, dictionary, reporter)?;
     }
 
     Ok(())
