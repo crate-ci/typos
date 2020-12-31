@@ -5,82 +5,6 @@ use typos::tokens;
 use typos::Dictionary;
 
 pub trait Check: Send + Sync {
-    fn check_str(
-        &self,
-        buffer: &str,
-        parser: &tokens::Tokenizer,
-        dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error>;
-
-    fn check_bytes(
-        &self,
-        buffer: &[u8],
-        parser: &tokens::Tokenizer,
-        dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error>;
-
-    fn check_filenames(&self) -> bool;
-
-    fn check_files(&self) -> bool;
-
-    fn binary(&self) -> bool;
-
-    fn check_filename(
-        &self,
-        path: &std::path::Path,
-        parser: &tokens::Tokenizer,
-        dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        if !self.check_filenames() {
-            return Ok(());
-        }
-
-        if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-            let context_reporter = ReportContext {
-                reporter,
-                context: report::PathContext { path }.into(),
-            };
-            self.check_str(file_name, parser, dictionary, &context_reporter)?;
-        }
-
-        Ok(())
-    }
-
-    fn check_file_content(
-        &self,
-        path: &std::path::Path,
-        explicit: bool,
-        parser: &tokens::Tokenizer,
-        dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        if !self.check_files() {
-            return Ok(());
-        }
-
-        let buffer = read_file(path, reporter)?;
-        let (buffer, content_type) = massage_data(buffer)?;
-        if !explicit && !self.binary() && content_type.is_binary() {
-            let msg = report::BinaryFile { path };
-            reporter.report(msg.into())?;
-            return Ok(());
-        }
-
-        for (line_idx, line) in buffer.lines().enumerate() {
-            let line_num = line_idx + 1;
-            let context_reporter = ReportContext {
-                reporter,
-                context: report::FileContext { path, line_num }.into(),
-            };
-            self.check_bytes(line, parser, dictionary, &context_reporter)?;
-        }
-
-        Ok(())
-    }
-
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -88,23 +12,7 @@ pub trait Check: Send + Sync {
         parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        self.check_filename(path, parser, dictionary, reporter)?;
-        self.check_file_content(path, explicit, parser, dictionary, reporter)?;
-        Ok(())
-    }
-}
-
-struct ReportContext<'m, 'r> {
-    reporter: &'r dyn report::Report,
-    context: report::Context<'m>,
-}
-
-impl<'m, 'r> report::Report for ReportContext<'m, 'r> {
-    fn report(&self, msg: report::Message) -> Result<(), std::io::Error> {
-        let msg = msg.context(Some(self.context.clone()));
-        self.reporter.report(msg)
-    }
+    ) -> Result<(), std::io::Error>;
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -183,9 +91,10 @@ pub struct Typos {
 }
 
 impl Check for Typos {
-    fn check_str(
+    fn check_file(
         &self,
-        buffer: &str,
+        path: &std::path::Path,
+        explicit: bool,
         tokenizer: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
@@ -194,53 +103,46 @@ impl Check for Typos {
             .tokenizer(tokenizer)
             .dictionary(dictionary)
             .typos();
-        for typo in parser.parse_str(buffer) {
-            let msg = report::Typo {
-                context: None,
-                buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
-                byte_offset: typo.byte_offset,
-                typo: typo.typo,
-                corrections: typo.corrections,
-            };
-            reporter.report(msg.into())?;
+
+        if self.check_filenames {
+            if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                for typo in parser.parse_str(file_name) {
+                    let msg = report::Typo {
+                        context: Some(report::PathContext { path }.into()),
+                        buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                        byte_offset: typo.byte_offset,
+                        typo: typo.typo,
+                        corrections: typo.corrections,
+                    };
+                    reporter.report(msg.into())?;
+                }
+            }
         }
-        Ok(())
-    }
 
-    fn check_bytes(
-        &self,
-        buffer: &[u8],
-        tokenizer: &tokens::Tokenizer,
-        dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        let parser = typos::ParserBuilder::new()
-            .tokenizer(tokenizer)
-            .dictionary(dictionary)
-            .typos();
-        for typo in parser.parse_bytes(buffer) {
-            let msg = report::Typo {
-                context: None,
-                buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
-                byte_offset: typo.byte_offset,
-                typo: typo.typo,
-                corrections: typo.corrections,
-            };
-            reporter.report(msg.into())?;
+        if self.check_files {
+            let buffer = read_file(path, reporter)?;
+            let (buffer, content_type) = massage_data(buffer)?;
+            if !explicit && !self.binary && content_type.is_binary() {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into())?;
+            } else {
+                let mut accum_line_num = AccumulateLineNum::new();
+                for typo in parser.parse_bytes(&buffer) {
+                    let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
+                    let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
+                    let msg = report::Typo {
+                        context: Some(report::FileContext { path, line_num }.into()),
+                        buffer: std::borrow::Cow::Borrowed(line),
+                        byte_offset: line_offset,
+                        typo: typo.typo,
+                        corrections: typo.corrections,
+                    };
+                    reporter.report(msg.into())?;
+                }
+            }
         }
+
         Ok(())
-    }
-
-    fn check_filenames(&self) -> bool {
-        self.check_filenames
-    }
-
-    fn check_files(&self) -> bool {
-        self.check_files
-    }
-
-    fn binary(&self) -> bool {
-        self.binary
     }
 }
 
@@ -252,26 +154,6 @@ pub struct Identifiers {
 }
 
 impl Check for Identifiers {
-    fn check_str(
-        &self,
-        _buffer: &str,
-        _tokenizer: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
-    fn check_bytes(
-        &self,
-        _buffer: &[u8],
-        _tokenizer: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -284,7 +166,7 @@ impl Check for Identifiers {
             .tokenizer(tokenizer)
             .identifiers();
 
-        if self.check_filenames() {
+        if self.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for word in parser.parse_str(file_name) {
                     let msg = report::Parse {
@@ -297,16 +179,20 @@ impl Check for Identifiers {
             }
         }
 
-        if self.check_files() {
+        if self.check_files {
             let buffer = read_file(path, reporter)?;
             let (buffer, content_type) = massage_data(buffer)?;
-            if !explicit && !self.binary() && content_type.is_binary() {
+            if !explicit && !self.binary && content_type.is_binary() {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
                 for word in parser.parse_bytes(&buffer) {
+                    // HACK: Don't look up the line_num per entry to better match the performance
+                    // of Typos for comparison purposes.  We don't really get much out of it
+                    // anyway.
+                    let line_num = 0;
                     let msg = report::Parse {
-                        context: Some(report::FileContext { path, line_num: 0 }.into()),
+                        context: Some(report::FileContext { path, line_num }.into()),
                         kind: report::ParseKind::Identifier,
                         data: word.token(),
                     };
@@ -316,18 +202,6 @@ impl Check for Identifiers {
         }
 
         Ok(())
-    }
-
-    fn check_filenames(&self) -> bool {
-        self.check_filenames
-    }
-
-    fn check_files(&self) -> bool {
-        self.check_files
-    }
-
-    fn binary(&self) -> bool {
-        self.binary
     }
 }
 
@@ -339,26 +213,6 @@ pub struct Words {
 }
 
 impl Check for Words {
-    fn check_str(
-        &self,
-        _buffer: &str,
-        _tokenizer: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
-    fn check_bytes(
-        &self,
-        _buffer: &[u8],
-        _tokenizer: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -369,7 +223,7 @@ impl Check for Words {
     ) -> Result<(), std::io::Error> {
         let parser = typos::ParserBuilder::new().tokenizer(tokenizer).words();
 
-        if self.check_filenames() {
+        if self.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for word in parser.parse_str(file_name) {
                     let msg = report::Parse {
@@ -382,16 +236,20 @@ impl Check for Words {
             }
         }
 
-        if self.check_files() {
+        if self.check_files {
             let buffer = read_file(path, reporter)?;
             let (buffer, content_type) = massage_data(buffer)?;
-            if !explicit && !self.binary() && content_type.is_binary() {
+            if !explicit && !self.binary && content_type.is_binary() {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
                 for word in parser.parse_bytes(&buffer) {
+                    // HACK: Don't look up the line_num per entry to better match the performance
+                    // of Typos for comparison purposes.  We don't really get much out of it
+                    // anyway.
+                    let line_num = 0;
                     let msg = report::Parse {
-                        context: Some(report::FileContext { path, line_num: 0 }.into()),
+                        context: Some(report::FileContext { path, line_num }.into()),
                         kind: report::ParseKind::Word,
                         data: word.token(),
                     };
@@ -402,18 +260,6 @@ impl Check for Words {
 
         Ok(())
     }
-
-    fn check_filenames(&self) -> bool {
-        self.check_filenames
-    }
-
-    fn check_files(&self) -> bool {
-        self.check_files
-    }
-
-    fn binary(&self) -> bool {
-        self.binary
-    }
 }
 
 #[derive(Debug, Clone)]
@@ -422,59 +268,6 @@ pub struct FoundFiles {
 }
 
 impl Check for FoundFiles {
-    fn check_str(
-        &self,
-        _buffer: &str,
-        _parser: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
-    fn check_bytes(
-        &self,
-        _buffer: &[u8],
-        _parser: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
-    fn check_filenames(&self) -> bool {
-        true
-    }
-
-    fn check_files(&self) -> bool {
-        true
-    }
-
-    fn binary(&self) -> bool {
-        self.binary
-    }
-
-    fn check_filename(
-        &self,
-        _path: &std::path::Path,
-        _parser: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
-    fn check_file_content(
-        &self,
-        _path: &std::path::Path,
-        _explicit: bool,
-        _parser: &tokens::Tokenizer,
-        _dictionary: &dyn Dictionary,
-        _reporter: &dyn report::Report,
-    ) -> Result<(), std::io::Error> {
-        Ok(())
-    }
-
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -531,6 +324,45 @@ fn massage_data(
     }
 
     Ok((buffer, content_type))
+}
+
+struct AccumulateLineNum {
+    line_num: usize,
+    last_offset: usize,
+}
+
+impl AccumulateLineNum {
+    fn new() -> Self {
+        Self {
+            // 1-indexed
+            line_num: 1,
+            last_offset: 0,
+        }
+    }
+
+    fn line_num(&mut self, buffer: &[u8], byte_offset: usize) -> usize {
+        assert!(self.last_offset <= byte_offset);
+        let slice = &buffer[self.last_offset..byte_offset];
+        let newlines = slice.lines().count();
+        let line_num = self.line_num + newlines;
+        self.line_num = line_num;
+        self.last_offset = byte_offset;
+        line_num
+    }
+}
+
+fn extract_line(buffer: &[u8], byte_offset: usize) -> (&[u8], usize) {
+    let line_start = buffer[0..byte_offset]
+        .rfind_byte(b'\n')
+        // Skip the newline
+        .map(|s| s + 1)
+        .unwrap_or(0);
+    let line = buffer[line_start..]
+        .lines()
+        .next()
+        .expect("should always be at least a line");
+    let line_offset = byte_offset - line_start;
+    (line, line_offset)
 }
 
 pub fn check_path(

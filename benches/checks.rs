@@ -7,129 +7,178 @@ mod data;
 use assert_fs::prelude::*;
 use typos_cli::checks::Check;
 
-fn bench_parse_ident_str(data: &str, b: &mut test::Bencher) {
+fn bench_files(data: &str, b: &mut test::Bencher) {
+    let temp = assert_fs::TempDir::new().unwrap();
+    let sample_path = temp.child("sample");
+    sample_path.write_str(data).unwrap();
+
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
-    let checks = typos_cli::checks::TyposSettings::new().build_identifier_parser();
-    b.iter(|| checks.check_str(data, &parser, &corrections, &typos_cli::report::PrintSilent));
-}
-
-#[bench]
-fn parse_idents_empty_str(b: &mut test::Bencher) {
-    bench_parse_ident_str(data::EMPTY, b);
-}
-
-#[bench]
-fn parse_idents_no_tokens_str(b: &mut test::Bencher) {
-    bench_parse_ident_str(data::NO_TOKENS, b);
-}
-
-#[bench]
-fn parse_idents_single_token_str(b: &mut test::Bencher) {
-    bench_parse_ident_str(data::SINGLE_TOKEN, b);
-}
-
-#[bench]
-fn parse_idents_sherlock_str(b: &mut test::Bencher) {
-    bench_parse_ident_str(data::SHERLOCK, b);
-}
-
-#[bench]
-fn parse_idents_code_str(b: &mut test::Bencher) {
-    bench_parse_ident_str(data::CODE, b);
-}
-
-#[bench]
-fn parse_idents_corpus_str(b: &mut test::Bencher) {
-    bench_parse_ident_str(data::CORPUS, b);
-}
-
-fn bench_parse_ident_bytes(data: &str, b: &mut test::Bencher) {
-    let corrections = typos_cli::dict::BuiltIn::new(Default::default());
-    let parser = typos::tokens::Tokenizer::new();
-    let checks = typos_cli::checks::TyposSettings::new().build_identifier_parser();
+    let checks = typos_cli::checks::TyposSettings::new().build_files();
     b.iter(|| {
-        checks.check_bytes(
-            data.as_bytes(),
+        checks.check_file(
+            sample_path.path(),
+            true,
             &parser,
             &corrections,
             &typos_cli::report::PrintSilent,
         )
     });
+
+    temp.close().unwrap();
 }
 
 #[bench]
-fn parse_idents_empty_bytes(b: &mut test::Bencher) {
-    bench_parse_ident_bytes(data::EMPTY, b);
+fn files_empty(b: &mut test::Bencher) {
+    bench_files(data::EMPTY, b);
 }
 
 #[bench]
-fn parse_idents_no_tokens_bytes(b: &mut test::Bencher) {
-    bench_parse_ident_bytes(data::NO_TOKENS, b);
+fn files_no_tokens(b: &mut test::Bencher) {
+    bench_files(data::NO_TOKENS, b);
 }
 
 #[bench]
-fn parse_idents_single_token_bytes(b: &mut test::Bencher) {
-    bench_parse_ident_bytes(data::SINGLE_TOKEN, b);
+fn files_single_token(b: &mut test::Bencher) {
+    bench_files(data::SINGLE_TOKEN, b);
 }
 
 #[bench]
-fn parse_idents_sherlock_bytes(b: &mut test::Bencher) {
-    bench_parse_ident_bytes(data::SHERLOCK, b);
+fn files_sherlock(b: &mut test::Bencher) {
+    bench_files(data::SHERLOCK, b);
 }
 
 #[bench]
-fn parse_idents_code_bytes(b: &mut test::Bencher) {
-    bench_parse_ident_bytes(data::CODE, b);
+fn files_code(b: &mut test::Bencher) {
+    bench_files(data::CODE, b);
 }
 
 #[bench]
-fn parse_idents_corpus_bytes(b: &mut test::Bencher) {
-    bench_parse_ident_bytes(data::CORPUS, b);
+fn files_corpus(b: &mut test::Bencher) {
+    bench_files(data::CORPUS, b);
 }
 
-fn bench_parse_word_str(data: &str, b: &mut test::Bencher) {
+fn bench_identifiers(data: &str, b: &mut test::Bencher) {
+    let temp = assert_fs::TempDir::new().unwrap();
+    let sample_path = temp.child("sample");
+    sample_path.write_str(data).unwrap();
+
+    let corrections = typos_cli::dict::BuiltIn::new(Default::default());
+    let parser = typos::tokens::Tokenizer::new();
+    let checks = typos_cli::checks::TyposSettings::new().build_identifier_parser();
+    b.iter(|| {
+        checks.check_file(
+            sample_path.path(),
+            true,
+            &parser,
+            &corrections,
+            &typos_cli::report::PrintSilent,
+        )
+    });
+
+    temp.close().unwrap();
+}
+
+#[bench]
+fn identifiers_empty(b: &mut test::Bencher) {
+    bench_identifiers(data::EMPTY, b);
+}
+
+#[bench]
+fn identifiers_no_tokens(b: &mut test::Bencher) {
+    bench_identifiers(data::NO_TOKENS, b);
+}
+
+#[bench]
+fn identifiers_single_token(b: &mut test::Bencher) {
+    bench_identifiers(data::SINGLE_TOKEN, b);
+}
+
+#[bench]
+fn identifiers_sherlock(b: &mut test::Bencher) {
+    bench_identifiers(data::SHERLOCK, b);
+}
+
+#[bench]
+fn identifiers_code(b: &mut test::Bencher) {
+    bench_identifiers(data::CODE, b);
+}
+
+#[bench]
+fn identifiers_corpus(b: &mut test::Bencher) {
+    bench_identifiers(data::CORPUS, b);
+}
+
+fn bench_words(data: &str, b: &mut test::Bencher) {
+    let temp = assert_fs::TempDir::new().unwrap();
+    let sample_path = temp.child("sample");
+    sample_path.write_str(data).unwrap();
+
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
     let checks = typos_cli::checks::TyposSettings::new().build_word_parser();
-    b.iter(|| checks.check_str(data, &parser, &corrections, &typos_cli::report::PrintSilent));
+    b.iter(|| {
+        checks.check_file(
+            sample_path.path(),
+            true,
+            &parser,
+            &corrections,
+            &typos_cli::report::PrintSilent,
+        )
+    });
+
+    temp.close().unwrap();
 }
 
 #[bench]
-fn parse_words_empty(b: &mut test::Bencher) {
-    bench_parse_word_str(data::EMPTY, b);
+fn words_empty(b: &mut test::Bencher) {
+    bench_words(data::EMPTY, b);
 }
 
 #[bench]
-fn parse_words_no_tokens(b: &mut test::Bencher) {
-    bench_parse_word_str(data::NO_TOKENS, b);
+fn words_no_tokens(b: &mut test::Bencher) {
+    bench_words(data::NO_TOKENS, b);
 }
 
 #[bench]
-fn parse_words_single_token(b: &mut test::Bencher) {
-    bench_parse_word_str(data::SINGLE_TOKEN, b);
+fn words_single_token(b: &mut test::Bencher) {
+    bench_words(data::SINGLE_TOKEN, b);
 }
 
 #[bench]
-fn parse_words_sherlock(b: &mut test::Bencher) {
-    bench_parse_word_str(data::SHERLOCK, b);
+fn words_sherlock(b: &mut test::Bencher) {
+    bench_words(data::SHERLOCK, b);
 }
 
 #[bench]
-fn parse_words_code(b: &mut test::Bencher) {
-    bench_parse_word_str(data::CODE, b);
+fn words_code(b: &mut test::Bencher) {
+    bench_words(data::CODE, b);
 }
 
 #[bench]
-fn parse_words_corpus(b: &mut test::Bencher) {
-    bench_parse_word_str(data::CORPUS, b);
+fn words_corpus(b: &mut test::Bencher) {
+    bench_words(data::CORPUS, b);
 }
 
 fn bench_typos(data: &str, b: &mut test::Bencher) {
+    let temp = assert_fs::TempDir::new().unwrap();
+    let sample_path = temp.child("sample");
+    sample_path.write_str(data).unwrap();
+
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
     let checks = typos_cli::checks::TyposSettings::new().build_typos();
-    b.iter(|| checks.check_str(data, &parser, &corrections, &typos_cli::report::PrintSilent));
+    b.iter(|| {
+        checks.check_file(
+            sample_path.path(),
+            true,
+            &parser,
+            &corrections,
+            &typos_cli::report::PrintSilent,
+        )
+    });
+
+    temp.close().unwrap();
 }
 
 #[bench]
@@ -160,55 +209,4 @@ fn typos_code(b: &mut test::Bencher) {
 #[bench]
 fn typos_corpus(b: &mut test::Bencher) {
     bench_typos(data::CORPUS, b);
-}
-
-fn bench_check_file(data: &str, b: &mut test::Bencher) {
-    let temp = assert_fs::TempDir::new().unwrap();
-    let sample_path = temp.child("sample");
-    sample_path.write_str(data).unwrap();
-
-    let corrections = typos_cli::dict::BuiltIn::new(Default::default());
-    let parser = typos::tokens::Tokenizer::new();
-    let checks = typos_cli::checks::TyposSettings::new().build_typos();
-    b.iter(|| {
-        checks.check_file_content(
-            sample_path.path(),
-            true,
-            &parser,
-            &corrections,
-            &typos_cli::report::PrintSilent,
-        )
-    });
-
-    temp.close().unwrap();
-}
-
-#[bench]
-fn check_file_empty(b: &mut test::Bencher) {
-    bench_check_file(data::EMPTY, b);
-}
-
-#[bench]
-fn check_file_no_tokens(b: &mut test::Bencher) {
-    bench_check_file(data::NO_TOKENS, b);
-}
-
-#[bench]
-fn check_file_single_token(b: &mut test::Bencher) {
-    bench_check_file(data::SINGLE_TOKEN, b);
-}
-
-#[bench]
-fn check_file_sherlock(b: &mut test::Bencher) {
-    bench_check_file(data::SHERLOCK, b);
-}
-
-#[bench]
-fn check_file_code(b: &mut test::Bencher) {
-    bench_check_file(data::CODE, b);
-}
-
-#[bench]
-fn check_file_corpus(b: &mut test::Bencher) {
-    bench_check_file(data::CORPUS, b);
 }
