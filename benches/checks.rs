@@ -171,7 +171,7 @@ fn bench_check_file(data: &str, b: &mut test::Bencher) {
     let parser = typos::tokens::Tokenizer::new();
     let checks = typos_cli::checks::TyposSettings::new().build_typos();
     b.iter(|| {
-        checks.check_file(
+        checks.check_file_content(
             sample_path.path(),
             true,
             &parser,

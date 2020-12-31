@@ -49,7 +49,7 @@ pub trait Check: Send + Sync {
         Ok(())
     }
 
-    fn check_file(
+    fn check_file_content(
         &self,
         path: &std::path::Path,
         explicit: bool,
@@ -401,7 +401,7 @@ impl Check for Files {
         Ok(())
     }
 
-    fn check_file(
+    fn check_file_content(
         &self,
         path: &std::path::Path,
         _explicit: bool,
@@ -492,7 +492,7 @@ fn check_entry(
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
         checks.check_filename(entry.path(), parser, dictionary, reporter)?;
-        checks.check_file(entry.path(), explicit, parser, dictionary, reporter)?;
+        checks.check_file_content(entry.path(), explicit, parser, dictionary, reporter)?;
     }
 
     Ok(())
