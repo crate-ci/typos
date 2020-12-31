@@ -3,7 +3,6 @@ use bstr::ByteSlice;
 use crate::report;
 use crate::tokens;
 use crate::Dictionary;
-use crate::Status;
 
 pub trait Check: Send + Sync {
     fn check_str(
@@ -172,44 +171,23 @@ impl Check for Typos {
     fn check_str(
         &self,
         buffer: &str,
-        parser: &tokens::Tokenizer,
+        tokenizer: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        for ident in parser.parse_str(buffer) {
-            match dictionary.correct_ident(ident) {
-                Some(Status::Valid) => {}
-                Some(corrections) => {
-                    let byte_offset = ident.offset();
-                    let msg = report::Typo {
-                        context: None,
-                        buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
-                        byte_offset,
-                        typo: ident.token(),
-                        corrections,
-                    };
-                    reporter.report(msg.into())?;
-                }
-                None => {
-                    for word in ident.split() {
-                        match dictionary.correct_word(word) {
-                            Some(Status::Valid) => {}
-                            Some(corrections) => {
-                                let byte_offset = word.offset();
-                                let msg = report::Typo {
-                                    context: None,
-                                    buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
-                                    byte_offset,
-                                    typo: word.token(),
-                                    corrections,
-                                };
-                                reporter.report(msg.into())?;
-                            }
-                            None => {}
-                        }
-                    }
-                }
-            }
+        let parser = crate::ParserBuilder::new()
+            .tokenizer(tokenizer)
+            .dictionary(dictionary)
+            .typos();
+        for typo in parser.parse_str(buffer) {
+            let msg = report::Typo {
+                context: None,
+                buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
+                byte_offset: typo.byte_offset,
+                typo: typo.typo,
+                corrections: typo.corrections,
+            };
+            reporter.report(msg.into())?;
         }
         Ok(())
     }
@@ -217,46 +195,24 @@ impl Check for Typos {
     fn check_bytes(
         &self,
         buffer: &[u8],
-        parser: &tokens::Tokenizer,
+        tokenizer: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        for ident in parser.parse_bytes(buffer) {
-            match dictionary.correct_ident(ident) {
-                Some(Status::Valid) => {}
-                Some(corrections) => {
-                    let byte_offset = ident.offset();
-                    let msg = report::Typo {
-                        context: None,
-                        buffer: std::borrow::Cow::Borrowed(buffer),
-                        byte_offset,
-                        typo: ident.token(),
-                        corrections,
-                    };
-                    reporter.report(msg.into())?;
-                }
-                None => {
-                    for word in ident.split() {
-                        match dictionary.correct_word(word) {
-                            Some(Status::Valid) => {}
-                            Some(corrections) => {
-                                let byte_offset = word.offset();
-                                let msg = report::Typo {
-                                    context: None,
-                                    buffer: std::borrow::Cow::Borrowed(buffer),
-                                    byte_offset,
-                                    typo: word.token(),
-                                    corrections,
-                                };
-                                reporter.report(msg.into())?;
-                            }
-                            None => {}
-                        }
-                    }
-                }
-            }
+        let parser = crate::ParserBuilder::new()
+            .tokenizer(tokenizer)
+            .dictionary(dictionary)
+            .typos();
+        for typo in parser.parse_bytes(buffer) {
+            let msg = report::Typo {
+                context: None,
+                buffer: std::borrow::Cow::Borrowed(buffer.as_bytes()),
+                byte_offset: typo.byte_offset,
+                typo: typo.typo,
+                corrections: typo.corrections,
+            };
+            reporter.report(msg.into())?;
         }
-
         Ok(())
     }
 
@@ -284,16 +240,19 @@ impl Check for ParseIdentifiers {
     fn check_str(
         &self,
         buffer: &str,
-        parser: &tokens::Tokenizer,
+        tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let msg = report::Parse {
-            context: None,
-            kind: report::ParseKind::Identifier,
-            data: parser.parse_str(buffer).map(|i| i.token()).collect(),
-        };
-        if !msg.data.is_empty() {
+        let parser = crate::ParserBuilder::new()
+            .tokenizer(tokenizer)
+            .identifiers();
+        for word in parser.parse_str(buffer) {
+            let msg = report::Parse {
+                context: None,
+                kind: report::ParseKind::Word,
+                data: word.token(),
+            };
             reporter.report(msg.into())?;
         }
 
@@ -303,16 +262,19 @@ impl Check for ParseIdentifiers {
     fn check_bytes(
         &self,
         buffer: &[u8],
-        parser: &tokens::Tokenizer,
+        tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let msg = report::Parse {
-            context: None,
-            kind: report::ParseKind::Identifier,
-            data: parser.parse_bytes(buffer).map(|i| i.token()).collect(),
-        };
-        if !msg.data.is_empty() {
+        let parser = crate::ParserBuilder::new()
+            .tokenizer(tokenizer)
+            .identifiers();
+        for word in parser.parse_bytes(buffer) {
+            let msg = report::Parse {
+                context: None,
+                kind: report::ParseKind::Word,
+                data: word.token(),
+            };
             reporter.report(msg.into())?;
         }
 
@@ -343,19 +305,17 @@ impl Check for ParseWords {
     fn check_str(
         &self,
         buffer: &str,
-        parser: &tokens::Tokenizer,
+        tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let msg = report::Parse {
-            context: None,
-            kind: report::ParseKind::Word,
-            data: parser
-                .parse_str(buffer)
-                .flat_map(|ident| ident.split().map(|i| i.token()))
-                .collect(),
-        };
-        if !msg.data.is_empty() {
+        let word_parser = crate::ParserBuilder::new().tokenizer(tokenizer).words();
+        for word in word_parser.parse_str(buffer) {
+            let msg = report::Parse {
+                context: None,
+                kind: report::ParseKind::Word,
+                data: word.token(),
+            };
             reporter.report(msg.into())?;
         }
 
@@ -365,19 +325,17 @@ impl Check for ParseWords {
     fn check_bytes(
         &self,
         buffer: &[u8],
-        parser: &tokens::Tokenizer,
+        tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let msg = report::Parse {
-            context: None,
-            kind: report::ParseKind::Word,
-            data: parser
-                .parse_bytes(buffer)
-                .flat_map(|ident| ident.split().map(|i| i.token()))
-                .collect(),
-        };
-        if !msg.data.is_empty() {
+        let parser = crate::ParserBuilder::new().tokenizer(tokenizer).words();
+        for word in parser.parse_bytes(buffer) {
+            let msg = report::Parse {
+                context: None,
+                kind: report::ParseKind::Word,
+                data: word.token(),
+            };
             reporter.report(msg.into())?;
         }
 

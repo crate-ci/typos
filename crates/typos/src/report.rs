@@ -168,7 +168,7 @@ pub struct Parse<'m> {
     #[serde(flatten)]
     pub context: Option<Context<'m>>,
     pub kind: ParseKind,
-    pub data: Vec<&'m str>,
+    pub data: &'m str,
 }
 
 impl<'m> Default for Parse<'m> {
@@ -176,7 +176,7 @@ impl<'m> Default for Parse<'m> {
         Self {
             context: None,
             kind: ParseKind::Identifier,
-            data: vec![],
+            data: "",
         }
     }
 }
@@ -265,7 +265,7 @@ impl Report for PrintBrief {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
+                writeln!(io::stdout(), "{}", msg.data)?;
             }
             Message::Error(msg) => {
                 log::error!("{}: {}", context_display(&msg.context), msg.msg);
@@ -289,7 +289,7 @@ impl Report for PrintLong {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
+                writeln!(io::stdout(), "{}", msg.data)?;
             }
             Message::Error(msg) => {
                 log::error!("{}: {}", context_display(&msg.context), msg.msg);
