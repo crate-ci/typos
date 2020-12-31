@@ -7,11 +7,12 @@ use std::io::Write;
 use structopt::StructOpt;
 
 mod args;
-mod checks;
-mod config;
-mod dict;
-mod diff;
-mod replace;
+use typos_cli::checks;
+use typos_cli::config;
+use typos_cli::dict;
+use typos_cli::diff;
+use typos_cli::replace;
+use typos_cli::report;
 
 use proc_exit::WithCodeResultExt;
 
@@ -74,7 +75,7 @@ fn run() -> proc_exit::ExitResult {
         dictionary.identifiers(config.default.extend_identifiers());
         dictionary.words(config.default.extend_words());
 
-        let mut settings = typos::checks::TyposSettings::new();
+        let mut settings = checks::TyposSettings::new();
         settings
             .check_filenames(config.default.check_filename())
             .check_files(config.default.check_file())
@@ -98,8 +99,8 @@ fn run() -> proc_exit::ExitResult {
         } else {
             args.format.reporter()
         };
-        let status_reporter = typos::report::MessageStatus::new(output_reporter);
-        let mut reporter: &dyn typos::report::Report = &status_reporter;
+        let status_reporter = report::MessageStatus::new(output_reporter);
+        let mut reporter: &dyn report::Report = &status_reporter;
         let replace_reporter = replace::Replace::new(reporter);
         let diff_reporter = diff::Diff::new(reporter);
         if args.diff {
@@ -109,7 +110,7 @@ fn run() -> proc_exit::ExitResult {
         }
 
         let (files, identifier_parser, word_parser, checks);
-        let selected_checks: &dyn typos::checks::Check = if args.files {
+        let selected_checks: &dyn checks::Check = if args.files {
             files = settings.build_files();
             &files
         } else if args.identifiers {

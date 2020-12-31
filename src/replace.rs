@@ -6,12 +6,12 @@ use std::sync;
 use bstr::ByteSlice;
 
 pub struct Replace<'r> {
-    reporter: &'r dyn typos::report::Report,
+    reporter: &'r dyn crate::report::Report,
     deferred: sync::Mutex<Deferred>,
 }
 
 impl<'r> Replace<'r> {
-    pub(crate) fn new(reporter: &'r dyn typos::report::Report) -> Self {
+    pub fn new(reporter: &'r dyn crate::report::Report) -> Self {
         Self {
             reporter,
             deferred: sync::Mutex::new(Deferred::default()),
@@ -54,10 +54,10 @@ impl<'r> Replace<'r> {
     }
 }
 
-impl<'r> typos::report::Report for Replace<'r> {
-    fn report(&self, msg: typos::report::Message<'_>) -> Result<(), std::io::Error> {
+impl<'r> crate::report::Report for Replace<'r> {
+    fn report(&self, msg: crate::report::Message<'_>) -> Result<(), std::io::Error> {
         let typo = match &msg {
-            typos::report::Message::Typo(typo) => typo,
+            crate::report::Message::Typo(typo) => typo,
             _ => return self.reporter.report(msg),
         };
 
@@ -67,7 +67,7 @@ impl<'r> typos::report::Report for Replace<'r> {
         };
 
         match &typo.context {
-            Some(typos::report::Context::File(file)) => {
+            Some(crate::report::Context::File(file)) => {
                 let path = file.path.to_owned();
                 let line_num = file.line_num;
                 let correction =
@@ -82,7 +82,7 @@ impl<'r> typos::report::Report for Replace<'r> {
                 content.push(correction);
                 Ok(())
             }
-            Some(typos::report::Context::Path(path)) => {
+            Some(crate::report::Context::Path(path)) => {
                 let path = path.path.to_owned();
                 let correction =
                     Correction::new(typo.byte_offset, typo.typo, corrections[0].as_ref());
@@ -97,20 +97,20 @@ impl<'r> typos::report::Report for Replace<'r> {
 }
 
 #[derive(Clone, Debug, Default)]
-pub(crate) struct Deferred {
-    pub(crate) content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
-    pub(crate) paths: BTreeMap<path::PathBuf, Vec<Correction>>,
+pub struct Deferred {
+    pub content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
+    pub paths: BTreeMap<path::PathBuf, Vec<Correction>>,
 }
 
 #[derive(Clone, Debug, PartialOrd, Ord, PartialEq, Eq)]
-pub(crate) struct Correction {
+pub struct Correction {
     pub byte_offset: usize,
     pub typo: Vec<u8>,
     pub correction: Vec<u8>,
 }
 
 impl Correction {
-    pub(crate) fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
+    pub fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
         Self {
             byte_offset,
             typo: typo.as_bytes().to_vec(),
@@ -119,7 +119,7 @@ impl Correction {
     }
 }
 
-pub(crate) fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
+pub fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
     let mut corrections: Vec<_> = corrections.iter().collect();
     corrections.sort_unstable();
     corrections.reverse();
@@ -137,8 +137,8 @@ pub(crate) fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> 
 mod test {
     use super::*;
 
+    use crate::report::Report;
     use assert_fs::prelude::*;
-    use typos::report::Report;
 
     fn simple_correct(line: &str, corrections: Vec<(usize, &str, &str)>) -> String {
         let line = line.as_bytes().to_vec();
@@ -205,13 +205,13 @@ mod test {
         let input_file = temp.child("foo.txt");
         input_file.write_str("1 foo 2\n3 4 5").unwrap();
 
-        let primary = typos::report::PrintSilent;
+        let primary = crate::report::PrintSilent;
         let replace = Replace::new(&primary);
         replace
             .report(
-                typos::report::Typo::default()
+                crate::report::Typo::default()
                     .context(Some(
-                        typos::report::FileContext::default()
+                        crate::report::FileContext::default()
                             .path(input_file.path())
                             .line_num(1)
                             .into(),
@@ -236,13 +236,13 @@ mod test {
         let input_file = temp.child("foo.txt");
         input_file.write_str("foo foo foo").unwrap();
 
-        let primary = typos::report::PrintSilent;
+        let primary = crate::report::PrintSilent;
         let replace = Replace::new(&primary);
         replace
             .report(
-                typos::report::Typo::default()
+                crate::report::Typo::default()
                     .context(Some(
-                        typos::report::PathContext::default()
+                        crate::report::PathContext::default()
                             .path(input_file.path())
                             .into(),
                     ))

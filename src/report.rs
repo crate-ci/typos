@@ -72,7 +72,7 @@ pub struct Typo<'m> {
     pub buffer: Cow<'m, [u8]>,
     pub byte_offset: usize,
     pub typo: &'m str,
-    pub corrections: crate::Status<'m>,
+    pub corrections: typos::Status<'m>,
 }
 
 impl<'m> Default for Typo<'m> {
@@ -82,7 +82,7 @@ impl<'m> Default for Typo<'m> {
             buffer: Cow::Borrowed(&[]),
             byte_offset: 0,
             typo: "",
-            corrections: crate::Status::Invalid,
+            corrections: typos::Status::Invalid,
         }
     }
 }
@@ -308,8 +308,8 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
     )
     .count();
     match &msg.corrections {
-        crate::Status::Valid => {}
-        crate::Status::Invalid => {
+        typos::Status::Valid => {}
+        typos::Status::Invalid => {
             writeln!(
                 io::stdout(),
                 "{}:{}: `{}` is disallowed",
@@ -318,7 +318,7 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
                 msg.typo,
             )?;
         }
-        crate::Status::Corrections(corrections) => {
+        typos::Status::Corrections(corrections) => {
             writeln!(
                 io::stdout(),
                 "{}:{}: `{}` -> {}",
@@ -345,11 +345,11 @@ fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
     )
     .count();
     match &msg.corrections {
-        crate::Status::Valid => {}
-        crate::Status::Invalid => {
+        typos::Status::Valid => {}
+        typos::Status::Invalid => {
             writeln!(handle, "error: `{}` is disallowed`", msg.typo,)?;
         }
-        crate::Status::Corrections(corrections) => {
+        typos::Status::Corrections(corrections) => {
             writeln!(
                 handle,
                 "error: `{}` should be {}",

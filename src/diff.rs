@@ -4,12 +4,12 @@ use std::sync;
 use bstr::ByteSlice;
 
 pub struct Diff<'r> {
-    reporter: &'r dyn typos::report::Report,
+    reporter: &'r dyn crate::report::Report,
     deferred: sync::Mutex<crate::replace::Deferred>,
 }
 
 impl<'r> Diff<'r> {
-    pub(crate) fn new(reporter: &'r dyn typos::report::Report) -> Self {
+    pub fn new(reporter: &'r dyn crate::report::Report) -> Self {
         Self {
             reporter,
             deferred: sync::Mutex::new(crate::replace::Deferred::default()),
@@ -56,10 +56,10 @@ impl<'r> Diff<'r> {
     }
 }
 
-impl<'r> typos::report::Report for Diff<'r> {
-    fn report(&self, msg: typos::report::Message<'_>) -> Result<(), std::io::Error> {
+impl<'r> crate::report::Report for Diff<'r> {
+    fn report(&self, msg: crate::report::Message<'_>) -> Result<(), std::io::Error> {
         let typo = match &msg {
-            typos::report::Message::Typo(typo) => typo,
+            crate::report::Message::Typo(typo) => typo,
             _ => return self.reporter.report(msg),
         };
 
@@ -69,7 +69,7 @@ impl<'r> typos::report::Report for Diff<'r> {
         };
 
         match &typo.context {
-            Some(typos::report::Context::File(file)) => {
+            Some(crate::report::Context::File(file)) => {
                 let path = file.path.to_owned();
                 let line_num = file.line_num;
                 let correction = crate::replace::Correction::new(

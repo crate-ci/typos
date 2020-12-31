@@ -115,7 +115,7 @@ impl<'p, 'd> TyposParser<'p, 'd> {
     }
 }
 
-#[derive(Clone, Debug, derive_setters::Setters)]
+#[derive(Clone, Debug)]
 #[non_exhaustive]
 pub struct Typo<'m> {
     pub byte_offset: usize,

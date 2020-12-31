@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-#[derive(Clone, PartialEq, Eq, Debug, serde::Serialize, derive_more::From)]
+#[derive(Clone, PartialEq, Eq, Debug, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
 #[serde(untagged)]
 pub enum Status<'c> {

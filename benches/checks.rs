@@ -5,13 +5,13 @@ extern crate test;
 mod data;
 
 use assert_fs::prelude::*;
-use typos::checks::Check;
+use typos_cli::checks::Check;
 
 fn bench_parse_ident_str(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
-    let checks = typos::checks::TyposSettings::new().build_identifier_parser();
-    b.iter(|| checks.check_str(data, &parser, &corrections, &typos::report::PrintSilent));
+    let checks = typos_cli::checks::TyposSettings::new().build_identifier_parser();
+    b.iter(|| checks.check_str(data, &parser, &corrections, &typos_cli::report::PrintSilent));
 }
 
 #[bench]
@@ -47,13 +47,13 @@ fn parse_idents_corpus_str(b: &mut test::Bencher) {
 fn bench_parse_ident_bytes(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
-    let checks = typos::checks::TyposSettings::new().build_identifier_parser();
+    let checks = typos_cli::checks::TyposSettings::new().build_identifier_parser();
     b.iter(|| {
         checks.check_bytes(
             data.as_bytes(),
             &parser,
             &corrections,
-            &typos::report::PrintSilent,
+            &typos_cli::report::PrintSilent,
         )
     });
 }
@@ -91,8 +91,8 @@ fn parse_idents_corpus_bytes(b: &mut test::Bencher) {
 fn bench_parse_word_str(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
-    let checks = typos::checks::TyposSettings::new().build_word_parser();
-    b.iter(|| checks.check_str(data, &parser, &corrections, &typos::report::PrintSilent));
+    let checks = typos_cli::checks::TyposSettings::new().build_word_parser();
+    b.iter(|| checks.check_str(data, &parser, &corrections, &typos_cli::report::PrintSilent));
 }
 
 #[bench]
@@ -128,8 +128,8 @@ fn parse_words_corpus(b: &mut test::Bencher) {
 fn bench_typos(data: &str, b: &mut test::Bencher) {
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
-    let checks = typos::checks::TyposSettings::new().build_typos();
-    b.iter(|| checks.check_str(data, &parser, &corrections, &typos::report::PrintSilent));
+    let checks = typos_cli::checks::TyposSettings::new().build_typos();
+    b.iter(|| checks.check_str(data, &parser, &corrections, &typos_cli::report::PrintSilent));
 }
 
 #[bench]
@@ -169,14 +169,14 @@ fn bench_check_file(data: &str, b: &mut test::Bencher) {
 
     let corrections = typos_cli::dict::BuiltIn::new(Default::default());
     let parser = typos::tokens::Tokenizer::new();
-    let checks = typos::checks::TyposSettings::new().build_typos();
+    let checks = typos_cli::checks::TyposSettings::new().build_typos();
     b.iter(|| {
         checks.check_file(
             sample_path.path(),
             true,
             &parser,
             &corrections,
-            &typos::report::PrintSilent,
+            &typos_cli::report::PrintSilent,
         )
     });
 
