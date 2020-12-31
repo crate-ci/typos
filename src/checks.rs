@@ -142,16 +142,16 @@ impl TyposSettings {
         }
     }
 
-    pub fn build_identifier_parser(&self) -> ParseIdentifiers {
-        ParseIdentifiers {
+    pub fn build_identifier_parser(&self) -> Identifiers {
+        Identifiers {
             check_filenames: self.check_filenames,
             check_files: self.check_files,
             binary: self.binary,
         }
     }
 
-    pub fn build_word_parser(&self) -> ParseWords {
-        ParseWords {
+    pub fn build_word_parser(&self) -> Words {
+        Words {
             check_filenames: self.check_filenames,
             check_files: self.check_files,
             binary: self.binary,
@@ -245,38 +245,37 @@ impl Check for Typos {
 }
 
 #[derive(Debug, Clone)]
-pub struct ParseIdentifiers {
+pub struct Identifiers {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
 }
 
-impl Check for ParseIdentifiers {
+impl Check for Identifiers {
     fn check_str(
         &self,
-        buffer: &str,
-        tokenizer: &tokens::Tokenizer,
+        _buffer: &str,
+        _tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
+        _reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let parser = typos::ParserBuilder::new()
-            .tokenizer(tokenizer)
-            .identifiers();
-        for word in parser.parse_str(buffer) {
-            let msg = report::Parse {
-                context: None,
-                kind: report::ParseKind::Word,
-                data: word.token(),
-            };
-            reporter.report(msg.into())?;
-        }
-
         Ok(())
     }
 
     fn check_bytes(
         &self,
-        buffer: &[u8],
+        _buffer: &[u8],
+        _tokenizer: &tokens::Tokenizer,
+        _dictionary: &dyn Dictionary,
+        _reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        Ok(())
+    }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
         tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
@@ -284,13 +283,36 @@ impl Check for ParseIdentifiers {
         let parser = typos::ParserBuilder::new()
             .tokenizer(tokenizer)
             .identifiers();
-        for word in parser.parse_bytes(buffer) {
-            let msg = report::Parse {
-                context: None,
-                kind: report::ParseKind::Word,
-                data: word.token(),
-            };
-            reporter.report(msg.into())?;
+
+        if self.check_filenames() {
+            if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                for word in parser.parse_str(file_name) {
+                    let msg = report::Parse {
+                        context: Some(report::PathContext { path }.into()),
+                        kind: report::ParseKind::Identifier,
+                        data: word.token(),
+                    };
+                    reporter.report(msg.into())?;
+                }
+            }
+        }
+
+        if self.check_files() {
+            let buffer = read_file(path, reporter)?;
+            let (buffer, content_type) = massage_data(buffer)?;
+            if !explicit && !self.binary() && content_type.is_binary() {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into())?;
+            } else {
+                for word in parser.parse_bytes(&buffer) {
+                    let msg = report::Parse {
+                        context: Some(report::FileContext { path, line_num: 0 }.into()),
+                        kind: report::ParseKind::Identifier,
+                        data: word.token(),
+                    };
+                    reporter.report(msg.into())?;
+                }
+            }
         }
 
         Ok(())
@@ -310,48 +332,72 @@ impl Check for ParseIdentifiers {
 }
 
 #[derive(Debug, Clone)]
-pub struct ParseWords {
+pub struct Words {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
 }
 
-impl Check for ParseWords {
+impl Check for Words {
     fn check_str(
         &self,
-        buffer: &str,
-        tokenizer: &tokens::Tokenizer,
+        _buffer: &str,
+        _tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
-        reporter: &dyn report::Report,
+        _reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let word_parser = typos::ParserBuilder::new().tokenizer(tokenizer).words();
-        for word in word_parser.parse_str(buffer) {
-            let msg = report::Parse {
-                context: None,
-                kind: report::ParseKind::Word,
-                data: word.token(),
-            };
-            reporter.report(msg.into())?;
-        }
-
         Ok(())
     }
 
     fn check_bytes(
         &self,
-        buffer: &[u8],
+        _buffer: &[u8],
+        _tokenizer: &tokens::Tokenizer,
+        _dictionary: &dyn Dictionary,
+        _reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        Ok(())
+    }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
         tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         let parser = typos::ParserBuilder::new().tokenizer(tokenizer).words();
-        for word in parser.parse_bytes(buffer) {
-            let msg = report::Parse {
-                context: None,
-                kind: report::ParseKind::Word,
-                data: word.token(),
-            };
-            reporter.report(msg.into())?;
+
+        if self.check_filenames() {
+            if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                for word in parser.parse_str(file_name) {
+                    let msg = report::Parse {
+                        context: Some(report::PathContext { path }.into()),
+                        kind: report::ParseKind::Word,
+                        data: word.token(),
+                    };
+                    reporter.report(msg.into())?;
+                }
+            }
+        }
+
+        if self.check_files() {
+            let buffer = read_file(path, reporter)?;
+            let (buffer, content_type) = massage_data(buffer)?;
+            if !explicit && !self.binary() && content_type.is_binary() {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into())?;
+            } else {
+                for word in parser.parse_bytes(&buffer) {
+                    let msg = report::Parse {
+                        context: Some(report::FileContext { path, line_num: 0 }.into()),
+                        kind: report::ParseKind::Word,
+                        data: word.token(),
+                    };
+                    reporter.report(msg.into())?;
+                }
+            }
         }
 
         Ok(())
