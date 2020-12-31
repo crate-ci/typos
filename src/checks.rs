@@ -158,8 +158,10 @@ impl TyposSettings {
         }
     }
 
-    pub fn build_files(&self) -> Files {
-        Files {}
+    pub fn build_files(&self) -> FoundFiles {
+        FoundFiles {
+            binary: self.binary,
+        }
     }
 }
 
@@ -369,9 +371,11 @@ impl Check for ParseWords {
 }
 
 #[derive(Debug, Clone)]
-pub struct Files {}
+pub struct FoundFiles {
+    binary: bool,
+}
 
-impl Check for Files {
+impl Check for FoundFiles {
     fn check_str(
         &self,
         _buffer: &str,
@@ -401,7 +405,7 @@ impl Check for Files {
     }
 
     fn binary(&self) -> bool {
-        true
+        self.binary
     }
 
     fn check_filename(
@@ -416,14 +420,38 @@ impl Check for Files {
 
     fn check_file_content(
         &self,
-        path: &std::path::Path,
+        _path: &std::path::Path,
         _explicit: bool,
+        _parser: &tokens::Tokenizer,
+        _dictionary: &dyn Dictionary,
+        _reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        Ok(())
+    }
+
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
         _parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let msg = report::File::new(path);
-        reporter.report(msg.into())?;
+        // Check `self.binary` first so we can easily check performance of walking vs reading
+        if self.binary {
+            let msg = report::File::new(path);
+            reporter.report(msg.into())?;
+        } else {
+            let buffer = read_file(path, reporter)?;
+            let (_buffer, content_type) = massage_data(buffer)?;
+            if !explicit && content_type.is_binary() {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into())?;
+            } else {
+                let msg = report::File::new(path);
+                reporter.report(msg.into())?;
+            }
+        }
 
         Ok(())
     }
@@ -458,6 +486,7 @@ fn massage_data(
 
     Ok((buffer, content_type))
 }
+
 pub fn check_path(
     walk: ignore::Walk,
     checks: &dyn Check,
