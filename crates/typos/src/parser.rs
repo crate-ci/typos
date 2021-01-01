@@ -1,5 +1,6 @@
 use crate::tokens;
 use crate::Dictionary;
+use std::borrow::Cow;
 
 #[derive(Clone)]
 pub struct ParserBuilder<'p, 'd> {
@@ -86,7 +87,7 @@ impl<'p, 'd> TyposParser<'p, 'd> {
             Some(corrections) => {
                 let typo = Typo {
                     byte_offset: ident.offset(),
-                    typo: ident.token(),
+                    typo: ident.token().into(),
                     corrections,
                 };
                 itertools::Either::Left(Some(typo).into_iter())
@@ -105,7 +106,7 @@ impl<'p, 'd> TyposParser<'p, 'd> {
             Some(corrections) => {
                 let typo = Typo {
                     byte_offset: word.offset(),
-                    typo: word.token(),
+                    typo: word.token().into(),
                     corrections,
                 };
                 Some(typo)
@@ -119,15 +120,33 @@ impl<'p, 'd> TyposParser<'p, 'd> {
 #[non_exhaustive]
 pub struct Typo<'m> {
     pub byte_offset: usize,
-    pub typo: &'m str,
+    pub typo: Cow<'m, str>,
     pub corrections: crate::Status<'m>,
+}
+
+impl<'m> Typo<'m> {
+    pub fn into_owned(self) -> Typo<'static> {
+        Typo {
+            byte_offset: self.byte_offset,
+            typo: Cow::Owned(self.typo.into_owned()),
+            corrections: self.corrections.into_owned(),
+        }
+    }
+
+    pub fn borrow(&self) -> Typo<'_> {
+        Typo {
+            byte_offset: self.byte_offset,
+            typo: Cow::Borrowed(self.typo.as_ref()),
+            corrections: self.corrections.borrow(),
+        }
+    }
 }
 
 impl<'m> Default for Typo<'m> {
     fn default() -> Self {
         Self {
             byte_offset: 0,
-            typo: "",
+            typo: "".into(),
             corrections: crate::Status::Invalid,
         }
     }

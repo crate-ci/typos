@@ -111,7 +111,7 @@ impl Check for Typos {
                         context: Some(report::PathContext { path }.into()),
                         buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
                         byte_offset: typo.byte_offset,
-                        typo: typo.typo,
+                        typo: typo.typo.as_ref(),
                         corrections: typo.corrections,
                     };
                     reporter.report(msg.into())?;
@@ -134,7 +134,7 @@ impl Check for Typos {
                         context: Some(report::FileContext { path, line_num }.into()),
                         buffer: std::borrow::Cow::Borrowed(line),
                         byte_offset: line_offset,
-                        typo: typo.typo,
+                        typo: typo.typo.as_ref(),
                         corrections: typo.corrections,
                     };
                     reporter.report(msg.into())?;

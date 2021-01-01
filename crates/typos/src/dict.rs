@@ -27,6 +27,20 @@ impl<'c> Status<'c> {
         }
     }
 
+    pub fn into_owned(self) -> Status<'static> {
+        match self {
+            Status::Valid => Status::Valid,
+            Status::Invalid => Status::Invalid,
+            Status::Corrections(corrections) => {
+                let corrections = corrections
+                    .into_iter()
+                    .map(|c| Cow::Owned(c.into_owned()))
+                    .collect();
+                Status::Corrections(corrections)
+            }
+        }
+    }
+
     pub fn borrow(&self) -> Status<'_> {
         match self {
             Status::Corrections(corrections) => {
