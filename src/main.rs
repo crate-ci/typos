@@ -101,7 +101,7 @@ fn run() -> proc_exit::ExitResult {
         let reporter: &dyn report::Report = &status_reporter;
 
         let (files, identifier_parser, word_parser, checks, fixer, differ);
-        let selected_checks: &dyn checks::Check = if args.files {
+        let selected_checks: &dyn checks::FileChecker = if args.files {
             files = settings.build_files();
             &files
         } else if args.identifiers {
@@ -122,7 +122,7 @@ fn run() -> proc_exit::ExitResult {
         };
 
         if single_threaded {
-            checks::check_path(
+            checks::walk_path(
                 walk.build(),
                 selected_checks,
                 &parser,
@@ -130,7 +130,7 @@ fn run() -> proc_exit::ExitResult {
                 reporter,
             )
         } else {
-            checks::check_path_parallel(
+            checks::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
                 &parser,

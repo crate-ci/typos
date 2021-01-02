@@ -5,7 +5,7 @@ extern crate test;
 mod data;
 
 use assert_fs::prelude::*;
-use typos_cli::checks::Check;
+use typos_cli::checks::FileChecker;
 
 fn bench_files(data: &str, b: &mut test::Bencher) {
     let temp = assert_fs::TempDir::new().unwrap();

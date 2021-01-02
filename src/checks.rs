@@ -4,7 +4,7 @@ use crate::report;
 use typos::tokens;
 use typos::Dictionary;
 
-pub trait Check: Send + Sync {
+pub trait FileChecker: Send + Sync {
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -106,7 +106,7 @@ pub struct Typos {
     binary: bool,
 }
 
-impl Check for Typos {
+impl FileChecker for Typos {
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -168,7 +168,7 @@ pub struct FixTypos {
     binary: bool,
 }
 
-impl Check for FixTypos {
+impl FileChecker for FixTypos {
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -253,7 +253,7 @@ pub struct DiffTypos {
     binary: bool,
 }
 
-impl Check for DiffTypos {
+impl FileChecker for DiffTypos {
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -370,7 +370,7 @@ pub struct Identifiers {
     binary: bool,
 }
 
-impl Check for Identifiers {
+impl FileChecker for Identifiers {
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -424,7 +424,7 @@ pub struct Words {
     binary: bool,
 }
 
-impl Check for Words {
+impl FileChecker for Words {
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -476,7 +476,7 @@ pub struct FoundFiles {
     binary: bool,
 }
 
-impl Check for FoundFiles {
+impl FileChecker for FoundFiles {
     fn check_file(
         &self,
         path: &std::path::Path,
@@ -613,22 +613,22 @@ fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'stat
     buffer
 }
 
-pub fn check_path(
+pub fn walk_path(
     walk: ignore::Walk,
-    checks: &dyn Check,
+    checks: &dyn FileChecker,
     parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     for entry in walk {
-        check_entry(entry, checks, parser, dictionary, reporter)?;
+        walk_entry(entry, checks, parser, dictionary, reporter)?;
     }
     Ok(())
 }
 
-pub fn check_path_parallel(
+pub fn walk_path_parallel(
     walk: ignore::WalkParallel,
-    checks: &dyn Check,
+    checks: &dyn FileChecker,
     parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
@@ -636,7 +636,7 @@ pub fn check_path_parallel(
     let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match check_entry(entry, checks, parser, dictionary, reporter) {
+            match walk_entry(entry, checks, parser, dictionary, reporter) {
                 Ok(()) => ignore::WalkState::Continue,
                 Err(err) => {
                     *error.lock().unwrap() = Err(err);
@@ -649,9 +649,9 @@ pub fn check_path_parallel(
     error.into_inner().unwrap()
 }
 
-fn check_entry(
+fn walk_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
-    checks: &dyn Check,
+    checks: &dyn FileChecker,
     parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
