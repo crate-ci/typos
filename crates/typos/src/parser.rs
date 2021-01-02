@@ -2,6 +2,7 @@ use crate::tokens;
 use crate::Dictionary;
 use std::borrow::Cow;
 
+/// Extract typos from the buffer.
 #[derive(Clone)]
 pub struct ParserBuilder<'p, 'd> {
     tokenizer: Option<&'p tokens::Tokenizer>,
@@ -30,24 +31,10 @@ impl<'p, 'd> ParserBuilder<'p, 'd> {
     }
 
     /// Extract typos from the buffer.
-    pub fn typos(&self) -> TyposParser<'p, 'd> {
+    pub fn build(&self) -> TyposParser<'p, 'd> {
         TyposParser {
             tokenizer: self.tokenizer.unwrap_or_else(|| &DEFAULT_TOKENIZER),
             dictionary: self.dictionary,
-        }
-    }
-
-    /// Parse for Identifiers.
-    pub fn identifiers(&self) -> IdentifiersParser<'p> {
-        IdentifiersParser {
-            tokenizer: self.tokenizer.unwrap_or_else(|| &DEFAULT_TOKENIZER),
-        }
-    }
-
-    /// Parse for Words.
-    pub fn words(&self) -> WordsParser<'p> {
-        WordsParser {
-            tokenizer: self.tokenizer.unwrap_or_else(|| &DEFAULT_TOKENIZER),
         }
     }
 }
@@ -156,37 +143,5 @@ impl<'m> Default for Typo<'m> {
             typo: "".into(),
             corrections: crate::Status::Invalid,
         }
-    }
-}
-
-/// Parse for Identifiers.
-#[derive(Debug, Clone)]
-pub struct IdentifiersParser<'p> {
-    tokenizer: &'p tokens::Tokenizer,
-}
-
-impl<'p> IdentifiersParser<'p> {
-    pub fn parse_str(&self, buffer: &'p str) -> impl Iterator<Item = tokens::Identifier<'p>> {
-        self.tokenizer.parse_str(buffer)
-    }
-
-    pub fn parse_bytes(&self, buffer: &'p [u8]) -> impl Iterator<Item = tokens::Identifier<'p>> {
-        self.tokenizer.parse_bytes(buffer)
-    }
-}
-
-/// Parse for Words.
-#[derive(Debug, Clone)]
-pub struct WordsParser<'p> {
-    tokenizer: &'p tokens::Tokenizer,
-}
-
-impl<'p> WordsParser<'p> {
-    pub fn parse_str(&self, buffer: &'p str) -> impl Iterator<Item = tokens::Word<'p>> {
-        self.tokenizer.parse_str(buffer).flat_map(|i| i.split())
-    }
-
-    pub fn parse_bytes(&self, buffer: &'p [u8]) -> impl Iterator<Item = tokens::Word<'p>> {
-        self.tokenizer.parse_bytes(buffer).flat_map(|i| i.split())
     }
 }

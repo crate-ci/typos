@@ -118,7 +118,7 @@ impl Check for Typos {
         let parser = typos::ParserBuilder::new()
             .tokenizer(tokenizer)
             .dictionary(dictionary)
-            .typos();
+            .build();
 
         if self.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
@@ -180,7 +180,7 @@ impl Check for FixTypos {
         let parser = typos::ParserBuilder::new()
             .tokenizer(tokenizer)
             .dictionary(dictionary)
-            .typos();
+            .build();
 
         if self.check_files {
             let (buffer, content_type) = read_file(path, reporter)?;
@@ -265,7 +265,7 @@ impl Check for DiffTypos {
         let parser = typos::ParserBuilder::new()
             .tokenizer(tokenizer)
             .dictionary(dictionary)
-            .typos();
+            .build();
 
         let mut content = Vec::new();
         let mut new_content = Vec::new();
@@ -379,13 +379,9 @@ impl Check for Identifiers {
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let parser = typos::ParserBuilder::new()
-            .tokenizer(tokenizer)
-            .identifiers();
-
         if self.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for word in parser.parse_str(file_name) {
+                for word in tokenizer.parse_str(file_name) {
                     let msg = report::Parse {
                         context: Some(report::PathContext { path }.into()),
                         kind: report::ParseKind::Identifier,
@@ -402,7 +398,7 @@ impl Check for Identifiers {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
-                for word in parser.parse_bytes(&buffer) {
+                for word in tokenizer.parse_bytes(&buffer) {
                     // HACK: Don't look up the line_num per entry to better match the performance
                     // of Typos for comparison purposes.  We don't really get much out of it
                     // anyway.
@@ -437,11 +433,9 @@ impl Check for Words {
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let parser = typos::ParserBuilder::new().tokenizer(tokenizer).words();
-
         if self.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for word in parser.parse_str(file_name) {
+                for word in tokenizer.parse_str(file_name).flat_map(|i| i.split()) {
                     let msg = report::Parse {
                         context: Some(report::PathContext { path }.into()),
                         kind: report::ParseKind::Word,
@@ -458,7 +452,7 @@ impl Check for Words {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
-                for word in parser.parse_bytes(&buffer) {
+                for word in tokenizer.parse_bytes(&buffer).flat_map(|i| i.split()) {
                     // HACK: Don't look up the line_num per entry to better match the performance
                     // of Typos for comparison purposes.  We don't really get much out of it
                     // anyway.
