@@ -234,10 +234,21 @@ impl<'r> MessageStatus<'r> {
 
 impl<'r> Report for MessageStatus<'r> {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
-        self.typos_found
-            .compare_and_swap(false, msg.is_correction(), atomic::Ordering::Relaxed);
-        self.errors_found
-            .compare_and_swap(false, msg.is_error(), atomic::Ordering::Relaxed);
+        let _ = self.typos_found.compare_exchange(
+            false,
+            msg.is_correction(),
+            atomic::Ordering::Relaxed,
+            atomic::Ordering::Relaxed,
+        );
+        let _ = self
+            .errors_found
+            .compare_exchange(
+                false,
+                msg.is_error(),
+                atomic::Ordering::Relaxed,
+                atomic::Ordering::Relaxed,
+            )
+            .unwrap();
         self.reporter.report(msg)
     }
 }

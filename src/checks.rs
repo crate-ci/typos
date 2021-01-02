@@ -331,12 +331,7 @@ impl FileChecker for DiffTypos {
 
         if new_path.is_some() || !content.is_empty() {
             let original_path = path.display().to_string();
-            let fixed_path = new_path
-                .as_ref()
-                .map(|p| p.as_path())
-                .unwrap_or(path)
-                .display()
-                .to_string();
+            let fixed_path = new_path.as_deref().unwrap_or(path).display().to_string();
             let original_content: Vec<_> = content
                 .lines_with_terminator()
                 .map(|s| String::from_utf8_lossy(s).into_owned())
@@ -595,7 +590,7 @@ fn extract_fix<'t>(typo: &'t typos::Typo<'t>) -> Option<&'t str> {
     }
 }
 
-fn is_fixable<'t>(typo: &typos::Typo<'t>) -> bool {
+fn is_fixable(typo: &typos::Typo<'_>) -> bool {
     extract_fix(typo).is_some()
 }
 

@@ -26,14 +26,14 @@ impl<'p, 'd> ParserBuilder<'p, 'd> {
     pub fn dictionary<'d1>(self, dictionary: &'d1 dyn Dictionary) -> ParserBuilder<'p, 'd1> {
         ParserBuilder {
             tokenizer: self.tokenizer,
-            dictionary: dictionary,
+            dictionary,
         }
     }
 
     /// Extract typos from the buffer.
     pub fn build(&self) -> TyposParser<'p, 'd> {
         TyposParser {
-            tokenizer: self.tokenizer.unwrap_or_else(|| &DEFAULT_TOKENIZER),
+            tokenizer: self.tokenizer.unwrap_or(&DEFAULT_TOKENIZER),
             dictionary: self.dictionary,
         }
     }
@@ -49,7 +49,7 @@ impl<'p> Default for ParserBuilder<'p, 'static> {
 }
 
 static DEFAULT_TOKENIZER: once_cell::sync::Lazy<tokens::Tokenizer> =
-    once_cell::sync::Lazy::new(|| tokens::Tokenizer::new());
+    once_cell::sync::Lazy::new(tokens::Tokenizer::new);
 
 /// Extract typos from the buffer.
 #[derive(Clone)]
