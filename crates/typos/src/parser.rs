@@ -15,11 +15,13 @@ impl<'p> ParserBuilder<'p, 'static> {
 }
 
 impl<'p, 'd> ParserBuilder<'p, 'd> {
+    /// Set the Tokenizer used when parsing.
     pub fn tokenizer(mut self, tokenizer: &'p tokens::Tokenizer) -> Self {
         self.tokenizer = Some(tokenizer);
         self
     }
 
+    /// Set the dictionary used when parsing.
     pub fn dictionary<'d1>(self, dictionary: &'d1 dyn Dictionary) -> ParserBuilder<'p, 'd1> {
         ParserBuilder {
             tokenizer: self.tokenizer,
@@ -27,6 +29,7 @@ impl<'p, 'd> ParserBuilder<'p, 'd> {
         }
     }
 
+    /// Extract typos from the buffer.
     pub fn typos(&self) -> TyposParser<'p, 'd> {
         TyposParser {
             tokenizer: self.tokenizer.unwrap_or_else(|| &DEFAULT_TOKENIZER),
@@ -34,12 +37,14 @@ impl<'p, 'd> ParserBuilder<'p, 'd> {
         }
     }
 
+    /// Parse for Identifiers.
     pub fn identifiers(&self) -> IdentifiersParser<'p> {
         IdentifiersParser {
             tokenizer: self.tokenizer.unwrap_or_else(|| &DEFAULT_TOKENIZER),
         }
     }
 
+    /// Parse for Words.
     pub fn words(&self) -> WordsParser<'p> {
         WordsParser {
             tokenizer: self.tokenizer.unwrap_or_else(|| &DEFAULT_TOKENIZER),
@@ -59,6 +64,7 @@ impl<'p> Default for ParserBuilder<'p, 'static> {
 static DEFAULT_TOKENIZER: once_cell::sync::Lazy<tokens::Tokenizer> =
     once_cell::sync::Lazy::new(|| tokens::Tokenizer::new());
 
+/// Extract typos from the buffer.
 #[derive(Clone)]
 pub struct TyposParser<'p, 'd> {
     tokenizer: &'p tokens::Tokenizer,
@@ -116,6 +122,7 @@ impl<'p, 'd> TyposParser<'p, 'd> {
     }
 }
 
+/// An invalid term found in the buffer.
 #[derive(Clone, Debug)]
 #[non_exhaustive]
 pub struct Typo<'m> {
@@ -152,6 +159,7 @@ impl<'m> Default for Typo<'m> {
     }
 }
 
+/// Parse for Identifiers.
 #[derive(Debug, Clone)]
 pub struct IdentifiersParser<'p> {
     tokenizer: &'p tokens::Tokenizer,
@@ -167,6 +175,7 @@ impl<'p> IdentifiersParser<'p> {
     }
 }
 
+/// Parse for Words.
 #[derive(Debug, Clone)]
 pub struct WordsParser<'p> {
     tokenizer: &'p tokens::Tokenizer,

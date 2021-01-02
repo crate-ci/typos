@@ -1,3 +1,4 @@
+/// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TokenizerBuilder {
     ignore_hex: bool,
@@ -12,26 +13,31 @@ impl TokenizerBuilder {
         Default::default()
     }
 
+    /// Specify that hexadecimal numbers should be ignored.
     pub fn ignore_hex(&mut self, yes: bool) -> &mut Self {
         self.ignore_hex = yes;
         self
     }
 
+    /// Specify that leading digits are allowed for Identifiers.
     pub fn leading_digits(&mut self, yes: bool) -> &mut Self {
         self.leading_digits = yes;
         self
     }
 
+    /// Extend accepted leading characters for Identifiers.
     pub fn leading_chars(&mut self, chars: String) -> &mut Self {
         self.leading_chars = chars;
         self
     }
 
+    /// Specify that digits can be included in Identifiers.
     pub fn include_digits(&mut self, yes: bool) -> &mut Self {
         self.include_digits = yes;
         self
     }
 
+    /// Extend accepted characters for Identifiers.
     pub fn include_chars(&mut self, chars: String) -> &mut Self {
         self.include_chars = chars;
         self
@@ -81,6 +87,7 @@ impl Default for TokenizerBuilder {
     }
 }
 
+/// Extract Identifiers from a buffer.
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
     words_str: regex::Regex,
@@ -148,6 +155,7 @@ fn is_hex(ident: &[u8]) -> bool {
     HEX.is_match(ident)
 }
 
+/// A term composed of Words.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Identifier<'t> {
     token: &'t str,
@@ -171,11 +179,13 @@ impl<'t> Identifier<'t> {
         self.offset
     }
 
+    /// Split into individual Words.
     pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
         split_ident(self.token, self.offset)
     }
 }
 
+/// An indivisible term.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Word<'t> {
     token: &'t str,
@@ -325,6 +335,7 @@ impl<'s> Iterator for SplitIdent<'s> {
     }
 }
 
+/// Format of the term.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Case {
     Title,
