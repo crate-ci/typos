@@ -10,7 +10,6 @@ mod args;
 use typos_cli::checks;
 use typos_cli::config;
 use typos_cli::dict;
-use typos_cli::diff;
 use typos_cli::report;
 
 use proc_exit::WithCodeResultExt;
@@ -99,13 +98,9 @@ fn run() -> proc_exit::ExitResult {
             args.format.reporter()
         };
         let status_reporter = report::MessageStatus::new(output_reporter);
-        let mut reporter: &dyn report::Report = &status_reporter;
-        let diff_reporter = diff::Diff::new(reporter);
-        if args.diff {
-            reporter = &diff_reporter;
-        }
+        let reporter: &dyn report::Report = &status_reporter;
 
-        let (files, identifier_parser, word_parser, checks, fixer);
+        let (files, identifier_parser, word_parser, checks, fixer, differ);
         let selected_checks: &dyn checks::Check = if args.files {
             files = settings.build_files();
             &files
@@ -118,6 +113,9 @@ fn run() -> proc_exit::ExitResult {
         } else if args.write_changes {
             fixer = settings.build_fix_typos();
             &fixer
+        } else if args.diff {
+            differ = settings.build_diff_typos();
+            &differ
         } else {
             checks = settings.build_typos();
             &checks
@@ -151,10 +149,6 @@ fn run() -> proc_exit::ExitResult {
         }
         if status_reporter.errors_found() {
             errors_found = true;
-        }
-
-        if args.diff {
-            diff_reporter.show().with_code(proc_exit::Code::FAILURE)?;
         }
     }
 

@@ -58,6 +58,14 @@ impl TyposSettings {
         }
     }
 
+    pub fn build_diff_typos(&self) -> DiffTypos {
+        DiffTypos {
+            check_filenames: self.check_filenames,
+            check_files: self.check_files,
+            binary: self.binary,
+        }
+    }
+
     pub fn build_identifier_parser(&self) -> Identifiers {
         Identifiers {
             check_filenames: self.check_filenames,
@@ -231,6 +239,123 @@ impl Check for FixTypos {
                     let new_path = path.with_file_name(new_name);
                     std::fs::rename(path, new_path)?;
                 }
+            }
+        }
+
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct DiffTypos {
+    check_filenames: bool,
+    check_files: bool,
+    binary: bool,
+}
+
+impl Check for DiffTypos {
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        tokenizer: &tokens::Tokenizer,
+        dictionary: &dyn Dictionary,
+        reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        let parser = typos::ParserBuilder::new()
+            .tokenizer(tokenizer)
+            .dictionary(dictionary)
+            .typos();
+
+        let mut content = Vec::new();
+        let mut new_content = Vec::new();
+        if self.check_files {
+            let (buffer, content_type) = read_file(path, reporter)?;
+            if !explicit && !self.binary && content_type.is_binary() {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into())?;
+            } else {
+                let mut fixes = Vec::new();
+                let mut accum_line_num = AccumulateLineNum::new();
+                for typo in parser.parse_bytes(&buffer) {
+                    if is_fixable(&typo) {
+                        fixes.push(typo.into_owned());
+                    } else {
+                        let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
+                        let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
+                        let msg = report::Typo {
+                            context: Some(report::FileContext { path, line_num }.into()),
+                            buffer: std::borrow::Cow::Borrowed(line),
+                            byte_offset: line_offset,
+                            typo: typo.typo.as_ref(),
+                            corrections: typo.corrections,
+                        };
+                        reporter.report(msg.into())?;
+                    }
+                }
+                if !fixes.is_empty() {
+                    new_content = fix_buffer(buffer.clone(), fixes.into_iter());
+                    content = buffer
+                }
+            }
+        }
+
+        // Match FixTypos ordering for easy diffing.
+        let mut new_path = None;
+        if self.check_filenames {
+            if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let mut fixes = Vec::new();
+                for typo in parser.parse_str(file_name) {
+                    if is_fixable(&typo) {
+                        fixes.push(typo.into_owned());
+                    } else {
+                        let msg = report::Typo {
+                            context: Some(report::PathContext { path }.into()),
+                            buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                            byte_offset: typo.byte_offset,
+                            typo: typo.typo.as_ref(),
+                            corrections: typo.corrections,
+                        };
+                        reporter.report(msg.into())?;
+                    }
+                }
+                if !fixes.is_empty() {
+                    let file_name = file_name.to_owned().into_bytes();
+                    let new_name = fix_buffer(file_name, fixes.into_iter());
+                    let new_name =
+                        String::from_utf8(new_name).expect("corrections are valid utf-8");
+                    new_path = Some(path.with_file_name(new_name));
+                }
+            }
+        }
+
+        if new_path.is_some() || !content.is_empty() {
+            let original_path = path.display().to_string();
+            let fixed_path = new_path
+                .as_ref()
+                .map(|p| p.as_path())
+                .unwrap_or(path)
+                .display()
+                .to_string();
+            let original_content: Vec<_> = content
+                .lines_with_terminator()
+                .map(|s| String::from_utf8_lossy(s).into_owned())
+                .collect();
+            let fixed_content: Vec<_> = new_content
+                .lines_with_terminator()
+                .map(|s| String::from_utf8_lossy(s).into_owned())
+                .collect();
+            let diff = difflib::unified_diff(
+                &original_content,
+                &fixed_content,
+                original_path.as_str(),
+                fixed_path.as_str(),
+                "original",
+                "fixed",
+                0,
+            );
+            for line in diff {
+                print!("{}", line);
             }
         }
 
