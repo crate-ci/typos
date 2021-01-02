@@ -11,7 +11,6 @@ use typos_cli::checks;
 use typos_cli::config;
 use typos_cli::dict;
 use typos_cli::diff;
-use typos_cli::replace;
 use typos_cli::report;
 
 use proc_exit::WithCodeResultExt;
@@ -101,15 +100,12 @@ fn run() -> proc_exit::ExitResult {
         };
         let status_reporter = report::MessageStatus::new(output_reporter);
         let mut reporter: &dyn report::Report = &status_reporter;
-        let replace_reporter = replace::Replace::new(reporter);
         let diff_reporter = diff::Diff::new(reporter);
         if args.diff {
             reporter = &diff_reporter;
-        } else if args.write_changes {
-            reporter = &replace_reporter;
         }
 
-        let (files, identifier_parser, word_parser, checks);
+        let (files, identifier_parser, word_parser, checks, fixer);
         let selected_checks: &dyn checks::Check = if args.files {
             files = settings.build_files();
             &files
@@ -119,6 +115,9 @@ fn run() -> proc_exit::ExitResult {
         } else if args.words {
             word_parser = settings.build_word_parser();
             &word_parser
+        } else if args.write_changes {
+            fixer = settings.build_fix_typos();
+            &fixer
         } else {
             checks = settings.build_typos();
             &checks
@@ -156,10 +155,6 @@ fn run() -> proc_exit::ExitResult {
 
         if args.diff {
             diff_reporter.show().with_code(proc_exit::Code::FAILURE)?;
-        } else if args.write_changes {
-            replace_reporter
-                .write()
-                .with_code(proc_exit::Code::FAILURE)?;
         }
     }
 

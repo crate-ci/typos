@@ -1,116 +1,21 @@
 use std::collections::BTreeMap;
-use std::io::Write;
 use std::path;
-use std::sync;
-
-use bstr::ByteSlice;
-
-pub struct Replace<'r> {
-    reporter: &'r dyn crate::report::Report,
-    deferred: sync::Mutex<Deferred>,
-}
-
-impl<'r> Replace<'r> {
-    pub fn new(reporter: &'r dyn crate::report::Report) -> Self {
-        Self {
-            reporter,
-            deferred: sync::Mutex::new(Deferred::default()),
-        }
-    }
-
-    pub fn write(&self) -> Result<(), std::io::Error> {
-        let deferred = self.deferred.lock().unwrap();
-
-        for (path, corrections) in deferred.content.iter() {
-            let buffer = std::fs::read(path)?;
-
-            let mut file = std::fs::File::create(path)?;
-            for (line_idx, line) in buffer.lines_with_terminator().enumerate() {
-                let line_num = line_idx + 1;
-                if let Some(corrections) = corrections.get(&line_num) {
-                    let line = line.to_vec();
-                    let line = correct(line, &corrections);
-                    file.write_all(&line)?;
-                } else {
-                    file.write_all(&line)?;
-                }
-            }
-        }
-
-        for (path, corrections) in deferred.paths.iter() {
-            let orig_name = path
-                .file_name()
-                .and_then(|s| s.to_str())
-                .expect("generating a correction requires the filename to be valid.")
-                .to_owned()
-                .into_bytes();
-            let new_name = correct(orig_name, &corrections);
-            let new_name = String::from_utf8(new_name).expect("corrections are valid utf-8");
-            let new_path = path.with_file_name(new_name);
-            std::fs::rename(path, new_path)?;
-        }
-
-        Ok(())
-    }
-}
-
-impl<'r> crate::report::Report for Replace<'r> {
-    fn report(&self, msg: crate::report::Message<'_>) -> Result<(), std::io::Error> {
-        let typo = match &msg {
-            crate::report::Message::Typo(typo) => typo,
-            _ => return self.reporter.report(msg),
-        };
-
-        let corrections = match &typo.corrections {
-            typos::Status::Corrections(corrections) if corrections.len() == 1 => corrections,
-            _ => return self.reporter.report(msg),
-        };
-
-        match &typo.context {
-            Some(crate::report::Context::File(file)) => {
-                let path = file.path.to_owned();
-                let line_num = file.line_num;
-                let correction =
-                    Correction::new(typo.byte_offset, typo.typo, corrections[0].as_ref());
-                let mut deferred = self.deferred.lock().unwrap();
-                let content = deferred
-                    .content
-                    .entry(path)
-                    .or_insert_with(BTreeMap::new)
-                    .entry(line_num)
-                    .or_insert_with(Vec::new);
-                content.push(correction);
-                Ok(())
-            }
-            Some(crate::report::Context::Path(path)) => {
-                let path = path.path.to_owned();
-                let correction =
-                    Correction::new(typo.byte_offset, typo.typo, corrections[0].as_ref());
-                let mut deferred = self.deferred.lock().unwrap();
-                let content = deferred.paths.entry(path).or_insert_with(Vec::new);
-                content.push(correction);
-                Ok(())
-            }
-            _ => self.reporter.report(msg),
-        }
-    }
-}
 
 #[derive(Clone, Debug, Default)]
-pub struct Deferred {
-    pub content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
-    pub paths: BTreeMap<path::PathBuf, Vec<Correction>>,
+pub(crate) struct Deferred {
+    pub(crate) content: BTreeMap<path::PathBuf, BTreeMap<usize, Vec<Correction>>>,
+    pub(crate) paths: BTreeMap<path::PathBuf, Vec<Correction>>,
 }
 
 #[derive(Clone, Debug, PartialOrd, Ord, PartialEq, Eq)]
-pub struct Correction {
-    pub byte_offset: usize,
-    pub typo: Vec<u8>,
-    pub correction: Vec<u8>,
+pub(crate) struct Correction {
+    pub(crate) byte_offset: usize,
+    pub(crate) typo: Vec<u8>,
+    pub(crate) correction: Vec<u8>,
 }
 
 impl Correction {
-    pub fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
+    pub(crate) fn new(byte_offset: usize, typo: &str, correction: &str) -> Self {
         Self {
             byte_offset,
             typo: typo.as_bytes().to_vec(),
@@ -119,7 +24,7 @@ impl Correction {
     }
 }
 
-pub fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
+pub(crate) fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
     let mut corrections: Vec<_> = corrections.iter().collect();
     corrections.sort_unstable();
     corrections.reverse();
@@ -136,9 +41,6 @@ pub fn correct(mut line: Vec<u8>, corrections: &[Correction]) -> Vec<u8> {
 #[cfg(test)]
 mod test {
     use super::*;
-
-    use crate::report::Report;
-    use assert_fs::prelude::*;
 
     fn simple_correct(line: &str, corrections: Vec<(usize, &str, &str)>) -> String {
         let line = line.as_bytes().to_vec();
@@ -197,67 +99,5 @@ mod test {
             vec![(4, "foo", "happy"), (8, "foo", "world")],
         );
         assert_eq!(actual, "foo happy world");
-    }
-
-    #[test]
-    fn test_replace_content() {
-        let temp = assert_fs::TempDir::new().unwrap();
-        let input_file = temp.child("foo.txt");
-        input_file.write_str("1 foo 2\n3 4 5").unwrap();
-
-        let primary = crate::report::PrintSilent;
-        let replace = Replace::new(&primary);
-        replace
-            .report(
-                crate::report::Typo::default()
-                    .context(Some(
-                        crate::report::FileContext::default()
-                            .path(input_file.path())
-                            .line_num(1)
-                            .into(),
-                    ))
-                    .buffer(std::borrow::Cow::Borrowed(b"1 foo 2\n3 4 5"))
-                    .byte_offset(2)
-                    .typo("foo")
-                    .corrections(typos::Status::Corrections(vec![
-                        std::borrow::Cow::Borrowed("bar"),
-                    ]))
-                    .into(),
-            )
-            .unwrap();
-        replace.write().unwrap();
-
-        input_file.assert("1 bar 2\n3 4 5");
-    }
-
-    #[test]
-    fn test_replace_path() {
-        let temp = assert_fs::TempDir::new().unwrap();
-        let input_file = temp.child("foo.txt");
-        input_file.write_str("foo foo foo").unwrap();
-
-        let primary = crate::report::PrintSilent;
-        let replace = Replace::new(&primary);
-        replace
-            .report(
-                crate::report::Typo::default()
-                    .context(Some(
-                        crate::report::PathContext::default()
-                            .path(input_file.path())
-                            .into(),
-                    ))
-                    .buffer(std::borrow::Cow::Borrowed(b"foo.txt"))
-                    .byte_offset(0)
-                    .typo("foo")
-                    .corrections(typos::Status::Corrections(vec![
-                        std::borrow::Cow::Borrowed("bar"),
-                    ]))
-                    .into(),
-            )
-            .unwrap();
-        replace.write().unwrap();
-
-        input_file.assert(predicates::path::missing());
-        temp.child("bar.txt").assert("foo foo foo");
     }
 }
