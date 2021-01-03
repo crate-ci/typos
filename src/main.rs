@@ -34,6 +34,7 @@ fn run() -> proc_exit::ExitResult {
     };
 
     init_logging(args.verbose.log_level());
+    let global_cwd = std::env::current_dir()?;
 
     let config = if let Some(path) = args.custom_config.as_ref() {
         config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?
@@ -44,8 +45,14 @@ fn run() -> proc_exit::ExitResult {
     let mut typos_found = false;
     let mut errors_found = false;
     for path in args.path.iter() {
-        let path = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
-        let cwd = if path.is_file() {
+        let path = if path == std::path::Path::new("-") {
+            path.to_owned()
+        } else {
+            path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
+        };
+        let cwd = if path == std::path::Path::new("-") {
+            global_cwd.as_path()
+        } else if path.is_file() {
             path.parent().unwrap()
         } else {
             path.as_path()
