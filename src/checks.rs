@@ -1,5 +1,7 @@
 use bstr::ByteSlice;
 use encoding::Encoding;
+use std::io::Read;
+use std::io::Write;
 
 use crate::report;
 use typos::tokens;
@@ -207,7 +209,7 @@ impl FileChecker for FixTypos {
                         reporter.report(msg.into())?;
                     }
                 }
-                if !fixes.is_empty() {
+                if !fixes.is_empty() || path == std::path::Path::new("-") {
                     let buffer = fix_buffer(buffer, fixes.into_iter());
                     write_file(path, content_type, buffer, reporter)?;
                 }
@@ -504,7 +506,13 @@ pub fn read_file(
     path: &std::path::Path,
     reporter: &dyn report::Report,
 ) -> Result<(Vec<u8>, content_inspector::ContentType), std::io::Error> {
-    let buffer = report_error(std::fs::read(path), reporter)?;
+    let buffer = if path == std::path::Path::new("-") {
+        let mut buffer = Vec::new();
+        report_result(std::io::stdin().read_to_end(&mut buffer), reporter)?;
+        buffer
+    } else {
+        report_result(std::fs::read(path), reporter)?
+    };
 
     let content_type = content_inspector::inspect(&buffer);
 
@@ -520,11 +528,11 @@ pub fn read_file(
             (buffer, content_type)
         },
         content_inspector::ContentType::UTF_16LE => {
-            let buffer = report_error(encoding::all::UTF_16LE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
+            let buffer = report_result(encoding::all::UTF_16LE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
             (buffer.into_bytes(), content_type)
         }
         content_inspector::ContentType::UTF_16BE => {
-            let buffer = report_error(encoding::all::UTF_16BE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
+            let buffer = report_result(encoding::all::UTF_16BE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
             (buffer.into_bytes(), content_type)
         },
     };
@@ -547,47 +555,56 @@ pub fn write_file(
         | content_inspector::ContentType::UTF_8
         | content_inspector::ContentType::UTF_8_BOM => buffer,
         content_inspector::ContentType::UTF_16LE => {
-            let buffer = report_error(String::from_utf8(buffer), reporter)?;
+            let buffer = report_result(String::from_utf8(buffer), reporter)?;
             if buffer.is_empty() {
                 // Error occurred, don't clear out the file
                 return Ok(());
             }
-            report_error(
+            report_result(
                 encoding::all::UTF_16LE.encode(&buffer, encoding::EncoderTrap::Strict),
                 reporter,
             )?
         }
         content_inspector::ContentType::UTF_16BE => {
-            let buffer = report_error(String::from_utf8(buffer), reporter)?;
+            let buffer = report_result(String::from_utf8(buffer), reporter)?;
             if buffer.is_empty() {
                 // Error occurred, don't clear out the file
                 return Ok(());
             }
-            report_error(
+            report_result(
                 encoding::all::UTF_16BE.encode(&buffer, encoding::EncoderTrap::Strict),
                 reporter,
             )?
         }
     };
 
-    report_error(std::fs::write(path, buffer), reporter)?;
+    if path == std::path::Path::new("-") {
+        report_result(std::io::stdout().write_all(&buffer), reporter)?;
+    } else {
+        report_result(std::fs::write(path, buffer), reporter)?;
+    }
 
     Ok(())
 }
 
-fn report_error<T: Default, E: ToString>(
+fn report_result<T: Default, E: ToString>(
     value: Result<T, E>,
     reporter: &dyn report::Report,
 ) -> Result<T, std::io::Error> {
     let buffer = match value {
         Ok(value) => value,
         Err(err) => {
-            let msg = report::Error::new(err.to_string());
-            reporter.report(msg.into())?;
+            report_error(err, reporter)?;
             Default::default()
         }
     };
     Ok(buffer)
+}
+
+fn report_error<E: ToString>(err: E, reporter: &dyn report::Report) -> Result<(), std::io::Error> {
+    let msg = report::Error::new(err.to_string());
+    reporter.report(msg.into())?;
+    Ok(())
 }
 
 struct AccumulateLineNum {
@@ -697,10 +714,21 @@ fn walk_entry(
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
-    let entry = entry?;
+    let entry = match entry {
+        Ok(entry) => entry,
+        Err(err) => {
+            report_error(err, reporter)?;
+            return Ok(());
+        }
+    };
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        checks.check_file(entry.path(), explicit, parser, dictionary, reporter)?;
+        let path = if entry.is_stdin() {
+            std::path::Path::new("-")
+        } else {
+            entry.path()
+        };
+        checks.check_file(path, explicit, parser, dictionary, reporter)?;
     }
 
     Ok(())
