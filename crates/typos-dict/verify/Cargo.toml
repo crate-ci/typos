@@ -20,5 +20,5 @@ unicase = "2.5"
 codegenrs = "0.1"
 structopt = "0.3"
 varcon = { version = "0.2", path = "../../varcon" }
-itertools = "0.9"
+itertools = "0.10"
 edit-distance = "2.1"

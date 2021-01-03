@@ -54,7 +54,7 @@ content_inspector = "0.2.4"
 unicode-segmentation = "1.6.0"
 derive_more = "0.99.11"
 derive_setters = "0.1"
-itertools = "0.9"
+itertools = "0.10"
 serde_json = "1.0"
 encoding = "0.2"
 
