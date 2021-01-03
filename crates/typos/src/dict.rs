@@ -1,6 +1,35 @@
 use std::borrow::Cow;
 
-#[derive(Clone, PartialEq, Eq, Debug, serde::Serialize, derive_more::From)]
+/// Look up the validity of a term.
+pub trait Dictionary: Send + Sync {
+    /// Look up the validity of an Identifier.
+    ///
+    /// `None` if the status is unknown.
+    fn correct_ident<'s, 'w>(&'s self, ident: crate::tokens::Identifier<'w>) -> Option<Status<'s>>;
+
+    /// Look up the validity of a Word.
+    ///
+    /// `None` if the status is unknown.
+    fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Status<'s>>;
+}
+
+pub(crate) struct NullDictionary;
+
+impl Dictionary for NullDictionary {
+    fn correct_ident<'s, 'w>(
+        &'s self,
+        _ident: crate::tokens::Identifier<'w>,
+    ) -> Option<Status<'s>> {
+        None
+    }
+
+    fn correct_word<'s, 'w>(&'s self, _word: crate::tokens::Word<'w>) -> Option<Status<'s>> {
+        None
+    }
+}
+
+/// Validity of a term in a Dictionary.
+#[derive(Clone, PartialEq, Eq, Debug, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
 #[serde(untagged)]
 pub enum Status<'c> {
@@ -27,6 +56,20 @@ impl<'c> Status<'c> {
         }
     }
 
+    pub fn into_owned(self) -> Status<'static> {
+        match self {
+            Status::Valid => Status::Valid,
+            Status::Invalid => Status::Invalid,
+            Status::Corrections(corrections) => {
+                let corrections = corrections
+                    .into_iter()
+                    .map(|c| Cow::Owned(c.into_owned()))
+                    .collect();
+                Status::Corrections(corrections)
+            }
+        }
+    }
+
     pub fn borrow(&self) -> Status<'_> {
         match self {
             Status::Corrections(corrections) => {
@@ -39,11 +82,4 @@ impl<'c> Status<'c> {
             _ => self.clone(),
         }
     }
-}
-
-pub trait Dictionary: Send + Sync {
-    fn correct_ident<'s, 'w>(&'s self, _ident: crate::tokens::Identifier<'w>)
-        -> Option<Status<'s>>;
-
-    fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Status<'s>>;
 }

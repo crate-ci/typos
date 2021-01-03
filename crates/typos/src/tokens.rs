@@ -1,13 +1,6 @@
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Case {
-    Title,
-    Lower,
-    Scream,
-    None,
-}
-
+/// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ParserBuilder {
+pub struct TokenizerBuilder {
     ignore_hex: bool,
     leading_digits: bool,
     leading_chars: String,
@@ -15,37 +8,42 @@ pub struct ParserBuilder {
     include_chars: String,
 }
 
-impl ParserBuilder {
+impl TokenizerBuilder {
     pub fn new() -> Self {
         Default::default()
     }
 
+    /// Specify that hexadecimal numbers should be ignored.
     pub fn ignore_hex(&mut self, yes: bool) -> &mut Self {
         self.ignore_hex = yes;
         self
     }
 
+    /// Specify that leading digits are allowed for Identifiers.
     pub fn leading_digits(&mut self, yes: bool) -> &mut Self {
         self.leading_digits = yes;
         self
     }
 
+    /// Extend accepted leading characters for Identifiers.
     pub fn leading_chars(&mut self, chars: String) -> &mut Self {
         self.leading_chars = chars;
         self
     }
 
+    /// Specify that digits can be included in Identifiers.
     pub fn include_digits(&mut self, yes: bool) -> &mut Self {
         self.include_digits = yes;
         self
     }
 
+    /// Extend accepted characters for Identifiers.
     pub fn include_chars(&mut self, chars: String) -> &mut Self {
         self.include_chars = chars;
         self
     }
 
-    pub fn build(&self) -> Parser {
+    pub fn build(&self) -> Tokenizer {
         let mut pattern = r#"\b("#.to_owned();
         Self::push_pattern(&mut pattern, self.leading_digits, &self.leading_chars);
         Self::push_pattern(&mut pattern, self.include_digits, &self.include_chars);
@@ -54,7 +52,7 @@ impl ParserBuilder {
         let words_str = regex::Regex::new(&pattern).unwrap();
         let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
 
-        Parser {
+        Tokenizer {
             words_str,
             words_bytes,
             // `leading_digits` let's us bypass the regexes since you can't have a decimal or
@@ -77,7 +75,7 @@ impl ParserBuilder {
     }
 }
 
-impl Default for ParserBuilder {
+impl Default for TokenizerBuilder {
     fn default() -> Self {
         Self {
             ignore_hex: true,
@@ -89,17 +87,18 @@ impl Default for ParserBuilder {
     }
 }
 
+/// Extract Identifiers from a buffer.
 #[derive(Debug, Clone)]
-pub struct Parser {
+pub struct Tokenizer {
     words_str: regex::Regex,
     words_bytes: regex::bytes::Regex,
     ignore_numbers: bool,
     ignore_hex: bool,
 }
 
-impl Parser {
+impl Tokenizer {
     pub fn new() -> Self {
-        ParserBuilder::default().build()
+        TokenizerBuilder::default().build()
     }
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
@@ -132,7 +131,7 @@ impl Parser {
     }
 }
 
-impl Default for Parser {
+impl Default for Tokenizer {
     fn default() -> Self {
         Self::new()
     }
@@ -156,6 +155,7 @@ fn is_hex(ident: &[u8]) -> bool {
     HEX.is_match(ident)
 }
 
+/// A term composed of Words.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Identifier<'t> {
     token: &'t str,
@@ -179,11 +179,13 @@ impl<'t> Identifier<'t> {
         self.offset
     }
 
+    /// Split into individual Words.
     pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
         split_ident(self.token, self.offset)
     }
 }
 
+/// An indivisible term.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Word<'t> {
     token: &'t str,
@@ -237,52 +239,8 @@ impl<'t> Word<'t> {
     }
 }
 
-/// Tracks the current 'mode' of the transformation algorithm as it scans the input string.
-///
-/// The mode is a tri-state which tracks the case of the last cased character of the current
-/// word. If there is no cased character (either lowercase or uppercase) since the previous
-/// word boundary, than the mode is `Boundary`. If the last cased character is lowercase, then
-/// the mode is `Lowercase`. Otherrwise, the mode is `Uppercase`.
-#[derive(Clone, Copy, PartialEq, Debug)]
-enum WordMode {
-    /// There have been no lowercase or uppercase characters in the current word.
-    Boundary,
-    /// The previous cased character in the current word is lowercase.
-    Lowercase,
-    /// The previous cased character in the current word is uppercase.
-    Uppercase,
-    Number,
-}
-
-impl WordMode {
-    fn classify(c: char) -> Self {
-        if c.is_lowercase() {
-            WordMode::Lowercase
-        } else if c.is_uppercase() {
-            WordMode::Uppercase
-        } else if c.is_ascii_digit() {
-            WordMode::Number
-        } else {
-            // This assumes all characters are either lower or upper case.
-            WordMode::Boundary
-        }
-    }
-
-    fn case(self, last: WordMode) -> Case {
-        match (self, last) {
-            (WordMode::Uppercase, WordMode::Uppercase) => Case::Scream,
-            (WordMode::Uppercase, WordMode::Lowercase) => Case::Title,
-            (WordMode::Lowercase, WordMode::Lowercase) => Case::Lower,
-            (WordMode::Number, WordMode::Number) => Case::None,
-            (WordMode::Number, _)
-            | (_, WordMode::Number)
-            | (WordMode::Boundary, _)
-            | (_, WordMode::Boundary)
-            | (WordMode::Lowercase, WordMode::Uppercase) => {
-                unreachable!("Invalid case combination: ({:?}, {:?})", self, last)
-            }
-        }
-    }
+fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
+    SplitIdent::new(ident, offset)
 }
 
 struct SplitIdent<'s> {
@@ -377,8 +335,61 @@ impl<'s> Iterator for SplitIdent<'s> {
     }
 }
 
-fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
-    SplitIdent::new(ident, offset)
+/// Format of the term.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Case {
+    Title,
+    Lower,
+    Scream,
+    None,
+}
+
+/// Tracks the current 'mode' of the transformation algorithm as it scans the input string.
+///
+/// The mode is a tri-state which tracks the case of the last cased character of the current
+/// word. If there is no cased character (either lowercase or uppercase) since the previous
+/// word boundary, than the mode is `Boundary`. If the last cased character is lowercase, then
+/// the mode is `Lowercase`. Otherrwise, the mode is `Uppercase`.
+#[derive(Clone, Copy, PartialEq, Debug)]
+enum WordMode {
+    /// There have been no lowercase or uppercase characters in the current word.
+    Boundary,
+    /// The previous cased character in the current word is lowercase.
+    Lowercase,
+    /// The previous cased character in the current word is uppercase.
+    Uppercase,
+    Number,
+}
+
+impl WordMode {
+    fn classify(c: char) -> Self {
+        if c.is_lowercase() {
+            WordMode::Lowercase
+        } else if c.is_uppercase() {
+            WordMode::Uppercase
+        } else if c.is_ascii_digit() {
+            WordMode::Number
+        } else {
+            // This assumes all characters are either lower or upper case.
+            WordMode::Boundary
+        }
+    }
+
+    fn case(self, last: WordMode) -> Case {
+        match (self, last) {
+            (WordMode::Uppercase, WordMode::Uppercase) => Case::Scream,
+            (WordMode::Uppercase, WordMode::Lowercase) => Case::Title,
+            (WordMode::Lowercase, WordMode::Lowercase) => Case::Lower,
+            (WordMode::Number, WordMode::Number) => Case::None,
+            (WordMode::Number, _)
+            | (_, WordMode::Number)
+            | (WordMode::Boundary, _)
+            | (_, WordMode::Boundary)
+            | (WordMode::Lowercase, WordMode::Uppercase) => {
+                unreachable!("Invalid case combination: ({:?}, {:?})", self, last)
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -387,7 +398,7 @@ mod test {
 
     #[test]
     fn tokenize_empty_is_empty() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "";
         let expected: Vec<Identifier> = vec![];
@@ -399,7 +410,7 @@ mod test {
 
     #[test]
     fn tokenize_word_is_word() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "word";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", 0)];
@@ -411,7 +422,7 @@ mod test {
 
     #[test]
     fn tokenize_space_separated_words() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A B";
         let expected: Vec<Identifier> = vec![
@@ -426,7 +437,7 @@ mod test {
 
     #[test]
     fn tokenize_dot_separated_words() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A.B";
         let expected: Vec<Identifier> = vec![
@@ -441,7 +452,7 @@ mod test {
 
     #[test]
     fn tokenize_namespace_separated_words() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A::B";
         let expected: Vec<Identifier> = vec![
@@ -456,7 +467,7 @@ mod test {
 
     #[test]
     fn tokenize_underscore_doesnt_separate() {
-        let parser = Parser::new();
+        let parser = Tokenizer::new();
 
         let input = "A_B";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
@@ -468,7 +479,7 @@ mod test {
 
     #[test]
     fn tokenize_ignore_hex_enabled() {
-        let parser = ParserBuilder::new().ignore_hex(true).build();
+        let parser = TokenizerBuilder::new().ignore_hex(true).build();
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
@@ -483,7 +494,7 @@ mod test {
 
     #[test]
     fn tokenize_ignore_hex_disabled() {
-        let parser = ParserBuilder::new()
+        let parser = TokenizerBuilder::new()
             .ignore_hex(false)
             .leading_digits(true)
             .build();
@@ -523,11 +534,11 @@ mod test {
                 &[("A", Case::Scream, 0), ("String", Case::Title, 1)],
             ),
             (
-                "SimpleXMLParser",
+                "SimpleXMLTokenizer",
                 &[
                     ("Simple", Case::Title, 0),
                     ("XML", Case::Scream, 6),
-                    ("Parser", Case::Title, 9),
+                    ("Tokenizer", Case::Title, 9),
                 ],
             ),
             (

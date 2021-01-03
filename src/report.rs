@@ -72,7 +72,7 @@ pub struct Typo<'m> {
     pub buffer: Cow<'m, [u8]>,
     pub byte_offset: usize,
     pub typo: &'m str,
-    pub corrections: crate::Status<'m>,
+    pub corrections: typos::Status<'m>,
 }
 
 impl<'m> Default for Typo<'m> {
@@ -82,7 +82,7 @@ impl<'m> Default for Typo<'m> {
             buffer: Cow::Borrowed(&[]),
             byte_offset: 0,
             typo: "",
-            corrections: crate::Status::Invalid,
+            corrections: typos::Status::Invalid,
         }
     }
 }
@@ -168,7 +168,7 @@ pub struct Parse<'m> {
     #[serde(flatten)]
     pub context: Option<Context<'m>>,
     pub kind: ParseKind,
-    pub data: Vec<&'m str>,
+    pub data: &'m str,
 }
 
 impl<'m> Default for Parse<'m> {
@@ -176,7 +176,7 @@ impl<'m> Default for Parse<'m> {
         Self {
             context: None,
             kind: ParseKind::Identifier,
-            data: vec![],
+            data: "",
         }
     }
 }
@@ -234,10 +234,21 @@ impl<'r> MessageStatus<'r> {
 
 impl<'r> Report for MessageStatus<'r> {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
-        self.typos_found
-            .compare_and_swap(false, msg.is_correction(), atomic::Ordering::Relaxed);
-        self.errors_found
-            .compare_and_swap(false, msg.is_error(), atomic::Ordering::Relaxed);
+        let _ = self.typos_found.compare_exchange(
+            false,
+            msg.is_correction(),
+            atomic::Ordering::Relaxed,
+            atomic::Ordering::Relaxed,
+        );
+        let _ = self
+            .errors_found
+            .compare_exchange(
+                false,
+                msg.is_error(),
+                atomic::Ordering::Relaxed,
+                atomic::Ordering::Relaxed,
+            )
+            .unwrap();
         self.reporter.report(msg)
     }
 }
@@ -265,7 +276,7 @@ impl Report for PrintBrief {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
+                writeln!(io::stdout(), "{}", msg.data)?;
             }
             Message::Error(msg) => {
                 log::error!("{}: {}", context_display(&msg.context), msg.msg);
@@ -289,7 +300,7 @@ impl Report for PrintLong {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                writeln!(io::stdout(), "{}", itertools::join(msg.data.iter(), " "))?;
+                writeln!(io::stdout(), "{}", msg.data)?;
             }
             Message::Error(msg) => {
                 log::error!("{}: {}", context_display(&msg.context), msg.msg);
@@ -308,8 +319,8 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
     )
     .count();
     match &msg.corrections {
-        crate::Status::Valid => {}
-        crate::Status::Invalid => {
+        typos::Status::Valid => {}
+        typos::Status::Invalid => {
             writeln!(
                 io::stdout(),
                 "{}:{}: `{}` is disallowed",
@@ -318,7 +329,7 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
                 msg.typo,
             )?;
         }
-        crate::Status::Corrections(corrections) => {
+        typos::Status::Corrections(corrections) => {
             writeln!(
                 io::stdout(),
                 "{}:{}: `{}` -> {}",
@@ -345,11 +356,11 @@ fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
     )
     .count();
     match &msg.corrections {
-        crate::Status::Valid => {}
-        crate::Status::Invalid => {
+        typos::Status::Valid => {}
+        typos::Status::Invalid => {
             writeln!(handle, "error: `{}` is disallowed`", msg.typo,)?;
         }
-        crate::Status::Corrections(corrections) => {
+        typos::Status::Corrections(corrections) => {
             writeln!(
                 handle,
                 "error: `{}` should be {}",

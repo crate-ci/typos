@@ -50,6 +50,12 @@ ahash = "0.6.1"
 difflib = "0.4"
 proc-exit = "1.0"
 human-panic = "1.0.3"
+content_inspector = "0.2.4"
+unicode-segmentation = "1.6.0"
+derive_more = "0.99.11"
+derive_setters = "0.1"
+itertools = "0.9"
+serde_json = "1.0"
 
 [dev-dependencies]
 assert_fs = "1.0"

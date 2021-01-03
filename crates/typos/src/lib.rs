@@ -1,7 +1,7 @@
 mod dict;
+mod parser;
 
-pub mod checks;
-pub mod report;
 pub mod tokens;
 
-pub use crate::dict::*;
+pub use dict::*;
+pub use parser::*;

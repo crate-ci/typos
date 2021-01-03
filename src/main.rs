@@ -7,11 +7,10 @@ use std::io::Write;
 use structopt::StructOpt;
 
 mod args;
-mod checks;
-mod config;
-mod dict;
-mod diff;
-mod replace;
+use typos_cli::checks;
+use typos_cli::config;
+use typos_cli::dict;
+use typos_cli::report;
 
 use proc_exit::WithCodeResultExt;
 
@@ -61,7 +60,7 @@ fn run() -> proc_exit::ExitResult {
         config.default.update(&args.overrides);
         let config = config;
 
-        let parser = typos::tokens::ParserBuilder::new()
+        let parser = typos::tokens::TokenizerBuilder::new()
             .ignore_hex(config.default.ignore_hex())
             .leading_digits(config.default.identifier_leading_digits())
             .leading_chars(config.default.identifier_leading_chars().to_owned())
@@ -74,7 +73,7 @@ fn run() -> proc_exit::ExitResult {
         dictionary.identifiers(config.default.extend_identifiers());
         dictionary.words(config.default.extend_words());
 
-        let mut settings = typos::checks::TyposSettings::new();
+        let mut settings = checks::TyposSettings::new();
         settings
             .check_filenames(config.default.check_filename())
             .check_files(config.default.check_file())
@@ -98,18 +97,11 @@ fn run() -> proc_exit::ExitResult {
         } else {
             args.format.reporter()
         };
-        let status_reporter = typos::report::MessageStatus::new(output_reporter);
-        let mut reporter: &dyn typos::report::Report = &status_reporter;
-        let replace_reporter = replace::Replace::new(reporter);
-        let diff_reporter = diff::Diff::new(reporter);
-        if args.diff {
-            reporter = &diff_reporter;
-        } else if args.write_changes {
-            reporter = &replace_reporter;
-        }
+        let status_reporter = report::MessageStatus::new(output_reporter);
+        let reporter: &dyn report::Report = &status_reporter;
 
-        let (files, identifier_parser, word_parser, checks);
-        let selected_checks: &dyn typos::checks::Check = if args.files {
+        let (files, identifier_parser, word_parser, checks, fixer, differ);
+        let selected_checks: &dyn checks::FileChecker = if args.files {
             files = settings.build_files();
             &files
         } else if args.identifiers {
@@ -118,13 +110,19 @@ fn run() -> proc_exit::ExitResult {
         } else if args.words {
             word_parser = settings.build_word_parser();
             &word_parser
+        } else if args.write_changes {
+            fixer = settings.build_fix_typos();
+            &fixer
+        } else if args.diff {
+            differ = settings.build_diff_typos();
+            &differ
         } else {
             checks = settings.build_typos();
             &checks
         };
 
         if single_threaded {
-            checks::check_path(
+            checks::walk_path(
                 walk.build(),
                 selected_checks,
                 &parser,
@@ -132,7 +130,7 @@ fn run() -> proc_exit::ExitResult {
                 reporter,
             )
         } else {
-            checks::check_path_parallel(
+            checks::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
                 &parser,
@@ -151,14 +149,6 @@ fn run() -> proc_exit::ExitResult {
         }
         if status_reporter.errors_found() {
             errors_found = true;
-        }
-
-        if args.diff {
-            diff_reporter.show().with_code(proc_exit::Code::FAILURE)?;
-        } else if args.write_changes {
-            replace_reporter
-                .write()
-                .with_code(proc_exit::Code::FAILURE)?;
         }
     }
 
