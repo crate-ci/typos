@@ -118,6 +118,13 @@ impl Config {
         Ok(content)
     }
 
+    pub fn from_defaults() -> Self {
+        Self {
+            files: Walk::from_defaults(),
+            default: FileConfig::from_defaults(),
+        }
+    }
+
     pub fn derive(cwd: &std::path::Path) -> Result<Self, anyhow::Error> {
         if let Some(path) = find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"]) {
             Self::from_file(&path)
@@ -160,6 +167,19 @@ pub struct Walk {
 }
 
 impl Walk {
+    pub fn from_defaults() -> Self {
+        let empty = Self::default();
+        Self {
+            binary: Some(empty.binary()),
+            ignore_hidden: Some(empty.ignore_hidden()),
+            ignore_files: Some(true),
+            ignore_dot: Some(empty.ignore_dot()),
+            ignore_vcs: Some(empty.ignore_vcs()),
+            ignore_global: Some(empty.ignore_global()),
+            ignore_parent: Some(empty.ignore_parent()),
+        }
+    }
+
     pub fn update(&mut self, source: &dyn WalkSource) {
         if let Some(source) = source.binary() {
             self.binary = Some(source);
@@ -264,6 +284,22 @@ pub struct FileConfig {
 }
 
 impl FileConfig {
+    pub fn from_defaults() -> Self {
+        let empty = Self::default();
+        FileConfig {
+            check_filename: Some(empty.check_filename()),
+            check_file: Some(empty.check_file()),
+            ignore_hex: Some(empty.ignore_hex()),
+            identifier_leading_digits: Some(empty.identifier_leading_digits()),
+            identifier_leading_chars: Some(empty.identifier_leading_chars().to_owned()),
+            identifier_include_digits: Some(empty.identifier_include_digits()),
+            identifier_include_chars: Some(empty.identifier_include_chars().to_owned()),
+            locale: Some(empty.locale()),
+            extend_identifiers: Default::default(),
+            extend_words: Default::default(),
+        }
+    }
+
     pub fn update(&mut self, source: &dyn FileSource) {
         if let Some(source) = source.check_filename() {
             self.check_filename = Some(source);

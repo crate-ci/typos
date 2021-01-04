@@ -60,7 +60,9 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     };
 
     let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
-    let output = toml::to_string_pretty(&config).with_code(proc_exit::Code::FAILURE)?;
+    let mut defaulted_config = config::Config::from_defaults();
+    defaulted_config.update(&config);
+    let output = toml::to_string_pretty(&defaulted_config).with_code(proc_exit::Code::FAILURE)?;
     std::fs::write(output_path, &output)?;
 
     Ok(())
