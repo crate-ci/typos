@@ -34,13 +34,40 @@ fn run() -> proc_exit::ExitResult {
     };
 
     init_logging(args.verbose.log_level());
+
+    if let Some(output_path) = args.dump_config.as_ref() {
+        run_dump_config(&args, output_path)
+    } else {
+        run_checks(&args)
+    }
+}
+
+fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exit::ExitResult {
     let global_cwd = std::env::current_dir()?;
 
-    let config = if let Some(path) = args.custom_config.as_ref() {
-        config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?
+    let path = &args.path[0];
+    let path = if path == std::path::Path::new("-") {
+        path.to_owned()
     } else {
-        config::Config::default()
+        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
     };
+    let cwd = if path == std::path::Path::new("-") {
+        global_cwd.as_path()
+    } else if path.is_file() {
+        path.parent().unwrap()
+    } else {
+        path.as_path()
+    };
+
+    let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
+    let output = toml::to_string_pretty(&config).with_code(proc_exit::Code::FAILURE)?;
+    std::fs::write(output_path, &output)?;
+
+    Ok(())
+}
+
+fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
+    let global_cwd = std::env::current_dir()?;
 
     let mut typos_found = false;
     let mut errors_found = false;
@@ -57,15 +84,7 @@ fn run() -> proc_exit::ExitResult {
         } else {
             path.as_path()
         };
-
-        let mut config = config.clone();
-        if !args.isolated {
-            let derived = config::Config::derive(cwd).with_code(proc_exit::Code::CONFIG_ERR)?;
-            config.update(&derived);
-        }
-        config.update(&args.config);
-        config.default.update(&args.overrides);
-        let config = config;
+        let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
 
         let parser = typos::tokens::TokenizerBuilder::new()
             .ignore_hex(config.default.ignore_hex())
@@ -193,4 +212,21 @@ fn init_logging(level: Option<log::Level>) {
 
         builder.init();
     }
+}
+
+fn load_config(cwd: &std::path::Path, args: &args::Args) -> Result<config::Config, anyhow::Error> {
+    let mut config = config::Config::default();
+
+    if let Some(path) = args.custom_config.as_ref() {
+        config.update(&config::Config::from_file(path)?);
+    }
+    if !args.isolated {
+        let derived = config::Config::derive(cwd)?;
+        config.update(&derived);
+    }
+
+    config.update(&args.config);
+    config.default.update(&args.overrides);
+
+    Ok(config)
 }

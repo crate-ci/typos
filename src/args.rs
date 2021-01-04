@@ -75,6 +75,10 @@ pub(crate) struct Args {
     /// Debug: Print each word that would be spellchecked.
     pub(crate) words: bool,
 
+    #[structopt(long, group = "mode")]
+    /// Write the current configuration to file.
+    pub(crate) dump_config: Option<std::path::PathBuf>,
+
     #[structopt(flatten)]
     pub(crate) overrides: FileArgs,
 
