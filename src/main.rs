@@ -217,12 +217,12 @@ fn init_logging(level: Option<log::Level>) {
 fn load_config(cwd: &std::path::Path, args: &args::Args) -> Result<config::Config, anyhow::Error> {
     let mut config = config::Config::default();
 
-    if let Some(path) = args.custom_config.as_ref() {
-        config.update(&config::Config::from_file(path)?);
-    }
     if !args.isolated {
         let derived = config::Config::derive(cwd)?;
         config.update(&derived);
+    }
+    if let Some(path) = args.custom_config.as_ref() {
+        config.update(&config::Config::from_file(path)?);
     }
 
     config.update(&args.config);
