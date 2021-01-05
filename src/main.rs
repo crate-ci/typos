@@ -63,7 +63,11 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     let mut defaulted_config = config::Config::from_defaults();
     defaulted_config.update(&config);
     let output = toml::to_string_pretty(&defaulted_config).with_code(proc_exit::Code::FAILURE)?;
-    std::fs::write(output_path, &output)?;
+    if output_path == std::path::Path::new("-") {
+        std::io::stdout().write_all(output.as_bytes())?;
+    } else {
+        std::fs::write(output_path, &output)?;
+    }
 
     Ok(())
 }

@@ -76,7 +76,7 @@ pub(crate) struct Args {
     pub(crate) words: bool,
 
     #[structopt(long, group = "mode")]
-    /// Write the current configuration to file.
+    /// Write the current configuration to file with `-` for stdout
     pub(crate) dump_config: Option<std::path::PathBuf>,
 
     #[structopt(flatten)]
