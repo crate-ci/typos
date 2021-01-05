@@ -109,7 +109,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         settings
             .check_filenames(config.default.check_filename())
             .check_files(config.default.check_file())
-            .binary(config.files.binary());
+            .binary(config.default.binary());
 
         let threads = if path.is_file() { 1 } else { args.threads };
         let single_threaded = threads == 1;

@@ -104,6 +104,12 @@ pub(crate) struct Args {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub(crate) struct FileArgs {
+    #[structopt(long, overrides_with("no-binary"))]
+    /// Search binary files.
+    binary: bool,
+    #[structopt(long, overrides_with("binary"), hidden(true))]
+    no_binary: bool,
+
     #[structopt(long, overrides_with("check-filenames"))]
     /// Skip verifying spelling in file names.
     no_check_filenames: bool,
@@ -130,6 +136,15 @@ pub(crate) struct FileArgs {
 }
 
 impl config::FileSource for FileArgs {
+    fn binary(&self) -> Option<bool> {
+        match (self.binary, self.no_binary) {
+            (true, false) => Some(true),
+            (false, true) => Some(false),
+            (false, false) => None,
+            (_, _) => unreachable!("StructOpt should make this impossible"),
+        }
+    }
+
     fn check_filename(&self) -> Option<bool> {
         match (self.check_filenames, self.no_check_filenames) {
             (true, false) => Some(true),
@@ -178,12 +193,6 @@ impl config::ConfigSource for ConfigArgs {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub(crate) struct WalkArgs {
-    #[structopt(long, overrides_with("no-binary"))]
-    /// Search binary files.
-    binary: bool,
-    #[structopt(long, overrides_with("binary"), hidden(true))]
-    no_binary: bool,
-
     #[structopt(long, overrides_with("no-hidden"))]
     /// Search hidden files and directories.
     hidden: bool,
@@ -222,15 +231,6 @@ pub(crate) struct WalkArgs {
 }
 
 impl config::WalkSource for WalkArgs {
-    fn binary(&self) -> Option<bool> {
-        match (self.binary, self.no_binary) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
-    }
-
     fn ignore_hidden(&self) -> Option<bool> {
         match (self.hidden, self.no_hidden) {
             (true, false) => Some(false),

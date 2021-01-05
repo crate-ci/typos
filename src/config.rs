@@ -12,11 +12,6 @@ pub trait ConfigSource {
 }
 
 pub trait WalkSource {
-    /// Search binary files.
-    fn binary(&self) -> Option<bool> {
-        None
-    }
-
     /// Skip hidden files and directories.
     fn ignore_hidden(&self) -> Option<bool> {
         None
@@ -49,6 +44,11 @@ pub trait WalkSource {
 }
 
 pub trait FileSource {
+    /// Check binary files.
+    fn binary(&self) -> Option<bool> {
+        None
+    }
+
     /// Verifying spelling in file names.
     fn check_filename(&self) -> Option<bool> {
         None
@@ -157,7 +157,6 @@ impl ConfigSource for Config {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
-    pub binary: Option<bool>,
     pub ignore_hidden: Option<bool>,
     pub ignore_files: Option<bool>,
     pub ignore_dot: Option<bool>,
@@ -170,7 +169,6 @@ impl Walk {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
         Self {
-            binary: Some(empty.binary()),
             ignore_hidden: Some(empty.ignore_hidden()),
             ignore_files: Some(true),
             ignore_dot: Some(empty.ignore_dot()),
@@ -181,9 +179,6 @@ impl Walk {
     }
 
     pub fn update(&mut self, source: &dyn WalkSource) {
-        if let Some(source) = source.binary() {
-            self.binary = Some(source);
-        }
         if let Some(source) = source.ignore_hidden() {
             self.ignore_hidden = Some(source);
         }
@@ -207,10 +202,6 @@ impl Walk {
         if let Some(source) = source.ignore_parent() {
             self.ignore_parent = Some(source);
         }
-    }
-
-    pub fn binary(&self) -> bool {
-        self.binary.unwrap_or(false)
     }
 
     pub fn ignore_hidden(&self) -> bool {
@@ -238,10 +229,6 @@ impl Walk {
 }
 
 impl WalkSource for Walk {
-    fn binary(&self) -> Option<bool> {
-        self.binary
-    }
-
     fn ignore_hidden(&self) -> Option<bool> {
         self.ignore_hidden
     }
@@ -271,6 +258,7 @@ impl WalkSource for Walk {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct FileConfig {
+    pub binary: Option<bool>,
     pub check_filename: Option<bool>,
     pub check_file: Option<bool>,
     pub ignore_hex: Option<bool>,
@@ -287,6 +275,7 @@ impl FileConfig {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
         FileConfig {
+            binary: Some(empty.binary()),
             check_filename: Some(empty.check_filename()),
             check_file: Some(empty.check_file()),
             ignore_hex: Some(empty.ignore_hex()),
@@ -301,6 +290,9 @@ impl FileConfig {
     }
 
     pub fn update(&mut self, source: &dyn FileSource) {
+        if let Some(source) = source.binary() {
+            self.binary = Some(source);
+        }
         if let Some(source) = source.check_filename() {
             self.check_filename = Some(source);
         }
@@ -335,6 +327,10 @@ impl FileConfig {
                 .extend_words()
                 .map(|(k, v)| (k.to_owned(), v.to_owned())),
         );
+    }
+
+    pub fn binary(&self) -> bool {
+        self.binary.unwrap_or(false)
     }
 
     pub fn check_filename(&self) -> bool {
@@ -387,6 +383,10 @@ impl FileConfig {
 }
 
 impl FileSource for FileConfig {
+    fn binary(&self) -> Option<bool> {
+        self.binary
+    }
+
     fn check_filename(&self) -> Option<bool> {
         self.check_filename
     }
