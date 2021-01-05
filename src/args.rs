@@ -41,9 +41,10 @@ impl Default for Format {
         setting = structopt::clap::AppSettings::DeriveDisplayOrder,
         setting = structopt::clap::AppSettings::DontCollapseArgsInUsage
     )]
+#[structopt(group = structopt::clap::ArgGroup::with_name("mode").multiple(false))]
 pub(crate) struct Args {
     #[structopt(parse(from_os_str), default_value = ".")]
-    /// Paths to check
+    /// Paths to check with `-` for stdin
     pub(crate) path: Vec<std::path::PathBuf>,
 
     #[structopt(short = "c", long = "config")]
@@ -54,25 +55,29 @@ pub(crate) struct Args {
     /// Ignore implicit configuration files.
     pub(crate) isolated: bool,
 
-    #[structopt(long)]
+    #[structopt(long, group = "mode")]
     /// Print a diff of what would change
     pub(crate) diff: bool,
 
-    #[structopt(long, short = "w")]
-    /// Write corrections out
+    #[structopt(long, short = "w", group = "mode")]
+    /// Write fixes out
     pub(crate) write_changes: bool,
 
-    #[structopt(long)]
-    /// Print each file that would be spellchecked.
+    #[structopt(long, group = "mode")]
+    /// Debug: Print each file that would be spellchecked.
     pub(crate) files: bool,
 
-    #[structopt(long)]
-    /// Print each identifier that would be spellchecked.
+    #[structopt(long, group = "mode")]
+    /// Debug: Print each identifier that would be spellchecked.
     pub(crate) identifiers: bool,
 
-    #[structopt(long)]
-    /// Print each word that would be spellchecked.
+    #[structopt(long, group = "mode")]
+    /// Debug: Print each word that would be spellchecked.
     pub(crate) words: bool,
+
+    #[structopt(long, group = "mode")]
+    /// Write the current configuration to file with `-` for stdout
+    pub(crate) dump_config: Option<std::path::PathBuf>,
 
     #[structopt(flatten)]
     pub(crate) overrides: FileArgs,
