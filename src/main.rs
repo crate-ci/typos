@@ -105,7 +105,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         dictionary.identifiers(config.default.extend_identifiers());
         dictionary.words(config.default.extend_words());
 
-        let mut settings = checks::TyposSettings::new();
+        let mut settings = checks::CheckSettings::new();
         settings
             .check_filenames(config.default.check_filename())
             .check_files(config.default.check_file())
@@ -132,31 +132,25 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         let status_reporter = report::MessageStatus::new(output_reporter);
         let reporter: &dyn report::Report = &status_reporter;
 
-        let (files, identifier_parser, word_parser, checks, fixer, differ);
         let selected_checks: &dyn checks::FileChecker = if args.files {
-            files = settings.build_files();
-            &files
+            &checks::FoundFiles
         } else if args.identifiers {
-            identifier_parser = settings.build_identifier_parser();
-            &identifier_parser
+            &checks::Identifiers
         } else if args.words {
-            word_parser = settings.build_word_parser();
-            &word_parser
+            &checks::Words
         } else if args.write_changes {
-            fixer = settings.build_fix_typos();
-            &fixer
+            &checks::FixTypos
         } else if args.diff {
-            differ = settings.build_diff_typos();
-            &differ
+            &checks::DiffTypos
         } else {
-            checks = settings.build_typos();
-            &checks
+            &checks::Typos
         };
 
         if single_threaded {
             checks::walk_path(
                 walk.build(),
                 selected_checks,
+                &settings,
                 &parser,
                 &dictionary,
                 reporter,
@@ -165,6 +159,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             checks::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
+                &settings,
                 &parser,
                 &dictionary,
                 reporter,

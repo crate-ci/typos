@@ -12,6 +12,7 @@ pub trait FileChecker: Send + Sync {
         &self,
         path: &std::path::Path,
         explicit: bool,
+        settings: &CheckSettings,
         parser: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
@@ -19,13 +20,13 @@ pub trait FileChecker: Send + Sync {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct TyposSettings {
+pub struct CheckSettings {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
 }
 
-impl TyposSettings {
+impl CheckSettings {
     pub fn new() -> Self {
         Default::default()
     }
@@ -44,55 +45,9 @@ impl TyposSettings {
         self.binary = yes;
         self
     }
-
-    pub fn build_typos(&self) -> Typos {
-        Typos {
-            check_filenames: self.check_filenames,
-            check_files: self.check_files,
-            binary: self.binary,
-        }
-    }
-
-    pub fn build_fix_typos(&self) -> FixTypos {
-        FixTypos {
-            check_filenames: self.check_filenames,
-            check_files: self.check_files,
-            binary: self.binary,
-        }
-    }
-
-    pub fn build_diff_typos(&self) -> DiffTypos {
-        DiffTypos {
-            check_filenames: self.check_filenames,
-            check_files: self.check_files,
-            binary: self.binary,
-        }
-    }
-
-    pub fn build_identifier_parser(&self) -> Identifiers {
-        Identifiers {
-            check_filenames: self.check_filenames,
-            check_files: self.check_files,
-            binary: self.binary,
-        }
-    }
-
-    pub fn build_word_parser(&self) -> Words {
-        Words {
-            check_filenames: self.check_filenames,
-            check_files: self.check_files,
-            binary: self.binary,
-        }
-    }
-
-    pub fn build_files(&self) -> FoundFiles {
-        FoundFiles {
-            binary: self.binary,
-        }
-    }
 }
 
-impl Default for TyposSettings {
+impl Default for CheckSettings {
     fn default() -> Self {
         Self {
             check_filenames: true,
@@ -102,18 +57,15 @@ impl Default for TyposSettings {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Typos {
-    check_filenames: bool,
-    check_files: bool,
-    binary: bool,
-}
+#[derive(Debug, Clone, Copy)]
+pub struct Typos;
 
 impl FileChecker for Typos {
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        settings: &CheckSettings,
         tokenizer: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
@@ -123,7 +75,7 @@ impl FileChecker for Typos {
             .dictionary(dictionary)
             .build();
 
-        if self.check_filenames {
+        if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for typo in parser.parse_str(file_name) {
                     let msg = report::Typo {
@@ -138,9 +90,9 @@ impl FileChecker for Typos {
             }
         }
 
-        if self.check_files {
+        if settings.check_files {
             let (buffer, content_type) = read_file(path, reporter)?;
-            if !explicit && !self.binary && content_type.is_binary() {
+            if !explicit && !settings.binary && content_type.is_binary() {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
@@ -164,18 +116,15 @@ impl FileChecker for Typos {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct FixTypos {
-    check_filenames: bool,
-    check_files: bool,
-    binary: bool,
-}
+#[derive(Debug, Clone, Copy)]
+pub struct FixTypos;
 
 impl FileChecker for FixTypos {
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        settings: &CheckSettings,
         tokenizer: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
@@ -185,9 +134,9 @@ impl FileChecker for FixTypos {
             .dictionary(dictionary)
             .build();
 
-        if self.check_files {
+        if settings.check_files {
             let (buffer, content_type) = read_file(path, reporter)?;
-            if !explicit && !self.binary && content_type.is_binary() {
+            if !explicit && !settings.binary && content_type.is_binary() {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
@@ -217,7 +166,7 @@ impl FileChecker for FixTypos {
         }
 
         // Ensure the above write can happen before renaming the file.
-        if self.check_filenames {
+        if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
                 for typo in parser.parse_str(file_name) {
@@ -249,18 +198,15 @@ impl FileChecker for FixTypos {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct DiffTypos {
-    check_filenames: bool,
-    check_files: bool,
-    binary: bool,
-}
+#[derive(Debug, Clone, Copy)]
+pub struct DiffTypos;
 
 impl FileChecker for DiffTypos {
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        settings: &CheckSettings,
         tokenizer: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
@@ -272,9 +218,9 @@ impl FileChecker for DiffTypos {
 
         let mut content = Vec::new();
         let mut new_content = Vec::new();
-        if self.check_files {
+        if settings.check_files {
             let (buffer, content_type) = read_file(path, reporter)?;
-            if !explicit && !self.binary && content_type.is_binary() {
+            if !explicit && !settings.binary && content_type.is_binary() {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
@@ -305,7 +251,7 @@ impl FileChecker for DiffTypos {
 
         // Match FixTypos ordering for easy diffing.
         let mut new_path = None;
-        if self.check_filenames {
+        if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
                 for typo in parser.parse_str(file_name) {
@@ -361,23 +307,20 @@ impl FileChecker for DiffTypos {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Identifiers {
-    check_filenames: bool,
-    check_files: bool,
-    binary: bool,
-}
+#[derive(Debug, Clone, Copy)]
+pub struct Identifiers;
 
 impl FileChecker for Identifiers {
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        settings: &CheckSettings,
         tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        if self.check_filenames {
+        if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for word in tokenizer.parse_str(file_name) {
                     let msg = report::Parse {
@@ -390,9 +333,9 @@ impl FileChecker for Identifiers {
             }
         }
 
-        if self.check_files {
+        if settings.check_files {
             let (buffer, content_type) = read_file(path, reporter)?;
-            if !explicit && !self.binary && content_type.is_binary() {
+            if !explicit && !settings.binary && content_type.is_binary() {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
@@ -415,23 +358,20 @@ impl FileChecker for Identifiers {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Words {
-    check_filenames: bool,
-    check_files: bool,
-    binary: bool,
-}
+#[derive(Debug, Clone, Copy)]
+pub struct Words;
 
 impl FileChecker for Words {
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        settings: &CheckSettings,
         tokenizer: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        if self.check_filenames {
+        if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for word in tokenizer.parse_str(file_name).flat_map(|i| i.split()) {
                     let msg = report::Parse {
@@ -444,9 +384,9 @@ impl FileChecker for Words {
             }
         }
 
-        if self.check_files {
+        if settings.check_files {
             let (buffer, content_type) = read_file(path, reporter)?;
-            if !explicit && !self.binary && content_type.is_binary() {
+            if !explicit && !settings.binary && content_type.is_binary() {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
@@ -469,22 +409,21 @@ impl FileChecker for Words {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct FoundFiles {
-    binary: bool,
-}
+#[derive(Debug, Clone, Copy)]
+pub struct FoundFiles;
 
 impl FileChecker for FoundFiles {
     fn check_file(
         &self,
         path: &std::path::Path,
         explicit: bool,
+        settings: &CheckSettings,
         _parser: &tokens::Tokenizer,
         _dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        // Check `self.binary` first so we can easily check performance of walking vs reading
-        if self.binary {
+        // Check `settings.binary` first so we can easily check performance of walking vs reading
+        if settings.binary {
             let msg = report::File::new(path);
             reporter.report(msg.into())?;
         } else {
@@ -674,12 +613,13 @@ fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'stat
 pub fn walk_path(
     walk: ignore::Walk,
     checks: &dyn FileChecker,
+    settings: &CheckSettings,
     parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     for entry in walk {
-        walk_entry(entry, checks, parser, dictionary, reporter)?;
+        walk_entry(entry, checks, settings, parser, dictionary, reporter)?;
     }
     Ok(())
 }
@@ -687,6 +627,7 @@ pub fn walk_path(
 pub fn walk_path_parallel(
     walk: ignore::WalkParallel,
     checks: &dyn FileChecker,
+    settings: &CheckSettings,
     parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
@@ -694,7 +635,7 @@ pub fn walk_path_parallel(
     let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match walk_entry(entry, checks, parser, dictionary, reporter) {
+            match walk_entry(entry, checks, settings, parser, dictionary, reporter) {
                 Ok(()) => ignore::WalkState::Continue,
                 Err(err) => {
                     *error.lock().unwrap() = Err(err);
@@ -710,6 +651,7 @@ pub fn walk_path_parallel(
 fn walk_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     checks: &dyn FileChecker,
+    settings: &CheckSettings,
     parser: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
@@ -728,7 +670,7 @@ fn walk_entry(
         } else {
             entry.path()
         };
-        checks.check_file(path, explicit, parser, dictionary, reporter)?;
+        checks.check_file(path, explicit, settings, parser, dictionary, reporter)?;
     }
 
     Ok(())

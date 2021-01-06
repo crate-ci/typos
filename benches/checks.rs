@@ -15,11 +15,12 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let checks = typos_cli::checks::TyposSettings::new().build_files();
+            let settings = typos_cli::checks::CheckSettings::new();
             b.iter(|| {
-                checks.check_file(
+                typos_cli::checks::FoundFiles.check_file(
                     sample_path.path(),
                     true,
+                    &settings,
                     &parser,
                     &corrections,
                     &typos_cli::report::PrintSilent,
@@ -35,11 +36,12 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let checks = typos_cli::checks::TyposSettings::new().build_identifier_parser();
+            let settings = typos_cli::checks::CheckSettings::new();
             b.iter(|| {
-                checks.check_file(
+                typos_cli::checks::Identifiers.check_file(
                     sample_path.path(),
                     true,
+                    &settings,
                     &parser,
                     &corrections,
                     &typos_cli::report::PrintSilent,
@@ -55,11 +57,12 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let checks = typos_cli::checks::TyposSettings::new().build_word_parser();
+            let settings = typos_cli::checks::CheckSettings::new();
             b.iter(|| {
-                checks.check_file(
+                typos_cli::checks::Words.check_file(
                     sample_path.path(),
                     true,
+                    &settings,
                     &parser,
                     &corrections,
                     &typos_cli::report::PrintSilent,
@@ -75,11 +78,12 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let checks = typos_cli::checks::TyposSettings::new().build_typos();
+            let settings = typos_cli::checks::CheckSettings::new();
             b.iter(|| {
-                checks.check_file(
+                typos_cli::checks::Typos.check_file(
                     sample_path.path(),
                     true,
+                    &settings,
                     &parser,
                     &corrections,
                     &typos_cli::report::PrintSilent,
