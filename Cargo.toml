@@ -57,6 +57,9 @@ derive_setters = "0.1"
 itertools = "0.10"
 serde_json = "1.0"
 encoding = "0.2"
+# HACK: Force a syn version until everyone has fixed their reliance on internal
+# APIs.
+syn = "=1.0.57"
 
 [dev-dependencies]
 assert_fs = "1.0"
