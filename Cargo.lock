@@ -270,7 +270,7 @@ dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
  "strsim 0.9.3",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -281,7 +281,7 @@ checksum = "d9b5a2f4ac4969822c62224815d069952656cadc7084fdca9751e6d959189b72"
 dependencies = [
  "darling_core",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -306,7 +306,7 @@ checksum = "41cb0e6161ad61ed084a36ba71fbba9e3ac5aee3606fb607fe08da6acbcf3d8c"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -318,7 +318,7 @@ dependencies = [
  "darling",
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -432,7 +432,7 @@ checksum = "946ee94e3dbf58fdd324f9ce245c7b238d46a66f00e86a020b71996349e46cce"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -829,7 +829,7 @@ dependencies = [
  "proc-macro-error-attr",
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
  "version_check",
 ]
 
@@ -1047,7 +1047,7 @@ checksum = "c84d3526699cd55261af4b941e4e725444df67aa4f9e6a3564f18030d12672df"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -1106,7 +1106,7 @@ dependencies = [
  "proc-macro-error",
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -1122,9 +1122,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "1.0.57"
+version = "1.0.60"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4211ce9909eb971f111059df92c45640aad50a619cf55cd76476be803c4c68e6"
+checksum = "c700597eca8a5a762beb35753ef6b94df201c81cca676604f547495a0d7f0081"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
@@ -1186,7 +1186,7 @@ checksum = "9be73a2caec27583d0046ef3796c3794f868a5bc813db689eed00c7631275cd1"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
- "syn 1.0.57",
+ "syn 1.0.60",
 ]
 
 [[package]]
@@ -1253,7 +1253,7 @@ dependencies = [
  "serde",
  "serde_json",
  "structopt",
- "syn 1.0.57",
+ "syn 1.0.60",
  "toml",
  "typos",
  "typos-dict",
