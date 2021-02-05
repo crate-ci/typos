@@ -46,7 +46,7 @@ toml = "0.5"
 log = "0.4"
 env_logger = "0.8"
 bstr = "0.2"
-ahash = "0.6.1"
+ahash = "0.7"
 difflib = "0.4"
 proc-exit = "1.0"
 human-panic = "1.0.3"
@@ -57,9 +57,6 @@ derive_setters = "0.1"
 itertools = "0.10"
 serde_json = "1.0"
 encoding = "0.2"
-# HACK: Force a syn version until everyone has fixed their reliance on internal
-# APIs.
-syn = "=1.0.57"
 
 [dev-dependencies]
 assert_fs = "1.0"
