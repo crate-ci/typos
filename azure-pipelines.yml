@@ -3,6 +3,15 @@ trigger:
     include: ['master']
   tags:
     include: ['v*']
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - "*.md"
+    - "docs/*"
+    - "LICENSE-*"
 schedules:
 - cron: "3 3 3 * *"
   displayName: Monthly Build
@@ -10,7 +19,7 @@ schedules:
     include:
     - master
 variables:
-  minrust: 1.47.0
+  minrust: 1.49.0
   codecov_token: $(CODECOV_TOKEN_SECRET)
   windows_vm: vs2017-win2016
   mac_vm: macos-10.14
@@ -28,18 +37,9 @@ stages:
     - template: install-rust.yml@templates
       parameters:
         rust: stable
-    - script: cargo check --all --bins --examples --tests
-      displayName: Default features
-  - job: cargo_check_bench
-    displayName: cargo check --benches
-    pool:
-      vmImage: ${{ variables.linux_vm }}
-    continueOnError: true
-    steps:
-    - template: install-rust.yml@templates
-      parameters:
-        rust: nightly
-    - script: cargo check --all --benches
+    - script: cargo check --workspace --locked
+      displayName: Check that Cargo.lock is satisfiable
+    - script: cargo check --workspace --all-targets
       displayName: Default features
 - stage: test
   displayName: Test
@@ -60,15 +60,25 @@ stages:
           imageName: ${{ variables.linux_vm }}
           target: 'x86_64-unknown-linux-gnu'
           channel: stable
+        # Check for upcoming platform-specific compiler breakages
+        windows_beta:
+          imageName: ${{ variables.windows_vm }}
+          target: 'x86_64-pc-windows-msvc'
+          channel: beta
+        mac_beta:
+          imageName: ${{ variables.mac_vm }}
+          target: 'x86_64-apple-darwin'
+          channel: beta
         linux_beta:
           imageName: ${{ variables.linux_vm }}
           target: 'x86_64-unknown-linux-gnu'
           channel: beta
+        # Check for compiler breakages
         linux_nightly:
           imageName: ${{ variables.linux_vm }}
           target: 'x86_64-unknown-linux-gnu'
           channel: nightly
-    continueOnError: ${{ eq(variables.channel, 'nightly') }}
+    continueOnError: $[ne(variables.channel, 'stable')]
     pool:
       vmImage: $(imageName)
     steps:
@@ -76,9 +86,9 @@ stages:
       parameters:
         rust: $(channel)
         targets: ["$(TARGET)"]
-    - script: cargo test --target $(TARGET) --all
+    - script: cargo test --target $(TARGET) --workspace
       displayName: cargo test
-    - script: cargo doc --target $(TARGET) --no-deps --all
+    - script: cargo doc --target $(TARGET) --workspace --no-deps
       displayName: cargo doc
   - job: msrv
     displayName: "${{ format('Minimum supported Rust version: {0}', variables.minrust) }}"
@@ -89,13 +99,14 @@ stages:
       - template: install-rust.yml@templates
         parameters:
           rust: ${{ variables.minrust }}
-      - script: cargo check --all
+      - script: cargo check --all --bins --examples --tests
         displayName: cargo check
 - stage: style
   displayName: Style checks
   dependsOn: []
   jobs:
   - job: "Committed"
+    displayName: Linting commit history
     pool:
       vmImage: ${{ variables.linux_vm }}
     steps:
@@ -106,19 +117,38 @@ stages:
         target: 'x86_64-unknown-linux-gnu'
         to: $(Build.StagingDirectory)/tools
     - script: |
-        echo "This project uses Conventional style, see https://www.conventionalcommits.org"
+        echo "Linting commits:"
+        git log --graph --oneline HEAD~..HEAD^2
+        echo "Against 'committed.toml':"
+        $(Build.StagingDirectory)/tools/committed --dump-config -
+        echo ""
+        echo "If this fails, don't sweat it. We're trying to encourage clear communication and not hinder contributions."
+        echo "If it is a reasonable issue and you lack time or feel uncomfortable fixing it yourself,"
+        echo "let us know and we can mentor or fix it."
         $(Build.StagingDirectory)/tools/committed HEAD~..HEAD^2 --no-merge-commit -vv
-      displayName: Committed
+      displayName: Lint commit history
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
   - job: style
-    displayName: Style linting
+    displayName: Style checking
+    pool:
+      vmImage: ${{ variables.linux_vm }}
+    steps:
+    - template: install-rust.yml@templates
+      parameters:
+        rust: stable
+        components:
+          - rustfmt
+    - script: cargo fmt --all -- --check
+      displayName: rustfmt
+  - job: lint
+    displayName: Linting
     strategy:
       matrix:
         current:
-          channel: stable
+          channel: ${{ variables.minrust }}
         next:
-          channel: beta
-    continueOnError: ${{ eq(variables.channel, 'beta') }}
+          channel: stable
+    continueOnError: $[eq(variables.channel, 'stable')]
     pool:
       vmImage: ${{ variables.linux_vm }}
     steps:
@@ -126,24 +156,21 @@ stages:
       parameters:
         rust: $(channel)
         components:
-          - rustfmt
           - clippy
-    - script: cargo fmt --all -- --check
-      displayName: rustfmt
-    - script: cargo check --all
+    - script: cargo check --workspace --all-targets --all-features
       displayName: Warnings
       env:
         RUSTFLAGS: "-D warnings"
-    - script: cargo clippy --all -- -D warnings
+    - script:  cargo clippy --workspace --all-features --all-targets -- -D warnings
       displayName: clippy
 - ${{ if ne('', variables.codecov_token) }}:
   - stage: coverage
     displayName: Code coverage
     dependsOn: test
     jobs:
-    - template: coverage.yml@templates
-      parameters:
-        token: ${{ variables.codecov_token }}
+      - template: coverage.yml@templates
+        parameters:
+          token: ${{ variables.codecov_token }}
 - stage: codegen
   displayName: Verify Code-gen
   dependsOn: ["check"]
@@ -174,8 +201,9 @@ stages:
     - script: |
         cargo run --package varcon-codegen -- --output crates/varcon/src/codegen.rs --check
       displayName: Verify varcon-dict
-- stage: Release
-  dependsOn: test
+- stage: release
+  displayName: Release
+  dependsOn: []
   condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
   jobs:
   - job:
@@ -197,8 +225,11 @@ stages:
       vmImage: $(imageName)
     steps:
     - template: install-rust.yml@templates
+      parameters:
+        rust: stable
+        targets: ["$(TARGET)"]
     - script: |
-        cargo rustc --target $(TARGET) --release --bin $(CRATE_NAME) -- -C lto
+        cargo build --target $(TARGET) --release --bin $(CRATE_NAME)
       displayName: Build
     - task: CopyFiles@2
       displayName: Stage assets
