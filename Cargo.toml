@@ -61,9 +61,22 @@ encoding = "0.2"
 [dev-dependencies]
 assert_fs = "1.0"
 predicates = "1.0"
+criterion = "0.3"
 
 [profile.dev]
 panic = "abort"
 
 [profile.release]
 panic = "abort"
+
+[[bench]]
+name = "checks"
+harness = false
+
+[[bench]]
+name = "corrections"
+harness = false
+
+[[bench]]
+name = "tokenize"
+harness = false

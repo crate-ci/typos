@@ -1,11 +1,11 @@
-pub const EMPTY: &str = "";
+pub static EMPTY: &str = "";
 
-pub const NO_TOKENS: &str = "                    ";
+pub static NO_TOKENS: &str = "                    ";
 
-pub const SINGLE_TOKEN: &str = "success";
+pub static SINGLE_TOKEN: &str = "success";
 
 // Stolen from https://github.com/BurntSushi/ripgrep/blob/master/grep-searcher/src/searcher/glue.rs
-pub const SHERLOCK: &'static str = "\
+pub static SHERLOCK: &'static str = "\
 For the Doctor Watsons of this world, as opposed to the Sherlock
 Holmeses, success in the province of detective work must always
 be, to a very large extent, the result of luck. Sherlock Holmes
@@ -15,7 +15,7 @@ and exhibited clearly, with a label attached.\
 ";
 
 // Stolen from https://github.com/BurntSushi/ripgrep/blob/master/grep-searcher/src/searcher/glue.rs
-pub const CODE: &'static str = "\
+pub static CODE: &'static str = "\
 extern crate snap;
 use std::io;
 fn main() {
@@ -28,4 +28,13 @@ fn main() {
 }
 ";
 
-pub const CORPUS: &str = include_str!("../crates/typos-dict/assets/words.csv");
+pub static CORPUS: &str = include_str!("../crates/typos-dict/assets/words.csv");
+
+pub static DATA: &[(&str, &str)] = &[
+    ("empty", EMPTY),
+    ("no_tokens", NO_TOKENS),
+    ("single_token", SINGLE_TOKEN),
+    ("sherlock", SHERLOCK),
+    ("code", CODE),
+    ("corpus", CORPUS),
+];
