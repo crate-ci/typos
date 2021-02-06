@@ -5,7 +5,7 @@ pub static NO_TOKENS: &str = "                    ";
 pub static SINGLE_TOKEN: &str = "success";
 
 // Stolen from https://github.com/BurntSushi/ripgrep/blob/master/grep-searcher/src/searcher/glue.rs
-pub static SHERLOCK: &'static str = "\
+pub static SHERLOCK: &str = "\
 For the Doctor Watsons of this world, as opposed to the Sherlock
 Holmeses, success in the province of detective work must always
 be, to a very large extent, the result of luck. Sherlock Holmes
@@ -15,7 +15,7 @@ and exhibited clearly, with a label attached.\
 ";
 
 // Stolen from https://github.com/BurntSushi/ripgrep/blob/master/grep-searcher/src/searcher/glue.rs
-pub static CODE: &'static str = "\
+pub static CODE: &str = "\
 extern crate snap;
 use std::io;
 fn main() {
