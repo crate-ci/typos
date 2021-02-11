@@ -92,7 +92,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         };
         let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
 
-        let parser = typos::tokens::TokenizerBuilder::new()
+        let tokenizer = typos::tokens::TokenizerBuilder::new()
             .ignore_hex(config.default.ignore_hex())
             .leading_digits(config.default.identifier_leading_digits())
             .leading_chars(config.default.identifier_leading_chars().to_owned())
@@ -151,7 +151,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
                 walk.build(),
                 selected_checks,
                 &settings,
-                &parser,
+                &tokenizer,
                 &dictionary,
                 reporter,
             )
@@ -160,7 +160,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
                 walk.build_parallel(),
                 selected_checks,
                 &settings,
-                &parser,
+                &tokenizer,
                 &dictionary,
                 reporter,
             )

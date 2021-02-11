@@ -13,7 +13,7 @@ pub trait FileChecker: Send + Sync {
         path: &std::path::Path,
         explicit: bool,
         settings: &CheckSettings,
-        parser: &tokens::Tokenizer,
+        tokenizer: &tokens::Tokenizer,
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error>;
@@ -614,12 +614,12 @@ pub fn walk_path(
     walk: ignore::Walk,
     checks: &dyn FileChecker,
     settings: &CheckSettings,
-    parser: &typos::tokens::Tokenizer,
+    tokenizer: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     for entry in walk {
-        walk_entry(entry, checks, settings, parser, dictionary, reporter)?;
+        walk_entry(entry, checks, settings, tokenizer, dictionary, reporter)?;
     }
     Ok(())
 }
@@ -628,14 +628,14 @@ pub fn walk_path_parallel(
     walk: ignore::WalkParallel,
     checks: &dyn FileChecker,
     settings: &CheckSettings,
-    parser: &typos::tokens::Tokenizer,
+    tokenizer: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match walk_entry(entry, checks, settings, parser, dictionary, reporter) {
+            match walk_entry(entry, checks, settings, tokenizer, dictionary, reporter) {
                 Ok(()) => ignore::WalkState::Continue,
                 Err(err) => {
                     *error.lock().unwrap() = Err(err);
@@ -652,7 +652,7 @@ fn walk_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     checks: &dyn FileChecker,
     settings: &CheckSettings,
-    parser: &typos::tokens::Tokenizer,
+    tokenizer: &typos::tokens::Tokenizer,
     dictionary: &dyn typos::Dictionary,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
@@ -670,7 +670,7 @@ fn walk_entry(
         } else {
             entry.path()
         };
-        checks.check_file(path, explicit, settings, parser, dictionary, reporter)?;
+        checks.check_file(path, explicit, settings, tokenizer, dictionary, reporter)?;
     }
 
     Ok(())
