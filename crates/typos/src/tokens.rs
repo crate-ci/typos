@@ -181,7 +181,7 @@ impl<'t> Identifier<'t> {
 
     /// Split into individual Words.
     pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
-        split_ident(self.token, self.offset)
+        SplitIdent::new(self.token, self.offset)
     }
 }
 
@@ -195,7 +195,7 @@ pub struct Word<'t> {
 
 impl<'t> Word<'t> {
     pub fn new(token: &'t str, offset: usize) -> Result<Self, std::io::Error> {
-        let mut itr = split_ident(token, 0);
+        let mut itr = SplitIdent::new(token, 0);
         let mut item = itr.next().ok_or_else(|| {
             std::io::Error::new(
                 std::io::ErrorKind::InvalidInput,
@@ -237,10 +237,6 @@ impl<'t> Word<'t> {
     pub fn offset(&self) -> usize {
         self.offset
     }
-}
-
-fn split_ident(ident: &str, offset: usize) -> impl Iterator<Item = Word<'_>> {
-    SplitIdent::new(ident, offset)
 }
 
 struct SplitIdent<'s> {
