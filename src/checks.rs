@@ -70,14 +70,9 @@ impl FileChecker for Typos {
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let parser = typos::ParserBuilder::new()
-            .tokenizer(tokenizer)
-            .dictionary(dictionary)
-            .build();
-
         if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for typo in parser.parse_str(file_name) {
+                for typo in typos::check_str(file_name, tokenizer, dictionary) {
                     let msg = report::Typo {
                         context: Some(report::PathContext { path }.into()),
                         buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
@@ -97,7 +92,7 @@ impl FileChecker for Typos {
                 reporter.report(msg.into())?;
             } else {
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in parser.parse_bytes(&buffer) {
+                for typo in typos::check_bytes(&buffer, tokenizer, dictionary) {
                     let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
                     let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
                     let msg = report::Typo {
@@ -129,11 +124,6 @@ impl FileChecker for FixTypos {
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let parser = typos::ParserBuilder::new()
-            .tokenizer(tokenizer)
-            .dictionary(dictionary)
-            .build();
-
         if settings.check_files {
             let (buffer, content_type) = read_file(path, reporter)?;
             if !explicit && !settings.binary && content_type.is_binary() {
@@ -142,7 +132,7 @@ impl FileChecker for FixTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in parser.parse_bytes(&buffer) {
+                for typo in typos::check_bytes(&buffer, tokenizer, dictionary) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -169,7 +159,7 @@ impl FileChecker for FixTypos {
         if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in parser.parse_str(file_name) {
+                for typo in typos::check_str(file_name, tokenizer, dictionary) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -211,11 +201,6 @@ impl FileChecker for DiffTypos {
         dictionary: &dyn Dictionary,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
-        let parser = typos::ParserBuilder::new()
-            .tokenizer(tokenizer)
-            .dictionary(dictionary)
-            .build();
-
         let mut content = Vec::new();
         let mut new_content = Vec::new();
         if settings.check_files {
@@ -226,7 +211,7 @@ impl FileChecker for DiffTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in parser.parse_bytes(&buffer) {
+                for typo in typos::check_bytes(&buffer, tokenizer, dictionary) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -254,7 +239,7 @@ impl FileChecker for DiffTypos {
         if settings.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in parser.parse_str(file_name) {
+                for typo in typos::check_str(file_name, tokenizer, dictionary) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {

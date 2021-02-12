@@ -1,7 +1,7 @@
+mod check;
 mod dict;
-mod parser;
 
 pub mod tokens;
 
+pub use check::*;
 pub use dict::*;
-pub use parser::*;

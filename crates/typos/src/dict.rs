@@ -13,21 +13,6 @@ pub trait Dictionary: Send + Sync {
     fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Status<'s>>;
 }
 
-pub(crate) struct NullDictionary;
-
-impl Dictionary for NullDictionary {
-    fn correct_ident<'s, 'w>(
-        &'s self,
-        _ident: crate::tokens::Identifier<'w>,
-    ) -> Option<Status<'s>> {
-        None
-    }
-
-    fn correct_word<'s, 'w>(&'s self, _word: crate::tokens::Word<'w>) -> Option<Status<'s>> {
-        None
-    }
-}
-
 /// Validity of a term in a Dictionary.
 #[derive(Clone, PartialEq, Eq, Debug, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
