@@ -7,7 +7,6 @@ use std::io::Write;
 use structopt::StructOpt;
 
 mod args;
-use typos_cli::checks;
 use typos_cli::config;
 use typos_cli::dict;
 use typos_cli::report;
@@ -105,7 +104,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         dictionary.identifiers(config.default.extend_identifiers());
         dictionary.words(config.default.extend_words());
 
-        let mut settings = checks::CheckSettings::new();
+        let mut settings = typos_cli::file::CheckSettings::new();
         settings
             .check_filenames(config.default.check_filename())
             .check_files(config.default.check_file())
@@ -132,22 +131,22 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         let status_reporter = report::MessageStatus::new(output_reporter);
         let reporter: &dyn report::Report = &status_reporter;
 
-        let selected_checks: &dyn checks::FileChecker = if args.files {
-            &checks::FoundFiles
+        let selected_checks: &dyn typos_cli::file::FileChecker = if args.files {
+            &typos_cli::file::FoundFiles
         } else if args.identifiers {
-            &checks::Identifiers
+            &typos_cli::file::Identifiers
         } else if args.words {
-            &checks::Words
+            &typos_cli::file::Words
         } else if args.write_changes {
-            &checks::FixTypos
+            &typos_cli::file::FixTypos
         } else if args.diff {
-            &checks::DiffTypos
+            &typos_cli::file::DiffTypos
         } else {
-            &checks::Typos
+            &typos_cli::file::Typos
         };
 
         if single_threaded {
-            checks::walk_path(
+            typos_cli::file::walk_path(
                 walk.build(),
                 selected_checks,
                 &settings,
@@ -156,7 +155,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
                 reporter,
             )
         } else {
-            checks::walk_path_parallel(
+            typos_cli::file::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
                 &settings,

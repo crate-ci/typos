@@ -2,7 +2,7 @@ mod data;
 
 use assert_fs::prelude::*;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
-use typos_cli::checks::FileChecker;
+use typos_cli::file::FileChecker;
 
 fn bench_checks(c: &mut Criterion) {
     let mut group = c.benchmark_group("checks");
@@ -15,9 +15,9 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let settings = typos_cli::checks::CheckSettings::new();
+            let settings = typos_cli::file::CheckSettings::new();
             b.iter(|| {
-                typos_cli::checks::FoundFiles.check_file(
+                typos_cli::file::FoundFiles.check_file(
                     sample_path.path(),
                     true,
                     &settings,
@@ -36,9 +36,9 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let settings = typos_cli::checks::CheckSettings::new();
+            let settings = typos_cli::file::CheckSettings::new();
             b.iter(|| {
-                typos_cli::checks::Identifiers.check_file(
+                typos_cli::file::Identifiers.check_file(
                     sample_path.path(),
                     true,
                     &settings,
@@ -57,9 +57,9 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let settings = typos_cli::checks::CheckSettings::new();
+            let settings = typos_cli::file::CheckSettings::new();
             b.iter(|| {
-                typos_cli::checks::Words.check_file(
+                typos_cli::file::Words.check_file(
                     sample_path.path(),
                     true,
                     &settings,
@@ -78,9 +78,9 @@ fn bench_checks(c: &mut Criterion) {
 
             let corrections = typos_cli::dict::BuiltIn::new(Default::default());
             let parser = typos::tokens::Tokenizer::new();
-            let settings = typos_cli::checks::CheckSettings::new();
+            let settings = typos_cli::file::CheckSettings::new();
             b.iter(|| {
-                typos_cli::checks::Typos.check_file(
+                typos_cli::file::Typos.check_file(
                     sample_path.path(),
                     true,
                     &settings,
