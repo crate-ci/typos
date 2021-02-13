@@ -1475,6 +1475,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7f741b240f1a48843f9b8e0444fb55fb2a4ff67293b50a9179dfd5ea67f8d41"
 
 [[package]]
+name = "typed-arena"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0685c84d5d54d1c26f7d3eb96cd41550adb97baed141a761cf335d3d33bcd0ae"
+
+[[package]]
 name = "typos"
 version = "0.3.0"
 dependencies = [
@@ -1510,6 +1516,7 @@ dependencies = [
  "itertools 0.10.0",
  "kstring",
  "log",
+ "once_cell",
  "phf",
  "predicates",
  "proc-exit",
@@ -1517,6 +1524,7 @@ dependencies = [
  "serde_json",
  "structopt",
  "toml",
+ "typed-arena",
  "typos",
  "typos-dict",
  "typos-vars",

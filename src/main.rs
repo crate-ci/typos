@@ -8,7 +8,6 @@ use structopt::StructOpt;
 
 mod args;
 use typos_cli::config;
-use typos_cli::dict;
 use typos_cli::report;
 
 use proc_exit::WithCodeResultExt;
@@ -91,36 +90,22 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         };
         let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
 
-        let tokenizer = typos::tokens::TokenizerBuilder::new()
-            .ignore_hex(config.default.ignore_hex())
-            .leading_digits(config.default.identifier_leading_digits())
-            .leading_chars(config.default.identifier_leading_chars().to_owned())
-            .include_digits(config.default.identifier_include_digits())
-            .include_chars(config.default.identifier_include_chars().to_owned())
-            .build();
-
-        let dictionary = crate::dict::BuiltIn::new(config.default.locale());
-        let mut dictionary = crate::dict::Override::new(dictionary);
-        dictionary.identifiers(config.default.extend_identifiers());
-        dictionary.words(config.default.extend_words());
-
-        let mut settings = typos_cli::file::CheckSettings::new();
-        settings
-            .check_filenames(config.default.check_filename())
-            .check_files(config.default.check_file())
-            .binary(config.default.binary());
+        let storage = typos_cli::policy::ConfigStorage::new();
+        let engine = typos_cli::policy::ConfigEngine::new(config, &storage);
+        let files = engine.files();
+        let policy = engine.policy();
 
         let threads = if path.is_file() { 1 } else { args.threads };
         let single_threaded = threads == 1;
 
         let mut walk = ignore::WalkBuilder::new(path);
         walk.threads(args.threads)
-            .hidden(config.files.ignore_hidden())
-            .ignore(config.files.ignore_dot())
-            .git_global(config.files.ignore_global())
-            .git_ignore(config.files.ignore_vcs())
-            .git_exclude(config.files.ignore_vcs())
-            .parents(config.files.ignore_parent());
+            .hidden(files.ignore_hidden())
+            .ignore(files.ignore_dot())
+            .git_global(files.ignore_global())
+            .git_ignore(files.ignore_vcs())
+            .git_exclude(files.ignore_vcs())
+            .parents(files.ignore_parent());
 
         // HACK: Diff doesn't handle mixing content
         let output_reporter = if args.diff {
@@ -146,21 +131,12 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         };
 
         if single_threaded {
-            typos_cli::file::walk_path(
-                walk.build(),
-                selected_checks,
-                &settings,
-                &tokenizer,
-                &dictionary,
-                reporter,
-            )
+            typos_cli::file::walk_path(walk.build(), selected_checks, &policy, reporter)
         } else {
             typos_cli::file::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
-                &settings,
-                &tokenizer,
-                &dictionary,
+                &policy,
                 reporter,
             )
         }
