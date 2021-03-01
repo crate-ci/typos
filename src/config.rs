@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::io::Read;
 
 pub trait ConfigSource {
     fn walk(&self) -> Option<&dyn WalkSource> {
@@ -107,9 +106,7 @@ pub struct Config {
 
 impl Config {
     pub fn from_file(path: &std::path::Path) -> Result<Self, anyhow::Error> {
-        let mut file = std::fs::File::open(path)?;
-        let mut s = String::new();
-        file.read_to_string(&mut s)?;
+        let s = std::fs::read_to_string(path)?;
         Self::from_toml(&s)
     }
 
