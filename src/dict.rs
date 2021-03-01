@@ -12,7 +12,7 @@ pub struct BuiltIn {
 }
 
 impl BuiltIn {
-    pub fn new(locale: crate::config::Locale) -> Self {
+    pub const fn new(locale: crate::config::Locale) -> Self {
         Self {
             locale: locale.category(),
         }

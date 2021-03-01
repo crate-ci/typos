@@ -461,7 +461,7 @@ pub enum Locale {
 }
 
 impl Locale {
-    pub fn category(self) -> Option<typos_vars::Category> {
+    pub const fn category(self) -> Option<typos_vars::Category> {
         match self {
             Locale::En => None,
             Locale::EnUs => Some(typos_vars::Category::American),
@@ -471,7 +471,7 @@ impl Locale {
         }
     }
 
-    pub fn variants() -> [&'static str; 5] {
+    pub const fn variants() -> [&'static str; 5] {
         ["en", "en-us", "en-gb", "en-ca", "en-au"]
     }
 }
