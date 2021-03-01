@@ -260,12 +260,12 @@ pub struct FileConfig {
     pub check_file: Option<bool>,
     pub ignore_hex: Option<bool>,
     pub identifier_leading_digits: Option<bool>,
-    pub identifier_leading_chars: Option<String>,
+    pub identifier_leading_chars: Option<kstring::KString>,
     pub identifier_include_digits: Option<bool>,
-    pub identifier_include_chars: Option<String>,
+    pub identifier_include_chars: Option<kstring::KString>,
     pub locale: Option<Locale>,
-    pub extend_identifiers: HashMap<String, String>,
-    pub extend_words: HashMap<String, String>,
+    pub extend_identifiers: HashMap<kstring::KString, kstring::KString>,
+    pub extend_words: HashMap<kstring::KString, kstring::KString>,
 }
 
 impl FileConfig {
@@ -277,9 +277,13 @@ impl FileConfig {
             check_file: Some(empty.check_file()),
             ignore_hex: Some(empty.ignore_hex()),
             identifier_leading_digits: Some(empty.identifier_leading_digits()),
-            identifier_leading_chars: Some(empty.identifier_leading_chars().to_owned()),
+            identifier_leading_chars: Some(kstring::KString::from_ref(
+                empty.identifier_leading_chars(),
+            )),
             identifier_include_digits: Some(empty.identifier_include_digits()),
-            identifier_include_chars: Some(empty.identifier_include_chars().to_owned()),
+            identifier_include_chars: Some(kstring::KString::from_ref(
+                empty.identifier_include_chars(),
+            )),
             locale: Some(empty.locale()),
             extend_identifiers: Default::default(),
             extend_words: Default::default(),
@@ -303,13 +307,13 @@ impl FileConfig {
             self.identifier_leading_digits = Some(source);
         }
         if let Some(source) = source.identifier_leading_chars() {
-            self.identifier_leading_chars = Some(source.to_owned());
+            self.identifier_leading_chars = Some(kstring::KString::from_ref(source));
         }
         if let Some(source) = source.identifier_include_digits() {
             self.identifier_include_digits = Some(source);
         }
         if let Some(source) = source.identifier_include_chars() {
-            self.identifier_include_chars = Some(source.to_owned());
+            self.identifier_include_chars = Some(kstring::KString::from_ref(source));
         }
         if let Some(source) = source.locale() {
             self.locale = Some(source);
@@ -317,12 +321,12 @@ impl FileConfig {
         self.extend_identifiers.extend(
             source
                 .extend_identifiers()
-                .map(|(k, v)| (k.to_owned(), v.to_owned())),
+                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
         );
         self.extend_words.extend(
             source
                 .extend_words()
-                .map(|(k, v)| (k.to_owned(), v.to_owned())),
+                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
         );
     }
 

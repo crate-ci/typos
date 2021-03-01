@@ -725,6 +725,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "kstring"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1167388385b43067bd74f967def6c93b969284f14f41e2ab6035b715d9343215"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1499,6 +1508,7 @@ dependencies = [
  "human-panic",
  "ignore",
  "itertools 0.10.0",
+ "kstring",
  "log",
  "phf",
  "predicates",
