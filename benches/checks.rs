@@ -5,10 +5,10 @@ use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use typos_cli::file::FileChecker;
 
 fn bench_checks(c: &mut Criterion) {
-    let dictionary = typos_cli::dict::BuiltIn::new(Default::default());
+    let dict = typos_cli::dict::BuiltIn::new(Default::default());
     let tokenizer = typos::tokens::Tokenizer::new();
     let policy = typos_cli::policy::Policy::new()
-        .dictionary(&dictionary)
+        .dict(&dict)
         .tokenizer(&tokenizer);
 
     let mut group = c.benchmark_group("checks");

@@ -122,12 +122,6 @@ pub(crate) struct FileArgs {
     #[structopt(long, overrides_with("no-check-files"), hidden(true))]
     check_files: bool,
 
-    #[structopt(long, overrides_with("hex"))]
-    /// Don't try to detect that an identifier looks like hex
-    no_hex: bool,
-    #[structopt(long, overrides_with("no-hex"), hidden(true))]
-    hex: bool,
-
     #[structopt(
         long,
         possible_values(&config::Locale::variants()),
@@ -163,15 +157,12 @@ impl config::FileSource for FileArgs {
         }
     }
 
-    fn ignore_hex(&self) -> Option<bool> {
-        match (self.hex, self.no_hex) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+    fn dict(&self) -> Option<&dyn config::DictSource> {
+        Some(self)
     }
+}
 
+impl config::DictSource for FileArgs {
     fn locale(&self) -> Option<config::Locale> {
         self.locale
     }

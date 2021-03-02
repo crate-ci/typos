@@ -28,7 +28,7 @@ impl FileChecker for Typos {
     ) -> Result<(), std::io::Error> {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dictionary) {
+                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
                     let msg = report::Typo {
                         context: Some(report::PathContext { path }.into()),
                         buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
@@ -48,7 +48,7 @@ impl FileChecker for Typos {
                 reporter.report(msg.into())?;
             } else {
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dictionary) {
+                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
                     let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
                     let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
                     let msg = report::Typo {
@@ -86,7 +86,7 @@ impl FileChecker for FixTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dictionary) {
+                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -113,7 +113,7 @@ impl FileChecker for FixTypos {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dictionary) {
+                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -163,7 +163,7 @@ impl FileChecker for DiffTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dictionary) {
+                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -191,7 +191,7 @@ impl FileChecker for DiffTypos {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dictionary) {
+                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {

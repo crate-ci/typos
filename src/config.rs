@@ -58,6 +58,16 @@ pub trait FileSource {
         None
     }
 
+    fn tokenizer(&self) -> Option<&dyn TokenizerSource> {
+        None
+    }
+
+    fn dict(&self) -> Option<&dyn DictSource> {
+        None
+    }
+}
+
+pub trait TokenizerSource {
     /// Do not check identifiers that appear to be hexadecimal values.
     fn ignore_hex(&self) -> Option<bool> {
         None
@@ -82,7 +92,9 @@ pub trait FileSource {
     fn identifier_include_chars(&self) -> Option<&str> {
         None
     }
+}
 
+pub trait DictSource {
     fn locale(&self) -> Option<Locale> {
         None
     }
@@ -258,14 +270,10 @@ pub struct FileConfig {
     pub binary: Option<bool>,
     pub check_filename: Option<bool>,
     pub check_file: Option<bool>,
-    pub ignore_hex: Option<bool>,
-    pub identifier_leading_digits: Option<bool>,
-    pub identifier_leading_chars: Option<kstring::KString>,
-    pub identifier_include_digits: Option<bool>,
-    pub identifier_include_chars: Option<kstring::KString>,
-    pub locale: Option<Locale>,
-    pub extend_identifiers: HashMap<kstring::KString, kstring::KString>,
-    pub extend_words: HashMap<kstring::KString, kstring::KString>,
+    #[serde(flatten)]
+    pub tokenizer: Option<TokenizerConfig>,
+    #[serde(flatten)]
+    pub dict: Option<DictConfig>,
 }
 
 impl FileConfig {
@@ -275,18 +283,12 @@ impl FileConfig {
             binary: Some(empty.binary()),
             check_filename: Some(empty.check_filename()),
             check_file: Some(empty.check_file()),
-            ignore_hex: Some(empty.ignore_hex()),
-            identifier_leading_digits: Some(empty.identifier_leading_digits()),
-            identifier_leading_chars: Some(kstring::KString::from_ref(
-                empty.identifier_leading_chars(),
-            )),
-            identifier_include_digits: Some(empty.identifier_include_digits()),
-            identifier_include_chars: Some(kstring::KString::from_ref(
-                empty.identifier_include_chars(),
-            )),
-            locale: Some(empty.locale()),
-            extend_identifiers: Default::default(),
-            extend_words: Default::default(),
+            tokenizer: Some(
+                empty
+                    .tokenizer
+                    .unwrap_or_else(|| TokenizerConfig::from_defaults()),
+            ),
+            dict: Some(empty.dict.unwrap_or_else(|| DictConfig::from_defaults())),
         }
     }
 
@@ -300,6 +302,87 @@ impl FileConfig {
         if let Some(source) = source.check_file() {
             self.check_file = Some(source);
         }
+        if let Some(source) = source.tokenizer() {
+            let mut tokenizer = None;
+            std::mem::swap(&mut tokenizer, &mut self.tokenizer);
+            let mut tokenizer = tokenizer.unwrap_or_default();
+            tokenizer.update(source);
+            let mut tokenizer = Some(tokenizer);
+            std::mem::swap(&mut tokenizer, &mut self.tokenizer);
+        }
+        if let Some(source) = source.dict() {
+            let mut dict = None;
+            std::mem::swap(&mut dict, &mut self.dict);
+            let mut dict = dict.unwrap_or_default();
+            dict.update(source);
+            let mut dict = Some(dict);
+            std::mem::swap(&mut dict, &mut self.dict);
+        }
+    }
+
+    pub fn binary(&self) -> bool {
+        self.binary.unwrap_or(false)
+    }
+
+    pub fn check_filename(&self) -> bool {
+        self.check_filename.unwrap_or(true)
+    }
+
+    pub fn check_file(&self) -> bool {
+        self.check_file.unwrap_or(true)
+    }
+}
+
+impl FileSource for FileConfig {
+    fn binary(&self) -> Option<bool> {
+        self.binary
+    }
+
+    fn check_filename(&self) -> Option<bool> {
+        self.check_filename
+    }
+
+    fn check_file(&self) -> Option<bool> {
+        self.check_file
+    }
+
+    fn tokenizer(&self) -> Option<&dyn TokenizerSource> {
+        self.tokenizer.as_ref().map(|t| t as &dyn TokenizerSource)
+    }
+
+    fn dict(&self) -> Option<&dyn DictSource> {
+        self.dict.as_ref().map(|d| d as &dyn DictSource)
+    }
+}
+
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct TokenizerConfig {
+    pub ignore_hex: Option<bool>,
+    pub identifier_leading_digits: Option<bool>,
+    pub identifier_leading_chars: Option<kstring::KString>,
+    pub identifier_include_digits: Option<bool>,
+    pub identifier_include_chars: Option<kstring::KString>,
+}
+
+impl TokenizerConfig {
+    pub fn from_defaults() -> Self {
+        let empty = Self::default();
+        Self {
+            ignore_hex: Some(empty.ignore_hex()),
+            identifier_leading_digits: Some(empty.identifier_leading_digits()),
+            identifier_leading_chars: Some(kstring::KString::from_ref(
+                empty.identifier_leading_chars(),
+            )),
+            identifier_include_digits: Some(empty.identifier_include_digits()),
+            identifier_include_chars: Some(kstring::KString::from_ref(
+                empty.identifier_include_chars(),
+            )),
+        }
+    }
+
+    pub fn update(&mut self, source: &dyn TokenizerSource) {
         if let Some(source) = source.ignore_hex() {
             self.ignore_hex = Some(source);
         }
@@ -315,31 +398,6 @@ impl FileConfig {
         if let Some(source) = source.identifier_include_chars() {
             self.identifier_include_chars = Some(kstring::KString::from_ref(source));
         }
-        if let Some(source) = source.locale() {
-            self.locale = Some(source);
-        }
-        self.extend_identifiers.extend(
-            source
-                .extend_identifiers()
-                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
-        );
-        self.extend_words.extend(
-            source
-                .extend_words()
-                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
-        );
-    }
-
-    pub fn binary(&self) -> bool {
-        self.binary.unwrap_or(false)
-    }
-
-    pub fn check_filename(&self) -> bool {
-        self.check_filename.unwrap_or(true)
-    }
-
-    pub fn check_file(&self) -> bool {
-        self.check_file.unwrap_or(true)
     }
 
     pub fn ignore_hex(&self) -> bool {
@@ -360,6 +418,64 @@ impl FileConfig {
 
     pub fn identifier_include_chars(&self) -> &str {
         self.identifier_include_chars.as_deref().unwrap_or("_'")
+    }
+}
+
+impl TokenizerSource for TokenizerConfig {
+    fn ignore_hex(&self) -> Option<bool> {
+        self.ignore_hex
+    }
+
+    fn identifier_leading_digits(&self) -> Option<bool> {
+        self.identifier_leading_digits
+    }
+
+    fn identifier_leading_chars(&self) -> Option<&str> {
+        self.identifier_leading_chars.as_deref()
+    }
+
+    fn identifier_include_digits(&self) -> Option<bool> {
+        self.identifier_include_digits
+    }
+
+    fn identifier_include_chars(&self) -> Option<&str> {
+        self.identifier_include_chars.as_deref()
+    }
+}
+
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct DictConfig {
+    pub locale: Option<Locale>,
+    pub extend_identifiers: HashMap<kstring::KString, kstring::KString>,
+    pub extend_words: HashMap<kstring::KString, kstring::KString>,
+}
+
+impl DictConfig {
+    pub fn from_defaults() -> Self {
+        let empty = Self::default();
+        Self {
+            locale: Some(empty.locale()),
+            extend_identifiers: Default::default(),
+            extend_words: Default::default(),
+        }
+    }
+
+    pub fn update(&mut self, source: &dyn DictSource) {
+        if let Some(source) = source.locale() {
+            self.locale = Some(source);
+        }
+        self.extend_identifiers.extend(
+            source
+                .extend_identifiers()
+                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
+        );
+        self.extend_words.extend(
+            source
+                .extend_words()
+                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
+        );
     }
 
     pub fn locale(&self) -> Locale {
@@ -383,39 +499,7 @@ impl FileConfig {
     }
 }
 
-impl FileSource for FileConfig {
-    fn binary(&self) -> Option<bool> {
-        self.binary
-    }
-
-    fn check_filename(&self) -> Option<bool> {
-        self.check_filename
-    }
-
-    fn check_file(&self) -> Option<bool> {
-        self.check_file
-    }
-
-    fn ignore_hex(&self) -> Option<bool> {
-        self.ignore_hex
-    }
-
-    fn identifier_leading_digits(&self) -> Option<bool> {
-        self.identifier_leading_digits
-    }
-
-    fn identifier_leading_chars(&self) -> Option<&str> {
-        self.identifier_leading_chars.as_deref()
-    }
-
-    fn identifier_include_digits(&self) -> Option<bool> {
-        self.identifier_include_digits
-    }
-
-    fn identifier_include_chars(&self) -> Option<&str> {
-        self.identifier_include_chars.as_deref()
-    }
-
+impl DictSource for DictConfig {
     fn locale(&self) -> Option<Locale> {
         self.locale
     }

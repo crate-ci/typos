@@ -20,41 +20,50 @@ pub struct ConfigEngine<'s> {
     check_files: bool,
     binary: bool,
     tokenizer: typos::tokens::Tokenizer,
-    dictionary: crate::dict::Override<'s, 's, crate::dict::BuiltIn>,
+    dict: crate::dict::Override<'s, 's, crate::dict::BuiltIn>,
 }
 
 impl<'s> ConfigEngine<'s> {
     pub fn new(config: crate::config::Config, storage: &'s ConfigStorage) -> Self {
         let crate::config::Config { files, default } = config;
+        let binary = default.binary();
+        let check_filename = default.check_filename();
+        let check_file = default.check_file();
+        let crate::config::EngineConfig {
+            tokenizer, dict, ..
+        } = default;
+        let tokenizer_config =
+            tokenizer.unwrap_or_else(|| crate::config::TokenizerConfig::from_defaults());
+        let dict_config = dict.unwrap_or_else(|| crate::config::DictConfig::from_defaults());
 
         let tokenizer = typos::tokens::TokenizerBuilder::new()
-            .ignore_hex(default.ignore_hex())
-            .leading_digits(default.identifier_leading_digits())
-            .leading_chars(default.identifier_leading_chars().to_owned())
-            .include_digits(default.identifier_include_digits())
-            .include_chars(default.identifier_include_chars().to_owned())
+            .ignore_hex(tokenizer_config.ignore_hex())
+            .leading_digits(tokenizer_config.identifier_leading_digits())
+            .leading_chars(tokenizer_config.identifier_leading_chars().to_owned())
+            .include_digits(tokenizer_config.identifier_include_digits())
+            .include_chars(tokenizer_config.identifier_include_chars().to_owned())
             .build();
 
-        let dictionary = crate::dict::BuiltIn::new(default.locale());
-        let mut dictionary = crate::dict::Override::new(dictionary);
-        dictionary.identifiers(
-            default
+        let dict = crate::dict::BuiltIn::new(dict_config.locale());
+        let mut dict = crate::dict::Override::new(dict);
+        dict.identifiers(
+            dict_config
                 .extend_identifiers()
                 .map(|(k, v)| (storage.get(k), storage.get(v))),
         );
-        dictionary.words(
-            default
+        dict.words(
+            dict_config
                 .extend_words()
                 .map(|(k, v)| (storage.get(k), storage.get(v))),
         );
 
         Self {
             files,
-            check_filenames: default.check_filename(),
-            check_files: default.check_file(),
-            binary: default.binary(),
+            check_filenames: check_filename,
+            check_files: check_file,
+            binary: binary,
             tokenizer,
-            dictionary,
+            dict,
         }
     }
 
@@ -68,7 +77,7 @@ impl<'s> ConfigEngine<'s> {
             check_files: self.check_files,
             binary: self.binary,
             tokenizer: &self.tokenizer,
-            dictionary: &self.dictionary,
+            dict: &self.dict,
         }
     }
 }
@@ -80,7 +89,7 @@ pub struct Policy<'t, 'd> {
     pub check_files: bool,
     pub binary: bool,
     pub tokenizer: &'t typos::tokens::Tokenizer,
-    pub dictionary: &'d dyn typos::Dictionary,
+    pub dict: &'d dyn typos::Dictionary,
 }
 
 impl<'t, 'd> Policy<'t, 'd> {
@@ -100,7 +109,7 @@ impl<'t, 'd> Default for Policy<'t, 'd> {
             check_files: true,
             binary: false,
             tokenizer: &DEFAULT_TOKENIZER,
-            dictionary: &DEFAULT_DICT,
+            dict: &DEFAULT_DICT,
         }
     }
 }
