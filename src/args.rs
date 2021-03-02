@@ -129,7 +129,7 @@ pub(crate) struct FileArgs {
     pub(crate) locale: Option<config::Locale>,
 }
 
-impl config::FileSource for FileArgs {
+impl config::EngineSource for FileArgs {
     fn binary(&self) -> Option<bool> {
         match (self.binary, self.no_binary) {
             (true, false) => Some(true),

@@ -5,7 +5,7 @@ pub trait ConfigSource {
         None
     }
 
-    fn default(&self) -> Option<&dyn FileSource> {
+    fn default(&self) -> Option<&dyn EngineSource> {
         None
     }
 }
@@ -42,7 +42,7 @@ pub trait WalkSource {
     }
 }
 
-pub trait FileSource {
+pub trait EngineSource {
     /// Check binary files.
     fn binary(&self) -> Option<bool> {
         None
@@ -113,7 +113,7 @@ pub trait DictSource {
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
     pub files: Walk,
-    pub default: FileConfig,
+    pub default: EngineConfig,
 }
 
 impl Config {
@@ -130,7 +130,7 @@ impl Config {
     pub fn from_defaults() -> Self {
         Self {
             files: Walk::from_defaults(),
-            default: FileConfig::from_defaults(),
+            default: EngineConfig::from_defaults(),
         }
     }
 
@@ -157,7 +157,7 @@ impl ConfigSource for Config {
         Some(&self.files)
     }
 
-    fn default(&self) -> Option<&dyn FileSource> {
+    fn default(&self) -> Option<&dyn EngineSource> {
         Some(&self.default)
     }
 }
@@ -266,7 +266,7 @@ impl WalkSource for Walk {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
-pub struct FileConfig {
+pub struct EngineConfig {
     pub binary: Option<bool>,
     pub check_filename: Option<bool>,
     pub check_file: Option<bool>,
@@ -276,10 +276,10 @@ pub struct FileConfig {
     pub dict: Option<DictConfig>,
 }
 
-impl FileConfig {
+impl EngineConfig {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
-        FileConfig {
+        EngineConfig {
             binary: Some(empty.binary()),
             check_filename: Some(empty.check_filename()),
             check_file: Some(empty.check_file()),
@@ -292,7 +292,7 @@ impl FileConfig {
         }
     }
 
-    pub fn update(&mut self, source: &dyn FileSource) {
+    pub fn update(&mut self, source: &dyn EngineSource) {
         if let Some(source) = source.binary() {
             self.binary = Some(source);
         }
@@ -333,7 +333,7 @@ impl FileConfig {
     }
 }
 
-impl FileSource for FileConfig {
+impl EngineSource for EngineConfig {
     fn binary(&self) -> Option<bool> {
         self.binary
     }
