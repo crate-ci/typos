@@ -85,6 +85,16 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
 fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     let global_cwd = std::env::current_dir()?;
 
+    let storage = typos_cli::policy::ConfigStorage::new();
+    let mut overrides = config::EngineConfig::default();
+    overrides.update(&args.overrides);
+    let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
+    engine.set_isolated(args.isolated).set_overrides(overrides);
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        engine.set_custom_config(custom);
+    }
+
     let mut typos_found = false;
     let mut errors_found = false;
     for path in args.path.iter() {
@@ -100,16 +110,6 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         } else {
             path.as_path()
         };
-
-        let storage = typos_cli::policy::ConfigStorage::new();
-        let mut overrides = config::EngineConfig::default();
-        overrides.update(&args.overrides);
-        let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
-        engine.set_isolated(args.isolated).set_overrides(overrides);
-        if let Some(path) = args.custom_config.as_ref() {
-            let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
-            engine.set_custom_config(custom);
-        }
 
         engine
             .init_dir(cwd)
