@@ -57,7 +57,19 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
         path.as_path()
     };
 
-    let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
+    let storage = typos_cli::policy::ConfigStorage::new();
+    let mut overrides = config::EngineConfig::default();
+    overrides.update(&args.overrides);
+    let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
+    engine.set_isolated(args.isolated).set_overrides(overrides);
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        engine.set_custom_config(custom);
+    }
+    let config = engine
+        .load_config(cwd)
+        .with_code(proc_exit::Code::CONFIG_ERR)?;
+
     let mut defaulted_config = config::Config::from_defaults();
     defaulted_config.update(&config);
     let output = toml::to_string_pretty(&defaulted_config).with_code(proc_exit::Code::FAILURE)?;
@@ -88,12 +100,21 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         } else {
             path.as_path()
         };
-        let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
 
         let storage = typos_cli::policy::ConfigStorage::new();
-        let engine = typos_cli::policy::ConfigEngine::new(config, &storage);
-        let files = engine.files();
-        let policy = engine.policy();
+        let mut overrides = config::EngineConfig::default();
+        overrides.update(&args.overrides);
+        let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
+        engine.set_isolated(args.isolated).set_overrides(overrides);
+        if let Some(path) = args.custom_config.as_ref() {
+            let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+            engine.set_custom_config(custom);
+        }
+
+        engine
+            .init_dir(cwd)
+            .with_code(proc_exit::Code::CONFIG_ERR)?;
+        let files = engine.files(cwd);
 
         let threads = if path.is_file() { 1 } else { args.threads };
         let single_threaded = threads == 1;
@@ -131,12 +152,12 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         };
 
         if single_threaded {
-            typos_cli::file::walk_path(walk.build(), selected_checks, &policy, reporter)
+            typos_cli::file::walk_path(walk.build(), selected_checks, &engine, reporter)
         } else {
             typos_cli::file::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
-                &policy,
+                &engine,
                 reporter,
             )
         }
@@ -188,21 +209,4 @@ fn init_logging(level: Option<log::Level>) {
 
         builder.init();
     }
-}
-
-fn load_config(cwd: &std::path::Path, args: &args::Args) -> Result<config::Config, anyhow::Error> {
-    let mut config = config::Config::default();
-
-    if !args.isolated {
-        let derived = config::Config::derive(cwd)?;
-        config.update(&derived);
-    }
-    if let Some(path) = args.custom_config.as_ref() {
-        config.update(&config::Config::from_file(path)?);
-    }
-
-    config.update(&args.config);
-    config.default.update(&args.overrides);
-
-    Ok(config)
 }

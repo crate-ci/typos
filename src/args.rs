@@ -101,7 +101,7 @@ pub(crate) struct Args {
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
 }
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Clone, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub(crate) struct FileArgs {
     #[structopt(long, overrides_with("no-binary"))]

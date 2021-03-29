@@ -117,6 +117,17 @@ pub struct Config {
 }
 
 impl Config {
+    pub fn from_dir(cwd: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
+        let config = if let Some(path) =
+            find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"])
+        {
+            Some(Self::from_file(&path)?)
+        } else {
+            None
+        };
+        Ok(config)
+    }
+
     pub fn from_file(path: &std::path::Path) -> Result<Self, anyhow::Error> {
         let s = std::fs::read_to_string(path)?;
         Self::from_toml(&s)
@@ -131,14 +142,6 @@ impl Config {
         Self {
             files: Walk::from_defaults(),
             default: EngineConfig::from_defaults(),
-        }
-    }
-
-    pub fn derive(cwd: &std::path::Path) -> Result<Self, anyhow::Error> {
-        if let Some(path) = find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"]) {
-            Self::from_file(&path)
-        } else {
-            Ok(Default::default())
         }
     }
 
@@ -522,13 +525,11 @@ impl DictSource for DictConfig {
 }
 
 fn find_project_file(dir: &std::path::Path, names: &[&str]) -> Option<std::path::PathBuf> {
-    for ancestor in dir.ancestors() {
-        let mut file_path = ancestor.join("placeholder");
-        for name in names {
-            file_path.set_file_name(name);
-            if file_path.exists() {
-                return Some(file_path);
-            }
+    let mut file_path = dir.join("placeholder");
+    for name in names {
+        file_path.set_file_name(name);
+        if file_path.exists() {
+            return Some(file_path);
         }
     }
     None

@@ -552,11 +552,11 @@ fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'stat
 pub fn walk_path(
     walk: ignore::Walk,
     checks: &dyn FileChecker,
-    policy: &crate::policy::Policy,
+    engine: &crate::policy::ConfigEngine,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     for entry in walk {
-        walk_entry(entry, checks, policy, reporter)?;
+        walk_entry(entry, checks, engine, reporter)?;
     }
     Ok(())
 }
@@ -564,13 +564,13 @@ pub fn walk_path(
 pub fn walk_path_parallel(
     walk: ignore::WalkParallel,
     checks: &dyn FileChecker,
-    policy: &crate::policy::Policy,
+    engine: &crate::policy::ConfigEngine,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match walk_entry(entry, checks, policy, reporter) {
+            match walk_entry(entry, checks, engine, reporter) {
                 Ok(()) => ignore::WalkState::Continue,
                 Err(err) => {
                     *error.lock().unwrap() = Err(err);
@@ -586,7 +586,7 @@ pub fn walk_path_parallel(
 fn walk_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     checks: &dyn FileChecker,
-    policy: &crate::policy::Policy,
+    engine: &crate::policy::ConfigEngine,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     let entry = match entry {
@@ -603,7 +603,8 @@ fn walk_entry(
         } else {
             entry.path()
         };
-        checks.check_file(path, explicit, policy, reporter)?;
+        let policy = engine.policy(path);
+        checks.check_file(path, explicit, &policy, reporter)?;
     }
 
     Ok(())
