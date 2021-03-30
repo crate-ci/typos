@@ -289,9 +289,9 @@ impl EngineConfig {
             tokenizer: Some(
                 empty
                     .tokenizer
-                    .unwrap_or_else(|| TokenizerConfig::from_defaults()),
+                    .unwrap_or_else(TokenizerConfig::from_defaults),
             ),
-            dict: Some(empty.dict.unwrap_or_else(|| DictConfig::from_defaults())),
+            dict: Some(empty.dict.unwrap_or_else(DictConfig::from_defaults)),
         }
     }
 

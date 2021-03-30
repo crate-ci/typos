@@ -19,9 +19,16 @@ impl ConfigStorage {
                 self.arena
                     .lock()
                     .unwrap()
-                    .alloc(kstring::KString::from_ref(other)),
+                    .alloc(kstring::KString::from_ref(other))
+                    .as_str(),
             )
         }
+    }
+}
+
+impl Default for ConfigStorage {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -145,8 +152,8 @@ impl<'s> ConfigEngine<'s> {
             tokenizer, dict, ..
         } = default;
         let tokenizer_config =
-            tokenizer.unwrap_or_else(|| crate::config::TokenizerConfig::from_defaults());
-        let dict_config = dict.unwrap_or_else(|| crate::config::DictConfig::from_defaults());
+            tokenizer.unwrap_or_else(crate::config::TokenizerConfig::from_defaults);
+        let dict_config = dict.unwrap_or_else(crate::config::DictConfig::from_defaults);
 
         let tokenizer = typos::tokens::TokenizerBuilder::new()
             .ignore_hex(tokenizer_config.ignore_hex())
@@ -177,7 +184,7 @@ impl<'s> ConfigEngine<'s> {
             files,
             check_filenames: check_filename,
             check_files: check_file,
-            binary: binary,
+            binary,
             tokenizer,
             dict,
         };
