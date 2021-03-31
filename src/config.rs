@@ -1,12 +1,11 @@
 use std::collections::HashMap;
-use std::io::Read;
 
 pub trait ConfigSource {
     fn walk(&self) -> Option<&dyn WalkSource> {
         None
     }
 
-    fn default(&self) -> Option<&dyn FileSource> {
+    fn default(&self) -> Option<&dyn EngineSource> {
         None
     }
 }
@@ -43,7 +42,7 @@ pub trait WalkSource {
     }
 }
 
-pub trait FileSource {
+pub trait EngineSource {
     /// Check binary files.
     fn binary(&self) -> Option<bool> {
         None
@@ -59,6 +58,16 @@ pub trait FileSource {
         None
     }
 
+    fn tokenizer(&self) -> Option<&dyn TokenizerSource> {
+        None
+    }
+
+    fn dict(&self) -> Option<&dyn DictSource> {
+        None
+    }
+}
+
+pub trait TokenizerSource {
     /// Do not check identifiers that appear to be hexadecimal values.
     fn ignore_hex(&self) -> Option<bool> {
         None
@@ -83,7 +92,9 @@ pub trait FileSource {
     fn identifier_include_chars(&self) -> Option<&str> {
         None
     }
+}
 
+pub trait DictSource {
     fn locale(&self) -> Option<Locale> {
         None
     }
@@ -102,14 +113,23 @@ pub trait FileSource {
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
     pub files: Walk,
-    pub default: FileConfig,
+    pub default: EngineConfig,
 }
 
 impl Config {
+    pub fn from_dir(cwd: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
+        let config = if let Some(path) =
+            find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"])
+        {
+            Some(Self::from_file(&path)?)
+        } else {
+            None
+        };
+        Ok(config)
+    }
+
     pub fn from_file(path: &std::path::Path) -> Result<Self, anyhow::Error> {
-        let mut file = std::fs::File::open(path)?;
-        let mut s = String::new();
-        file.read_to_string(&mut s)?;
+        let s = std::fs::read_to_string(path)?;
         Self::from_toml(&s)
     }
 
@@ -121,15 +141,7 @@ impl Config {
     pub fn from_defaults() -> Self {
         Self {
             files: Walk::from_defaults(),
-            default: FileConfig::from_defaults(),
-        }
-    }
-
-    pub fn derive(cwd: &std::path::Path) -> Result<Self, anyhow::Error> {
-        if let Some(path) = find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"]) {
-            Self::from_file(&path)
-        } else {
-            Ok(Default::default())
+            default: EngineConfig::from_defaults(),
         }
     }
 
@@ -148,7 +160,7 @@ impl ConfigSource for Config {
         Some(&self.files)
     }
 
-    fn default(&self) -> Option<&dyn FileSource> {
+    fn default(&self) -> Option<&dyn EngineSource> {
         Some(&self.default)
     }
 }
@@ -257,39 +269,33 @@ impl WalkSource for Walk {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
-pub struct FileConfig {
+pub struct EngineConfig {
     pub binary: Option<bool>,
     pub check_filename: Option<bool>,
     pub check_file: Option<bool>,
-    pub ignore_hex: Option<bool>,
-    pub identifier_leading_digits: Option<bool>,
-    pub identifier_leading_chars: Option<String>,
-    pub identifier_include_digits: Option<bool>,
-    pub identifier_include_chars: Option<String>,
-    pub locale: Option<Locale>,
-    pub extend_identifiers: HashMap<String, String>,
-    pub extend_words: HashMap<String, String>,
+    #[serde(flatten)]
+    pub tokenizer: Option<TokenizerConfig>,
+    #[serde(flatten)]
+    pub dict: Option<DictConfig>,
 }
 
-impl FileConfig {
+impl EngineConfig {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
-        FileConfig {
+        EngineConfig {
             binary: Some(empty.binary()),
             check_filename: Some(empty.check_filename()),
             check_file: Some(empty.check_file()),
-            ignore_hex: Some(empty.ignore_hex()),
-            identifier_leading_digits: Some(empty.identifier_leading_digits()),
-            identifier_leading_chars: Some(empty.identifier_leading_chars().to_owned()),
-            identifier_include_digits: Some(empty.identifier_include_digits()),
-            identifier_include_chars: Some(empty.identifier_include_chars().to_owned()),
-            locale: Some(empty.locale()),
-            extend_identifiers: Default::default(),
-            extend_words: Default::default(),
+            tokenizer: Some(
+                empty
+                    .tokenizer
+                    .unwrap_or_else(TokenizerConfig::from_defaults),
+            ),
+            dict: Some(empty.dict.unwrap_or_else(DictConfig::from_defaults)),
         }
     }
 
-    pub fn update(&mut self, source: &dyn FileSource) {
+    pub fn update(&mut self, source: &dyn EngineSource) {
         if let Some(source) = source.binary() {
             self.binary = Some(source);
         }
@@ -299,34 +305,22 @@ impl FileConfig {
         if let Some(source) = source.check_file() {
             self.check_file = Some(source);
         }
-        if let Some(source) = source.ignore_hex() {
-            self.ignore_hex = Some(source);
+        if let Some(source) = source.tokenizer() {
+            let mut tokenizer = None;
+            std::mem::swap(&mut tokenizer, &mut self.tokenizer);
+            let mut tokenizer = tokenizer.unwrap_or_default();
+            tokenizer.update(source);
+            let mut tokenizer = Some(tokenizer);
+            std::mem::swap(&mut tokenizer, &mut self.tokenizer);
         }
-        if let Some(source) = source.identifier_leading_digits() {
-            self.identifier_leading_digits = Some(source);
+        if let Some(source) = source.dict() {
+            let mut dict = None;
+            std::mem::swap(&mut dict, &mut self.dict);
+            let mut dict = dict.unwrap_or_default();
+            dict.update(source);
+            let mut dict = Some(dict);
+            std::mem::swap(&mut dict, &mut self.dict);
         }
-        if let Some(source) = source.identifier_leading_chars() {
-            self.identifier_leading_chars = Some(source.to_owned());
-        }
-        if let Some(source) = source.identifier_include_digits() {
-            self.identifier_include_digits = Some(source);
-        }
-        if let Some(source) = source.identifier_include_chars() {
-            self.identifier_include_chars = Some(source.to_owned());
-        }
-        if let Some(source) = source.locale() {
-            self.locale = Some(source);
-        }
-        self.extend_identifiers.extend(
-            source
-                .extend_identifiers()
-                .map(|(k, v)| (k.to_owned(), v.to_owned())),
-        );
-        self.extend_words.extend(
-            source
-                .extend_words()
-                .map(|(k, v)| (k.to_owned(), v.to_owned())),
-        );
     }
 
     pub fn binary(&self) -> bool {
@@ -339,6 +333,74 @@ impl FileConfig {
 
     pub fn check_file(&self) -> bool {
         self.check_file.unwrap_or(true)
+    }
+}
+
+impl EngineSource for EngineConfig {
+    fn binary(&self) -> Option<bool> {
+        self.binary
+    }
+
+    fn check_filename(&self) -> Option<bool> {
+        self.check_filename
+    }
+
+    fn check_file(&self) -> Option<bool> {
+        self.check_file
+    }
+
+    fn tokenizer(&self) -> Option<&dyn TokenizerSource> {
+        self.tokenizer.as_ref().map(|t| t as &dyn TokenizerSource)
+    }
+
+    fn dict(&self) -> Option<&dyn DictSource> {
+        self.dict.as_ref().map(|d| d as &dyn DictSource)
+    }
+}
+
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct TokenizerConfig {
+    pub ignore_hex: Option<bool>,
+    pub identifier_leading_digits: Option<bool>,
+    pub identifier_leading_chars: Option<kstring::KString>,
+    pub identifier_include_digits: Option<bool>,
+    pub identifier_include_chars: Option<kstring::KString>,
+}
+
+impl TokenizerConfig {
+    pub fn from_defaults() -> Self {
+        let empty = Self::default();
+        Self {
+            ignore_hex: Some(empty.ignore_hex()),
+            identifier_leading_digits: Some(empty.identifier_leading_digits()),
+            identifier_leading_chars: Some(kstring::KString::from_ref(
+                empty.identifier_leading_chars(),
+            )),
+            identifier_include_digits: Some(empty.identifier_include_digits()),
+            identifier_include_chars: Some(kstring::KString::from_ref(
+                empty.identifier_include_chars(),
+            )),
+        }
+    }
+
+    pub fn update(&mut self, source: &dyn TokenizerSource) {
+        if let Some(source) = source.ignore_hex() {
+            self.ignore_hex = Some(source);
+        }
+        if let Some(source) = source.identifier_leading_digits() {
+            self.identifier_leading_digits = Some(source);
+        }
+        if let Some(source) = source.identifier_leading_chars() {
+            self.identifier_leading_chars = Some(kstring::KString::from_ref(source));
+        }
+        if let Some(source) = source.identifier_include_digits() {
+            self.identifier_include_digits = Some(source);
+        }
+        if let Some(source) = source.identifier_include_chars() {
+            self.identifier_include_chars = Some(kstring::KString::from_ref(source));
+        }
     }
 
     pub fn ignore_hex(&self) -> bool {
@@ -359,6 +421,64 @@ impl FileConfig {
 
     pub fn identifier_include_chars(&self) -> &str {
         self.identifier_include_chars.as_deref().unwrap_or("_'")
+    }
+}
+
+impl TokenizerSource for TokenizerConfig {
+    fn ignore_hex(&self) -> Option<bool> {
+        self.ignore_hex
+    }
+
+    fn identifier_leading_digits(&self) -> Option<bool> {
+        self.identifier_leading_digits
+    }
+
+    fn identifier_leading_chars(&self) -> Option<&str> {
+        self.identifier_leading_chars.as_deref()
+    }
+
+    fn identifier_include_digits(&self) -> Option<bool> {
+        self.identifier_include_digits
+    }
+
+    fn identifier_include_chars(&self) -> Option<&str> {
+        self.identifier_include_chars.as_deref()
+    }
+}
+
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct DictConfig {
+    pub locale: Option<Locale>,
+    pub extend_identifiers: HashMap<kstring::KString, kstring::KString>,
+    pub extend_words: HashMap<kstring::KString, kstring::KString>,
+}
+
+impl DictConfig {
+    pub fn from_defaults() -> Self {
+        let empty = Self::default();
+        Self {
+            locale: Some(empty.locale()),
+            extend_identifiers: Default::default(),
+            extend_words: Default::default(),
+        }
+    }
+
+    pub fn update(&mut self, source: &dyn DictSource) {
+        if let Some(source) = source.locale() {
+            self.locale = Some(source);
+        }
+        self.extend_identifiers.extend(
+            source
+                .extend_identifiers()
+                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
+        );
+        self.extend_words.extend(
+            source
+                .extend_words()
+                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
+        );
     }
 
     pub fn locale(&self) -> Locale {
@@ -382,39 +502,7 @@ impl FileConfig {
     }
 }
 
-impl FileSource for FileConfig {
-    fn binary(&self) -> Option<bool> {
-        self.binary
-    }
-
-    fn check_filename(&self) -> Option<bool> {
-        self.check_filename
-    }
-
-    fn check_file(&self) -> Option<bool> {
-        self.check_file
-    }
-
-    fn ignore_hex(&self) -> Option<bool> {
-        self.ignore_hex
-    }
-
-    fn identifier_leading_digits(&self) -> Option<bool> {
-        self.identifier_leading_digits
-    }
-
-    fn identifier_leading_chars(&self) -> Option<&str> {
-        self.identifier_leading_chars.as_deref()
-    }
-
-    fn identifier_include_digits(&self) -> Option<bool> {
-        self.identifier_include_digits
-    }
-
-    fn identifier_include_chars(&self) -> Option<&str> {
-        self.identifier_include_chars.as_deref()
-    }
-
+impl DictSource for DictConfig {
     fn locale(&self) -> Option<Locale> {
         self.locale
     }
@@ -437,13 +525,11 @@ impl FileSource for FileConfig {
 }
 
 fn find_project_file(dir: &std::path::Path, names: &[&str]) -> Option<std::path::PathBuf> {
-    for ancestor in dir.ancestors() {
-        let mut file_path = ancestor.join("placeholder");
-        for name in names {
-            file_path.set_file_name(name);
-            if file_path.exists() {
-                return Some(file_path);
-            }
+    let mut file_path = dir.join("placeholder");
+    for name in names {
+        file_path.set_file_name(name);
+        if file_path.exists() {
+            return Some(file_path);
         }
     }
     None
@@ -460,7 +546,7 @@ pub enum Locale {
 }
 
 impl Locale {
-    pub fn category(self) -> Option<typos_vars::Category> {
+    pub const fn category(self) -> Option<typos_vars::Category> {
         match self {
             Locale::En => None,
             Locale::EnUs => Some(typos_vars::Category::American),
@@ -470,7 +556,7 @@ impl Locale {
         }
     }
 
-    pub fn variants() -> [&'static str; 5] {
+    pub const fn variants() -> [&'static str; 5] {
         ["en", "en-us", "en-gb", "en-ca", "en-au"]
     }
 }

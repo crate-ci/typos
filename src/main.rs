@@ -8,7 +8,6 @@ use structopt::StructOpt;
 
 mod args;
 use typos_cli::config;
-use typos_cli::dict;
 use typos_cli::report;
 
 use proc_exit::WithCodeResultExt;
@@ -58,7 +57,19 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
         path.as_path()
     };
 
-    let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
+    let storage = typos_cli::policy::ConfigStorage::new();
+    let mut overrides = config::EngineConfig::default();
+    overrides.update(&args.overrides);
+    let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
+    engine.set_isolated(args.isolated).set_overrides(overrides);
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        engine.set_custom_config(custom);
+    }
+    let config = engine
+        .load_config(cwd)
+        .with_code(proc_exit::Code::CONFIG_ERR)?;
+
     let mut defaulted_config = config::Config::from_defaults();
     defaulted_config.update(&config);
     let output = toml::to_string_pretty(&defaulted_config).with_code(proc_exit::Code::FAILURE)?;
@@ -73,6 +84,16 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
 
 fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     let global_cwd = std::env::current_dir()?;
+
+    let storage = typos_cli::policy::ConfigStorage::new();
+    let mut overrides = config::EngineConfig::default();
+    overrides.update(&args.overrides);
+    let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
+    engine.set_isolated(args.isolated).set_overrides(overrides);
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        engine.set_custom_config(custom);
+    }
 
     let mut typos_found = false;
     let mut errors_found = false;
@@ -89,38 +110,23 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         } else {
             path.as_path()
         };
-        let config = load_config(cwd, &args).with_code(proc_exit::Code::CONFIG_ERR)?;
 
-        let tokenizer = typos::tokens::TokenizerBuilder::new()
-            .ignore_hex(config.default.ignore_hex())
-            .leading_digits(config.default.identifier_leading_digits())
-            .leading_chars(config.default.identifier_leading_chars().to_owned())
-            .include_digits(config.default.identifier_include_digits())
-            .include_chars(config.default.identifier_include_chars().to_owned())
-            .build();
-
-        let dictionary = crate::dict::BuiltIn::new(config.default.locale());
-        let mut dictionary = crate::dict::Override::new(dictionary);
-        dictionary.identifiers(config.default.extend_identifiers());
-        dictionary.words(config.default.extend_words());
-
-        let mut settings = typos_cli::file::CheckSettings::new();
-        settings
-            .check_filenames(config.default.check_filename())
-            .check_files(config.default.check_file())
-            .binary(config.default.binary());
+        engine
+            .init_dir(cwd)
+            .with_code(proc_exit::Code::CONFIG_ERR)?;
+        let files = engine.files(cwd);
 
         let threads = if path.is_file() { 1 } else { args.threads };
         let single_threaded = threads == 1;
 
         let mut walk = ignore::WalkBuilder::new(path);
         walk.threads(args.threads)
-            .hidden(config.files.ignore_hidden())
-            .ignore(config.files.ignore_dot())
-            .git_global(config.files.ignore_global())
-            .git_ignore(config.files.ignore_vcs())
-            .git_exclude(config.files.ignore_vcs())
-            .parents(config.files.ignore_parent());
+            .hidden(files.ignore_hidden())
+            .ignore(files.ignore_dot())
+            .git_global(files.ignore_global())
+            .git_ignore(files.ignore_vcs())
+            .git_exclude(files.ignore_vcs())
+            .parents(files.ignore_parent());
 
         // HACK: Diff doesn't handle mixing content
         let output_reporter = if args.diff {
@@ -146,21 +152,12 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         };
 
         if single_threaded {
-            typos_cli::file::walk_path(
-                walk.build(),
-                selected_checks,
-                &settings,
-                &tokenizer,
-                &dictionary,
-                reporter,
-            )
+            typos_cli::file::walk_path(walk.build(), selected_checks, &engine, reporter)
         } else {
             typos_cli::file::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
-                &settings,
-                &tokenizer,
-                &dictionary,
+                &engine,
                 reporter,
             )
         }
@@ -212,21 +209,4 @@ fn init_logging(level: Option<log::Level>) {
 
         builder.init();
     }
-}
-
-fn load_config(cwd: &std::path::Path, args: &args::Args) -> Result<config::Config, anyhow::Error> {
-    let mut config = config::Config::default();
-
-    if !args.isolated {
-        let derived = config::Config::derive(cwd)?;
-        config.update(&derived);
-    }
-    if let Some(path) = args.custom_config.as_ref() {
-        config.update(&config::Config::from_file(path)?);
-    }
-
-    config.update(&args.config);
-    config.default.update(&args.overrides);
-
-    Ok(config)
 }
