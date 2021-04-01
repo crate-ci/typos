@@ -1,113 +1,5 @@
 use std::collections::HashMap;
 
-pub trait ConfigSource {
-    fn walk(&self) -> Option<&dyn WalkSource> {
-        None
-    }
-
-    fn default(&self) -> Option<&dyn EngineSource> {
-        None
-    }
-}
-
-pub trait WalkSource {
-    /// Skip hidden files and directories.
-    fn ignore_hidden(&self) -> Option<bool> {
-        None
-    }
-
-    /// Respect ignore files.
-    fn ignore_files(&self) -> Option<bool> {
-        None
-    }
-
-    /// Respect .ignore files.
-    fn ignore_dot(&self) -> Option<bool> {
-        None
-    }
-
-    /// Respect ignore files in vcs directories.
-    fn ignore_vcs(&self) -> Option<bool> {
-        None
-    }
-
-    /// Respect global ignore files.
-    fn ignore_global(&self) -> Option<bool> {
-        None
-    }
-
-    /// Respect ignore files in parent directories.
-    fn ignore_parent(&self) -> Option<bool> {
-        None
-    }
-}
-
-pub trait EngineSource {
-    /// Check binary files.
-    fn binary(&self) -> Option<bool> {
-        None
-    }
-
-    /// Verifying spelling in file names.
-    fn check_filename(&self) -> Option<bool> {
-        None
-    }
-
-    /// Verifying spelling in files.
-    fn check_file(&self) -> Option<bool> {
-        None
-    }
-
-    fn tokenizer(&self) -> Option<&dyn TokenizerSource> {
-        None
-    }
-
-    fn dict(&self) -> Option<&dyn DictSource> {
-        None
-    }
-}
-
-pub trait TokenizerSource {
-    /// Do not check identifiers that appear to be hexadecimal values.
-    fn ignore_hex(&self) -> Option<bool> {
-        None
-    }
-
-    /// Allow identifiers to start with digits, in addition to letters.
-    fn identifier_leading_digits(&self) -> Option<bool> {
-        None
-    }
-
-    /// Allow identifiers to start with one of these characters.
-    fn identifier_leading_chars(&self) -> Option<&str> {
-        None
-    }
-
-    /// Allow identifiers to include digits, in addition to letters.
-    fn identifier_include_digits(&self) -> Option<bool> {
-        None
-    }
-
-    /// Allow identifiers to include these characters.
-    fn identifier_include_chars(&self) -> Option<&str> {
-        None
-    }
-}
-
-pub trait DictSource {
-    fn locale(&self) -> Option<Locale> {
-        None
-    }
-
-    fn extend_identifiers(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
-        Box::new(None.into_iter())
-    }
-
-    fn extend_words(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
-        Box::new(None.into_iter())
-    }
-}
-
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
@@ -145,23 +37,9 @@ impl Config {
         }
     }
 
-    pub fn update(&mut self, source: &dyn ConfigSource) {
-        if let Some(walk) = source.walk() {
-            self.files.update(walk);
-        }
-        if let Some(default) = source.default() {
-            self.default.update(default);
-        }
-    }
-}
-
-impl ConfigSource for Config {
-    fn walk(&self) -> Option<&dyn WalkSource> {
-        Some(&self.files)
-    }
-
-    fn default(&self) -> Option<&dyn EngineSource> {
-        Some(&self.default)
+    pub fn update(&mut self, source: &Config) {
+        self.files.update(&source.files);
+        self.default.update(&source.default);
     }
 }
 
@@ -169,11 +47,17 @@ impl ConfigSource for Config {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
+    /// Skip hidden files and directories.
     pub ignore_hidden: Option<bool>,
+    /// Respect ignore files.
     pub ignore_files: Option<bool>,
+    /// Respect .ignore files.
     pub ignore_dot: Option<bool>,
+    /// Respect ignore files in vcs directories.
     pub ignore_vcs: Option<bool>,
+    /// Respect global ignore files.
     pub ignore_global: Option<bool>,
+    /// Respect ignore files in parent directories.
     pub ignore_parent: Option<bool>,
 }
 
@@ -190,28 +74,28 @@ impl Walk {
         }
     }
 
-    pub fn update(&mut self, source: &dyn WalkSource) {
-        if let Some(source) = source.ignore_hidden() {
+    pub fn update(&mut self, source: &Walk) {
+        if let Some(source) = source.ignore_hidden {
             self.ignore_hidden = Some(source);
         }
-        if let Some(source) = source.ignore_files() {
+        if let Some(source) = source.ignore_files {
             self.ignore_files = Some(source);
             self.ignore_dot = None;
             self.ignore_vcs = None;
             self.ignore_global = None;
             self.ignore_parent = None;
         }
-        if let Some(source) = source.ignore_dot() {
+        if let Some(source) = source.ignore_dot {
             self.ignore_dot = Some(source);
         }
-        if let Some(source) = source.ignore_vcs() {
+        if let Some(source) = source.ignore_vcs {
             self.ignore_vcs = Some(source);
             self.ignore_global = None;
         }
-        if let Some(source) = source.ignore_global() {
+        if let Some(source) = source.ignore_global {
             self.ignore_global = Some(source);
         }
-        if let Some(source) = source.ignore_parent() {
+        if let Some(source) = source.ignore_parent {
             self.ignore_parent = Some(source);
         }
     }
@@ -240,38 +124,15 @@ impl Walk {
     }
 }
 
-impl WalkSource for Walk {
-    fn ignore_hidden(&self) -> Option<bool> {
-        self.ignore_hidden
-    }
-
-    fn ignore_files(&self) -> Option<bool> {
-        self.ignore_files
-    }
-
-    fn ignore_dot(&self) -> Option<bool> {
-        self.ignore_dot
-    }
-
-    fn ignore_vcs(&self) -> Option<bool> {
-        self.ignore_vcs
-    }
-
-    fn ignore_global(&self) -> Option<bool> {
-        self.ignore_global
-    }
-
-    fn ignore_parent(&self) -> Option<bool> {
-        self.ignore_parent
-    }
-}
-
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct EngineConfig {
+    /// Check binary files.
     pub binary: Option<bool>,
+    /// Verifying spelling in file names.
     pub check_filename: Option<bool>,
+    /// Verifying spelling in files.
     pub check_file: Option<bool>,
     #[serde(flatten)]
     pub tokenizer: Option<TokenizerConfig>,
@@ -295,17 +156,17 @@ impl EngineConfig {
         }
     }
 
-    pub fn update(&mut self, source: &dyn EngineSource) {
-        if let Some(source) = source.binary() {
+    pub fn update(&mut self, source: &EngineConfig) {
+        if let Some(source) = source.binary {
             self.binary = Some(source);
         }
-        if let Some(source) = source.check_filename() {
+        if let Some(source) = source.check_filename {
             self.check_filename = Some(source);
         }
-        if let Some(source) = source.check_file() {
+        if let Some(source) = source.check_file {
             self.check_file = Some(source);
         }
-        if let Some(source) = source.tokenizer() {
+        if let Some(source) = source.tokenizer.as_ref() {
             let mut tokenizer = None;
             std::mem::swap(&mut tokenizer, &mut self.tokenizer);
             let mut tokenizer = tokenizer.unwrap_or_default();
@@ -313,7 +174,7 @@ impl EngineConfig {
             let mut tokenizer = Some(tokenizer);
             std::mem::swap(&mut tokenizer, &mut self.tokenizer);
         }
-        if let Some(source) = source.dict() {
+        if let Some(source) = source.dict.as_ref() {
             let mut dict = None;
             std::mem::swap(&mut dict, &mut self.dict);
             let mut dict = dict.unwrap_or_default();
@@ -336,36 +197,19 @@ impl EngineConfig {
     }
 }
 
-impl EngineSource for EngineConfig {
-    fn binary(&self) -> Option<bool> {
-        self.binary
-    }
-
-    fn check_filename(&self) -> Option<bool> {
-        self.check_filename
-    }
-
-    fn check_file(&self) -> Option<bool> {
-        self.check_file
-    }
-
-    fn tokenizer(&self) -> Option<&dyn TokenizerSource> {
-        self.tokenizer.as_ref().map(|t| t as &dyn TokenizerSource)
-    }
-
-    fn dict(&self) -> Option<&dyn DictSource> {
-        self.dict.as_ref().map(|d| d as &dyn DictSource)
-    }
-}
-
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct TokenizerConfig {
+    /// Do not check identifiers that appear to be hexadecimal values.
     pub ignore_hex: Option<bool>,
+    /// Allow identifiers to start with digits, in addition to letters.
     pub identifier_leading_digits: Option<bool>,
+    /// Allow identifiers to start with one of these characters.
     pub identifier_leading_chars: Option<kstring::KString>,
+    /// Allow identifiers to include digits, in addition to letters.
     pub identifier_include_digits: Option<bool>,
+    /// Allow identifiers to include these characters.
     pub identifier_include_chars: Option<kstring::KString>,
 }
 
@@ -385,21 +229,21 @@ impl TokenizerConfig {
         }
     }
 
-    pub fn update(&mut self, source: &dyn TokenizerSource) {
-        if let Some(source) = source.ignore_hex() {
+    pub fn update(&mut self, source: &TokenizerConfig) {
+        if let Some(source) = source.ignore_hex {
             self.ignore_hex = Some(source);
         }
-        if let Some(source) = source.identifier_leading_digits() {
+        if let Some(source) = source.identifier_leading_digits {
             self.identifier_leading_digits = Some(source);
         }
-        if let Some(source) = source.identifier_leading_chars() {
-            self.identifier_leading_chars = Some(kstring::KString::from_ref(source));
+        if let Some(source) = source.identifier_leading_chars.as_ref() {
+            self.identifier_leading_chars = Some(source.clone());
         }
-        if let Some(source) = source.identifier_include_digits() {
+        if let Some(source) = source.identifier_include_digits {
             self.identifier_include_digits = Some(source);
         }
-        if let Some(source) = source.identifier_include_chars() {
-            self.identifier_include_chars = Some(kstring::KString::from_ref(source));
+        if let Some(source) = source.identifier_include_chars.as_ref() {
+            self.identifier_include_chars = Some(source.clone());
         }
     }
 
@@ -424,28 +268,6 @@ impl TokenizerConfig {
     }
 }
 
-impl TokenizerSource for TokenizerConfig {
-    fn ignore_hex(&self) -> Option<bool> {
-        self.ignore_hex
-    }
-
-    fn identifier_leading_digits(&self) -> Option<bool> {
-        self.identifier_leading_digits
-    }
-
-    fn identifier_leading_chars(&self) -> Option<&str> {
-        self.identifier_leading_chars.as_deref()
-    }
-
-    fn identifier_include_digits(&self) -> Option<bool> {
-        self.identifier_include_digits
-    }
-
-    fn identifier_include_chars(&self) -> Option<&str> {
-        self.identifier_include_chars.as_deref()
-    }
-}
-
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
@@ -465,19 +287,21 @@ impl DictConfig {
         }
     }
 
-    pub fn update(&mut self, source: &dyn DictSource) {
-        if let Some(source) = source.locale() {
+    pub fn update(&mut self, source: &DictConfig) {
+        if let Some(source) = source.locale {
             self.locale = Some(source);
         }
         self.extend_identifiers.extend(
             source
-                .extend_identifiers()
-                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
+                .extend_identifiers
+                .iter()
+                .map(|(key, value)| (key.clone(), value.clone())),
         );
         self.extend_words.extend(
             source
-                .extend_words()
-                .map(|(k, v)| (kstring::KString::from_ref(k), kstring::KString::from_ref(v))),
+                .extend_words
+                .iter()
+                .map(|(key, value)| (key.clone(), value.clone())),
         );
     }
 
@@ -494,28 +318,6 @@ impl DictConfig {
     }
 
     pub fn extend_words(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
-        Box::new(
-            self.extend_words
-                .iter()
-                .map(|(k, v)| (k.as_str(), v.as_str())),
-        )
-    }
-}
-
-impl DictSource for DictConfig {
-    fn locale(&self) -> Option<Locale> {
-        self.locale
-    }
-
-    fn extend_identifiers(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
-        Box::new(
-            self.extend_identifiers
-                .iter()
-                .map(|(k, v)| (k.as_str(), v.as_str())),
-        )
-    }
-
-    fn extend_words(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
         Box::new(
             self.extend_words
                 .iter()

@@ -59,7 +59,7 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut overrides = config::EngineConfig::default();
-    overrides.update(&args.overrides);
+    overrides.update(&args.overrides.to_config());
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated).set_overrides(overrides);
     if let Some(path) = args.custom_config.as_ref() {
@@ -87,7 +87,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut overrides = config::EngineConfig::default();
-    overrides.update(&args.overrides);
+    overrides.update(&args.overrides.to_config());
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated).set_overrides(overrides);
     if let Some(path) = args.custom_config.as_ref() {
