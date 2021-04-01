@@ -85,11 +85,11 @@ impl<'s> ConfigEngine<'s> {
     pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {
         let dir = self.get_dir(path).expect("`walk()` should be called first");
         Policy {
-            check_filenames: dir.check_filenames,
-            check_files: dir.check_files,
-            binary: dir.binary,
-            tokenizer: self.get_tokenizer(dir),
-            dict: self.get_dict(dir),
+            check_filenames: dir.default.check_filenames,
+            check_files: dir.default.check_files,
+            binary: dir.default.binary,
+            tokenizer: self.get_tokenizer(&dir.default),
+            dict: self.get_dict(&dir.default),
         }
     }
 
@@ -97,12 +97,12 @@ impl<'s> ConfigEngine<'s> {
         self.walk.get(dir.walk)
     }
 
-    fn get_tokenizer(&self, dir: &DirConfig) -> &typos::tokens::Tokenizer {
-        self.tokenizer.get(dir.tokenizer)
+    fn get_tokenizer(&self, file: &FileConfig) -> &typos::tokens::Tokenizer {
+        self.tokenizer.get(file.tokenizer)
     }
 
-    fn get_dict(&self, dir: &DirConfig) -> &dyn typos::Dictionary {
-        self.dict.get(dir.dict)
+    fn get_dict(&self, file: &FileConfig) -> &dyn typos::Dictionary {
+        self.dict.get(file.dict)
     }
 
     fn get_dir(&self, path: &std::path::Path) -> Option<&DirConfig> {
@@ -141,14 +141,27 @@ impl<'s> ConfigEngine<'s> {
         }
 
         let config = self.load_config(cwd)?;
-
         let crate::config::Config { files, default } = config;
-        let binary = default.binary();
-        let check_filename = default.check_filename();
-        let check_file = default.check_file();
+
+        let walk = self.walk.intern(files);
+        let default = self.init_file_config(default)?;
+
+        let dir = DirConfig { walk, default };
+
+        self.configs.insert(cwd.to_owned(), dir);
+        Ok(())
+    }
+
+    fn init_file_config(
+        &mut self,
+        engine: crate::config::EngineConfig,
+    ) -> Result<FileConfig, anyhow::Error> {
+        let binary = engine.binary();
+        let check_filename = engine.check_filename();
+        let check_file = engine.check_file();
         let crate::config::EngineConfig {
             tokenizer, dict, ..
-        } = default;
+        } = engine;
         let tokenizer_config =
             tokenizer.unwrap_or_else(crate::config::TokenizerConfig::from_defaults);
         let dict_config = dict.unwrap_or_else(crate::config::DictConfig::from_defaults);
@@ -175,20 +188,16 @@ impl<'s> ConfigEngine<'s> {
         );
 
         let dict = self.dict.intern(dict);
-        let walk = self.walk.intern(files);
         let tokenizer = self.tokenizer.intern(tokenizer);
 
-        let dir = DirConfig {
-            walk,
+        let file = FileConfig {
             check_filenames: check_filename,
             check_files: check_file,
             binary,
             tokenizer,
             dict,
         };
-
-        self.configs.insert(cwd.to_owned(), dir);
-        Ok(())
+        Ok(file)
     }
 }
 
@@ -222,6 +231,10 @@ impl<T> Default for Intern<T> {
 
 struct DirConfig {
     walk: usize,
+    default: FileConfig,
+}
+
+struct FileConfig {
     tokenizer: usize,
     dict: usize,
     check_filenames: bool,
