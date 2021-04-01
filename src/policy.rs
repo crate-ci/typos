@@ -40,7 +40,7 @@ pub struct ConfigEngine<'s> {
     isolated: bool,
 
     configs: std::collections::HashMap<std::path::PathBuf, DirConfig>,
-    files: Intern<crate::config::Walk>,
+    walk: Intern<crate::config::Walk>,
     tokenizer: Intern<typos::tokens::Tokenizer>,
     dict: Intern<crate::dict::Override<'s, 's, crate::dict::BuiltIn>>,
 }
@@ -53,7 +53,7 @@ impl<'s> ConfigEngine<'s> {
             custom: Default::default(),
             configs: Default::default(),
             isolated: false,
-            files: Default::default(),
+            walk: Default::default(),
             tokenizer: Default::default(),
             dict: Default::default(),
         }
@@ -74,18 +74,16 @@ impl<'s> ConfigEngine<'s> {
         self
     }
 
-    pub fn files(&mut self, cwd: &std::path::Path) -> &crate::config::Walk {
+    pub fn walk(&mut self, cwd: &std::path::Path) -> &crate::config::Walk {
         let dir = self
             .configs
             .get(cwd)
             .expect("`init_dir` must be called first");
-        self.get_files(dir)
+        self.get_walk(dir)
     }
 
     pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {
-        let dir = self
-            .get_dir(path)
-            .expect("`files()` should be called first");
+        let dir = self.get_dir(path).expect("`walk()` should be called first");
         Policy {
             check_filenames: dir.check_filenames,
             check_files: dir.check_files,
@@ -95,8 +93,8 @@ impl<'s> ConfigEngine<'s> {
         }
     }
 
-    fn get_files(&self, dir: &DirConfig) -> &crate::config::Walk {
-        self.files.get(dir.files)
+    fn get_walk(&self, dir: &DirConfig) -> &crate::config::Walk {
+        self.walk.get(dir.walk)
     }
 
     fn get_tokenizer(&self, dir: &DirConfig) -> &typos::tokens::Tokenizer {
@@ -177,11 +175,11 @@ impl<'s> ConfigEngine<'s> {
         );
 
         let dict = self.dict.intern(dict);
-        let files = self.files.intern(files);
+        let walk = self.walk.intern(files);
         let tokenizer = self.tokenizer.intern(tokenizer);
 
         let dir = DirConfig {
-            files,
+            walk,
             check_filenames: check_filename,
             check_files: check_file,
             binary,
@@ -223,7 +221,7 @@ impl<T> Default for Intern<T> {
 }
 
 struct DirConfig {
-    files: usize,
+    walk: usize,
     tokenizer: usize,
     dict: usize,
     check_filenames: bool,

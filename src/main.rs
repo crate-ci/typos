@@ -114,19 +114,19 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         engine
             .init_dir(cwd)
             .with_code(proc_exit::Code::CONFIG_ERR)?;
-        let files = engine.files(cwd);
+        let walk_policy = engine.walk(cwd);
 
         let threads = if path.is_file() { 1 } else { args.threads };
         let single_threaded = threads == 1;
 
         let mut walk = ignore::WalkBuilder::new(path);
         walk.threads(args.threads)
-            .hidden(files.ignore_hidden())
-            .ignore(files.ignore_dot())
-            .git_global(files.ignore_global())
-            .git_ignore(files.ignore_vcs())
-            .git_exclude(files.ignore_vcs())
-            .parents(files.ignore_parent());
+            .hidden(walk_policy.ignore_hidden())
+            .ignore(walk_policy.ignore_dot())
+            .git_global(walk_policy.ignore_global())
+            .git_ignore(walk_policy.ignore_vcs())
+            .git_exclude(walk_policy.ignore_vcs())
+            .parents(walk_policy.ignore_parent());
 
         // HACK: Diff doesn't handle mixing content
         let output_reporter = if args.diff {
