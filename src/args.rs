@@ -79,9 +79,6 @@ pub(crate) struct Args {
     /// Write the current configuration to file with `-` for stdout
     pub(crate) dump_config: Option<std::path::PathBuf>,
 
-    #[structopt(flatten)]
-    pub(crate) overrides: FileArgs,
-
     #[structopt(
         long,
         possible_values(&Format::variants()),
@@ -177,12 +174,15 @@ impl FileArgs {
 pub(crate) struct ConfigArgs {
     #[structopt(flatten)]
     walk: WalkArgs,
+    #[structopt(flatten)]
+    overrides: FileArgs,
 }
 
 impl ConfigArgs {
     pub fn to_config(&self) -> config::Config {
         config::Config {
             files: self.walk.to_config(),
+            overrides: Some(self.overrides.to_config()),
             ..Default::default()
         }
     }

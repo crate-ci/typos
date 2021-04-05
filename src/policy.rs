@@ -35,8 +35,7 @@ impl Default for ConfigStorage {
 pub struct ConfigEngine<'s> {
     storage: &'s ConfigStorage,
 
-    overrides: Option<crate::config::EngineConfig>,
-    custom: Option<crate::config::Config>,
+    overrides: Option<crate::config::Config>,
     isolated: bool,
 
     configs: std::collections::HashMap<std::path::PathBuf, DirConfig>,
@@ -50,7 +49,6 @@ impl<'s> ConfigEngine<'s> {
         Self {
             storage,
             overrides: Default::default(),
-            custom: Default::default(),
             configs: Default::default(),
             isolated: false,
             walk: Default::default(),
@@ -59,13 +57,8 @@ impl<'s> ConfigEngine<'s> {
         }
     }
 
-    pub fn set_overrides(&mut self, overrides: crate::config::EngineConfig) -> &mut Self {
+    pub fn set_overrides(&mut self, overrides: crate::config::Config) -> &mut Self {
         self.overrides = Some(overrides);
-        self
-    }
-
-    pub fn set_custom_config(&mut self, custom: crate::config::Config) -> &mut Self {
-        self.custom = Some(custom);
         self
     }
 
@@ -125,11 +118,8 @@ impl<'s> ConfigEngine<'s> {
                 config.update(&derived);
             }
         }
-        if let Some(custom) = self.custom.as_ref() {
-            config.update(custom);
-        }
         if let Some(overrides) = self.overrides.as_ref() {
-            config.default.update(overrides);
+            config.update(overrides);
         }
 
         Ok(config)
@@ -141,7 +131,14 @@ impl<'s> ConfigEngine<'s> {
         }
 
         let config = self.load_config(cwd)?;
-        let crate::config::Config { files, default } = config;
+        let crate::config::Config {
+            files,
+            mut default,
+            overrides,
+        } = config;
+        if let Some(overrides) = overrides {
+            default.update(&overrides);
+        }
 
         let walk = self.walk.intern(files);
         let default = self.init_file_config(default)?;
