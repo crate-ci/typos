@@ -35,12 +35,11 @@ impl Default for ConfigStorage {
 pub struct ConfigEngine<'s> {
     storage: &'s ConfigStorage,
 
-    overrides: Option<crate::config::EngineConfig>,
-    custom: Option<crate::config::Config>,
+    overrides: Option<crate::config::Config>,
     isolated: bool,
 
     configs: std::collections::HashMap<std::path::PathBuf, DirConfig>,
-    files: Intern<crate::config::Walk>,
+    walk: Intern<crate::config::Walk>,
     tokenizer: Intern<typos::tokens::Tokenizer>,
     dict: Intern<crate::dict::Override<'s, 's, crate::dict::BuiltIn>>,
 }
@@ -50,22 +49,16 @@ impl<'s> ConfigEngine<'s> {
         Self {
             storage,
             overrides: Default::default(),
-            custom: Default::default(),
             configs: Default::default(),
             isolated: false,
-            files: Default::default(),
+            walk: Default::default(),
             tokenizer: Default::default(),
             dict: Default::default(),
         }
     }
 
-    pub fn set_overrides(&mut self, overrides: crate::config::EngineConfig) -> &mut Self {
+    pub fn set_overrides(&mut self, overrides: crate::config::Config) -> &mut Self {
         self.overrides = Some(overrides);
-        self
-    }
-
-    pub fn set_custom_config(&mut self, custom: crate::config::Config) -> &mut Self {
-        self.custom = Some(custom);
         self
     }
 
@@ -74,37 +67,44 @@ impl<'s> ConfigEngine<'s> {
         self
     }
 
-    pub fn files(&mut self, cwd: &std::path::Path) -> &crate::config::Walk {
+    pub fn walk(&self, cwd: &std::path::Path) -> &crate::config::Walk {
         let dir = self
             .configs
             .get(cwd)
             .expect("`init_dir` must be called first");
-        self.get_files(dir)
+        self.get_walk(dir)
+    }
+
+    pub fn file_types(&self, cwd: &std::path::Path) -> &[ignore::types::FileTypeDef] {
+        let dir = self
+            .configs
+            .get(cwd)
+            .expect("`init_dir` must be called first");
+        dir.type_matcher.definitions()
     }
 
     pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {
-        let dir = self
-            .get_dir(path)
-            .expect("`files()` should be called first");
+        let dir = self.get_dir(path).expect("`walk()` should be called first");
+        let file_config = dir.get_file_config(path);
         Policy {
-            check_filenames: dir.check_filenames,
-            check_files: dir.check_files,
-            binary: dir.binary,
-            tokenizer: self.get_tokenizer(dir),
-            dict: self.get_dict(dir),
+            check_filenames: file_config.check_filenames,
+            check_files: file_config.check_files,
+            binary: file_config.binary,
+            tokenizer: self.get_tokenizer(&file_config),
+            dict: self.get_dict(&file_config),
         }
     }
 
-    fn get_files(&self, dir: &DirConfig) -> &crate::config::Walk {
-        self.files.get(dir.files)
+    fn get_walk(&self, dir: &DirConfig) -> &crate::config::Walk {
+        self.walk.get(dir.walk)
     }
 
-    fn get_tokenizer(&self, dir: &DirConfig) -> &typos::tokens::Tokenizer {
-        self.tokenizer.get(dir.tokenizer)
+    fn get_tokenizer(&self, file: &FileConfig) -> &typos::tokens::Tokenizer {
+        self.tokenizer.get(file.tokenizer)
     }
 
-    fn get_dict(&self, dir: &DirConfig) -> &dyn typos::Dictionary {
-        self.dict.get(dir.dict)
+    fn get_dict(&self, file: &FileConfig) -> &dyn typos::Dictionary {
+        self.dict.get(file.dict)
     }
 
     fn get_dir(&self, path: &std::path::Path) -> Option<&DirConfig> {
@@ -127,11 +127,8 @@ impl<'s> ConfigEngine<'s> {
                 config.update(&derived);
             }
         }
-        if let Some(custom) = self.custom.as_ref() {
-            config.update(custom);
-        }
         if let Some(overrides) = self.overrides.as_ref() {
-            config.default.update(overrides);
+            config.update(overrides);
         }
 
         Ok(config)
@@ -143,14 +140,46 @@ impl<'s> ConfigEngine<'s> {
         }
 
         let config = self.load_config(cwd)?;
+        let crate::config::Config {
+            files,
+            mut default,
+            type_,
+            overrides,
+        } = config;
 
-        let crate::config::Config { files, default } = config;
-        let binary = default.binary();
-        let check_filename = default.check_filename();
-        let check_file = default.check_file();
+        let walk = self.walk.intern(files);
+
+        let types = type_
+            .into_iter()
+            .map(|(type_, type_engine)| {
+                let mut new_type_engine = default.clone();
+                new_type_engine.update(&type_engine);
+                new_type_engine.update(&overrides);
+                let type_config = self.init_file_config(new_type_engine);
+                (type_, type_config)
+            })
+            .collect();
+        default.update(&overrides);
+        let default = self.init_file_config(default);
+
+        let dir = DirConfig {
+            walk,
+            default,
+            types,
+            type_matcher: ignore::types::TypesBuilder::new().add_defaults().build()?,
+        };
+
+        self.configs.insert(cwd.to_owned(), dir);
+        Ok(())
+    }
+
+    fn init_file_config(&mut self, engine: crate::config::EngineConfig) -> FileConfig {
+        let binary = engine.binary();
+        let check_filename = engine.check_filename();
+        let check_file = engine.check_file();
         let crate::config::EngineConfig {
             tokenizer, dict, ..
-        } = default;
+        } = engine;
         let tokenizer_config =
             tokenizer.unwrap_or_else(crate::config::TokenizerConfig::from_defaults);
         let dict_config = dict.unwrap_or_else(crate::config::DictConfig::from_defaults);
@@ -177,20 +206,15 @@ impl<'s> ConfigEngine<'s> {
         );
 
         let dict = self.dict.intern(dict);
-        let files = self.files.intern(files);
         let tokenizer = self.tokenizer.intern(tokenizer);
 
-        let dir = DirConfig {
-            files,
+        FileConfig {
             check_filenames: check_filename,
             check_files: check_file,
             binary,
             tokenizer,
             dict,
-        };
-
-        self.configs.insert(cwd.to_owned(), dir);
-        Ok(())
+        }
     }
 }
 
@@ -222,8 +246,29 @@ impl<T> Default for Intern<T> {
     }
 }
 
+#[derive(Clone, Debug)]
 struct DirConfig {
-    files: usize,
+    walk: usize,
+    default: FileConfig,
+    types: std::collections::HashMap<kstring::KString, FileConfig>,
+    type_matcher: ignore::types::Types,
+}
+
+impl DirConfig {
+    fn get_file_config(&self, path: &std::path::Path) -> FileConfig {
+        let match_ = self.type_matcher.matched(path, false);
+        let name = match_
+            .inner()
+            .and_then(|g| g.file_type_def())
+            .map(|f| f.name());
+
+        name.and_then(|name| self.types.get(name).copied())
+            .unwrap_or(self.default)
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
+struct FileConfig {
     tokenizer: usize,
     dict: usize,
     check_filenames: bool,

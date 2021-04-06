@@ -35,6 +35,8 @@ fn run() -> proc_exit::ExitResult {
 
     if let Some(output_path) = args.dump_config.as_ref() {
         run_dump_config(&args, output_path)
+    } else if args.type_list {
+        run_type_list(&args)
     } else {
         run_checks(&args)
     }
@@ -58,14 +60,17 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     };
 
     let storage = typos_cli::policy::ConfigStorage::new();
-    let mut overrides = config::EngineConfig::default();
-    overrides.update(&args.overrides);
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
-    engine.set_isolated(args.isolated).set_overrides(overrides);
+    engine.set_isolated(args.isolated);
+
+    let mut overrides = config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
         let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
-        engine.set_custom_config(custom);
+        overrides.update(&custom);
     }
+    overrides.update(&args.config.to_config());
+    engine.set_overrides(overrides);
+
     let config = engine
         .load_config(cwd)
         .with_code(proc_exit::Code::CONFIG_ERR)?;
@@ -82,18 +87,68 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     Ok(())
 }
 
+fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
+    let global_cwd = std::env::current_dir()?;
+
+    let path = &args.path[0];
+    let path = if path == std::path::Path::new("-") {
+        path.to_owned()
+    } else {
+        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
+    };
+    let cwd = if path == std::path::Path::new("-") {
+        global_cwd.as_path()
+    } else if path.is_file() {
+        path.parent().unwrap()
+    } else {
+        path.as_path()
+    };
+
+    let storage = typos_cli::policy::ConfigStorage::new();
+    let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
+    engine.set_isolated(args.isolated);
+
+    let mut overrides = config::Config::default();
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        overrides.update(&custom);
+    }
+    overrides.update(&args.config.to_config());
+    engine.set_overrides(overrides);
+
+    engine
+        .init_dir(cwd)
+        .with_code(proc_exit::Code::CONFIG_ERR)?;
+    let definitions = engine.file_types(cwd);
+
+    let stdout = std::io::stdout();
+    let mut handle = stdout.lock();
+    for def in definitions {
+        writeln!(
+            handle,
+            "{}: {}",
+            def.name(),
+            itertools::join(def.globs(), ", ")
+        )?;
+    }
+
+    Ok(())
+}
+
 fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     let global_cwd = std::env::current_dir()?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
-    let mut overrides = config::EngineConfig::default();
-    overrides.update(&args.overrides);
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
-    engine.set_isolated(args.isolated).set_overrides(overrides);
+    engine.set_isolated(args.isolated);
+
+    let mut overrides = config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
         let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
-        engine.set_custom_config(custom);
+        overrides.update(&custom);
     }
+    overrides.update(&args.config.to_config());
+    engine.set_overrides(overrides);
 
     let mut typos_found = false;
     let mut errors_found = false;
@@ -114,19 +169,19 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         engine
             .init_dir(cwd)
             .with_code(proc_exit::Code::CONFIG_ERR)?;
-        let files = engine.files(cwd);
+        let walk_policy = engine.walk(cwd);
 
         let threads = if path.is_file() { 1 } else { args.threads };
         let single_threaded = threads == 1;
 
         let mut walk = ignore::WalkBuilder::new(path);
         walk.threads(args.threads)
-            .hidden(files.ignore_hidden())
-            .ignore(files.ignore_dot())
-            .git_global(files.ignore_global())
-            .git_ignore(files.ignore_vcs())
-            .git_exclude(files.ignore_vcs())
-            .parents(files.ignore_parent());
+            .hidden(walk_policy.ignore_hidden())
+            .ignore(walk_policy.ignore_dot())
+            .git_global(walk_policy.ignore_global())
+            .git_ignore(walk_policy.ignore_vcs())
+            .git_exclude(walk_policy.ignore_vcs())
+            .parents(walk_policy.ignore_parent());
 
         // HACK: Diff doesn't handle mixing content
         let output_reporter = if args.diff {

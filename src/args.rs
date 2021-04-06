@@ -79,8 +79,9 @@ pub(crate) struct Args {
     /// Write the current configuration to file with `-` for stdout
     pub(crate) dump_config: Option<std::path::PathBuf>,
 
-    #[structopt(flatten)]
-    pub(crate) overrides: FileArgs,
+    #[structopt(long, group = "mode")]
+    /// Show all supported file types.
+    pub(crate) type_list: bool,
 
     #[structopt(
         long,
@@ -129,7 +130,20 @@ pub(crate) struct FileArgs {
     pub(crate) locale: Option<config::Locale>,
 }
 
-impl config::EngineSource for FileArgs {
+impl FileArgs {
+    pub fn to_config(&self) -> config::EngineConfig {
+        config::EngineConfig {
+            binary: self.binary(),
+            check_filename: self.check_filename(),
+            check_file: self.check_file(),
+            tokenizer: None,
+            dict: Some(config::DictConfig {
+                locale: self.locale,
+                ..Default::default()
+            }),
+        }
+    }
+
     fn binary(&self) -> Option<bool> {
         match (self.binary, self.no_binary) {
             (true, false) => Some(true),
@@ -156,16 +170,6 @@ impl config::EngineSource for FileArgs {
             (_, _) => unreachable!("StructOpt should make this impossible"),
         }
     }
-
-    fn dict(&self) -> Option<&dyn config::DictSource> {
-        Some(self)
-    }
-}
-
-impl config::DictSource for FileArgs {
-    fn locale(&self) -> Option<config::Locale> {
-        self.locale
-    }
 }
 
 #[derive(Debug, StructOpt)]
@@ -173,11 +177,17 @@ impl config::DictSource for FileArgs {
 pub(crate) struct ConfigArgs {
     #[structopt(flatten)]
     walk: WalkArgs,
+    #[structopt(flatten)]
+    overrides: FileArgs,
 }
 
-impl config::ConfigSource for ConfigArgs {
-    fn walk(&self) -> Option<&dyn config::WalkSource> {
-        Some(&self.walk)
+impl ConfigArgs {
+    pub fn to_config(&self) -> config::Config {
+        config::Config {
+            files: self.walk.to_config(),
+            overrides: self.overrides.to_config(),
+            ..Default::default()
+        }
     }
 }
 
@@ -221,7 +231,18 @@ pub(crate) struct WalkArgs {
     ignore_vcs: bool,
 }
 
-impl config::WalkSource for WalkArgs {
+impl WalkArgs {
+    pub fn to_config(&self) -> config::Walk {
+        config::Walk {
+            ignore_hidden: self.ignore_hidden(),
+            ignore_files: self.ignore_files(),
+            ignore_dot: self.ignore_dot(),
+            ignore_vcs: self.ignore_vcs(),
+            ignore_global: self.ignore_global(),
+            ignore_parent: self.ignore_parent(),
+        }
+    }
+
     fn ignore_hidden(&self) -> Option<bool> {
         match (self.hidden, self.no_hidden) {
             (true, false) => Some(false),
