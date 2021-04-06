@@ -208,14 +208,13 @@ impl<'s> ConfigEngine<'s> {
         let dict = self.dict.intern(dict);
         let tokenizer = self.tokenizer.intern(tokenizer);
 
-        let file = FileConfig {
+        FileConfig {
             check_filenames: check_filename,
             check_files: check_file,
             binary,
             tokenizer,
             dict,
-        };
-        file
+        }
     }
 }
 

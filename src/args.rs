@@ -141,7 +141,6 @@ impl FileArgs {
                 locale: self.locale,
                 ..Default::default()
             }),
-            ..Default::default()
         }
     }
 
@@ -241,7 +240,6 @@ impl WalkArgs {
             ignore_vcs: self.ignore_vcs(),
             ignore_global: self.ignore_global(),
             ignore_parent: self.ignore_parent(),
-            ..Default::default()
         }
     }
 
