@@ -35,6 +35,8 @@ fn run() -> proc_exit::ExitResult {
 
     if let Some(output_path) = args.dump_config.as_ref() {
         run_dump_config(&args, output_path)
+    } else if args.type_list {
+        run_type_list(&args)
     } else {
         run_checks(&args)
     }
@@ -80,6 +82,54 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
         std::io::stdout().write_all(output.as_bytes())?;
     } else {
         std::fs::write(output_path, &output)?;
+    }
+
+    Ok(())
+}
+
+fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
+    let global_cwd = std::env::current_dir()?;
+
+    let path = &args.path[0];
+    let path = if path == std::path::Path::new("-") {
+        path.to_owned()
+    } else {
+        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
+    };
+    let cwd = if path == std::path::Path::new("-") {
+        global_cwd.as_path()
+    } else if path.is_file() {
+        path.parent().unwrap()
+    } else {
+        path.as_path()
+    };
+
+    let storage = typos_cli::policy::ConfigStorage::new();
+    let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
+    engine.set_isolated(args.isolated);
+
+    let mut overrides = config::Config::default();
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        overrides.update(&custom);
+    }
+    overrides.update(&args.config.to_config());
+    engine.set_overrides(overrides);
+
+    engine
+        .init_dir(cwd)
+        .with_code(proc_exit::Code::CONFIG_ERR)?;
+    let definitions = engine.file_types(cwd);
+
+    let stdout = std::io::stdout();
+    let mut handle = stdout.lock();
+    for def in definitions {
+        writeln!(
+            handle,
+            "{}: {}",
+            def.name(),
+            itertools::join(def.globs(), ", ")
+        )?;
     }
 
     Ok(())

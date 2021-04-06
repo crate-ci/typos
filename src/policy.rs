@@ -67,12 +67,20 @@ impl<'s> ConfigEngine<'s> {
         self
     }
 
-    pub fn walk(&mut self, cwd: &std::path::Path) -> &crate::config::Walk {
+    pub fn walk(&self, cwd: &std::path::Path) -> &crate::config::Walk {
         let dir = self
             .configs
             .get(cwd)
             .expect("`init_dir` must be called first");
         self.get_walk(dir)
+    }
+
+    pub fn file_types(&self, cwd: &std::path::Path) -> &[ignore::types::FileTypeDef] {
+        let dir = self
+            .configs
+            .get(cwd)
+            .expect("`init_dir` must be called first");
+        dir.type_matcher.definitions()
     }
 
     pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {

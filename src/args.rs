@@ -79,6 +79,10 @@ pub(crate) struct Args {
     /// Write the current configuration to file with `-` for stdout
     pub(crate) dump_config: Option<std::path::PathBuf>,
 
+    #[structopt(long, group = "mode")]
+    /// Show all supported file types.
+    pub(crate) type_list: bool,
+
     #[structopt(
         long,
         possible_values(&Format::variants()),
