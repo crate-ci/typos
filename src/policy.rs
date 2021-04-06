@@ -77,12 +77,13 @@ impl<'s> ConfigEngine<'s> {
 
     pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {
         let dir = self.get_dir(path).expect("`walk()` should be called first");
+        let file_config = dir.get_file_config(path);
         Policy {
-            check_filenames: dir.default.check_filenames,
-            check_files: dir.default.check_files,
-            binary: dir.default.binary,
-            tokenizer: self.get_tokenizer(&dir.default),
-            dict: self.get_dict(&dir.default),
+            check_filenames: file_config.check_filenames,
+            check_files: file_config.check_files,
+            binary: file_config.binary,
+            tokenizer: self.get_tokenizer(&file_config),
+            dict: self.get_dict(&file_config),
         }
     }
 
@@ -134,25 +135,37 @@ impl<'s> ConfigEngine<'s> {
         let crate::config::Config {
             files,
             mut default,
+            type_,
             overrides,
         } = config;
-        if let Some(overrides) = overrides {
-            default.update(&overrides);
-        }
 
         let walk = self.walk.intern(files);
-        let default = self.init_file_config(default)?;
 
-        let dir = DirConfig { walk, default };
+        let types = type_
+            .into_iter()
+            .map(|(type_, type_engine)| {
+                let mut new_type_engine = default.clone();
+                new_type_engine.update(&type_engine);
+                new_type_engine.update(&overrides);
+                let type_config = self.init_file_config(new_type_engine);
+                (type_, type_config)
+            })
+            .collect();
+        default.update(&overrides);
+        let default = self.init_file_config(default);
+
+        let dir = DirConfig {
+            walk,
+            default,
+            types,
+            type_matcher: ignore::types::TypesBuilder::new().add_defaults().build()?,
+        };
 
         self.configs.insert(cwd.to_owned(), dir);
         Ok(())
     }
 
-    fn init_file_config(
-        &mut self,
-        engine: crate::config::EngineConfig,
-    ) -> Result<FileConfig, anyhow::Error> {
+    fn init_file_config(&mut self, engine: crate::config::EngineConfig) -> FileConfig {
         let binary = engine.binary();
         let check_filename = engine.check_filename();
         let check_file = engine.check_file();
@@ -194,7 +207,7 @@ impl<'s> ConfigEngine<'s> {
             tokenizer,
             dict,
         };
-        Ok(file)
+        file
     }
 }
 
@@ -226,11 +239,28 @@ impl<T> Default for Intern<T> {
     }
 }
 
+#[derive(Clone, Debug)]
 struct DirConfig {
     walk: usize,
     default: FileConfig,
+    types: std::collections::HashMap<kstring::KString, FileConfig>,
+    type_matcher: ignore::types::Types,
 }
 
+impl DirConfig {
+    fn get_file_config(&self, path: &std::path::Path) -> FileConfig {
+        let match_ = self.type_matcher.matched(path, false);
+        let name = match_
+            .inner()
+            .and_then(|g| g.file_type_def())
+            .map(|f| f.name());
+
+        name.and_then(|name| self.types.get(name).copied())
+            .unwrap_or(self.default)
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
 struct FileConfig {
     tokenizer: usize,
     dict: usize,

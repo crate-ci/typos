@@ -182,7 +182,7 @@ impl ConfigArgs {
     pub fn to_config(&self) -> config::Config {
         config::Config {
             files: self.walk.to_config(),
-            overrides: Some(self.overrides.to_config()),
+            overrides: self.overrides.to_config(),
             ..Default::default()
         }
     }

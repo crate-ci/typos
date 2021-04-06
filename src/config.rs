@@ -6,8 +6,10 @@ use std::collections::HashMap;
 pub struct Config {
     pub files: Walk,
     pub default: EngineConfig,
+    #[serde(rename = "type")]
+    pub type_: std::collections::HashMap<kstring::KString, EngineConfig>,
     #[serde(skip)]
-    pub overrides: Option<EngineConfig>,
+    pub overrides: EngineConfig,
 }
 
 impl Config {
@@ -36,7 +38,8 @@ impl Config {
         Self {
             files: Walk::from_defaults(),
             default: EngineConfig::from_defaults(),
-            overrides: None,
+            type_: Default::default(),
+            overrides: EngineConfig::default(),
         }
     }
 
