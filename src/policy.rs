@@ -153,8 +153,18 @@ impl<'s> ConfigEngine<'s> {
         type_matcher.add_defaults();
         let mut types: std::collections::HashMap<_, _> = Default::default();
         for (type_name, type_engine) in type_.into_iter() {
-            for glob in type_engine.extend_glob.iter() {
-                type_matcher.add(type_name.as_str(), glob.as_str())?;
+            if type_engine.extend_glob.is_empty() {
+                if type_matcher
+                    .definitions()
+                    .iter()
+                    .all(|def| def.name() != type_name.as_str())
+                {
+                    anyhow::bail!("Unknown type definition `{}`, pass `--type-list` to see valid names or set `extend_globs` to add a new one.", type_name);
+                }
+            } else {
+                for glob in type_engine.extend_glob.iter() {
+                    type_matcher.add(type_name.as_str(), glob.as_str())?;
+                }
             }
 
             let mut new_type_engine = default.clone();
