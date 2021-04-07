@@ -149,6 +149,8 @@ impl<'s> ConfigEngine<'s> {
 
         let walk = self.walk.intern(files);
 
+        let mut type_matcher = ignore::types::TypesBuilder::new();
+        type_matcher.add_defaults();
         let mut types: std::collections::HashMap<_, _> = Default::default();
         for (type_name, type_engine) in type_.into_iter() {
             let mut new_type_engine = default.clone();
@@ -164,7 +166,7 @@ impl<'s> ConfigEngine<'s> {
             walk,
             default,
             types,
-            type_matcher: ignore::types::TypesBuilder::new().add_defaults().build()?,
+            type_matcher: type_matcher.build()?,
         };
 
         self.configs.insert(cwd.to_owned(), dir);
