@@ -46,6 +46,13 @@ impl Config {
     pub fn update(&mut self, source: &Config) {
         self.files.update(&source.files);
         self.default.update(&source.default);
+        for (type_name, engine) in source.type_.iter() {
+            self.type_
+                .entry(type_name.to_owned())
+                .or_insert_with(EngineConfig::default)
+                .update(engine);
+        }
+        self.overrides.update(&source.overrides);
     }
 }
 
