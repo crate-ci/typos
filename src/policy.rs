@@ -149,16 +149,14 @@ impl<'s> ConfigEngine<'s> {
 
         let walk = self.walk.intern(files);
 
-        let types = type_
-            .into_iter()
-            .map(|(type_, type_engine)| {
-                let mut new_type_engine = default.clone();
-                new_type_engine.update(&type_engine);
-                new_type_engine.update(&overrides);
-                let type_config = self.init_file_config(new_type_engine);
-                (type_, type_config)
-            })
-            .collect();
+        let mut types: std::collections::HashMap<_, _> = Default::default();
+        for (type_name, type_engine) in type_.into_iter() {
+            let mut new_type_engine = default.clone();
+            new_type_engine.update(&type_engine);
+            new_type_engine.update(&overrides);
+            let type_config = self.init_file_config(new_type_engine);
+            types.insert(type_name, type_config);
+        }
         default.update(&overrides);
         let default = self.init_file_config(default);
 
