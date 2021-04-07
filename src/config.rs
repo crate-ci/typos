@@ -7,7 +7,7 @@ pub struct Config {
     pub files: Walk,
     pub default: EngineConfig,
     #[serde(rename = "type")]
-    pub type_: std::collections::HashMap<kstring::KString, EngineConfig>,
+    pub type_: std::collections::HashMap<kstring::KString, TypeEngineConfig>,
     #[serde(skip)]
     pub overrides: EngineConfig,
 }
@@ -49,7 +49,7 @@ impl Config {
         for (type_name, engine) in source.type_.iter() {
             self.type_
                 .entry(type_name.to_owned())
-                .or_insert_with(EngineConfig::default)
+                .or_insert_with(TypeEngineConfig::default)
                 .update(engine);
         }
         self.overrides.update(&source.overrides);
@@ -134,6 +134,22 @@ impl Walk {
 
     pub fn ignore_parent(&self) -> bool {
         self.ignore_parent.or(self.ignore_files).unwrap_or(true)
+    }
+}
+
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct TypeEngineConfig {
+    pub extend_glob: Vec<kstring::KString>,
+    #[serde(flatten)]
+    pub engine: EngineConfig,
+}
+
+impl TypeEngineConfig {
+    pub fn update(&mut self, source: &TypeEngineConfig) {
+        self.extend_glob.extend(source.extend_glob.iter().cloned());
+        self.engine.update(&source.engine);
     }
 }
 

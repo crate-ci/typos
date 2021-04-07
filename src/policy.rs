@@ -153,8 +153,12 @@ impl<'s> ConfigEngine<'s> {
         type_matcher.add_defaults();
         let mut types: std::collections::HashMap<_, _> = Default::default();
         for (type_name, type_engine) in type_.into_iter() {
+            for glob in type_engine.extend_glob.iter() {
+                type_matcher.add(type_name.as_str(), glob.as_str())?;
+            }
+
             let mut new_type_engine = default.clone();
-            new_type_engine.update(&type_engine);
+            new_type_engine.update(&type_engine.engine);
             new_type_engine.update(&overrides);
             let type_config = self.init_file_config(new_type_engine);
             types.insert(type_name, type_config);

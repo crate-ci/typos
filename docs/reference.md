@@ -31,4 +31,5 @@ Configuration is read from the following (in precedence order)
 | default.locale         | --locale          | en, en-us, en-gb, en-ca, en-au   | English dialect to correct to. |
 | default.extend-identifiers | \-            | table of strings | Corrections for identifiers. When the correction is blank, the word is never valid. When the correction is the key, the word is always valid. |
 | default.extend-words       | \-            | table of strings | Corrections for identifiers. When the correction is blank, the word is never valid. When the correction is the key, the word is always valid. |
-| type.<name>.binary         | <varied>      | <varied>   | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s |
+| type.<name>.<field>        | <varied>      | <varied>   | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s |
+| type.<name>.extend_globs   | \-            | list of strings  | File globs for matching `<name>` |
