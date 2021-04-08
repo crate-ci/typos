@@ -131,6 +131,26 @@ impl<'s> ConfigEngine<'s> {
             config.update(overrides);
         }
 
+        let mut types = Default::default();
+        std::mem::swap(&mut types, &mut config.type_);
+
+        let mut types = types
+            .into_iter()
+            .map(|(type_, type_engine)| {
+                let mut new_engine = config.default.clone();
+                new_engine.update(&type_engine.engine);
+                new_engine.update(&config.overrides);
+                let new_type_engine = crate::config::TypeEngineConfig {
+                    extend_glob: type_engine.extend_glob,
+                    engine: new_engine,
+                };
+                (type_, new_type_engine)
+            })
+            .collect();
+        std::mem::swap(&mut types, &mut config.type_);
+
+        config.default.update(&config.overrides);
+
         Ok(config)
     }
 
@@ -167,10 +187,7 @@ impl<'s> ConfigEngine<'s> {
                 }
             }
 
-            let mut new_type_engine = default.clone();
-            new_type_engine.update(&type_engine.engine);
-            new_type_engine.update(&overrides);
-            let type_config = self.init_file_config(new_type_engine);
+            let type_config = self.init_file_config(type_engine.engine);
             types.insert(type_name, type_config);
         }
         default.update(&overrides);
