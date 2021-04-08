@@ -342,6 +342,8 @@ impl<'t, 'd> Default for Policy<'t, 'd> {
 mod test {
     use super::*;
 
+    const NEVER_EXIST_TYPE: &str = "this-type-should-never-exist-but-i-hate-you-if-it-does";
+
     #[test]
     fn test_load_config_applies_overrides() {
         let storage = ConfigStorage::new();
@@ -389,5 +391,28 @@ mod test {
             loaded.type_[type_name.as_str()].engine.check_file,
             Some(false)
         );
+    }
+
+    #[test]
+    fn test_init_fails_on_unknown_type() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+
+        let config = crate::config::Config {
+            type_: maplit::hashmap! {
+                type_name.clone() => crate::config::TypeEngineConfig {
+                    ..Default::default()
+                },
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        let result = engine.init_dir(&cwd);
+        assert!(result.is_err());
     }
 }
