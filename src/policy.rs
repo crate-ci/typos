@@ -133,7 +133,6 @@ impl<'s> ConfigEngine<'s> {
 
         let mut types = Default::default();
         std::mem::swap(&mut types, &mut config.type_);
-
         let mut types = types
             .into_iter()
             .map(|(type_, type_engine)| {
@@ -336,5 +335,59 @@ impl<'t, 'd> Default for Policy<'t, 'd> {
             tokenizer: &DEFAULT_TOKENIZER,
             dict: &DEFAULT_DICT,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_load_config_applies_overrides() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static("toml");
+
+        let config = crate::config::Config {
+            default: crate::config::EngineConfig {
+                binary: Some(true),
+                check_filename: Some(true),
+                ..Default::default()
+            },
+            type_: maplit::hashmap! {
+                type_name.clone() => crate::config::TypeEngineConfig {
+                    engine: crate::config::EngineConfig {
+                        check_filename: Some(false),
+                        check_file: Some(true),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            },
+            overrides: crate::config::EngineConfig {
+                binary: Some(false),
+                check_file: Some(false),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        let loaded = engine.load_config(&cwd).unwrap();
+        assert_eq!(loaded.default.binary, Some(false));
+        assert_eq!(loaded.default.check_filename, Some(true));
+        assert_eq!(loaded.default.check_file, Some(false));
+        assert_eq!(loaded.type_[type_name.as_str()].engine.binary, Some(false));
+        assert_eq!(
+            loaded.type_[type_name.as_str()].engine.check_filename,
+            Some(false)
+        );
+        assert_eq!(
+            loaded.type_[type_name.as_str()].engine.check_file,
+            Some(false)
+        );
     }
 }
