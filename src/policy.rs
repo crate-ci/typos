@@ -159,7 +159,7 @@ impl<'s> ConfigEngine<'s> {
                     .iter()
                     .all(|def| def.name() != type_name.as_str())
                 {
-                    anyhow::bail!("Unknown type definition `{}`, pass `--type-list` to see valid names or set `extend_globs` to add a new one.", type_name);
+                    anyhow::bail!("Unknown type definition `{}`, pass `--type-list` to see valid names or set `extend_glob` to add a new one.", type_name);
                 }
             } else {
                 for glob in type_engine.extend_glob.iter() {
