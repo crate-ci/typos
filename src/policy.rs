@@ -192,6 +192,8 @@ impl<'s> ConfigEngine<'s> {
         default.update(&overrides);
         let default = self.init_file_config(default);
 
+        type_matcher.select("all");
+
         let dir = DirConfig {
             walk,
             default,
