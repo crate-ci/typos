@@ -344,7 +344,7 @@ impl<'t, 'd> Default for Policy<'t, 'd> {
 mod test {
     use super::*;
 
-    const NEVER_EXIST_TYPE: &str = "this-type-should-never-exist-but-i-hate-you-if-it-does";
+    const NEVER_EXIST_TYPE: &str = "THISyTYPEySHOULDyNEVERyEXISTyBUTyIyHATEyYOUyIFyITyDOES";
 
     #[test]
     fn test_load_config_applies_overrides() {
@@ -416,5 +416,88 @@ mod test {
         let cwd = std::path::Path::new(".");
         let result = engine.init_dir(&cwd);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_policy_default() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let config = crate::config::Config::default();
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        engine.init_dir(&cwd).unwrap();
+        let policy = engine.policy(&cwd.join("Cargo.toml"));
+        assert!(!policy.binary);
+    }
+
+    #[test]
+    fn test_policy_fallback() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+
+        let config = crate::config::Config {
+            default: crate::config::EngineConfig {
+                binary: Some(true),
+                ..Default::default()
+            },
+            type_: maplit::hashmap! {
+                type_name.clone() => crate::config::TypeEngineConfig {
+                    extend_glob: vec![type_name.clone()],
+                    engine: crate::config::EngineConfig {
+                        binary: Some(false),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        engine.init_dir(&cwd).unwrap();
+        let policy = engine.policy(&cwd.join("Cargo.toml"));
+        assert!(policy.binary);
+    }
+
+    #[test]
+    fn test_policy_type_specific() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+
+        let config = crate::config::Config {
+            default: crate::config::EngineConfig {
+                binary: Some(true),
+                ..Default::default()
+            },
+            type_: maplit::hashmap! {
+                type_name.clone() => crate::config::TypeEngineConfig {
+                    extend_glob: vec![type_name.clone()],
+                    engine: crate::config::EngineConfig {
+                        binary: Some(false),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        engine.init_dir(&cwd).unwrap();
+        let policy = engine.policy(&cwd.join("Cargo.toml"));
+        assert!(policy.binary);
+        let policy = engine.policy(&cwd.join(NEVER_EXIST_TYPE));
+        assert!(!policy.binary);
     }
 }
