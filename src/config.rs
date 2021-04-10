@@ -456,7 +456,7 @@ mod test {
         let null = Config::default();
         let defaulted = Config::from_defaults();
 
-        let mut actual = null.clone();
+        let mut actual = null;
         actual.update(&defaulted);
 
         assert_eq!(actual, defaulted);
@@ -470,7 +470,7 @@ mod test {
             ..Default::default()
         };
 
-        let mut actual = null.clone();
+        let mut actual = null;
         actual.update(&extended);
 
         assert_eq!(actual, extended);
@@ -487,7 +487,7 @@ mod test {
             ..Default::default()
         };
 
-        let mut actual = base.clone();
+        let mut actual = base;
         actual.update(&extended);
 
         let expected: Vec<kstring::KString> = vec!["*.foo".into(), "*.bar".into()];

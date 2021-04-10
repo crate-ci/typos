@@ -405,7 +405,7 @@ mod test {
 
         let config = crate::config::Config {
             type_: maplit::hashmap! {
-                type_name.clone() => crate::config::TypeEngineConfig {
+                type_name => crate::config::TypeEngineConfig {
                     ..Default::default()
                 },
             },
@@ -448,12 +448,11 @@ mod test {
             },
             type_: maplit::hashmap! {
                 type_name.clone() => crate::config::TypeEngineConfig {
-                    extend_glob: vec![type_name.clone()],
+                    extend_glob: vec![type_name],
                     engine: crate::config::EngineConfig {
                         binary: Some(false),
                         ..Default::default()
                     },
-                    ..Default::default()
                 },
             },
             ..Default::default()
@@ -481,12 +480,11 @@ mod test {
             },
             type_: maplit::hashmap! {
                 type_name.clone() => crate::config::TypeEngineConfig {
-                    extend_glob: vec![type_name.clone()],
+                    extend_glob: vec![type_name],
                     engine: crate::config::EngineConfig {
                         binary: Some(false),
                         ..Default::default()
                     },
-                    ..Default::default()
                 },
             },
             ..Default::default()
