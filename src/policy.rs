@@ -131,6 +131,25 @@ impl<'s> ConfigEngine<'s> {
             config.update(overrides);
         }
 
+        let mut types = Default::default();
+        std::mem::swap(&mut types, &mut config.type_);
+        let mut types = types
+            .into_iter()
+            .map(|(type_, type_engine)| {
+                let mut new_engine = config.default.clone();
+                new_engine.update(&type_engine.engine);
+                new_engine.update(&config.overrides);
+                let new_type_engine = crate::config::TypeEngineConfig {
+                    extend_glob: type_engine.extend_glob,
+                    engine: new_engine,
+                };
+                (type_, new_type_engine)
+            })
+            .collect();
+        std::mem::swap(&mut types, &mut config.type_);
+
+        config.default.update(&config.overrides);
+
         Ok(config)
     }
 
@@ -149,24 +168,37 @@ impl<'s> ConfigEngine<'s> {
 
         let walk = self.walk.intern(files);
 
-        let types = type_
-            .into_iter()
-            .map(|(type_, type_engine)| {
-                let mut new_type_engine = default.clone();
-                new_type_engine.update(&type_engine);
-                new_type_engine.update(&overrides);
-                let type_config = self.init_file_config(new_type_engine);
-                (type_, type_config)
-            })
-            .collect();
+        let mut type_matcher = ignore::types::TypesBuilder::new();
+        type_matcher.add_defaults();
+        let mut types: std::collections::HashMap<_, _> = Default::default();
+        for (type_name, type_engine) in type_.into_iter() {
+            if type_engine.extend_glob.is_empty() {
+                if type_matcher
+                    .definitions()
+                    .iter()
+                    .all(|def| def.name() != type_name.as_str())
+                {
+                    anyhow::bail!("Unknown type definition `{}`, pass `--type-list` to see valid names or set `extend_glob` to add a new one.", type_name);
+                }
+            } else {
+                for glob in type_engine.extend_glob.iter() {
+                    type_matcher.add(type_name.as_str(), glob.as_str())?;
+                }
+            }
+
+            let type_config = self.init_file_config(type_engine.engine);
+            types.insert(type_name, type_config);
+        }
         default.update(&overrides);
         let default = self.init_file_config(default);
+
+        type_matcher.select("all");
 
         let dir = DirConfig {
             walk,
             default,
             types,
-            type_matcher: ignore::types::TypesBuilder::new().add_defaults().build()?,
+            type_matcher: type_matcher.build()?,
         };
 
         self.configs.insert(cwd.to_owned(), dir);
@@ -305,5 +337,165 @@ impl<'t, 'd> Default for Policy<'t, 'd> {
             tokenizer: &DEFAULT_TOKENIZER,
             dict: &DEFAULT_DICT,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    const NEVER_EXIST_TYPE: &str = "THISyTYPEySHOULDyNEVERyEXISTyBUTyIyHATEyYOUyIFyITyDOES";
+
+    #[test]
+    fn test_load_config_applies_overrides() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static("toml");
+
+        let config = crate::config::Config {
+            default: crate::config::EngineConfig {
+                binary: Some(true),
+                check_filename: Some(true),
+                ..Default::default()
+            },
+            type_: maplit::hashmap! {
+                type_name.clone() => crate::config::TypeEngineConfig {
+                    engine: crate::config::EngineConfig {
+                        check_filename: Some(false),
+                        check_file: Some(true),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            },
+            overrides: crate::config::EngineConfig {
+                binary: Some(false),
+                check_file: Some(false),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        let loaded = engine.load_config(&cwd).unwrap();
+        assert_eq!(loaded.default.binary, Some(false));
+        assert_eq!(loaded.default.check_filename, Some(true));
+        assert_eq!(loaded.default.check_file, Some(false));
+        assert_eq!(loaded.type_[type_name.as_str()].engine.binary, Some(false));
+        assert_eq!(
+            loaded.type_[type_name.as_str()].engine.check_filename,
+            Some(false)
+        );
+        assert_eq!(
+            loaded.type_[type_name.as_str()].engine.check_file,
+            Some(false)
+        );
+    }
+
+    #[test]
+    fn test_init_fails_on_unknown_type() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+
+        let config = crate::config::Config {
+            type_: maplit::hashmap! {
+                type_name => crate::config::TypeEngineConfig {
+                    ..Default::default()
+                },
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        let result = engine.init_dir(&cwd);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_policy_default() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let config = crate::config::Config::default();
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        engine.init_dir(&cwd).unwrap();
+        let policy = engine.policy(&cwd.join("Cargo.toml"));
+        assert!(!policy.binary);
+    }
+
+    #[test]
+    fn test_policy_fallback() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+
+        let config = crate::config::Config {
+            default: crate::config::EngineConfig {
+                binary: Some(true),
+                ..Default::default()
+            },
+            type_: maplit::hashmap! {
+                type_name.clone() => crate::config::TypeEngineConfig {
+                    extend_glob: vec![type_name],
+                    engine: crate::config::EngineConfig {
+                        binary: Some(false),
+                        ..Default::default()
+                    },
+                },
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        engine.init_dir(&cwd).unwrap();
+        let policy = engine.policy(&cwd.join("Cargo.toml"));
+        assert!(policy.binary);
+    }
+
+    #[test]
+    fn test_policy_type_specific() {
+        let storage = ConfigStorage::new();
+        let mut engine = ConfigEngine::new(&storage);
+        engine.set_isolated(true);
+
+        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+
+        let config = crate::config::Config {
+            default: crate::config::EngineConfig {
+                binary: Some(true),
+                ..Default::default()
+            },
+            type_: maplit::hashmap! {
+                type_name.clone() => crate::config::TypeEngineConfig {
+                    extend_glob: vec![type_name],
+                    engine: crate::config::EngineConfig {
+                        binary: Some(false),
+                        ..Default::default()
+                    },
+                },
+            },
+            ..Default::default()
+        };
+        engine.set_overrides(config);
+
+        let cwd = std::path::Path::new(".");
+        engine.init_dir(&cwd).unwrap();
+        let policy = engine.policy(&cwd.join("Cargo.toml"));
+        assert!(policy.binary);
+        let policy = engine.policy(&cwd.join(NEVER_EXIST_TYPE));
+        assert!(!policy.binary);
     }
 }

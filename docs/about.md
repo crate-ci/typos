@@ -39,7 +39,7 @@ See also [benchmarks](../benchsuite/runs).
 | Runtime        | \-                    | \-                              | \-                              | Python      | Python      |
 | Dictionary     | Blacklist             | Blacklist                       | Blacklist                       | Blacklist   | Whitelist   |
 | Custom Dict    | Yes                   | No                              | ?                               | Yes         | Yes         |
-| Per-Lang Dict  | No ([#14][def-14])    | No                              | ?                               | No          | Yes         |
+| Per-Lang Dict  | Yes                   | No                              | ?                               | No          | Yes         |
 | CamelCase      | Yes                   | No                              | ?                               | No          | Yes         |
 | snake_case     | Yes                   | No                              | ?                               | No          | Yes         |
 | Ignore Hex     | Yes                   | No                              | ?                               | No          | Yes         |

@@ -65,6 +65,7 @@ typed-arena = "2.0.1"
 assert_fs = "1.0"
 predicates = "1.0"
 criterion = "0.3"
+maplit = "1.0"
 
 [profile.dev]
 panic = "abort"

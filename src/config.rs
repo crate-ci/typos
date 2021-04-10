@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
     pub files: Walk,
     pub default: EngineConfig,
     #[serde(rename = "type")]
-    pub type_: std::collections::HashMap<kstring::KString, EngineConfig>,
+    pub type_: std::collections::HashMap<kstring::KString, TypeEngineConfig>,
     #[serde(skip)]
     pub overrides: EngineConfig,
 }
@@ -46,10 +46,17 @@ impl Config {
     pub fn update(&mut self, source: &Config) {
         self.files.update(&source.files);
         self.default.update(&source.default);
+        for (type_name, engine) in source.type_.iter() {
+            self.type_
+                .entry(type_name.to_owned())
+                .or_insert_with(TypeEngineConfig::default)
+                .update(engine);
+        }
+        self.overrides.update(&source.overrides);
     }
 }
 
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
@@ -130,7 +137,23 @@ impl Walk {
     }
 }
 
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct TypeEngineConfig {
+    pub extend_glob: Vec<kstring::KString>,
+    #[serde(flatten)]
+    pub engine: EngineConfig,
+}
+
+impl TypeEngineConfig {
+    pub fn update(&mut self, source: &TypeEngineConfig) {
+        self.extend_glob.extend(source.extend_glob.iter().cloned());
+        self.engine.update(&source.engine);
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct EngineConfig {
@@ -203,7 +226,7 @@ impl EngineConfig {
     }
 }
 
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct TokenizerConfig {
@@ -274,7 +297,7 @@ impl TokenizerConfig {
     }
 }
 
-#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct DictConfig {
@@ -343,7 +366,7 @@ fn find_project_file(dir: &std::path::Path, names: &[&str]) -> Option<std::path:
     None
 }
 
-#[derive(Debug, Copy, Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Locale {
     En,
@@ -399,5 +422,75 @@ impl std::fmt::Display for Locale {
             Locale::EnCa => write!(f, "en-ca"),
             Locale::EnAu => write!(f, "en-au"),
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_from_defaults() {
+        let null = Config::default();
+        let defaulted = Config::from_defaults();
+        assert_ne!(defaulted, null);
+        assert_ne!(defaulted.files, null.files);
+        assert_ne!(defaulted.default, null.default);
+        assert_ne!(defaulted.default.tokenizer, null.default.tokenizer);
+        assert_ne!(defaulted.default.dict, null.default.dict);
+    }
+
+    #[test]
+    fn test_update_from_nothing() {
+        let null = Config::default();
+        let defaulted = Config::from_defaults();
+
+        let mut actual = defaulted.clone();
+        actual.update(&null);
+
+        assert_eq!(actual, defaulted);
+    }
+
+    #[test]
+    fn test_update_from_defaults() {
+        let null = Config::default();
+        let defaulted = Config::from_defaults();
+
+        let mut actual = null;
+        actual.update(&defaulted);
+
+        assert_eq!(actual, defaulted);
+    }
+
+    #[test]
+    fn test_extend_glob_updates() {
+        let null = TypeEngineConfig::default();
+        let extended = TypeEngineConfig {
+            extend_glob: vec!["*.foo".into()],
+            ..Default::default()
+        };
+
+        let mut actual = null;
+        actual.update(&extended);
+
+        assert_eq!(actual, extended);
+    }
+
+    #[test]
+    fn test_extend_glob_extends() {
+        let base = TypeEngineConfig {
+            extend_glob: vec!["*.foo".into()],
+            ..Default::default()
+        };
+        let extended = TypeEngineConfig {
+            extend_glob: vec!["*.bar".into()],
+            ..Default::default()
+        };
+
+        let mut actual = base;
+        actual.update(&extended);
+
+        let expected: Vec<kstring::KString> = vec!["*.foo".into(), "*.bar".into()];
+        assert_eq!(actual.extend_glob, expected);
     }
 }
