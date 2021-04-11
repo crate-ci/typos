@@ -672,4 +672,39 @@ mod test {
         );
         assert_eq!(actual, "foo happy world");
     }
+
+    #[test]
+    fn test_extract_line_single_line() {
+        let (line, offset) = extract_line(b"hello world", 6);
+        assert_eq!(line, b"hello world");
+        assert_eq!(offset, 6);
+    }
+
+    #[test]
+    fn test_extract_line_first() {
+        let (line, offset) = extract_line(b"1\n2\n3", 0);
+        assert_eq!(line, b"1");
+        assert_eq!(offset, 0);
+    }
+
+    #[test]
+    fn test_extract_line_middle() {
+        let (line, offset) = extract_line(b"1\n2\n3", 2);
+        assert_eq!(line, b"2");
+        assert_eq!(offset, 0);
+    }
+
+    #[test]
+    fn test_extract_line_end() {
+        let (line, offset) = extract_line(b"1\n2\n3", 4);
+        assert_eq!(line, b"3");
+        assert_eq!(offset, 0);
+    }
+
+    #[test]
+    fn test_extract_line_offset_change() {
+        let (line, offset) = extract_line(b"1\nhello world\n2", 8);
+        assert_eq!(line, b"hello world");
+        assert_eq!(offset, 6);
+    }
 }
