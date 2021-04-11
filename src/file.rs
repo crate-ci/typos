@@ -609,3 +609,67 @@ fn walk_entry(
 
     Ok(())
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    fn fix_simple(line: &str, corrections: Vec<(usize, &'static str, &'static str)>) -> String {
+        let line = line.as_bytes().to_vec();
+        let corrections: Vec<_> = corrections
+            .into_iter()
+            .map(|(byte_offset, typo, correction)| typos::Typo {
+                byte_offset,
+                typo: typo.into(),
+                corrections: typos::Status::Corrections(vec![correction.into()]),
+            })
+            .collect();
+        let actual = fix_buffer(line, corrections.into_iter());
+        String::from_utf8(actual).unwrap()
+    }
+
+    #[test]
+    fn test_fix_buffer_single() {
+        let actual = fix_simple("foo foo foo", vec![(4, "foo", "bar")]);
+        assert_eq!(actual, "foo bar foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_single_grow() {
+        let actual = fix_simple("foo foo foo", vec![(4, "foo", "happy")]);
+        assert_eq!(actual, "foo happy foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_single_shrink() {
+        let actual = fix_simple("foo foo foo", vec![(4, "foo", "if")]);
+        assert_eq!(actual, "foo if foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_start() {
+        let actual = fix_simple("foo foo foo", vec![(0, "foo", "bar")]);
+        assert_eq!(actual, "bar foo foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_end() {
+        let actual = fix_simple("foo foo foo", vec![(8, "foo", "bar")]);
+        assert_eq!(actual, "foo foo bar");
+    }
+
+    #[test]
+    fn test_fix_buffer_end_grow() {
+        let actual = fix_simple("foo foo foo", vec![(8, "foo", "happy")]);
+        assert_eq!(actual, "foo foo happy");
+    }
+
+    #[test]
+    fn test_fix_buffer_multiple() {
+        let actual = fix_simple(
+            "foo foo foo",
+            vec![(4, "foo", "happy"), (8, "foo", "world")],
+        );
+        assert_eq!(actual, "foo happy world");
+    }
+}
