@@ -64,7 +64,6 @@ fn process_word<'w, 's: 'w>(
 
 /// An invalid term found in the buffer.
 #[derive(Clone, Debug)]
-#[non_exhaustive]
 pub struct Typo<'m> {
     pub byte_offset: usize,
     pub typo: Cow<'m, str>,

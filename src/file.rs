@@ -609,3 +609,102 @@ fn walk_entry(
 
     Ok(())
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    fn fix_simple(line: &str, corrections: Vec<(usize, &'static str, &'static str)>) -> String {
+        let line = line.as_bytes().to_vec();
+        let corrections: Vec<_> = corrections
+            .into_iter()
+            .map(|(byte_offset, typo, correction)| typos::Typo {
+                byte_offset,
+                typo: typo.into(),
+                corrections: typos::Status::Corrections(vec![correction.into()]),
+            })
+            .collect();
+        let actual = fix_buffer(line, corrections.into_iter());
+        String::from_utf8(actual).unwrap()
+    }
+
+    #[test]
+    fn test_fix_buffer_single() {
+        let actual = fix_simple("foo foo foo", vec![(4, "foo", "bar")]);
+        assert_eq!(actual, "foo bar foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_single_grow() {
+        let actual = fix_simple("foo foo foo", vec![(4, "foo", "happy")]);
+        assert_eq!(actual, "foo happy foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_single_shrink() {
+        let actual = fix_simple("foo foo foo", vec![(4, "foo", "if")]);
+        assert_eq!(actual, "foo if foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_start() {
+        let actual = fix_simple("foo foo foo", vec![(0, "foo", "bar")]);
+        assert_eq!(actual, "bar foo foo");
+    }
+
+    #[test]
+    fn test_fix_buffer_end() {
+        let actual = fix_simple("foo foo foo", vec![(8, "foo", "bar")]);
+        assert_eq!(actual, "foo foo bar");
+    }
+
+    #[test]
+    fn test_fix_buffer_end_grow() {
+        let actual = fix_simple("foo foo foo", vec![(8, "foo", "happy")]);
+        assert_eq!(actual, "foo foo happy");
+    }
+
+    #[test]
+    fn test_fix_buffer_multiple() {
+        let actual = fix_simple(
+            "foo foo foo",
+            vec![(4, "foo", "happy"), (8, "foo", "world")],
+        );
+        assert_eq!(actual, "foo happy world");
+    }
+
+    #[test]
+    fn test_extract_line_single_line() {
+        let (line, offset) = extract_line(b"hello world", 6);
+        assert_eq!(line, b"hello world");
+        assert_eq!(offset, 6);
+    }
+
+    #[test]
+    fn test_extract_line_first() {
+        let (line, offset) = extract_line(b"1\n2\n3", 0);
+        assert_eq!(line, b"1");
+        assert_eq!(offset, 0);
+    }
+
+    #[test]
+    fn test_extract_line_middle() {
+        let (line, offset) = extract_line(b"1\n2\n3", 2);
+        assert_eq!(line, b"2");
+        assert_eq!(offset, 0);
+    }
+
+    #[test]
+    fn test_extract_line_end() {
+        let (line, offset) = extract_line(b"1\n2\n3", 4);
+        assert_eq!(line, b"3");
+        assert_eq!(offset, 0);
+    }
+
+    #[test]
+    fn test_extract_line_offset_change() {
+        let (line, offset) = extract_line(b"1\nhello world\n2", 8);
+        assert_eq!(line, b"hello world");
+        assert_eq!(offset, 6);
+    }
+}
