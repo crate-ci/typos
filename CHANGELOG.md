@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Improve accuracy of typo column number
+- Moved some reports to stderr
+- Gracefully handle broken pipe
+- Clearly defined exit codes
+
+#### Features
+
+- Fix support with `--write-changes`
+- Diff support with `--diff`
+- Locale-independent and locale-specific dictionaries
+- Dictionary overrides
+- UTF-16 file support
+- Support for stdin corrections (with `-`)
+- `--dump-config <path>` (with `-`) support
+- Per-file type settings with custom file type support
+
+#### Performance
+
+- Multi-threading support
+- Faster binary file detection
+- Avoid looking up unknown words or numbers
+- Small string optimizations
+- Re-use config across arguments where possible
+
 ## 0.1.4 - 2019-11-03
 
 
