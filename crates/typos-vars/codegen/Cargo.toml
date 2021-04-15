@@ -1,6 +1,6 @@
 [package]
 name = "typos-vars-codegen"
-version = "1.0.2"
+version = "1.1.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
@@ -17,9 +17,9 @@ codecov = { repository = "crate-ci/typos" }
 [dependencies]
 phf = { version = "0.8", features = ["unicase"] }
 phf_codegen = "0.8"
-varcon = { version = "0.2", path = "../../varcon", features = ["flags"] }
+varcon = { version = "^0.3", path = "../../varcon", features = ["flags"] }
 varcon-core = { version = "1.0", path = "../../varcon-core", features = ["flags"] }
-typos = { version = "^0.3", path = "../../typos" }
+typos = { version = "^0.4", path = "../../typos" }
 unicase = "2.5"
 codegenrs = "0.1"
 structopt = "0.3"

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.2.0] - 2021-04-14
+
 #### Bug Fixes
 
 - Improve accuracy of typo column number
@@ -52,4 +54,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/assert-rs/predicates-rs/compare/v0.1.4...v0.2.0

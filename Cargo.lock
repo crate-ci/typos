@@ -197,7 +197,7 @@ dependencies = [
 
 [[package]]
 name = "codespell-codegen"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "codegenrs",
  "itertools 0.10.0",
@@ -209,7 +209,7 @@ dependencies = [
 
 [[package]]
 name = "codespell-dict"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "log",
  "phf",
@@ -800,7 +800,7 @@ dependencies = [
 
 [[package]]
 name = "misspell-codegen"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "codegenrs",
  "itertools 0.10.0",
@@ -813,7 +813,7 @@ dependencies = [
 
 [[package]]
 name = "misspell-dict"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "log",
  "phf",
@@ -1488,7 +1488,7 @@ checksum = "0685c84d5d54d1c26f7d3eb96cd41550adb97baed141a761cf335d3d33bcd0ae"
 
 [[package]]
 name = "typos"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "itertools 0.10.0",
@@ -1502,7 +1502,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "0.1.4"
+version = "0.2.0"
 dependencies = [
  "ahash",
  "anyhow",
@@ -1541,7 +1541,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "log",
  "phf",
@@ -1550,7 +1550,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict-codegen"
-version = "1.0.2"
+version = "1.1.0"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1562,7 +1562,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict-verify"
-version = "1.0.2"
+version = "1.1.0"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1575,7 +1575,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "log",
  "phf",
@@ -1585,7 +1585,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars-codegen"
-version = "1.0.2"
+version = "1.1.0"
 dependencies = [
  "clap",
  "clap-verbosity-flag",
@@ -1646,14 +1646,14 @@ dependencies = [
 
 [[package]]
 name = "varcon"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "varcon-core",
 ]
 
 [[package]]
 name = "varcon-codegen"
-version = "1.0.2"
+version = "1.1.0"
 dependencies = [
  "codegenrs",
  "structopt",
@@ -1662,7 +1662,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "enumflags2",
  "nom",
@@ -1769,7 +1769,7 @@ dependencies = [
 
 [[package]]
 name = "wikipedia-codegen"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "codegenrs",
  "itertools 0.10.0",
@@ -1781,7 +1781,7 @@ dependencies = [
 
 [[package]]
 name = "wikipedia-dict"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "log",
  "phf",
