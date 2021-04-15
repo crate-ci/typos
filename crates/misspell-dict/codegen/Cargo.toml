@@ -19,6 +19,6 @@ phf = { version = "0.8", features = ["unicase"] }
 phf_codegen = "0.8"
 unicase = "2.5"
 itertools = "0.10"
-codegenrs = "0.1"
+codegenrs = "1.0"
 structopt = "0.3"
 regex = "1"
