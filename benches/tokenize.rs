@@ -11,7 +11,8 @@ fn bench_tokenize(c: &mut Criterion) {
             b.iter(|| parser.parse_bytes(sample.as_bytes()).last());
         });
         group.bench_with_input(BenchmarkId::new("words", name), &len, |b, _| {
-            let symbol = typos::tokens::Identifier::new_unchecked(sample, 0);
+            let symbol =
+                typos::tokens::Identifier::new_unchecked(sample, typos::tokens::Case::None, 0);
             b.iter(|| symbol.split().last());
         });
     }

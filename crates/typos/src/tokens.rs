@@ -44,10 +44,11 @@ impl TokenizerBuilder {
     }
 
     pub fn build(&self) -> Tokenizer {
-        let mut pattern = r#"\b("#.to_owned();
+        let mut pattern =
+            r#"\b((\p{Lowercase}+)|(\p{Uppercase}+)|(\p{Uppercase}\p{Lowercase}+)|("#.to_owned();
         Self::push_pattern(&mut pattern, self.leading_digits, &self.leading_chars);
         Self::push_pattern(&mut pattern, self.include_digits, &self.include_chars);
-        pattern.push_str(r#"*)\b"#);
+        pattern.push_str(r#"*))\b"#);
 
         let words_str = regex::Regex::new(&pattern).unwrap();
         let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
@@ -59,6 +60,34 @@ impl TokenizerBuilder {
             // hexadecimal number without a leading digit.
             ignore_numbers: self.leading_digits,
             ignore_hex: self.ignore_hex && self.leading_digits,
+        }
+    }
+
+    fn resolve_capture(capture: regex::Captures) -> (regex::Match, Case) {
+        if let Some(lower) = capture.get(2) {
+            (lower, Case::Lower)
+        } else if let Some(scream) = capture.get(3) {
+            (scream, Case::Scream)
+        } else if let Some(title) = capture.get(4) {
+            (title, Case::Title)
+        } else if let Some(unknown) = capture.get(5) {
+            (unknown, Case::None)
+        } else {
+            unreachable!("One of prior groups must match");
+        }
+    }
+
+    fn resolve_bytes_capture(capture: regex::bytes::Captures) -> (regex::bytes::Match, Case) {
+        if let Some(lower) = capture.get(2) {
+            (lower, Case::Lower)
+        } else if let Some(scream) = capture.get(3) {
+            (scream, Case::Scream)
+        } else if let Some(title) = capture.get(4) {
+            (title, Case::Title)
+        } else if let Some(unknown) = capture.get(5) {
+            (unknown, Case::None)
+        } else {
+            unreachable!("One of prior groups must match");
         }
     }
 
@@ -103,18 +132,20 @@ impl Tokenizer {
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
         self.words_str
-            .find_iter(content)
-            .filter(move |m| self.accept(m.as_str().as_bytes()))
-            .map(|m| Identifier::new_unchecked(m.as_str(), m.start()))
+            .captures_iter(content)
+            .map(|c| TokenizerBuilder::resolve_capture(c))
+            .filter(move |(m, _c)| self.accept(m.as_str().as_bytes()))
+            .map(|(m, c)| Identifier::new_unchecked(m.as_str(), c, m.start()))
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
         self.words_bytes
-            .find_iter(content)
-            .filter(move |m| self.accept(m.as_bytes()))
-            .filter_map(|m| {
+            .captures_iter(content)
+            .map(|c| TokenizerBuilder::resolve_bytes_capture(c))
+            .filter(move |(m, _c)| self.accept(m.as_bytes()))
+            .filter_map(|(m, c)| {
                 let s = std::str::from_utf8(m.as_bytes()).ok();
-                s.map(|s| Identifier::new_unchecked(s, m.start()))
+                s.map(|s| Identifier::new_unchecked(s, c, m.start()))
             })
     }
 
@@ -159,12 +190,17 @@ fn is_hex(ident: &[u8]) -> bool {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Identifier<'t> {
     token: &'t str,
+    case: Case,
     offset: usize,
 }
 
 impl<'t> Identifier<'t> {
-    pub fn new_unchecked(token: &'t str, offset: usize) -> Self {
-        Self { token, offset }
+    pub fn new_unchecked(token: &'t str, case: Case, offset: usize) -> Self {
+        Self {
+            token,
+            case,
+            offset,
+        }
     }
 
     pub fn token(&self) -> &'t str {
@@ -172,7 +208,7 @@ impl<'t> Identifier<'t> {
     }
 
     pub fn case(&self) -> Case {
-        Case::None
+        self.case
     }
 
     pub fn offset(&self) -> usize {
@@ -181,7 +217,12 @@ impl<'t> Identifier<'t> {
 
     /// Split into individual Words.
     pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
-        SplitIdent::new(self.token, self.offset)
+        match self.case {
+            Case::None => itertools::Either::Left(SplitIdent::new(self.token, self.offset)),
+            _ => itertools::Either::Right(
+                Some(Word::new_unchecked(self.token, self.case, self.offset)).into_iter(),
+            ),
+        }
     }
 }
 
@@ -409,7 +450,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "word";
-        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", 0)];
+        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", Case::Lower, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -422,8 +463,8 @@ mod test {
 
         let input = "A B";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("A", 0),
-            Identifier::new_unchecked("B", 2),
+            Identifier::new_unchecked("A", Case::Scream, 0),
+            Identifier::new_unchecked("B", Case::Scream, 2),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -437,8 +478,8 @@ mod test {
 
         let input = "A.B";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("A", 0),
-            Identifier::new_unchecked("B", 2),
+            Identifier::new_unchecked("A", Case::Scream, 0),
+            Identifier::new_unchecked("B", Case::Scream, 2),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -452,8 +493,8 @@ mod test {
 
         let input = "A::B";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("A", 0),
-            Identifier::new_unchecked("B", 3),
+            Identifier::new_unchecked("A", Case::Scream, 0),
+            Identifier::new_unchecked("B", Case::Scream, 3),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -466,7 +507,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A_B";
-        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
+        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", Case::None, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -479,8 +520,8 @@ mod test {
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("Hello", 0),
-            Identifier::new_unchecked("World", 17),
+            Identifier::new_unchecked("Hello", Case::Title, 0),
+            Identifier::new_unchecked("World", Case::Title, 17),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -497,9 +538,9 @@ mod test {
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("Hello", 0),
-            Identifier::new_unchecked("0xDEADBEEF", 6),
-            Identifier::new_unchecked("World", 17),
+            Identifier::new_unchecked("Hello", Case::Title, 0),
+            Identifier::new_unchecked("0xDEADBEEF", Case::None, 6),
+            Identifier::new_unchecked("World", Case::Title, 17),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -564,7 +605,7 @@ mod test {
             ),
         ];
         for (input, expected) in cases.iter() {
-            let ident = Identifier::new_unchecked(input, 0);
+            let ident = Identifier::new_unchecked(input, Case::None, 0);
             let result: Vec<_> = ident.split().map(|w| (w.token, w.case, w.offset)).collect();
             assert_eq!(&result, expected);
         }
