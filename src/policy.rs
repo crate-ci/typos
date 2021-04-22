@@ -219,9 +219,6 @@ impl<'s> ConfigEngine<'s> {
         let tokenizer = typos::tokens::TokenizerBuilder::new()
             .ignore_hex(tokenizer_config.ignore_hex())
             .leading_digits(tokenizer_config.identifier_leading_digits())
-            .leading_chars(tokenizer_config.identifier_leading_chars().to_owned())
-            .include_digits(tokenizer_config.identifier_include_digits())
-            .include_chars(tokenizer_config.identifier_include_chars().to_owned())
             .build();
 
         let dict = crate::dict::BuiltIn::new(dict_config.locale());

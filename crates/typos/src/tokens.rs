@@ -3,9 +3,6 @@
 pub struct TokenizerBuilder {
     ignore_hex: bool,
     leading_digits: bool,
-    leading_chars: String,
-    include_digits: bool,
-    include_chars: String,
 }
 
 impl TokenizerBuilder {
@@ -25,60 +22,23 @@ impl TokenizerBuilder {
         self
     }
 
-    /// Extend accepted leading characters for Identifiers.
-    pub fn leading_chars(&mut self, chars: String) -> &mut Self {
-        self.leading_chars = chars;
-        self
-    }
-
-    /// Specify that digits can be included in Identifiers.
-    pub fn include_digits(&mut self, yes: bool) -> &mut Self {
-        self.include_digits = yes;
-        self
-    }
-
-    /// Extend accepted characters for Identifiers.
-    pub fn include_chars(&mut self, chars: String) -> &mut Self {
-        self.include_chars = chars;
-        self
-    }
-
     pub fn build(&self) -> Tokenizer {
-        let mut pattern = r#"\b("#.to_owned();
-        Self::push_pattern(&mut pattern, self.leading_digits, &self.leading_chars);
-        Self::push_pattern(&mut pattern, self.include_digits, &self.include_chars);
-        pattern.push_str(r#"*)\b"#);
-
-        let words_str = regex::Regex::new(&pattern).unwrap();
-
+        let TokenizerBuilder {
+            leading_digits,
+            ignore_hex,
+        } = self.clone();
         Tokenizer {
-            words_str,
-            leading_digits: self.leading_digits,
-            ignore_hex: self.ignore_hex,
+            leading_digits,
+            ignore_hex,
         }
-    }
-
-    fn push_pattern(pattern: &mut String, digits: bool, chars: &str) {
-        pattern.push_str(r#"(\p{Alphabetic}"#);
-        if digits {
-            pattern.push_str(r#"|\d"#);
-        }
-        for grapheme in unicode_segmentation::UnicodeSegmentation::graphemes(chars, true) {
-            let escaped = regex::escape(&grapheme);
-            pattern.push_str(&format!("|{}", escaped));
-        }
-        pattern.push(')');
     }
 }
 
 impl Default for TokenizerBuilder {
     fn default() -> Self {
         Self {
-            ignore_hex: true,
             leading_digits: false,
-            leading_chars: "_".to_owned(),
-            include_digits: true,
-            include_chars: "_'".to_owned(),
+            ignore_hex: true,
         }
     }
 }
@@ -86,7 +46,6 @@ impl Default for TokenizerBuilder {
 /// Extract Identifiers from a buffer.
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
-    words_str: regex::Regex,
     leading_digits: bool,
     ignore_hex: bool,
 }
@@ -97,10 +56,15 @@ impl Tokenizer {
     }
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
-        self.words_str
-            .find_iter(content)
-            .filter(move |m| self.accept(m.as_str()))
-            .map(|m| Identifier::new_unchecked(m.as_str(), Case::None, m.start()))
+        parser::iter_literals(content).filter_map(move |identifier| {
+            let case = Case::None;
+            let offset = offset(content.as_bytes(), identifier.as_bytes());
+            if self.accept(identifier) {
+                Some(Identifier::new_unchecked(identifier, case, offset))
+            } else {
+                None
+            }
+        })
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
@@ -214,6 +178,39 @@ fn is_digit_sep(chr: u8) -> bool {
 #[inline]
 fn is_hex_digit(chr: u8) -> bool {
     chr.is_ascii_hexdigit()
+}
+
+mod parser {
+    use nom::bytes::complete::*;
+    use nom::sequence::*;
+    use nom::IResult;
+
+    pub(crate) fn iter_literals(mut input: &str) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_literal(input) {
+            Ok((i, o)) => {
+                input = i;
+                assert_ne!(o, "");
+                Some(o)
+            }
+            _ => None,
+        })
+    }
+
+    fn next_literal(input: &str) -> IResult<&str, &str> {
+        preceded(literal_sep, identifier)(input)
+    }
+
+    fn literal_sep(input: &str) -> IResult<&str, &str> {
+        take_till(|c: char| unicode_xid::UnicodeXID::is_xid_continue(c))(input)
+    }
+
+    fn identifier(input: &str) -> IResult<&str, &str> {
+        // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
+        // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
+        // or unexpected cases than strip off start characters to a word since we aren't doing a
+        // proper word boundary parse
+        take_while1(|c: char| unicode_xid::UnicodeXID::is_xid_continue(c))(input)
+    }
 }
 
 /// A term composed of Words.
