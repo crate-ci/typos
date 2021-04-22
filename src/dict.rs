@@ -147,7 +147,7 @@ fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
                 s[0..1].make_ascii_uppercase();
             }
         },
-        Case::Scream => match correction {
+        Case::Upper => match correction {
             Cow::Borrowed(s) => {
                 let mut s = String::from(*s);
                 s.make_ascii_uppercase();
@@ -241,7 +241,7 @@ mod test {
             ("foo", Case::Lower, "foo"),
             ("foo", Case::None, "foo"),
             ("foo", Case::Title, "Foo"),
-            ("foo", Case::Scream, "FOO"),
+            ("foo", Case::Upper, "FOO"),
             ("fOo", Case::None, "fOo"),
         ];
         for (correction, case, expected) in cases.iter() {

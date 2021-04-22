@@ -305,7 +305,7 @@ impl<'s> Iterator for SplitIdent<'s> {
                     (WordMode::Uppercase, WordMode::Uppercase, WordMode::Lowercase) => {
                         let result = Word::new_unchecked(
                             &self.ident[self.start..i],
-                            Case::Scream,
+                            Case::Upper,
                             self.start + self.offset,
                         );
                         self.start = i;
@@ -336,7 +336,7 @@ impl<'s> Iterator for SplitIdent<'s> {
 pub enum Case {
     Title,
     Lower,
-    Scream,
+    Upper,
     None,
 }
 
@@ -373,7 +373,7 @@ impl WordMode {
 
     fn case(self, last: WordMode) -> Case {
         match (self, last) {
-            (WordMode::Uppercase, WordMode::Uppercase) => Case::Scream,
+            (WordMode::Uppercase, WordMode::Uppercase) => Case::Upper,
             (WordMode::Uppercase, WordMode::Lowercase) => Case::Title,
             (WordMode::Lowercase, WordMode::Lowercase) => Case::Lower,
             (WordMode::Number, WordMode::Number) => Case::None,
@@ -519,21 +519,21 @@ mod test {
                 "MyClass",
                 &[("My", Case::Title, 0), ("Class", Case::Title, 2)],
             ),
-            ("MyC", &[("My", Case::Title, 0), ("C", Case::Scream, 2)]),
-            ("HTML", &[("HTML", Case::Scream, 0)]),
+            ("MyC", &[("My", Case::Title, 0), ("C", Case::Upper, 2)]),
+            ("HTML", &[("HTML", Case::Upper, 0)]),
             (
                 "PDFLoader",
-                &[("PDF", Case::Scream, 0), ("Loader", Case::Title, 3)],
+                &[("PDF", Case::Upper, 0), ("Loader", Case::Title, 3)],
             ),
             (
                 "AString",
-                &[("A", Case::Scream, 0), ("String", Case::Title, 1)],
+                &[("A", Case::Upper, 0), ("String", Case::Title, 1)],
             ),
             (
                 "SimpleXMLTokenizer",
                 &[
                     ("Simple", Case::Title, 0),
-                    ("XML", Case::Scream, 6),
+                    ("XML", Case::Upper, 6),
                     ("Tokenizer", Case::Title, 9),
                 ],
             ),
@@ -541,14 +541,14 @@ mod test {
                 "vimRPCPlugin",
                 &[
                     ("vim", Case::Lower, 0),
-                    ("RPC", Case::Scream, 3),
+                    ("RPC", Case::Upper, 3),
                     ("Plugin", Case::Title, 6),
                 ],
             ),
             (
                 "GL11Version",
                 &[
-                    ("GL", Case::Scream, 0),
+                    ("GL", Case::Upper, 0),
                     ("11", Case::None, 2),
                     ("Version", Case::Title, 4),
                 ],
@@ -560,7 +560,7 @@ mod test {
             ("May5", &[("May", Case::Title, 0), ("5", Case::None, 3)]),
             (
                 "BFG9000",
-                &[("BFG", Case::Scream, 0), ("9000", Case::None, 3)],
+                &[("BFG", Case::Upper, 0), ("9000", Case::None, 3)],
             ),
         ];
         for (input, expected) in cases.iter() {
