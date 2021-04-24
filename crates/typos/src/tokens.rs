@@ -50,11 +50,9 @@ impl TokenizerBuilder {
         pattern.push_str(r#"*)\b"#);
 
         let words_str = regex::Regex::new(&pattern).unwrap();
-        let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
 
         Tokenizer {
             words_str,
-            words_bytes,
             // `leading_digits` let's us bypass the regexes since you can't have a decimal or
             // hexadecimal number without a leading digit.
             ignore_numbers: self.leading_digits,
@@ -91,7 +89,6 @@ impl Default for TokenizerBuilder {
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
     words_str: regex::Regex,
-    words_bytes: regex::bytes::Regex,
     ignore_numbers: bool,
     ignore_hex: bool,
 }
@@ -104,21 +101,20 @@ impl Tokenizer {
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
         self.words_str
             .find_iter(content)
-            .filter(move |m| self.accept(m.as_str().as_bytes()))
+            .filter(move |m| self.accept(m.as_str()))
             .map(|m| Identifier::new_unchecked(m.as_str(), Case::None, m.start()))
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
-        self.words_bytes
-            .find_iter(content)
-            .filter(move |m| self.accept(m.as_bytes()))
-            .filter_map(|m| {
-                let s = std::str::from_utf8(m.as_bytes()).ok();
-                s.map(|s| Identifier::new_unchecked(s, Case::None, m.start()))
+        Utf8Chunks::new(content).flat_map(move |c| {
+            let chunk_offset = offset(content, c.as_bytes());
+            self.parse_str(c).map(move |i| {
+                Identifier::new_unchecked(i.token(), i.case(), i.offset() + chunk_offset)
             })
+        })
     }
 
-    fn accept(&self, contents: &[u8]) -> bool {
+    fn accept(&self, contents: &str) -> bool {
         if self.ignore_numbers && is_number(contents) {
             return false;
         }
@@ -137,21 +133,68 @@ impl Default for Tokenizer {
     }
 }
 
+fn offset(base: &[u8], needle: &[u8]) -> usize {
+    let base = base.as_ptr() as usize;
+    let needle = needle.as_ptr() as usize;
+    debug_assert!(base <= needle);
+    needle - base
+}
+
+struct Utf8Chunks<'s> {
+    source: &'s [u8],
+}
+
+impl<'s> Utf8Chunks<'s> {
+    fn new(source: &'s [u8]) -> Self {
+        Self { source }
+    }
+}
+
+impl<'s> Iterator for Utf8Chunks<'s> {
+    type Item = &'s str;
+
+    fn next(&mut self) -> Option<&'s str> {
+        loop {
+            if self.source.is_empty() {
+                return None;
+            }
+            match std::str::from_utf8(self.source) {
+                Ok(valid) => {
+                    self.source = b"";
+                    return Some(valid);
+                }
+                Err(error) => {
+                    let (valid, after_valid) = self.source.split_at(error.valid_up_to());
+
+                    if let Some(invalid_sequence_length) = error.error_len() {
+                        self.source = &after_valid[invalid_sequence_length..];
+                    } else {
+                        self.source = b"";
+                    }
+
+                    let valid = unsafe { std::str::from_utf8_unchecked(valid) };
+                    return Some(valid);
+                }
+            }
+        }
+    }
+}
+
 // `_`: number literal separator in Rust and other languages
 // `'`: number literal separator in C++
-static DIGITS: once_cell::sync::Lazy<regex::bytes::Regex> =
-    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^[0-9_']+$"#).unwrap());
+static DIGITS: once_cell::sync::Lazy<regex::Regex> =
+    once_cell::sync::Lazy::new(|| regex::Regex::new(r#"^[0-9_']+$"#).unwrap());
 
-fn is_number(ident: &[u8]) -> bool {
+fn is_number(ident: &str) -> bool {
     DIGITS.is_match(ident)
 }
 
 // `_`: number literal separator in Rust and other languages
 // `'`: number literal separator in C++
-static HEX: once_cell::sync::Lazy<regex::bytes::Regex> =
-    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap());
+static HEX: once_cell::sync::Lazy<regex::Regex> =
+    once_cell::sync::Lazy::new(|| regex::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap());
 
-fn is_hex(ident: &[u8]) -> bool {
+fn is_hex(ident: &str) -> bool {
     HEX.is_match(ident)
 }
 
