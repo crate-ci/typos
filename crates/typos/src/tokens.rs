@@ -158,7 +158,7 @@ impl<'s> Iterator for Utf8Chunks<'s> {
             if self.source.is_empty() {
                 return None;
             }
-            match std::str::from_utf8(self.source) {
+            match simdutf8::compat::from_utf8(self.source) {
                 Ok(valid) => {
                     self.source = b"";
                     return Some(valid);

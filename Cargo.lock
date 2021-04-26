@@ -1319,6 +1319,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "simdutf8"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f4f3d445e9015cf5e72cec4a3b3a84f8d54f34207afee609fd152de1c0212b1"
+
+[[package]]
 name = "siphasher"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1496,6 +1502,7 @@ dependencies = [
  "once_cell",
  "regex",
  "serde",
+ "simdutf8",
  "thiserror",
  "unicode-segmentation",
 ]
