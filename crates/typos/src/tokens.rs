@@ -115,11 +115,11 @@ impl Tokenizer {
     }
 
     fn accept(&self, contents: &str) -> bool {
-        if self.ignore_numbers && is_number(contents) {
+        if self.ignore_numbers && is_number(contents.as_bytes()) {
             return false;
         }
 
-        if self.ignore_hex && is_hex(contents) {
+        if self.ignore_hex && is_hex(contents.as_bytes()) {
             return false;
         }
 
@@ -180,22 +180,37 @@ impl<'s> Iterator for Utf8Chunks<'s> {
     }
 }
 
-// `_`: number literal separator in Rust and other languages
-// `'`: number literal separator in C++
-static DIGITS: once_cell::sync::Lazy<regex::Regex> =
-    once_cell::sync::Lazy::new(|| regex::Regex::new(r#"^[0-9_']+$"#).unwrap());
-
-fn is_number(ident: &str) -> bool {
-    DIGITS.is_match(ident)
+fn is_number(ident: &[u8]) -> bool {
+    ident.iter().all(|b| is_digit(*b) || is_digit_sep(*b))
 }
 
-// `_`: number literal separator in Rust and other languages
-// `'`: number literal separator in C++
-static HEX: once_cell::sync::Lazy<regex::Regex> =
-    once_cell::sync::Lazy::new(|| regex::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap());
+fn is_hex(ident: &[u8]) -> bool {
+    if ident.len() < 3 {
+        false
+    } else {
+        ident[0] == b'0'
+            && ident[1] == b'x'
+            && ident[2..]
+                .iter()
+                .all(|b| is_hex_digit(*b) || is_digit_sep(*b))
+    }
+}
 
-fn is_hex(ident: &str) -> bool {
-    HEX.is_match(ident)
+#[inline]
+fn is_digit(chr: u8) -> bool {
+    chr.is_ascii_digit()
+}
+
+#[inline]
+fn is_digit_sep(chr: u8) -> bool {
+    // `_`: number literal separator in Rust and other languages
+    // `'`: number literal separator in C++
+    chr == b'_' || chr == b'\''
+}
+
+#[inline]
+fn is_hex_digit(chr: u8) -> bool {
+    chr.is_ascii_hexdigit()
 }
 
 /// A term composed of Words.
