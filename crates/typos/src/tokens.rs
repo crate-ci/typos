@@ -53,10 +53,8 @@ impl TokenizerBuilder {
 
         Tokenizer {
             words_str,
-            // `leading_digits` let's us bypass the regexes since you can't have a decimal or
-            // hexadecimal number without a leading digit.
-            ignore_numbers: self.leading_digits,
-            ignore_hex: self.ignore_hex && self.leading_digits,
+            leading_digits: self.leading_digits,
+            ignore_hex: self.ignore_hex,
         }
     }
 
@@ -89,7 +87,7 @@ impl Default for TokenizerBuilder {
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
     words_str: regex::Regex,
-    ignore_numbers: bool,
+    leading_digits: bool,
     ignore_hex: bool,
 }
 
@@ -115,11 +113,16 @@ impl Tokenizer {
     }
 
     fn accept(&self, contents: &str) -> bool {
-        if self.ignore_numbers && is_number(contents.as_bytes()) {
-            return false;
-        }
+        debug_assert!(!contents.is_empty());
+        if self.leading_digits {
+            if is_number(contents.as_bytes()) {
+                return false;
+            }
 
-        if self.ignore_hex && is_hex(contents.as_bytes()) {
+            if self.ignore_hex && is_hex(contents.as_bytes()) {
+                return false;
+            }
+        } else if is_digit(contents.as_bytes()[0]) {
             return false;
         }
 
@@ -543,7 +546,10 @@ mod test {
 
     #[test]
     fn tokenize_ignore_hex_enabled() {
-        let parser = TokenizerBuilder::new().ignore_hex(true).build();
+        let parser = TokenizerBuilder::new()
+            .ignore_hex(true)
+            .leading_digits(true)
+            .build();
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
@@ -568,6 +574,44 @@ mod test {
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("0xDEADBEEF", Case::None, 6),
             Identifier::new_unchecked("World", Case::None, 17),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_leading_digits_enabled() {
+        let parser = TokenizerBuilder::new()
+            .ignore_hex(false)
+            .leading_digits(true)
+            .build();
+
+        let input = "Hello 0Hello 124 0xDEADBEEF World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("0Hello", Case::None, 6),
+            Identifier::new_unchecked("0xDEADBEEF", Case::None, 17),
+            Identifier::new_unchecked("World", Case::None, 28),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_leading_digits_disabled() {
+        let parser = TokenizerBuilder::new()
+            .ignore_hex(false)
+            .leading_digits(false)
+            .build();
+
+        let input = "Hello 0Hello 124 0xDEADBEEF World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 28),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
