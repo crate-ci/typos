@@ -57,13 +57,8 @@ impl Tokenizer {
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
         parser::iter_literals(content).filter_map(move |identifier| {
-            let case = Case::None;
             let offset = offset(content.as_bytes(), identifier.as_bytes());
-            if self.accept(identifier) {
-                Some(Identifier::new_unchecked(identifier, case, offset))
-            } else {
-                None
-            }
+            self.transform(identifier, offset)
         })
     }
 
@@ -76,21 +71,22 @@ impl Tokenizer {
         })
     }
 
-    fn accept(&self, contents: &str) -> bool {
-        debug_assert!(!contents.is_empty());
+    fn transform<'i>(&self, identifier: &'i str, offset: usize) -> Option<Identifier<'i>> {
+        debug_assert!(!identifier.is_empty());
         if self.leading_digits {
-            if is_number(contents.as_bytes()) {
-                return false;
+            if is_number(identifier.as_bytes()) {
+                return None;
             }
 
-            if self.ignore_hex && is_hex(contents.as_bytes()) {
-                return false;
+            if self.ignore_hex && is_hex(identifier.as_bytes()) {
+                return None;
             }
-        } else if is_digit(contents.as_bytes()[0]) {
-            return false;
+        } else if is_digit(identifier.as_bytes()[0]) {
+            return None;
         }
 
-        true
+        let case = Case::None;
+        Some(Identifier::new_unchecked(identifier, case, offset))
     }
 }
 
