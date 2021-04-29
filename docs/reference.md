@@ -23,6 +23,7 @@ Configuration is read from the following (in precedence order)
 | default.binary         | --binary          | bool   | Check binary files as text |
 | default.check-filename | \-                | bool   | Verifying spelling in file names. |
 | default.check-file     | \-                | bool   | Verifying spelling in files. |
+| default.unicode        | \-                | bool   | Allow unicode characters in identifiers (and not just ASCII) |
 | default.ignore-hex     | \-                | bool   | Do not check identifiers that appear to be hexadecimal values. |
 | default.identifier-leading-digits   | \-   | bool   | Allow identifiers to start with digits, in addition to letters. |
 | default.locale         | --locale          | en, en-us, en-gb, en-ca, en-au   | English dialect to correct to. |

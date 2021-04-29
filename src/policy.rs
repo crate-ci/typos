@@ -217,6 +217,7 @@ impl<'s> ConfigEngine<'s> {
         let dict_config = dict.unwrap_or_else(crate::config::DictConfig::from_defaults);
 
         let tokenizer = typos::tokens::TokenizerBuilder::new()
+            .unicode(tokenizer_config.unicode())
             .ignore_hex(tokenizer_config.ignore_hex())
             .leading_digits(tokenizer_config.identifier_leading_digits())
             .build();

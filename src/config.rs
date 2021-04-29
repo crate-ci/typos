@@ -230,6 +230,8 @@ impl EngineConfig {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct TokenizerConfig {
+    /// Allow unicode characters in identifiers (and not just ASCII)
+    pub unicode: Option<bool>,
     /// Do not check identifiers that appear to be hexadecimal values.
     pub ignore_hex: Option<bool>,
     /// Allow identifiers to start with digits, in addition to letters.
@@ -240,18 +242,26 @@ impl TokenizerConfig {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
         Self {
+            unicode: Some(empty.unicode()),
             ignore_hex: Some(empty.ignore_hex()),
             identifier_leading_digits: Some(empty.identifier_leading_digits()),
         }
     }
 
     pub fn update(&mut self, source: &TokenizerConfig) {
+        if let Some(source) = source.unicode {
+            self.unicode = Some(source);
+        }
         if let Some(source) = source.ignore_hex {
             self.ignore_hex = Some(source);
         }
         if let Some(source) = source.identifier_leading_digits {
             self.identifier_leading_digits = Some(source);
         }
+    }
+
+    pub fn unicode(&self) -> bool {
+        self.unicode.unwrap_or(true)
     }
 
     pub fn ignore_hex(&self) -> bool {

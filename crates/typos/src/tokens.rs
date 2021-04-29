@@ -1,6 +1,7 @@
 /// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TokenizerBuilder {
+    unicode: bool,
     ignore_hex: bool,
     leading_digits: bool,
 }
@@ -8,6 +9,12 @@ pub struct TokenizerBuilder {
 impl TokenizerBuilder {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// Specify that unicode Identifiers are allowed.
+    pub fn unicode(&mut self, yes: bool) -> &mut Self {
+        self.unicode = yes;
+        self
     }
 
     /// Specify that hexadecimal numbers should be ignored.
@@ -24,10 +31,12 @@ impl TokenizerBuilder {
 
     pub fn build(&self) -> Tokenizer {
         let TokenizerBuilder {
+            unicode,
             leading_digits,
             ignore_hex,
         } = self.clone();
         Tokenizer {
+            unicode,
             leading_digits,
             ignore_hex,
         }
@@ -37,6 +46,7 @@ impl TokenizerBuilder {
 impl Default for TokenizerBuilder {
     fn default() -> Self {
         Self {
+            unicode: true,
             leading_digits: false,
             ignore_hex: true,
         }
@@ -46,6 +56,7 @@ impl Default for TokenizerBuilder {
 /// Extract Identifiers from a buffer.
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
+    unicode: bool,
     leading_digits: bool,
     ignore_hex: bool,
 }
@@ -56,18 +67,27 @@ impl Tokenizer {
     }
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
-        parser::iter_literals(content).filter_map(move |identifier| {
+        let iter = if self.unicode {
+            itertools::Either::Left(unicode_parser::iter_literals(content))
+        } else {
+            itertools::Either::Right(ascii_parser::iter_literals(content.as_bytes()))
+        };
+        iter.filter_map(move |identifier| {
             let offset = offset(content.as_bytes(), identifier.as_bytes());
             self.transform(identifier, offset)
         })
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
-        Utf8Chunks::new(content).flat_map(move |c| {
-            let chunk_offset = offset(content, c.as_bytes());
-            self.parse_str(c).map(move |i| {
-                Identifier::new_unchecked(i.token(), i.case(), i.offset() + chunk_offset)
-            })
+        let iter = if self.unicode {
+            let iter = Utf8Chunks::new(content).flat_map(move |c| unicode_parser::iter_literals(c));
+            itertools::Either::Left(iter)
+        } else {
+            itertools::Either::Right(ascii_parser::iter_literals(content))
+        };
+        iter.filter_map(move |identifier| {
+            let offset = offset(content, identifier.as_bytes());
+            self.transform(identifier, offset)
         })
     }
 
@@ -176,7 +196,7 @@ fn is_hex_digit(chr: u8) -> bool {
     chr.is_ascii_hexdigit()
 }
 
-mod parser {
+mod unicode_parser {
     use nom::bytes::complete::*;
     use nom::sequence::*;
     use nom::IResult;
@@ -206,6 +226,49 @@ mod parser {
         // or unexpected cases than strip off start characters to a word since we aren't doing a
         // proper word boundary parse
         take_while1(|c: char| unicode_xid::UnicodeXID::is_xid_continue(c))(input)
+    }
+}
+
+mod ascii_parser {
+    use nom::bytes::complete::*;
+    use nom::sequence::*;
+    use nom::IResult;
+
+    pub(crate) fn iter_literals(mut input: &[u8]) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_literal(input) {
+            Ok((i, o)) => {
+                input = i;
+                debug_assert_ne!(o, b"");
+                // This is safe because we've checked that the strings are a subset of ASCII
+                // characters.
+                let o = unsafe { std::str::from_utf8_unchecked(o) };
+                Some(o)
+            }
+            _ => None,
+        })
+    }
+
+    fn next_literal(input: &[u8]) -> IResult<&[u8], &[u8]> {
+        preceded(literal_sep, identifier)(input)
+    }
+
+    fn literal_sep(input: &[u8]) -> IResult<&[u8], &[u8]> {
+        take_till(|c: u8| is_continue(c))(input)
+    }
+
+    fn identifier(input: &[u8]) -> IResult<&[u8], &[u8]> {
+        // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
+        // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
+        // or unexpected cases than strip off start characters to a word since we aren't doing a
+        // proper word boundary parse
+        take_while1(|c: u8| is_continue(c))(input)
+    }
+
+    fn is_continue(c: u8) -> bool {
+        (b'a'..=b'z').contains(&c)
+            || (b'A'..=b'Z').contains(&c)
+            || (b'0'..=b'9').contains(&c)
+            || c == b'_'
     }
 }
 
