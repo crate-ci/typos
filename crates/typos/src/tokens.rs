@@ -185,7 +185,7 @@ mod parser {
         std::iter::from_fn(move || match next_literal(input) {
             Ok((i, o)) => {
                 input = i;
-                assert_ne!(o, "");
+                debug_assert_ne!(o, "");
                 Some(o)
             }
             _ => None,
@@ -333,7 +333,7 @@ impl<'s> Iterator for SplitIdent<'s> {
         while let Some((i, c)) = self.char_indices.next() {
             let cur_mode = WordMode::classify(c);
             if cur_mode == WordMode::Boundary {
-                assert!(self.start_mode == WordMode::Boundary);
+                debug_assert!(self.start_mode == WordMode::Boundary);
                 continue;
             }
             if self.start_mode == WordMode::Boundary {
