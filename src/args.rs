@@ -145,30 +145,15 @@ impl FileArgs {
     }
 
     fn binary(&self) -> Option<bool> {
-        match (self.binary, self.no_binary) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.binary, self.no_binary)
     }
 
     fn check_filename(&self) -> Option<bool> {
-        match (self.check_filenames, self.no_check_filenames) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.check_filenames, self.no_check_filenames)
     }
 
     fn check_file(&self) -> Option<bool> {
-        match (self.check_files, self.no_check_files) {
-            (true, false) => Some(true),
-            (false, true) => Some(false),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.check_files, self.no_check_files)
     }
 }
 
@@ -244,56 +229,35 @@ impl WalkArgs {
     }
 
     fn ignore_hidden(&self) -> Option<bool> {
-        match (self.hidden, self.no_hidden) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.no_hidden, self.hidden)
     }
 
     fn ignore_files(&self) -> Option<bool> {
-        match (self.no_ignore, self.ignore) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.ignore, self.no_ignore)
     }
 
     fn ignore_dot(&self) -> Option<bool> {
-        match (self.no_ignore_dot, self.ignore_dot) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.ignore_dot, self.no_ignore_dot)
     }
 
     fn ignore_vcs(&self) -> Option<bool> {
-        match (self.no_ignore_vcs, self.ignore_vcs) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.ignore_vcs, self.no_ignore_vcs)
     }
 
     fn ignore_global(&self) -> Option<bool> {
-        match (self.no_ignore_global, self.ignore_global) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.ignore_global, self.no_ignore_global)
     }
 
     fn ignore_parent(&self) -> Option<bool> {
-        match (self.no_ignore_parent, self.ignore_parent) {
-            (true, false) => Some(false),
-            (false, true) => Some(true),
-            (false, false) => None,
-            (_, _) => unreachable!("StructOpt should make this impossible"),
-        }
+        resolve_bool_arg(self.ignore_parent, self.no_ignore_parent)
+    }
+}
+
+fn resolve_bool_arg(yes: bool, no: bool) -> Option<bool> {
+    match (yes, no) {
+        (true, false) => Some(true),
+        (false, true) => Some(false),
+        (false, false) => None,
+        (_, _) => unreachable!("StructOpt should make this impossible"),
     }
 }
