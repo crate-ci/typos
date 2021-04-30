@@ -1,16 +1,20 @@
 /// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TokenizerBuilder {
+    unicode: bool,
     ignore_hex: bool,
     leading_digits: bool,
-    leading_chars: String,
-    include_digits: bool,
-    include_chars: String,
 }
 
 impl TokenizerBuilder {
     pub fn new() -> Self {
         Default::default()
+    }
+
+    /// Specify that unicode Identifiers are allowed.
+    pub fn unicode(&mut self, yes: bool) -> &mut Self {
+        self.unicode = yes;
+        self
     }
 
     /// Specify that hexadecimal numbers should be ignored.
@@ -25,64 +29,26 @@ impl TokenizerBuilder {
         self
     }
 
-    /// Extend accepted leading characters for Identifiers.
-    pub fn leading_chars(&mut self, chars: String) -> &mut Self {
-        self.leading_chars = chars;
-        self
-    }
-
-    /// Specify that digits can be included in Identifiers.
-    pub fn include_digits(&mut self, yes: bool) -> &mut Self {
-        self.include_digits = yes;
-        self
-    }
-
-    /// Extend accepted characters for Identifiers.
-    pub fn include_chars(&mut self, chars: String) -> &mut Self {
-        self.include_chars = chars;
-        self
-    }
-
     pub fn build(&self) -> Tokenizer {
-        let mut pattern = r#"\b("#.to_owned();
-        Self::push_pattern(&mut pattern, self.leading_digits, &self.leading_chars);
-        Self::push_pattern(&mut pattern, self.include_digits, &self.include_chars);
-        pattern.push_str(r#"*)\b"#);
-
-        let words_str = regex::Regex::new(&pattern).unwrap();
-        let words_bytes = regex::bytes::Regex::new(&pattern).unwrap();
-
+        let TokenizerBuilder {
+            unicode,
+            leading_digits,
+            ignore_hex,
+        } = self.clone();
         Tokenizer {
-            words_str,
-            words_bytes,
-            // `leading_digits` let's us bypass the regexes since you can't have a decimal or
-            // hexadecimal number without a leading digit.
-            ignore_numbers: self.leading_digits,
-            ignore_hex: self.ignore_hex && self.leading_digits,
+            unicode,
+            leading_digits,
+            ignore_hex,
         }
-    }
-
-    fn push_pattern(pattern: &mut String, digits: bool, chars: &str) {
-        pattern.push_str(r#"(\p{Alphabetic}"#);
-        if digits {
-            pattern.push_str(r#"|\d"#);
-        }
-        for grapheme in unicode_segmentation::UnicodeSegmentation::graphemes(chars, true) {
-            let escaped = regex::escape(&grapheme);
-            pattern.push_str(&format!("|{}", escaped));
-        }
-        pattern.push(')');
     }
 }
 
 impl Default for TokenizerBuilder {
     fn default() -> Self {
         Self {
-            ignore_hex: true,
+            unicode: true,
             leading_digits: false,
-            leading_chars: "_".to_owned(),
-            include_digits: true,
-            include_chars: "_'".to_owned(),
+            ignore_hex: true,
         }
     }
 }
@@ -90,9 +56,8 @@ impl Default for TokenizerBuilder {
 /// Extract Identifiers from a buffer.
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
-    words_str: regex::Regex,
-    words_bytes: regex::bytes::Regex,
-    ignore_numbers: bool,
+    unicode: bool,
+    leading_digits: bool,
     ignore_hex: bool,
 }
 
@@ -102,32 +67,46 @@ impl Tokenizer {
     }
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
-        self.words_str
-            .find_iter(content)
-            .filter(move |m| self.accept(m.as_str().as_bytes()))
-            .map(|m| Identifier::new_unchecked(m.as_str(), m.start()))
+        let iter = if self.unicode {
+            itertools::Either::Left(unicode_parser::iter_literals(content))
+        } else {
+            itertools::Either::Right(ascii_parser::iter_literals(content.as_bytes()))
+        };
+        iter.filter_map(move |identifier| {
+            let offset = offset(content.as_bytes(), identifier.as_bytes());
+            self.transform(identifier, offset)
+        })
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
-        self.words_bytes
-            .find_iter(content)
-            .filter(move |m| self.accept(m.as_bytes()))
-            .filter_map(|m| {
-                let s = std::str::from_utf8(m.as_bytes()).ok();
-                s.map(|s| Identifier::new_unchecked(s, m.start()))
-            })
+        let iter = if self.unicode {
+            let iter = Utf8Chunks::new(content).flat_map(move |c| unicode_parser::iter_literals(c));
+            itertools::Either::Left(iter)
+        } else {
+            itertools::Either::Right(ascii_parser::iter_literals(content))
+        };
+        iter.filter_map(move |identifier| {
+            let offset = offset(content, identifier.as_bytes());
+            self.transform(identifier, offset)
+        })
     }
 
-    fn accept(&self, contents: &[u8]) -> bool {
-        if self.ignore_numbers && is_number(contents) {
-            return false;
+    fn transform<'i>(&self, identifier: &'i str, offset: usize) -> Option<Identifier<'i>> {
+        debug_assert!(!identifier.is_empty());
+        if self.leading_digits {
+            if is_number(identifier.as_bytes()) {
+                return None;
+            }
+
+            if self.ignore_hex && is_hex(identifier.as_bytes()) {
+                return None;
+            }
+        } else if is_digit(identifier.as_bytes()[0]) {
+            return None;
         }
 
-        if self.ignore_hex && is_hex(contents) {
-            return false;
-        }
-
-        true
+        let case = Case::None;
+        Some(Identifier::new_unchecked(identifier, case, offset))
     }
 }
 
@@ -137,34 +116,176 @@ impl Default for Tokenizer {
     }
 }
 
-// `_`: number literal separator in Rust and other languages
-// `'`: number literal separator in C++
-static DIGITS: once_cell::sync::Lazy<regex::bytes::Regex> =
-    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^[0-9_']+$"#).unwrap());
-
-fn is_number(ident: &[u8]) -> bool {
-    DIGITS.is_match(ident)
+fn offset(base: &[u8], needle: &[u8]) -> usize {
+    let base = base.as_ptr() as usize;
+    let needle = needle.as_ptr() as usize;
+    debug_assert!(base <= needle);
+    needle - base
 }
 
-// `_`: number literal separator in Rust and other languages
-// `'`: number literal separator in C++
-static HEX: once_cell::sync::Lazy<regex::bytes::Regex> =
-    once_cell::sync::Lazy::new(|| regex::bytes::Regex::new(r#"^0[xX][0-9a-fA-F_']+$"#).unwrap());
+struct Utf8Chunks<'s> {
+    source: &'s [u8],
+}
+
+impl<'s> Utf8Chunks<'s> {
+    fn new(source: &'s [u8]) -> Self {
+        Self { source }
+    }
+}
+
+impl<'s> Iterator for Utf8Chunks<'s> {
+    type Item = &'s str;
+
+    fn next(&mut self) -> Option<&'s str> {
+        if self.source.is_empty() {
+            return None;
+        }
+
+        match simdutf8::compat::from_utf8(self.source) {
+            Ok(valid) => {
+                self.source = b"";
+                Some(valid)
+            }
+            Err(error) => {
+                let (valid, after_valid) = self.source.split_at(error.valid_up_to());
+
+                if let Some(invalid_sequence_length) = error.error_len() {
+                    self.source = &after_valid[invalid_sequence_length..];
+                } else {
+                    self.source = b"";
+                }
+
+                let valid = unsafe { std::str::from_utf8_unchecked(valid) };
+                Some(valid)
+            }
+        }
+    }
+}
+
+fn is_number(ident: &[u8]) -> bool {
+    ident.iter().all(|b| is_digit(*b) || is_digit_sep(*b))
+}
 
 fn is_hex(ident: &[u8]) -> bool {
-    HEX.is_match(ident)
+    if ident.len() < 3 {
+        false
+    } else {
+        ident[0] == b'0'
+            && ident[1] == b'x'
+            && ident[2..]
+                .iter()
+                .all(|b| is_hex_digit(*b) || is_digit_sep(*b))
+    }
+}
+
+#[inline]
+fn is_digit(chr: u8) -> bool {
+    chr.is_ascii_digit()
+}
+
+#[inline]
+fn is_digit_sep(chr: u8) -> bool {
+    // `_`: number literal separator in Rust and other languages
+    // `'`: number literal separator in C++
+    chr == b'_' || chr == b'\''
+}
+
+#[inline]
+fn is_hex_digit(chr: u8) -> bool {
+    chr.is_ascii_hexdigit()
+}
+
+mod unicode_parser {
+    use nom::bytes::complete::*;
+    use nom::sequence::*;
+    use nom::IResult;
+
+    pub(crate) fn iter_literals(mut input: &str) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_literal(input) {
+            Ok((i, o)) => {
+                input = i;
+                debug_assert_ne!(o, "");
+                Some(o)
+            }
+            _ => None,
+        })
+    }
+
+    fn next_literal(input: &str) -> IResult<&str, &str> {
+        preceded(literal_sep, identifier)(input)
+    }
+
+    fn literal_sep(input: &str) -> IResult<&str, &str> {
+        take_till(unicode_xid::UnicodeXID::is_xid_continue)(input)
+    }
+
+    fn identifier(input: &str) -> IResult<&str, &str> {
+        // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
+        // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
+        // or unexpected cases than strip off start characters to a word since we aren't doing a
+        // proper word boundary parse
+        take_while1(unicode_xid::UnicodeXID::is_xid_continue)(input)
+    }
+}
+
+mod ascii_parser {
+    use nom::bytes::complete::*;
+    use nom::sequence::*;
+    use nom::IResult;
+
+    pub(crate) fn iter_literals(mut input: &[u8]) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_literal(input) {
+            Ok((i, o)) => {
+                input = i;
+                debug_assert_ne!(o, b"");
+                // This is safe because we've checked that the strings are a subset of ASCII
+                // characters.
+                let o = unsafe { std::str::from_utf8_unchecked(o) };
+                Some(o)
+            }
+            _ => None,
+        })
+    }
+
+    fn next_literal(input: &[u8]) -> IResult<&[u8], &[u8]> {
+        preceded(literal_sep, identifier)(input)
+    }
+
+    fn literal_sep(input: &[u8]) -> IResult<&[u8], &[u8]> {
+        take_till(is_continue)(input)
+    }
+
+    fn identifier(input: &[u8]) -> IResult<&[u8], &[u8]> {
+        // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
+        // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
+        // or unexpected cases than strip off start characters to a word since we aren't doing a
+        // proper word boundary parse
+        take_while1(is_continue)(input)
+    }
+
+    fn is_continue(c: u8) -> bool {
+        (b'a'..=b'z').contains(&c)
+            || (b'A'..=b'Z').contains(&c)
+            || (b'0'..=b'9').contains(&c)
+            || c == b'_'
+    }
 }
 
 /// A term composed of Words.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Identifier<'t> {
     token: &'t str,
+    case: Case,
     offset: usize,
 }
 
 impl<'t> Identifier<'t> {
-    pub fn new_unchecked(token: &'t str, offset: usize) -> Self {
-        Self { token, offset }
+    pub fn new_unchecked(token: &'t str, case: Case, offset: usize) -> Self {
+        Self {
+            token,
+            case,
+            offset,
+        }
     }
 
     pub fn token(&self) -> &'t str {
@@ -172,7 +293,7 @@ impl<'t> Identifier<'t> {
     }
 
     pub fn case(&self) -> Case {
-        Case::None
+        self.case
     }
 
     pub fn offset(&self) -> usize {
@@ -181,7 +302,12 @@ impl<'t> Identifier<'t> {
 
     /// Split into individual Words.
     pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
-        SplitIdent::new(self.token, self.offset)
+        match self.case {
+            Case::None => itertools::Either::Left(SplitIdent::new(self.token, self.offset)),
+            _ => itertools::Either::Right(
+                Some(Word::new_unchecked(self.token, self.case, self.offset)).into_iter(),
+            ),
+        }
     }
 }
 
@@ -269,7 +395,7 @@ impl<'s> Iterator for SplitIdent<'s> {
         while let Some((i, c)) = self.char_indices.next() {
             let cur_mode = WordMode::classify(c);
             if cur_mode == WordMode::Boundary {
-                assert!(self.start_mode == WordMode::Boundary);
+                debug_assert!(self.start_mode == WordMode::Boundary);
                 continue;
             }
             if self.start_mode == WordMode::Boundary {
@@ -409,7 +535,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "word";
-        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", 0)];
+        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", Case::None, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -422,8 +548,8 @@ mod test {
 
         let input = "A B";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("A", 0),
-            Identifier::new_unchecked("B", 2),
+            Identifier::new_unchecked("A", Case::None, 0),
+            Identifier::new_unchecked("B", Case::None, 2),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -437,8 +563,8 @@ mod test {
 
         let input = "A.B";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("A", 0),
-            Identifier::new_unchecked("B", 2),
+            Identifier::new_unchecked("A", Case::None, 0),
+            Identifier::new_unchecked("B", Case::None, 2),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -452,8 +578,8 @@ mod test {
 
         let input = "A::B";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("A", 0),
-            Identifier::new_unchecked("B", 3),
+            Identifier::new_unchecked("A", Case::None, 0),
+            Identifier::new_unchecked("B", Case::None, 3),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -466,7 +592,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A_B";
-        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", 0)];
+        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", Case::None, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -475,12 +601,15 @@ mod test {
 
     #[test]
     fn tokenize_ignore_hex_enabled() {
-        let parser = TokenizerBuilder::new().ignore_hex(true).build();
+        let parser = TokenizerBuilder::new()
+            .ignore_hex(true)
+            .leading_digits(true)
+            .build();
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("Hello", 0),
-            Identifier::new_unchecked("World", 17),
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 17),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -497,9 +626,47 @@ mod test {
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("Hello", 0),
-            Identifier::new_unchecked("0xDEADBEEF", 6),
-            Identifier::new_unchecked("World", 17),
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("0xDEADBEEF", Case::None, 6),
+            Identifier::new_unchecked("World", Case::None, 17),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_leading_digits_enabled() {
+        let parser = TokenizerBuilder::new()
+            .ignore_hex(false)
+            .leading_digits(true)
+            .build();
+
+        let input = "Hello 0Hello 124 0xDEADBEEF World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("0Hello", Case::None, 6),
+            Identifier::new_unchecked("0xDEADBEEF", Case::None, 17),
+            Identifier::new_unchecked("World", Case::None, 28),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_leading_digits_disabled() {
+        let parser = TokenizerBuilder::new()
+            .ignore_hex(false)
+            .leading_digits(false)
+            .build();
+
+        let input = "Hello 0Hello 124 0xDEADBEEF World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 28),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -564,7 +731,7 @@ mod test {
             ),
         ];
         for (input, expected) in cases.iter() {
-            let ident = Identifier::new_unchecked(input, 0);
+            let ident = Identifier::new_unchecked(input, Case::None, 0);
             let result: Vec<_> = ident.split().map(|w| (w.token, w.case, w.offset)).collect();
             assert_eq!(&result, expected);
         }

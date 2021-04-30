@@ -230,50 +230,38 @@ impl EngineConfig {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct TokenizerConfig {
+    /// Allow unicode characters in identifiers (and not just ASCII)
+    pub unicode: Option<bool>,
     /// Do not check identifiers that appear to be hexadecimal values.
     pub ignore_hex: Option<bool>,
     /// Allow identifiers to start with digits, in addition to letters.
     pub identifier_leading_digits: Option<bool>,
-    /// Allow identifiers to start with one of these characters.
-    pub identifier_leading_chars: Option<kstring::KString>,
-    /// Allow identifiers to include digits, in addition to letters.
-    pub identifier_include_digits: Option<bool>,
-    /// Allow identifiers to include these characters.
-    pub identifier_include_chars: Option<kstring::KString>,
 }
 
 impl TokenizerConfig {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
         Self {
+            unicode: Some(empty.unicode()),
             ignore_hex: Some(empty.ignore_hex()),
             identifier_leading_digits: Some(empty.identifier_leading_digits()),
-            identifier_leading_chars: Some(kstring::KString::from_ref(
-                empty.identifier_leading_chars(),
-            )),
-            identifier_include_digits: Some(empty.identifier_include_digits()),
-            identifier_include_chars: Some(kstring::KString::from_ref(
-                empty.identifier_include_chars(),
-            )),
         }
     }
 
     pub fn update(&mut self, source: &TokenizerConfig) {
+        if let Some(source) = source.unicode {
+            self.unicode = Some(source);
+        }
         if let Some(source) = source.ignore_hex {
             self.ignore_hex = Some(source);
         }
         if let Some(source) = source.identifier_leading_digits {
             self.identifier_leading_digits = Some(source);
         }
-        if let Some(source) = source.identifier_leading_chars.as_ref() {
-            self.identifier_leading_chars = Some(source.clone());
-        }
-        if let Some(source) = source.identifier_include_digits {
-            self.identifier_include_digits = Some(source);
-        }
-        if let Some(source) = source.identifier_include_chars.as_ref() {
-            self.identifier_include_chars = Some(source.clone());
-        }
+    }
+
+    pub fn unicode(&self) -> bool {
+        self.unicode.unwrap_or(true)
     }
 
     pub fn ignore_hex(&self) -> bool {
@@ -282,18 +270,6 @@ impl TokenizerConfig {
 
     pub fn identifier_leading_digits(&self) -> bool {
         self.identifier_leading_digits.unwrap_or(false)
-    }
-
-    pub fn identifier_leading_chars(&self) -> &str {
-        self.identifier_leading_chars.as_deref().unwrap_or("_")
-    }
-
-    pub fn identifier_include_digits(&self) -> bool {
-        self.identifier_include_digits.unwrap_or(true)
-    }
-
-    pub fn identifier_include_chars(&self) -> &str {
-        self.identifier_include_chars.as_deref().unwrap_or("_'")
     }
 }
 
