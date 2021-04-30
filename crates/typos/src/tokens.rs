@@ -137,27 +137,26 @@ impl<'s> Iterator for Utf8Chunks<'s> {
     type Item = &'s str;
 
     fn next(&mut self) -> Option<&'s str> {
-        loop {
-            if self.source.is_empty() {
-                return None;
+        if self.source.is_empty() {
+            return None;
+        }
+
+        match simdutf8::compat::from_utf8(self.source) {
+            Ok(valid) => {
+                self.source = b"";
+                Some(valid)
             }
-            match simdutf8::compat::from_utf8(self.source) {
-                Ok(valid) => {
+            Err(error) => {
+                let (valid, after_valid) = self.source.split_at(error.valid_up_to());
+
+                if let Some(invalid_sequence_length) = error.error_len() {
+                    self.source = &after_valid[invalid_sequence_length..];
+                } else {
                     self.source = b"";
-                    return Some(valid);
                 }
-                Err(error) => {
-                    let (valid, after_valid) = self.source.split_at(error.valid_up_to());
 
-                    if let Some(invalid_sequence_length) = error.error_len() {
-                        self.source = &after_valid[invalid_sequence_length..];
-                    } else {
-                        self.source = b"";
-                    }
-
-                    let valid = unsafe { std::str::from_utf8_unchecked(valid) };
-                    return Some(valid);
-                }
+                let valid = unsafe { std::str::from_utf8_unchecked(valid) };
+                Some(valid)
             }
         }
     }
@@ -217,7 +216,7 @@ mod unicode_parser {
     }
 
     fn literal_sep(input: &str) -> IResult<&str, &str> {
-        take_till(|c: char| unicode_xid::UnicodeXID::is_xid_continue(c))(input)
+        take_till(unicode_xid::UnicodeXID::is_xid_continue)(input)
     }
 
     fn identifier(input: &str) -> IResult<&str, &str> {
@@ -225,7 +224,7 @@ mod unicode_parser {
         // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
         // or unexpected cases than strip off start characters to a word since we aren't doing a
         // proper word boundary parse
-        take_while1(|c: char| unicode_xid::UnicodeXID::is_xid_continue(c))(input)
+        take_while1(unicode_xid::UnicodeXID::is_xid_continue)(input)
     }
 }
 
@@ -253,7 +252,7 @@ mod ascii_parser {
     }
 
     fn literal_sep(input: &[u8]) -> IResult<&[u8], &[u8]> {
-        take_till(|c: u8| is_continue(c))(input)
+        take_till(is_continue)(input)
     }
 
     fn identifier(input: &[u8]) -> IResult<&[u8], &[u8]> {
@@ -261,7 +260,7 @@ mod ascii_parser {
         // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
         // or unexpected cases than strip off start characters to a word since we aren't doing a
         // proper word boundary parse
-        take_while1(|c: u8| is_continue(c))(input)
+        take_while1(is_continue)(input)
     }
 
     fn is_continue(c: u8) -> bool {
