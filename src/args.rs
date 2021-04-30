@@ -123,6 +123,12 @@ pub(crate) struct FileArgs {
     #[structopt(long, overrides_with("no-check-files"), hidden(true))]
     check_files: bool,
 
+    #[structopt(long, overrides_with("no-unicode"), hidden(true))]
+    unicode: bool,
+    #[structopt(long, overrides_with("unicode"))]
+    /// Only allow ASCII characters in identifiers
+    no_unicode: bool,
+
     #[structopt(
         long,
         possible_values(&config::Locale::variants()),
@@ -136,7 +142,10 @@ impl FileArgs {
             binary: self.binary(),
             check_filename: self.check_filename(),
             check_file: self.check_file(),
-            tokenizer: None,
+            tokenizer: Some(config::TokenizerConfig {
+                unicode: self.unicode(),
+                ..Default::default()
+            }),
             dict: Some(config::DictConfig {
                 locale: self.locale,
                 ..Default::default()
@@ -150,6 +159,10 @@ impl FileArgs {
 
     fn check_filename(&self) -> Option<bool> {
         resolve_bool_arg(self.check_filenames, self.no_check_filenames)
+    }
+
+    fn unicode(&self) -> Option<bool> {
+        resolve_bool_arg(self.unicode, self.no_unicode)
     }
 
     fn check_file(&self) -> Option<bool> {
