@@ -48,9 +48,7 @@ impl BuiltIn {
 
     // Not using `Status` to avoid the allocations
     fn correct_with_dict(&self, word: &str) -> Option<&'static str> {
-        const WORD_RANGE: std::ops::RangeInclusive<usize> =
-            typos_dict::WORD_MIN..=typos_dict::WORD_MAX;
-        if WORD_RANGE.contains(&word.len()) {
+        if typos_dict::WORD_RANGE.contains(&word.len()) {
             map_lookup(&typos_dict::WORD_DICTIONARY, word)
         } else {
             None
@@ -58,9 +56,7 @@ impl BuiltIn {
     }
 
     fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
-        const WORD_RANGE: std::ops::RangeInclusive<usize> =
-            typos_vars::WORD_MIN..=typos_vars::WORD_MAX;
-        if WORD_RANGE.contains(&word.len()) {
+        if typos_vars::WORD_RANGE.contains(&word.len()) {
             map_lookup(&typos_vars::VARS_DICTIONARY, word)
                 .map(|variants| self.select_variant(variants))
         } else {

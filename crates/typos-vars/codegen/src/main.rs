@@ -103,8 +103,12 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
     writeln!(file, ";").unwrap();
 
     writeln!(file).unwrap();
-    writeln!(file, "pub const WORD_MIN: usize = {};", smallest).unwrap();
-    writeln!(file, "pub const WORD_MAX: usize = {};", largest).unwrap();
+    writeln!(
+        file,
+        "pub const WORD_RANGE: std::ops::RangeInclusive<usize> = {}..={};",
+        smallest, largest
+    )
+    .unwrap();
 
     for (symbol, entry) in entries.iter() {
         if !referenced_symbols.contains(symbol.as_str()) {
