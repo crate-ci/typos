@@ -1558,6 +1558,7 @@ dependencies = [
  "typos-vars",
  "unicase",
  "unicode-segmentation",
+ "varcon-core",
 ]
 
 [[package]]

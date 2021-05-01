@@ -8,7 +8,7 @@ use typos::Status;
 
 #[derive(Default)]
 pub struct BuiltIn {
-    locale: Option<typos_vars::Category>,
+    locale: Option<varcon_core::Category>,
 }
 
 impl BuiltIn {
@@ -46,6 +46,7 @@ impl BuiltIn {
         Some(corrections)
     }
 
+    #[cfg(feature = "dict")]
     // Not using `Status` to avoid the allocations
     fn correct_with_dict(&self, word: &str) -> Option<&'static str> {
         const WORD_RANGE: std::ops::RangeInclusive<usize> =
@@ -57,6 +58,12 @@ impl BuiltIn {
         }
     }
 
+    #[cfg(not(feature = "dict"))]
+    fn correct_with_dict(&self, _word: &str) -> Option<&'static str> {
+        None
+    }
+
+    #[cfg(feature = "vars")]
     fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
         const WORD_RANGE: std::ops::RangeInclusive<usize> =
             typos_vars::WORD_MIN..=typos_vars::WORD_MAX;
@@ -68,6 +75,12 @@ impl BuiltIn {
         }
     }
 
+    #[cfg(not(feature = "vars"))]
+    fn correct_with_vars(&self, _word: &str) -> Option<Status<'static>> {
+        None
+    }
+
+    #[cfg(feature = "vars")]
     fn select_variant(
         &self,
         vars: &'static [(u8, &'static typos_vars::VariantsMap)],

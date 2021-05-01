@@ -41,6 +41,10 @@ stages:
       displayName: Check that Cargo.lock is satisfiable
     - script: cargo check --workspace --all-targets
       displayName: Default features
+    - script: cargo check --all-targets --no-default-features
+      displayName: No features
+    - script: cargo check --all-targets --all-features
+      displayName: All features
 - stage: test
   displayName: Test
   jobs:
