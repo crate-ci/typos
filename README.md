@@ -2,28 +2,37 @@
 
 > **Source code spell checker**
 
+Finds and corrects spelling mistakes among source code:
+- Fast enough to run on monorepos
+- Low false positives so you can run on PRs
+
 [![Build Status](https://dev.azure.com/crate-ci/crate-ci/_apis/build/status/typos?branchName=master)](https://dev.azure.com/crate-ci/crate-ci/_build/latest?definitionId=11&branchName=master)
 [![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
 ![License](https://img.shields.io/crates/l/typos.svg)
 [![Crates Status](https://img.shields.io/crates/v/typos.svg)](https://crates.io/crates/typos)
 
-## [About](docs/about.md)
+Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 
-## [Install](docs/install.md)
+## Documentation
 
-## [Reference](docs/reference.md)
+- [Installation](#install)
+- [Reference](docs/reference.md)
+- [Comparison with other spell checkers](docs/comparison.md)
+- [Benchmarks](benchsuite/runs)
+- [Design](docs/design.md)
+- [Contribute](CONTRIBUTING.md)
+- [CHANGELOG](CHANGELOG.md)
 
-## [Contribute](CONTRIBUTING.md)
+## Install
 
-## License
+[Download](https://github.com/crate-ci/typos/releases) a pre-built binary
+(installable via [gh-install](https://github.com/crate-ci/gh-install).
 
-Licensed under either of
-
- * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
-
-at your option.
+Or use rust to install:
+```bash
+cargo install typos-cli
+```
 
 [Crates.io]: https://crates.io/crates/typos-cli
 [Documentation]: https://docs.rs/typos
