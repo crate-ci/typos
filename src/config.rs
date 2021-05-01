@@ -353,13 +353,13 @@ pub enum Locale {
 }
 
 impl Locale {
-    pub const fn category(self) -> Option<typos_vars::Category> {
+    pub const fn category(self) -> Option<varcon_core::Category> {
         match self {
             Locale::En => None,
-            Locale::EnUs => Some(typos_vars::Category::American),
-            Locale::EnGb => Some(typos_vars::Category::BritishIse),
-            Locale::EnCa => Some(typos_vars::Category::Canadian),
-            Locale::EnAu => Some(typos_vars::Category::Australian),
+            Locale::EnUs => Some(varcon_core::Category::American),
+            Locale::EnGb => Some(varcon_core::Category::BritishIse),
+            Locale::EnCa => Some(varcon_core::Category::Canadian),
+            Locale::EnAu => Some(varcon_core::Category::Australian),
         }
     }
 
