@@ -15,6 +15,6 @@ azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-codegenrs = "0.1"
+codegenrs = "1.0"
 structopt = "0.3"
 varcon-core = { version = "1.0", path = "../../varcon-core", features = ["parser"] }
