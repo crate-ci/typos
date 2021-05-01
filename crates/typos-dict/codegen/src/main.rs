@@ -38,8 +38,12 @@ fn generate<W: std::io::Write>(file: &mut W) {
     writeln!(file, "{}", codegenned).unwrap();
     writeln!(file, ";").unwrap();
     writeln!(file).unwrap();
-    writeln!(file, "pub const WORD_MIN: usize = {};", smallest).unwrap();
-    writeln!(file, "pub const WORD_MAX: usize = {};", largest).unwrap();
+    writeln!(
+        file,
+        "pub const WORD_RANGE: std::ops::RangeInclusive<usize> = {}..={};",
+        smallest, largest
+    )
+    .unwrap();
 }
 
 #[derive(Debug, StructOpt)]
