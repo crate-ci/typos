@@ -20,13 +20,13 @@ Quick feedback and resolution for developer:
 
 ## Trade Offs
 
-### typos uses a blacklist
+### Corrections vs Dictionaries
 
-Blacklist: Known typos that map to their corresponding word
+Corrections: Known misspellings that map to their corresponding dictionary word
 - Ignores unknown typos
 - Ignores typos that follow c-escapes if they aren't handled correctly
 
-Whitelist: A confidence rating is given for how close a word is to one in the whitelist
+Dictionary: A confidence rating is given for how close a word is to one in a dictionary
 - Sensitive to false positives due to hex numbers and c-escapes
-- Traditional spell checkers use a whitelist.
+- Traditional spell checkers use a dictionary.
 

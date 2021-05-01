@@ -3,7 +3,7 @@
 |                | typos                 | [bloom42/misspell][misspell-rs] | [client9/misspell][misspell-go] | [codespell] | [scspell3k] |
 |----------------|-----------------------|---------------------------------|---------------------------------|-------------|-------------|
 | Runtime        | \-                    | \-                              | \-                              | Python      | Python      |
-| Dictionary     | Blacklist             | Blacklist                       | Blacklist                       | Blacklist   | Whitelist   |
+| [Approach](design.md) | Correction     | Correction                      | Correction                      | Correction  | Dictionary  |
 | Custom Dict    | Yes                   | No                              | ?                               | Yes         | Yes         |
 | Per-Lang Dict  | Yes                   | No                              | ?                               | No          | Yes         |
 | CamelCase      | Yes                   | No                              | ?                               | No          | Yes         |
