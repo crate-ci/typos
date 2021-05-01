@@ -21,7 +21,7 @@ varcon = { version = "^0.3", path = "../../varcon", features = ["flags"] }
 varcon-core = { version = "1.0", path = "../../varcon-core", features = ["flags"] }
 typos = { version = "^0.4", path = "../../typos" }
 unicase = "2.5"
-codegenrs = "0.1"
+codegenrs = "1.0"
 structopt = "0.3"
 clap = "2"
 log = "0.4"
