@@ -5,6 +5,34 @@ use std::sync::atomic;
 
 use typos_cli::report::{Context, Message, Report, Typo};
 
+#[derive(Copy, Clone, Debug)]
+pub struct Palette {
+    error: yansi::Style,
+    warn: yansi::Style,
+    info: yansi::Style,
+    strong: yansi::Style,
+}
+
+impl Palette {
+    pub fn colored() -> Self {
+        Self {
+            error: yansi::Style::new(yansi::Color::Red),
+            warn: yansi::Style::new(yansi::Color::Yellow),
+            info: yansi::Style::new(yansi::Color::Blue),
+            strong: yansi::Style::default().bold(),
+        }
+    }
+
+    pub fn plain() -> Self {
+        Self {
+            error: yansi::Style::default(),
+            warn: yansi::Style::default(),
+            info: yansi::Style::default(),
+            strong: yansi::Style::default(),
+        }
+    }
+}
+
 pub struct MessageStatus<'r> {
     typos_found: atomic::AtomicBool,
     errors_found: atomic::AtomicBool,
@@ -59,8 +87,10 @@ impl Report for PrintSilent {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
-pub struct PrintBrief;
+pub struct PrintBrief {
+    pub stdout_palette: Palette,
+    pub stderr_palette: Palette,
+}
 
 impl Report for PrintBrief {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
@@ -68,7 +98,7 @@ impl Report for PrintBrief {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Typo(msg) => print_brief_correction(msg)?,
+            Message::Typo(msg) => print_brief_correction(msg, self.stdout_palette)?,
             Message::File(msg) => {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
@@ -84,8 +114,10 @@ impl Report for PrintBrief {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
-pub struct PrintLong;
+pub struct PrintLong {
+    pub stdout_palette: Palette,
+    pub stderr_palette: Palette,
+}
 
 impl Report for PrintLong {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
@@ -93,7 +125,7 @@ impl Report for PrintLong {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Typo(msg) => print_long_correction(msg)?,
+            Message::Typo(msg) => print_long_correction(msg, self.stdout_palette)?,
             Message::File(msg) => {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
@@ -109,7 +141,7 @@ impl Report for PrintLong {
     }
 }
 
-fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
+fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Error> {
     let line = String::from_utf8_lossy(msg.buffer.as_ref());
     let line = line.replace("\t", " ");
     let column = unicode_segmentation::UnicodeSegmentation::graphemes(
@@ -120,22 +152,31 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
     match &msg.corrections {
         typos::Status::Valid => {}
         typos::Status::Invalid => {
+            let divider = ":";
             writeln!(
                 io::stdout(),
-                "{}:{}: `{}` is disallowed",
-                context_display(&msg.context),
-                column,
-                msg.typo,
+                "{}{}{}: {}",
+                palette.info.paint(context_display(&msg.context)),
+                palette.info.paint(divider),
+                palette.info.paint(column),
+                palette
+                    .strong
+                    .paint(format_args!("`{}` is disallowed:", msg.typo)),
             )?;
         }
         typos::Status::Corrections(corrections) => {
+            let divider = ":";
             writeln!(
                 io::stdout(),
-                "{}:{}: `{}` -> {}",
-                context_display(&msg.context),
-                column,
-                msg.typo,
-                itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                "{}{}{}: {}",
+                palette.info.paint(context_display(&msg.context)),
+                palette.info.paint(divider),
+                palette.info.paint(column),
+                palette.strong.paint(format_args!(
+                    "`{}` -> {}",
+                    msg.typo,
+                    itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                )),
             )?;
         }
     }
@@ -143,7 +184,7 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
+fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Error> {
     let stdout = io::stdout();
     let mut handle = stdout.lock();
 
@@ -157,18 +198,36 @@ fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
     match &msg.corrections {
         typos::Status::Valid => {}
         typos::Status::Invalid => {
-            writeln!(handle, "error: `{}` is disallowed`", msg.typo,)?;
+            writeln!(
+                handle,
+                "{}: {}",
+                palette.error.paint("error"),
+                palette
+                    .strong
+                    .paint(format_args!("`{}` is disallowed`", msg.typo))
+            )?;
         }
         typos::Status::Corrections(corrections) => {
             writeln!(
                 handle,
-                "error: `{}` should be {}",
-                msg.typo,
-                itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                "{}: {}",
+                palette.error.paint("error"),
+                palette.strong.paint(format_args!(
+                    "`{}` should be {}",
+                    msg.typo,
+                    itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                ))
             )?;
         }
     }
-    writeln!(handle, "  --> {}:{}", context_display(&msg.context), column)?;
+    let divider = ":";
+    writeln!(
+        handle,
+        "  --> {}{}{}",
+        palette.info.paint(context_display(&msg.context)),
+        palette.info.paint(divider),
+        palette.info.paint(column)
+    )?;
 
     if let Some(Context::File(context)) = &msg.context {
         let line_num = context.line_num.to_string();
@@ -178,8 +237,19 @@ fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
         let hl: String = itertools::repeat_n("^", msg.typo.len()).collect();
 
         writeln!(handle, "{} |", line_indent)?;
-        writeln!(handle, "{} | {}", line_num, line.trim_end())?;
-        writeln!(handle, "{} | {}{}", line_indent, hl_indent, hl)?;
+        writeln!(
+            handle,
+            "{} | {}",
+            palette.info.paint(line_num),
+            line.trim_end()
+        )?;
+        writeln!(
+            handle,
+            "{} | {}{}",
+            line_indent,
+            hl_indent,
+            palette.error.paint(hl)
+        )?;
         writeln!(handle, "{} |", line_indent)?;
     }
 
