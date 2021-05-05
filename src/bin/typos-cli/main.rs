@@ -7,8 +7,7 @@ use std::io::Write;
 use structopt::StructOpt;
 
 mod args;
-use typos_cli::config;
-use typos_cli::report;
+mod report;
 
 use proc_exit::WithCodeResultExt;
 
@@ -63,9 +62,10 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = config::Config::default();
+    let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom =
+            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -75,7 +75,7 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
         .load_config(cwd)
         .with_code(proc_exit::Code::CONFIG_ERR)?;
 
-    let mut defaulted_config = config::Config::from_defaults();
+    let mut defaulted_config = typos_cli::config::Config::from_defaults();
     defaulted_config.update(&config);
     let output = toml::to_string_pretty(&defaulted_config).with_code(proc_exit::Code::FAILURE)?;
     if output_path == std::path::Path::new("-") {
@@ -108,9 +108,10 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = config::Config::default();
+    let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom =
+            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -142,9 +143,10 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = config::Config::default();
+    let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom =
+            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -190,7 +192,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             args.format.reporter()
         };
         let status_reporter = report::MessageStatus::new(output_reporter);
-        let reporter: &dyn report::Report = &status_reporter;
+        let reporter: &dyn typos_cli::report::Report = &status_reporter;
 
         let selected_checks: &dyn typos_cli::file::FileChecker = if args.files {
             &typos_cli::file::FoundFiles

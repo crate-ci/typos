@@ -1,6 +1,6 @@
 use structopt::StructOpt;
 
-use crate::config;
+use typos_cli::config;
 
 arg_enum! {
     #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -12,10 +12,10 @@ arg_enum! {
     }
 }
 
-pub const PRINT_SILENT: typos_cli::report::PrintSilent = typos_cli::report::PrintSilent;
-pub const PRINT_BRIEF: typos_cli::report::PrintBrief = typos_cli::report::PrintBrief;
-pub const PRINT_LONG: typos_cli::report::PrintLong = typos_cli::report::PrintLong;
-pub const PRINT_JSON: typos_cli::report::PrintJson = typos_cli::report::PrintJson;
+pub const PRINT_SILENT: crate::report::PrintSilent = crate::report::PrintSilent;
+pub const PRINT_BRIEF: crate::report::PrintBrief = crate::report::PrintBrief;
+pub const PRINT_LONG: crate::report::PrintLong = crate::report::PrintLong;
+pub const PRINT_JSON: crate::report::PrintJson = crate::report::PrintJson;
 
 impl Format {
     pub(crate) fn reporter(self) -> &'static dyn typos_cli::report::Report {

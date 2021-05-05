@@ -26,7 +26,7 @@ fn bench_checks(c: &mut Criterion) {
                     sample_path.path(),
                     true,
                     &policy,
-                    &typos_cli::report::PrintSilent,
+                    &PrintSilent,
                 )
             });
         });
@@ -36,34 +36,33 @@ fn bench_checks(c: &mut Criterion) {
                     sample_path.path(),
                     true,
                     &policy,
-                    &typos_cli::report::PrintSilent,
+                    &PrintSilent,
                 )
             });
         });
         group.bench_with_input(BenchmarkId::new("Words", name), &len, |b, _| {
             b.iter(|| {
-                typos_cli::file::Words.check_file(
-                    sample_path.path(),
-                    true,
-                    &policy,
-                    &typos_cli::report::PrintSilent,
-                )
+                typos_cli::file::Words.check_file(sample_path.path(), true, &policy, &PrintSilent)
             });
         });
         group.bench_with_input(BenchmarkId::new("Typos", name), &len, |b, _| {
             b.iter(|| {
-                typos_cli::file::Typos.check_file(
-                    sample_path.path(),
-                    true,
-                    &policy,
-                    &typos_cli::report::PrintSilent,
-                )
+                typos_cli::file::Typos.check_file(sample_path.path(), true, &policy, &PrintSilent)
             });
         });
     }
     group.finish();
 
     temp.close().unwrap();
+}
+
+#[derive(Debug, Default)]
+pub struct PrintSilent;
+
+impl typos_cli::report::Report for PrintSilent {
+    fn report(&self, _msg: typos_cli::report::Message) -> Result<(), std::io::Error> {
+        Ok(())
+    }
 }
 
 criterion_group!(benches, bench_checks,);
