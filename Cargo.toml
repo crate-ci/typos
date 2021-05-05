@@ -40,7 +40,7 @@ pre-release-replacements = [
 
 [[bin]]
 name = "typos"
-path = "src/main.rs"
+path = "src/bin/typos-cli/main.rs"
 doc = false
 
 [badges]
