@@ -1,6 +1,6 @@
 [package]
 name = "wikipedia-dict"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"

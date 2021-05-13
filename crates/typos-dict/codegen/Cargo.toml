@@ -1,6 +1,6 @@
 [package]
 name = "typos-dict-codegen"
-version = "1.1.0"
+version = "1.2.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"

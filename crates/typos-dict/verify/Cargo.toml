@@ -1,6 +1,6 @@
 [package]
 name = "typos-dict-verify"
-version = "1.1.0"
+version = "1.2.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
@@ -19,6 +19,6 @@ csv = "1.1"
 unicase = "2.5"
 codegenrs = "1.0"
 structopt = "0.3"
-varcon = { version = "^0.3", path = "../../varcon" }
+varcon = { version = "^0.4", path = "../../varcon" }
 itertools = "0.10"
 edit-distance = "2.1"

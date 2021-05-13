@@ -11,7 +11,7 @@ members = [
 
 [package]
 name = "typos-cli"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
@@ -48,10 +48,10 @@ azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-typos = { version = "^0.4", path = "crates/typos" }
+typos = { version = "^0.5", path = "crates/typos" }
 varcon-core = { version = "1.1.0", path = "crates/varcon-core" }
-typos-dict = { version = "^0.3", path = "crates/typos-dict", optional = true }
-typos-vars = { version = "^0.3", path = "crates/typos-vars", optional = true }
+typos-dict = { version = "^0.4", path = "crates/typos-dict", optional = true }
+typos-vars = { version = "^0.4", path = "crates/typos-vars", optional = true }
 phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
 anyhow = "1.0"
