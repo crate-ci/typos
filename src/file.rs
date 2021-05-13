@@ -380,7 +380,7 @@ impl FileChecker for FoundFiles {
     }
 }
 
-pub fn read_file(
+fn read_file(
     path: &std::path::Path,
     reporter: &dyn report::Report,
 ) -> Result<(Vec<u8>, content_inspector::ContentType), std::io::Error> {
@@ -418,7 +418,7 @@ pub fn read_file(
     Ok((buffer, content_type))
 }
 
-pub fn write_file(
+fn write_file(
     path: &std::path::Path,
     content_type: content_inspector::ContentType,
     buffer: Vec<u8>,
