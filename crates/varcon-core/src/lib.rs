@@ -83,8 +83,8 @@ pub struct Type {
     pub num: Option<usize>,
 }
 
+#[cfg_attr(feature = "flags", enumflags2::bitflags)]
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "flags", derive(enumflags2::BitFlags))]
 #[repr(u8)]
 pub enum Category {
     American = 0x01,
@@ -98,8 +98,8 @@ pub enum Category {
 #[cfg(feature = "flags")]
 pub type CategorySet = enumflags2::BitFlags<Category>;
 
+#[cfg_attr(feature = "flags", enumflags2::bitflags)]
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
-#[cfg_attr(feature = "flags", derive(enumflags2::BitFlags))]
 #[repr(u8)]
 pub enum Tag {
     Eq = 0x01,
@@ -112,8 +112,8 @@ pub enum Tag {
 #[cfg(feature = "flags")]
 pub type TagSet = enumflags2::BitFlags<Tag>;
 
+#[cfg_attr(feature = "flags", enumflags2::bitflags)]
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
-#[cfg_attr(feature = "flags", derive(enumflags2::BitFlags))]
 #[repr(u8)]
 pub enum Pos {
     Noun = 0x01,

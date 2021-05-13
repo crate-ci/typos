@@ -84,7 +84,7 @@ impl BuiltIn {
         let var = vars[0];
         let var_categories = unsafe {
             // Code-genned from a checked category-set, so known to be safe
-            typos_vars::CategorySet::new(var.0)
+            typos_vars::CategorySet::from_bits_unchecked(var.0)
         };
         if let Some(locale) = self.locale {
             if var_categories.contains(locale) {
