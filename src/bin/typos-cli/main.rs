@@ -7,8 +7,8 @@ use std::io::Write;
 use structopt::StructOpt;
 
 mod args;
-use typos_cli::config;
-use typos_cli::report;
+mod color;
+mod report;
 
 use proc_exit::WithCodeResultExt;
 
@@ -31,14 +31,33 @@ fn run() -> proc_exit::ExitResult {
         }
     };
 
-    init_logging(args.verbose.log_level());
+    let colored = args.color.colored().or_else(color::colored_env);
+    let mut colored_stdout = colored.or_else(color::colored_stdout).unwrap_or(true);
+    let mut colored_stderr = colored.or_else(color::colored_stderr).unwrap_or(true);
+    if (colored_stdout || colored_stderr) && !yansi::Paint::enable_windows_ascii() {
+        colored_stdout = false;
+        colored_stderr = false;
+    }
+
+    init_logging(args.verbose.log_level(), colored_stderr);
+
+    let stdout_palette = if colored_stdout {
+        report::Palette::colored()
+    } else {
+        report::Palette::plain()
+    };
+    let stderr_palette = if colored_stderr {
+        report::Palette::colored()
+    } else {
+        report::Palette::plain()
+    };
 
     if let Some(output_path) = args.dump_config.as_ref() {
         run_dump_config(&args, output_path)
     } else if args.type_list {
         run_type_list(&args)
     } else {
-        run_checks(&args)
+        run_checks(&args, stdout_palette, stderr_palette)
     }
 }
 
@@ -63,9 +82,10 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = config::Config::default();
+    let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom =
+            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -75,7 +95,7 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
         .load_config(cwd)
         .with_code(proc_exit::Code::CONFIG_ERR)?;
 
-    let mut defaulted_config = config::Config::from_defaults();
+    let mut defaulted_config = typos_cli::config::Config::from_defaults();
     defaulted_config.update(&config);
     let output = toml::to_string_pretty(&defaulted_config).with_code(proc_exit::Code::FAILURE)?;
     if output_path == std::path::Path::new("-") {
@@ -108,9 +128,10 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = config::Config::default();
+    let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom =
+            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -135,16 +156,21 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     Ok(())
 }
 
-fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
+fn run_checks(
+    args: &args::Args,
+    stdout_palette: report::Palette,
+    stderr_palette: report::Palette,
+) -> proc_exit::ExitResult {
     let global_cwd = std::env::current_dir()?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = config::Config::default();
+    let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom = config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom =
+            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -185,12 +211,12 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
 
         // HACK: Diff doesn't handle mixing content
         let output_reporter = if args.diff {
-            &args::PRINT_SILENT
+            Box::new(crate::report::PrintSilent)
         } else {
-            args.format.reporter()
+            args.format.reporter(stdout_palette, stderr_palette)
         };
-        let status_reporter = report::MessageStatus::new(output_reporter);
-        let reporter: &dyn report::Report = &status_reporter;
+        let status_reporter = report::MessageStatus::new(output_reporter.as_ref());
+        let reporter: &dyn typos_cli::report::Report = &status_reporter;
 
         let selected_checks: &dyn typos_cli::file::FileChecker = if args.files {
             &typos_cli::file::FoundFiles
@@ -243,9 +269,14 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     }
 }
 
-fn init_logging(level: Option<log::Level>) {
+fn init_logging(level: Option<log::Level>, colored: bool) {
     if let Some(level) = level {
         let mut builder = env_logger::Builder::new();
+        builder.write_style(if colored {
+            env_logger::WriteStyle::Always
+        } else {
+            env_logger::WriteStyle::Never
+        });
 
         builder.filter(None, level.to_level_filter());
 

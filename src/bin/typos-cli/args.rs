@@ -1,6 +1,6 @@
 use structopt::StructOpt;
 
-use crate::config;
+use typos_cli::config;
 
 arg_enum! {
     #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -12,18 +12,23 @@ arg_enum! {
     }
 }
 
-pub const PRINT_SILENT: typos_cli::report::PrintSilent = typos_cli::report::PrintSilent;
-pub const PRINT_BRIEF: typos_cli::report::PrintBrief = typos_cli::report::PrintBrief;
-pub const PRINT_LONG: typos_cli::report::PrintLong = typos_cli::report::PrintLong;
-pub const PRINT_JSON: typos_cli::report::PrintJson = typos_cli::report::PrintJson;
-
 impl Format {
-    pub(crate) fn reporter(self) -> &'static dyn typos_cli::report::Report {
+    pub(crate) fn reporter(
+        self,
+        stdout_palette: crate::report::Palette,
+        stderr_palette: crate::report::Palette,
+    ) -> Box<dyn typos_cli::report::Report> {
         match self {
-            Format::Silent => &PRINT_SILENT,
-            Format::Brief => &PRINT_BRIEF,
-            Format::Long => &PRINT_LONG,
-            Format::Json => &PRINT_JSON,
+            Format::Silent => Box::new(crate::report::PrintSilent),
+            Format::Brief => Box::new(crate::report::PrintBrief {
+                stdout_palette,
+                stderr_palette,
+            }),
+            Format::Long => Box::new(crate::report::PrintLong {
+                stdout_palette,
+                stderr_palette,
+            }),
+            Format::Json => Box::new(crate::report::PrintJson),
         }
     }
 }
@@ -97,6 +102,9 @@ pub(crate) struct Args {
 
     #[structopt(flatten)]
     pub(crate) config: ConfigArgs,
+
+    #[structopt(flatten)]
+    pub(crate) color: crate::color::ColorArgs,
 
     #[structopt(flatten)]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
