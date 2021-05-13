@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Parsing identifiers according to the Unicode XID standard
+- Corrected number detection
+
+#### Performance
+
+- Hand-rolled parser rather than regex
+- Sped up UTF-8 validation
+- Limited inner-loop asserts to debug builds
+- Allow bypassing unicode cost with a  `--no-unicode` flag
+
+#### Features
+
+- Colored output support
+
 ## [0.2.0] - 2021-04-14
 
 #### Bug Fixes
