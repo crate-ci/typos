@@ -17,6 +17,7 @@ impl Config {
         let config = if let Some(path) =
             find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"])
         {
+            log::debug!("Loading {}", path.display());
             Some(Self::from_file(&path)?)
         } else {
             None

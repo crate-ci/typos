@@ -123,8 +123,11 @@ impl<'s> ConfigEngine<'s> {
         let mut config = crate::config::Config::default();
 
         if !self.isolated {
-            if let Some(derived) = crate::config::Config::from_dir(cwd)? {
-                config.update(&derived);
+            for ancestor in cwd.ancestors() {
+                if let Some(derived) = crate::config::Config::from_dir(ancestor)? {
+                    config.update(&derived);
+                    break;
+                }
             }
         }
         if let Some(overrides) = self.overrides.as_ref() {
