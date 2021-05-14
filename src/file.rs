@@ -598,12 +598,14 @@ fn walk_entry(
     };
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
-        let path = if entry.is_stdin() {
-            std::path::Path::new("-")
+        let (path, lookup_path) = if entry.is_stdin() {
+            let path = std::path::Path::new("-");
+            (path, path.to_owned())
         } else {
-            entry.path()
+            let path = entry.path();
+            (path, path.canonicalize()?)
         };
-        let policy = engine.policy(path);
+        let policy = engine.policy(&lookup_path);
         checks.check_file(path, explicit, &policy, reporter)?;
     }
 
