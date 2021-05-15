@@ -68,6 +68,7 @@ impl<'s> ConfigEngine<'s> {
     }
 
     pub fn walk(&self, cwd: &std::path::Path) -> &crate::config::Walk {
+        debug_assert!(cwd.is_absolute(), "{} is not absolute", cwd.display());
         let dir = self
             .configs
             .get(cwd)
@@ -76,6 +77,7 @@ impl<'s> ConfigEngine<'s> {
     }
 
     pub fn file_types(&self, cwd: &std::path::Path) -> &[ignore::types::FileTypeDef] {
+        debug_assert!(cwd.is_absolute(), "{} is not absolute", cwd.display());
         let dir = self
             .configs
             .get(cwd)
@@ -84,6 +86,7 @@ impl<'s> ConfigEngine<'s> {
     }
 
     pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {
+        debug_assert!(path.is_absolute(), "{} is not absolute", path.display());
         let dir = self.get_dir(path).expect("`walk()` should be called first");
         let file_config = dir.get_file_config(path);
         Policy {
@@ -120,6 +123,7 @@ impl<'s> ConfigEngine<'s> {
         &self,
         cwd: &std::path::Path,
     ) -> Result<crate::config::Config, anyhow::Error> {
+        debug_assert!(cwd.is_absolute(), "{} is not absolute", cwd.display());
         let mut config = crate::config::Config::default();
 
         if !self.isolated {
@@ -157,6 +161,7 @@ impl<'s> ConfigEngine<'s> {
     }
 
     pub fn init_dir(&mut self, cwd: &std::path::Path) -> Result<(), anyhow::Error> {
+        debug_assert!(cwd.is_absolute(), "{} is not absolute", cwd.display());
         if self.configs.contains_key(cwd) {
             return Ok(());
         }
@@ -380,7 +385,7 @@ mod test {
         };
         engine.set_overrides(config);
 
-        let cwd = std::path::Path::new(".");
+        let cwd = std::path::Path::new(".").canonicalize().unwrap();
         let loaded = engine.load_config(&cwd).unwrap();
         assert_eq!(loaded.default.binary, Some(false));
         assert_eq!(loaded.default.check_filename, Some(true));
@@ -414,7 +419,7 @@ mod test {
         };
         engine.set_overrides(config);
 
-        let cwd = std::path::Path::new(".");
+        let cwd = std::path::Path::new(".").canonicalize().unwrap();
         let result = engine.init_dir(&cwd);
         assert!(result.is_err());
     }
@@ -428,7 +433,7 @@ mod test {
         let config = crate::config::Config::default();
         engine.set_overrides(config);
 
-        let cwd = std::path::Path::new(".");
+        let cwd = std::path::Path::new(".").canonicalize().unwrap();
         engine.init_dir(&cwd).unwrap();
         let policy = engine.policy(&cwd.join("Cargo.toml"));
         assert!(!policy.binary);
@@ -460,7 +465,7 @@ mod test {
         };
         engine.set_overrides(config);
 
-        let cwd = std::path::Path::new(".");
+        let cwd = std::path::Path::new(".").canonicalize().unwrap();
         engine.init_dir(&cwd).unwrap();
         let policy = engine.policy(&cwd.join("Cargo.toml"));
         assert!(policy.binary);
@@ -492,7 +497,7 @@ mod test {
         };
         engine.set_overrides(config);
 
-        let cwd = std::path::Path::new(".");
+        let cwd = std::path::Path::new(".").canonicalize().unwrap();
         engine.init_dir(&cwd).unwrap();
         let policy = engine.policy(&cwd.join("Cargo.toml"));
         assert!(policy.binary);

@@ -65,11 +65,6 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     let global_cwd = std::env::current_dir()?;
 
     let path = &args.path[0];
-    let path = if path == std::path::Path::new("-") {
-        path.to_owned()
-    } else {
-        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
-    };
     let cwd = if path == std::path::Path::new("-") {
         global_cwd.as_path()
     } else if path.is_file() {
@@ -77,6 +72,7 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     } else {
         path.as_path()
     };
+    let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
@@ -92,7 +88,7 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     engine.set_overrides(overrides);
 
     let config = engine
-        .load_config(cwd)
+        .load_config(&cwd)
         .with_code(proc_exit::Code::CONFIG_ERR)?;
 
     let mut defaulted_config = typos_cli::config::Config::from_defaults();
@@ -111,11 +107,6 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     let global_cwd = std::env::current_dir()?;
 
     let path = &args.path[0];
-    let path = if path == std::path::Path::new("-") {
-        path.to_owned()
-    } else {
-        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
-    };
     let cwd = if path == std::path::Path::new("-") {
         global_cwd.as_path()
     } else if path.is_file() {
@@ -123,6 +114,7 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     } else {
         path.as_path()
     };
+    let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
@@ -138,9 +130,9 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     engine.set_overrides(overrides);
 
     engine
-        .init_dir(cwd)
+        .init_dir(&cwd)
         .with_code(proc_exit::Code::CONFIG_ERR)?;
-    let definitions = engine.file_types(cwd);
+    let definitions = engine.file_types(&cwd);
 
     let stdout = std::io::stdout();
     let mut handle = stdout.lock();
@@ -179,11 +171,6 @@ fn run_checks(
     let mut typos_found = false;
     let mut errors_found = false;
     for path in args.path.iter() {
-        let path = if path == std::path::Path::new("-") {
-            path.to_owned()
-        } else {
-            path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
-        };
         let cwd = if path == std::path::Path::new("-") {
             global_cwd.as_path()
         } else if path.is_file() {
@@ -191,11 +178,12 @@ fn run_checks(
         } else {
             path.as_path()
         };
+        let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
 
         engine
-            .init_dir(cwd)
+            .init_dir(&cwd)
             .with_code(proc_exit::Code::CONFIG_ERR)?;
-        let walk_policy = engine.walk(cwd);
+        let walk_policy = engine.walk(&cwd);
 
         let threads = if path.is_file() { 1 } else { args.threads };
         let single_threaded = threads == 1;
