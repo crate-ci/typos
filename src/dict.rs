@@ -38,7 +38,7 @@ impl BuiltIn {
             if corrections.is_empty() {
                 Status::Invalid
             } else {
-                self.chain_with_vars(corrections)?
+                self.chain_with_vars(corrections)
             }
         } else {
             self.correct_with_vars(word)?
@@ -65,7 +65,7 @@ impl BuiltIn {
     }
 
     #[cfg(feature = "vars")]
-    fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Option<Status<'static>> {
+    fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Status<'static> {
         let mut chained: Vec<_> = corrections
             .iter()
             .flat_map(|c| match self.correct_with_vars(c) {
@@ -81,12 +81,12 @@ impl BuiltIn {
             chained.dedup();
         }
         debug_assert!(!chained.is_empty());
-        Some(Status::Corrections(chained))
+        Status::Corrections(chained)
     }
 
     #[cfg(not(feature = "vars"))]
-    fn chain_with_vars(&self, corrections: &[&str]) -> Option<Status<'static>> {
-        Status::Corrections(corrections.map(|c| Cow::Borrowed(correction).collect()))
+    fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Status<'static> {
+        Status::Corrections(corrections.iter().map(|c| Cow::Borrowed(*c)).collect())
     }
 
     #[cfg(feature = "vars")]
