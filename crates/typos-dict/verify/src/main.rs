@@ -6,8 +6,8 @@ use structopt::StructOpt;
 fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
     let mut wtr = csv::Writer::from_writer(file);
 
-    let disallowed_typos = disallowed_typos();
-    let related_words = related_words();
+    let disallowed_typos = varcon_words();
+    let word_variants = proper_word_variants();
 
     let mut reader = csv::ReaderBuilder::new()
         .has_headers(false)
@@ -19,7 +19,7 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
         if disallowed_typos.contains(&unicase::UniCase::new(typo)) {
             continue;
         }
-        let correction = related_words
+        let correction = word_variants
             .get(correction)
             .and_then(|words| find_best_match(typo, correction, words))
             .unwrap_or(correction);
@@ -28,7 +28,9 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
     wtr.flush().unwrap();
 }
 
-fn disallowed_typos() -> HashSet<unicase::UniCase<&'static str>> {
+fn varcon_words() -> HashSet<unicase::UniCase<&'static str>> {
+    // Even include improper ones because we should be letting varcon handle that rather than our
+    // dictionary
     varcon::VARCON
         .iter()
         .flat_map(|c| c.entries.iter())
@@ -37,7 +39,7 @@ fn disallowed_typos() -> HashSet<unicase::UniCase<&'static str>> {
         .collect()
 }
 
-fn related_words() -> HashMap<&'static str, HashSet<&'static str>> {
+fn proper_word_variants() -> HashMap<&'static str, HashSet<&'static str>> {
     let mut words: HashMap<&'static str, HashSet<&'static str>> = HashMap::new();
     for entry in varcon::VARCON.iter().flat_map(|c| c.entries.iter()) {
         let variants: HashSet<_> = entry
@@ -57,11 +59,11 @@ fn related_words() -> HashMap<&'static str, HashSet<&'static str>> {
 fn find_best_match<'c>(
     typo: &'c str,
     correction: &'c str,
-    related_words: &HashSet<&'static str>,
+    word_variants: &HashSet<&'static str>,
 ) -> Option<&'c str> {
-    assert!(!related_words.contains(correction));
+    assert!(!word_variants.contains(correction));
     let current = edit_distance::edit_distance(typo, correction);
-    let mut matches: Vec<_> = related_words
+    let mut matches: Vec<_> = word_variants
         .iter()
         .map(|r| (edit_distance::edit_distance(typo, r), *r))
         .filter(|(d, _)| *d < current)
