@@ -34,14 +34,11 @@ impl BuiltIn {
         }
 
         let word = word_token.token();
-        let mut corrections = if let Some(correction) = self.correct_with_dict(word) {
-            match self.correct_with_vars(correction) {
-                Some(Status::Valid) => Status::Corrections(vec![Cow::Borrowed(correction)]),
-                Some(correction @ Status::Corrections(_)) => correction,
-                Some(Status::Invalid) => {
-                    unreachable!("correct_with_vars should always have valid suggestions")
-                }
-                None => Status::Corrections(vec![Cow::Borrowed(correction)]),
+        let mut corrections = if let Some(corrections) = self.correct_with_dict(word) {
+            if corrections.is_empty() {
+                Status::Invalid
+            } else {
+                self.chain_with_vars(corrections)?
             }
         } else {
             self.correct_with_vars(word)?
@@ -54,7 +51,7 @@ impl BuiltIn {
 
     #[cfg(feature = "dict")]
     // Not using `Status` to avoid the allocations
-    fn correct_with_dict(&self, word: &str) -> Option<&'static str> {
+    fn correct_with_dict(&self, word: &str) -> Option<&'static [&'static str]> {
         if typos_dict::WORD_RANGE.contains(&word.len()) {
             map_lookup(&typos_dict::WORD_DICTIONARY, word)
         } else {
@@ -63,8 +60,33 @@ impl BuiltIn {
     }
 
     #[cfg(not(feature = "dict"))]
-    fn correct_with_dict(&self, _word: &str) -> Option<&'static str> {
+    fn correct_with_dict(&self, _word: &str) -> Option<&'static [&'static str]> {
         None
+    }
+
+    #[cfg(feature = "vars")]
+    fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Option<Status<'static>> {
+        let mut chained: Vec<_> = corrections
+            .iter()
+            .flat_map(|c| match self.correct_with_vars(c) {
+                Some(Status::Valid) | None => vec![Cow::Borrowed(*c)],
+                Some(Status::Corrections(vars)) => vars,
+                Some(Status::Invalid) => {
+                    unreachable!("correct_with_vars should always have valid suggestions")
+                }
+            })
+            .collect();
+        if chained.len() != 1 {
+            chained.sort_unstable();
+            chained.dedup();
+        }
+        debug_assert!(!chained.is_empty());
+        Some(Status::Corrections(chained))
+    }
+
+    #[cfg(not(feature = "vars"))]
+    fn chain_with_vars(&self, corrections: &[&str]) -> Option<Status<'static>> {
+        Status::Corrections(corrections.map(|c| Cow::Borrowed(correction).collect()))
     }
 
     #[cfg(feature = "vars")]

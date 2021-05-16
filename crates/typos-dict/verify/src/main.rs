@@ -4,26 +4,32 @@ use std::collections::HashSet;
 use structopt::StructOpt;
 
 fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
-    let mut wtr = csv::Writer::from_writer(file);
+    let mut wtr = csv::WriterBuilder::new().flexible(true).from_writer(file);
 
     let disallowed_typos = varcon_words();
     let word_variants = proper_word_variants();
 
     let mut reader = csv::ReaderBuilder::new()
         .has_headers(false)
+        .flexible(true)
         .from_reader(dict);
     for record in reader.records() {
         let record = record.unwrap();
-        let typo = &record[0];
-        let correction = &record[1];
+        let mut record_fields = record.iter();
+        let typo = record_fields.next().unwrap();
         if disallowed_typos.contains(&unicase::UniCase::new(typo)) {
             continue;
         }
-        let correction = word_variants
-            .get(correction)
-            .and_then(|words| find_best_match(typo, correction, words))
-            .unwrap_or(correction);
-        wtr.write_record(&[typo, correction]).unwrap();
+
+        let mut row = vec![typo];
+        for correction in record_fields {
+            let correction = word_variants
+                .get(correction)
+                .and_then(|words| find_best_match(typo, correction, words))
+                .unwrap_or(correction);
+            row.push(correction);
+        }
+        wtr.write_record(&row).unwrap();
     }
     wtr.flush().unwrap();
 }

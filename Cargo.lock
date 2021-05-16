@@ -1526,6 +1526,7 @@ version = "1.2.0"
 dependencies = [
  "codegenrs",
  "csv",
+ "itertools 0.10.0",
  "phf",
  "phf_codegen",
  "structopt",

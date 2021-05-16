@@ -18,20 +18,26 @@ fn generate<W: std::io::Write>(file: &mut W) {
 
     writeln!(
         file,
-        "pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static str> = "
+        "pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static [&'static str]> = "
     )
     .unwrap();
     let mut builder = phf_codegen::Map::new();
     let records: Vec<_> = csv::ReaderBuilder::new()
         .has_headers(false)
+        .flexible(true)
         .from_reader(DICT)
         .records()
         .map(|r| r.unwrap())
         .collect();
     for record in &records {
-        smallest = std::cmp::min(smallest, record[0].len());
-        largest = std::cmp::max(largest, record[0].len());
-        let value = format!(r#""{}""#, &record[1]);
+        let mut record_fields = record.iter();
+        let key = record_fields.next().unwrap();
+        smallest = std::cmp::min(smallest, key.len());
+        largest = std::cmp::max(largest, key.len());
+        let value = format!(
+            "&[{}]",
+            itertools::join(record_fields.map(|field| format!(r#""{}""#, field)), ", ")
+        );
         builder.entry(unicase::UniCase::new(&record[0]), &value);
     }
     let codegenned = builder.build();
