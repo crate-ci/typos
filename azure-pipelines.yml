@@ -189,10 +189,10 @@ stages:
       displayName: Verify typos-dict
     - script: |
         cargo run --package typos-vars-codegen -- --output crates/typos-vars/src/vars_codegen.rs --check
-      displayName: Verify typos-dict
+      displayName: Verify typos-vars
     - script: |
         cargo run --package typos-dict-verify -- --input crates/typos-dict/assets/words.csv --output crates/typos-dict/assets/words.csv --check
-      displayName: Verify typos-dict
+      displayName: Verify typos-dict-verify
     - script: |
         cargo run --package codespell-codegen -- --output crates/codespell-dict/src/dict_codegen.rs --check
       displayName: Verify codespell-dict
