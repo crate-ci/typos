@@ -35,8 +35,14 @@ impl BuiltIn {
 
         let word = word_token.token();
         let mut corrections = if let Some(correction) = self.correct_with_dict(word) {
-            self.correct_with_vars(word)
-                .unwrap_or_else(|| Status::Corrections(vec![Cow::Borrowed(correction)]))
+            match self.correct_with_vars(correction) {
+                Some(Status::Valid) => Status::Corrections(vec![Cow::Borrowed(correction)]),
+                Some(correction @ Status::Corrections(_)) => correction,
+                Some(Status::Invalid) => {
+                    unreachable!("correct_with_vars should always have valid suggestions")
+                }
+                None => Status::Corrections(vec![Cow::Borrowed(correction)]),
+            }
         } else {
             self.correct_with_vars(word)?
         };
@@ -243,6 +249,75 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[cfg(feature = "dict")]
+    #[test]
+    fn test_dict_correct() {
+        let dict = BuiltIn::new(crate::config::Locale::default());
+        let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
+            "finallizes",
+            typos::tokens::Case::Lower,
+            0,
+        ));
+        assert_eq!(
+            correction,
+            Some(Status::Corrections(vec!["finalizes".into()]))
+        );
+    }
+
+    #[cfg(feature = "vars")]
+    #[test]
+    fn test_varcon_no_locale() {
+        let dict = BuiltIn::new(crate::config::Locale::En);
+        let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
+            "finalizes",
+            typos::tokens::Case::Lower,
+            0,
+        ));
+        assert_eq!(correction, Some(Status::Valid));
+    }
+
+    #[cfg(feature = "vars")]
+    #[test]
+    fn test_varcon_same_locale() {
+        let dict = BuiltIn::new(crate::config::Locale::EnUs);
+        let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
+            "finalizes",
+            typos::tokens::Case::Lower,
+            0,
+        ));
+        assert_eq!(correction, Some(Status::Valid));
+    }
+
+    #[cfg(feature = "vars")]
+    #[test]
+    fn test_varcon_different_locale() {
+        let dict = BuiltIn::new(crate::config::Locale::EnGb);
+        let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
+            "finalizes",
+            typos::tokens::Case::Lower,
+            0,
+        ));
+        assert_eq!(
+            correction,
+            Some(Status::Corrections(vec!["finalises".into()]))
+        );
+    }
+
+    #[cfg(all(feature = "dict", feature = "vars"))]
+    #[test]
+    fn test_dict_to_varcon() {
+        let dict = BuiltIn::new(crate::config::Locale::EnGb);
+        let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
+            "finallizes",
+            typos::tokens::Case::Lower,
+            0,
+        ));
+        assert_eq!(
+            correction,
+            Some(Status::Corrections(vec!["finalises".into()]))
+        );
+    }
 
     #[test]
     fn test_case_correct() {
