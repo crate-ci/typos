@@ -72,31 +72,41 @@ impl BuiltIn {
 #[cfg(feature = "vars")]
 impl BuiltIn {
     fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Status<'static> {
-        let mut chained: Vec<_> = corrections
-            .iter()
-            .flat_map(|c| match self.correct_with_vars(c) {
-                Some(Status::Valid) | None => vec![Cow::Borrowed(*c)],
-                Some(Status::Corrections(vars)) => vars,
-                Some(Status::Invalid) => {
-                    unreachable!("correct_with_vars should always have valid suggestions")
-                }
-            })
-            .collect();
-        if chained.len() != 1 {
-            chained.sort_unstable();
-            chained.dedup();
+        if self.is_vars_enabled() {
+            let mut chained: Vec<_> = corrections
+                .iter()
+                .flat_map(|c| match self.correct_with_vars(c) {
+                    Some(Status::Valid) | None => vec![Cow::Borrowed(*c)],
+                    Some(Status::Corrections(vars)) => vars,
+                    Some(Status::Invalid) => {
+                        unreachable!("correct_with_vars should always have valid suggestions")
+                    }
+                })
+                .collect();
+            if chained.len() != 1 {
+                chained.sort_unstable();
+                chained.dedup();
+            }
+            debug_assert!(!chained.is_empty());
+            Status::Corrections(chained)
+        } else {
+            Status::Corrections(corrections.iter().map(|c| Cow::Borrowed(*c)).collect())
         }
-        debug_assert!(!chained.is_empty());
-        Status::Corrections(chained)
     }
 
     fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
-        if typos_vars::WORD_RANGE.contains(&word.len()) {
+        if self.is_vars_enabled() && typos_vars::WORD_RANGE.contains(&word.len()) {
             map_lookup(&typos_vars::VARS_DICTIONARY, word)
                 .map(|variants| self.select_variant(variants))
         } else {
             None
         }
+    }
+
+    fn is_vars_enabled(&self) -> bool {
+        #![allow(clippy::assertions_on_constants)]
+        debug_assert!(typos_vars::NO_INVALID);
+        self.locale.is_some()
     }
 
     fn select_variant(
@@ -301,7 +311,7 @@ mod test {
             typos::tokens::Case::Lower,
             0,
         ));
-        assert_eq!(correction, Some(Status::Valid));
+        assert_eq!(correction, None);
     }
 
     #[cfg(feature = "vars")]
