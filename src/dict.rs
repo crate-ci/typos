@@ -48,8 +48,10 @@ impl BuiltIn {
             .for_each(|mut s| case_correct(&mut s, word_token.case()));
         Some(corrections)
     }
+}
 
-    #[cfg(feature = "dict")]
+#[cfg(feature = "dict")]
+impl BuiltIn {
     // Not using `Status` to avoid the allocations
     fn correct_with_dict(&self, word: &str) -> Option<&'static [&'static str]> {
         if typos_dict::WORD_RANGE.contains(&word.len()) {
@@ -58,13 +60,17 @@ impl BuiltIn {
             None
         }
     }
+}
 
-    #[cfg(not(feature = "dict"))]
+#[cfg(not(feature = "dict"))]
+impl BuiltIn {
     fn correct_with_dict(&self, _word: &str) -> Option<&'static [&'static str]> {
         None
     }
+}
 
-    #[cfg(feature = "vars")]
+#[cfg(feature = "vars")]
+impl BuiltIn {
     fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Status<'static> {
         let mut chained: Vec<_> = corrections
             .iter()
@@ -84,12 +90,6 @@ impl BuiltIn {
         Status::Corrections(chained)
     }
 
-    #[cfg(not(feature = "vars"))]
-    fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Status<'static> {
-        Status::Corrections(corrections.iter().map(|c| Cow::Borrowed(*c)).collect())
-    }
-
-    #[cfg(feature = "vars")]
     fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
         if typos_vars::WORD_RANGE.contains(&word.len()) {
             map_lookup(&typos_vars::VARS_DICTIONARY, word)
@@ -99,12 +99,6 @@ impl BuiltIn {
         }
     }
 
-    #[cfg(not(feature = "vars"))]
-    fn correct_with_vars(&self, _word: &str) -> Option<Status<'static>> {
-        None
-    }
-
-    #[cfg(feature = "vars")]
     fn select_variant(
         &self,
         vars: &'static [(u8, &'static typos_vars::VariantsMap)],
@@ -145,6 +139,17 @@ impl BuiltIn {
                 Status::Valid
             }
         }
+    }
+}
+
+#[cfg(not(feature = "vars"))]
+impl BuiltIn {
+    fn chain_with_vars(&self, corrections: &'static [&'static str]) -> Status<'static> {
+        Status::Corrections(corrections.iter().map(|c| Cow::Borrowed(*c)).collect())
+    }
+
+    fn correct_with_vars(&self, _word: &str) -> Option<Status<'static>> {
+        None
     }
 }
 
