@@ -78,6 +78,7 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
 
     let mut smallest = usize::MAX;
     let mut largest = usize::MIN;
+    let mut no_invalid = true;
 
     writeln!(
         file,
@@ -97,6 +98,8 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
         builder.entry(unicase::UniCase::new(word), &value);
         smallest = std::cmp::min(smallest, word.len());
         largest = std::cmp::max(largest, word.len());
+
+        no_invalid &= !is_always_invalid(data);
     }
     let codegenned = builder.build();
     writeln!(file, "{}", codegenned).unwrap();
@@ -110,6 +113,10 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
     )
     .unwrap();
 
+    writeln!(file).unwrap();
+    writeln!(file, "pub const NO_INVALID: bool = {:?};", no_invalid,).unwrap();
+
+    writeln!(file).unwrap();
     for (symbol, entry) in entries.iter() {
         if !referenced_symbols.contains(symbol.as_str()) {
             continue;
@@ -150,6 +157,15 @@ fn is_always_valid(data: &[(&str, varcon::CategorySet)]) -> bool {
     let valid_categories = valid_categories();
     for (_symbol, set) in data.iter() {
         if *set == valid_categories {
+            return true;
+        }
+    }
+    false
+}
+
+fn is_always_invalid(data: &[(&str, varcon::CategorySet)]) -> bool {
+    for (_symbol, set) in data.iter() {
+        if set.is_empty() {
             return true;
         }
     }
