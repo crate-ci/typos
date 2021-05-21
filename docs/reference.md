@@ -14,6 +14,8 @@ Configuration is read from the following (in precedence order)
 
 | Field                  | Argument          | Format | Description |
 |------------------------|-------------------|--------|-------------|
+| files.binary           | --binary          | bool   | Check binary files as text |
+| files.extend-exclude   | --exclude         | list of strings | Typos-specific ignore globs (gitignore syntax) |
 | files.ignore-hidden    | --hidden          | bool   | Skip hidden files and directories. |
 | files.ignore-files     | --ignore          | bool   | Respect ignore files. |
 | files.ignore-dot       | --ignore-dot      | bool   | Respect .ignore files. |

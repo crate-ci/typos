@@ -61,6 +61,7 @@ impl Config {
 #[serde(deny_unknown_fields, default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
+    pub extend_exclude: Vec<String>,
     /// Skip hidden files and directories.
     pub ignore_hidden: Option<bool>,
     /// Respect ignore files.
@@ -79,6 +80,7 @@ impl Walk {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
         Self {
+            extend_exclude: empty.extend_exclude.clone(),
             ignore_hidden: Some(empty.ignore_hidden()),
             ignore_files: Some(true),
             ignore_dot: Some(empty.ignore_dot()),
@@ -89,6 +91,8 @@ impl Walk {
     }
 
     pub fn update(&mut self, source: &Walk) {
+        self.extend_exclude
+            .extend(source.extend_exclude.iter().cloned());
         if let Some(source) = source.ignore_hidden {
             self.ignore_hidden = Some(source);
         }
@@ -112,6 +116,10 @@ impl Walk {
         if let Some(source) = source.ignore_parent {
             self.ignore_parent = Some(source);
         }
+    }
+
+    pub fn extend_exclude(&self) -> &[String] {
+        &self.extend_exclude
     }
 
     pub fn ignore_hidden(&self) -> bool {
