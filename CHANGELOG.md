@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Correctly find config in parent directory
+- Show abbreviated paths
+- Check for word variations when also correcting a word
+- Correct `ther` as not just `there` but also `the` and `their` (based on misspelling in Linux)
+- Don't correct `hardlinked`
+- `refernce` should correct to `reference` and not `references`
+
+#### Performance
+
+- Bypass variations, when possible
+
+#### Features
+
+- Log config loading to help debugging
+- `typos`-specific ignores
+
 ## [0.3.0] - 2021-05-13
 
 #### Bug Fixes
