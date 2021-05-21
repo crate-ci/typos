@@ -196,6 +196,16 @@ fn run_checks(
             .git_ignore(walk_policy.ignore_vcs())
             .git_exclude(walk_policy.ignore_vcs())
             .parents(walk_policy.ignore_parent());
+        if !walk_policy.extend_exclude.is_empty() {
+            let mut overrides = ignore::overrides::OverrideBuilder::new(".");
+            for pattern in walk_policy.extend_exclude.iter() {
+                overrides
+                    .add(&format!("!{}", pattern))
+                    .with_code(proc_exit::Code::CONFIG_ERR)?;
+            }
+            let overrides = overrides.build().with_code(proc_exit::Code::CONFIG_ERR)?;
+            walk.overrides(overrides);
+        }
 
         // HACK: Diff doesn't handle mixing content
         let output_reporter = if args.diff {

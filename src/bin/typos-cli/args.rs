@@ -200,6 +200,10 @@ impl ConfigArgs {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub(crate) struct WalkArgs {
+    #[structopt(long)]
+    /// Ignore all files & directories matching the pattern.
+    exclude: Vec<String>,
+
     #[structopt(long, overrides_with("no-hidden"))]
     /// Search hidden files and directories.
     hidden: bool,
@@ -240,6 +244,7 @@ pub(crate) struct WalkArgs {
 impl WalkArgs {
     pub fn to_config(&self) -> config::Walk {
         config::Walk {
+            extend_exclude: self.exclude.clone(),
             ignore_hidden: self.ignore_hidden(),
             ignore_files: self.ignore_files(),
             ignore_dot: self.ignore_dot(),
