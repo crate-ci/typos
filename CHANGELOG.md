@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.4.0] - 2021-05-21
+
 #### Bug Fixes
 
 - Correctly find config in parent directory
@@ -90,6 +92,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/assert-rs/predicates-rs/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/assert-rs/predicates-rs/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/assert-rs/predicates-rs/compare/v0.1.4...v0.2.0
