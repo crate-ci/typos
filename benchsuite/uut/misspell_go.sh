@@ -2,7 +2,7 @@
 set -e
 
 UUT_DIR="misspell_go"
-MISSPELL_GO_VERSION="2.2"
+MISSPELL_GO_VERSION="0.3.4"
 
 if [[ $# -eq 0 ]]; then
   exit 1

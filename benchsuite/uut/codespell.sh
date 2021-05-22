@@ -4,7 +4,7 @@
 set -e
 
 UUT_DIR="codespell"
-CODESPELL_VERSION="1.15.0"
+CODESPELL_VERSION="2.0.0"
 
 if [[ $# -eq 0 ]]; then
   exit 1
