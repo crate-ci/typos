@@ -18,7 +18,7 @@ codecov = { repository = "crate-ci/typos" }
 phf = { version = "0.8", features = ["unicase"] }
 phf_codegen = "0.8"
 varcon = { version = "^0.4", path = "../../varcon", features = ["flags"] }
-varcon-core = { version = "1.0", path = "../../varcon-core", features = ["flags"] }
+varcon-core = { version = "^2.0", path = "../../varcon-core", features = ["flags"] }
 typos = { version = "^0.5", path = "../../typos" }
 unicase = "2.5"
 codegenrs = "1.0"

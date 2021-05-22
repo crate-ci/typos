@@ -18,4 +18,4 @@ codecov = { repository = "crate-ci/typos" }
 phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
 log = "0.4"
-varcon-core = { version = "1.0", path = "../varcon-core", features = ["flags"] }
+varcon-core = { version = "^2.0", path = "../varcon-core", features = ["flags"] }
