@@ -172,17 +172,17 @@ ripgrep_built_path=`$current_dir/fixtures/ripgrep_built.sh path $base_dir`
 ripgrep_built_version=`$current_dir/fixtures/ripgrep_built.sh version $base_dir`
 bench_dir "ripgrep_built" "$ripgrep_built_version" "$ripgrep_built_path" "$report_path"
 
-# subtitles_en_path=`$current_dir/fixtures/subtitles_en.sh path $base_dir`
-# subtitles_en_version=`$current_dir/fixtures/subtitles_en.sh version $base_dir`
-# bench_file "subtitles_en" "$subtitles_en_version" "$subtitles_en_path" "$report_path"
+subtitles_en_path=`$current_dir/fixtures/subtitles_en.sh path $base_dir`
+subtitles_en_version=`$current_dir/fixtures/subtitles_en.sh version $base_dir`
+bench_file "subtitles_en" "$subtitles_en_version" "$subtitles_en_path" "$report_path"
 
-# subtitles_en_small_path=`$current_dir/fixtures/subtitles_en_small.sh path $base_dir`
-# subtitles_en_small_version=`$current_dir/fixtures/subtitles_en_small.sh version $base_dir`
-# bench_file "subtitles_en_small" "$subtitles_en_small_version" "$subtitles_en_small_path" "$report_path"
+subtitles_en_small_path=`$current_dir/fixtures/subtitles_en_small.sh path $base_dir`
+subtitles_en_small_version=`$current_dir/fixtures/subtitles_en_small.sh version $base_dir`
+bench_file "subtitles_en_small" "$subtitles_en_small_version" "$subtitles_en_small_path" "$report_path"
 
-# subtitles_ru_path=`$current_dir/fixtures/subtitles_ru.sh path $base_dir`
-# subtitles_ru_version=`$current_dir/fixtures/subtitles_ru.sh version $base_dir`
-# bench_file "subtitles_ru" "$subtitles_ru_version" "$subtitles_ru_path" "$report_path"
+subtitles_ru_path=`$current_dir/fixtures/subtitles_ru.sh path $base_dir`
+subtitles_ru_version=`$current_dir/fixtures/subtitles_ru.sh version $base_dir`
+bench_file "subtitles_ru" "$subtitles_ru_version" "$subtitles_ru_path" "$report_path"
 
 subtitles_ru_small_path=`$current_dir/fixtures/subtitles_ru_small.sh path $base_dir`
 subtitles_ru_small_version=`$current_dir/fixtures/subtitles_ru_small.sh version $base_dir`
