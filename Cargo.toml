@@ -11,7 +11,7 @@ members = [
 
 [package]
 name = "typos-cli"
-version = "0.4.0"
+version = "1.0.0"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
