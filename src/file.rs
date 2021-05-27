@@ -502,7 +502,7 @@ impl AccumulateLineNum {
     fn line_num(&mut self, buffer: &[u8], byte_offset: usize) -> usize {
         assert!(self.last_offset <= byte_offset);
         let slice = &buffer[self.last_offset..byte_offset];
-        let newlines = slice.lines().count();
+        let newlines = slice.find_iter(b"\n").count();
         let line_num = self.line_num + newlines;
         self.line_num = line_num;
         self.last_offset = byte_offset;
@@ -673,6 +673,31 @@ mod test {
             vec![(4, "foo", "happy"), (8, "foo", "world")],
         );
         assert_eq!(actual, "foo happy world");
+    }
+
+    #[test]
+    fn test_line_count_first() {
+        let mut accum_line_num = AccumulateLineNum::new();
+        let line_num = accum_line_num.line_num(b"hello world", 6);
+        assert_eq!(line_num, 1);
+    }
+
+    #[test]
+    fn test_line_count_second() {
+        let mut accum_line_num = AccumulateLineNum::new();
+        let line_num = accum_line_num.line_num(b"1\n2\n3", 2);
+        assert_eq!(line_num, 2);
+    }
+
+    #[test]
+    fn test_line_count_multiple() {
+        let mut accum_line_num = AccumulateLineNum::new();
+        let line_num = accum_line_num.line_num(b"1\n2\n3", 0);
+        assert_eq!(line_num, 1);
+        let line_num = accum_line_num.line_num(b"1\n2\n3", 2);
+        assert_eq!(line_num, 2);
+        let line_num = accum_line_num.line_num(b"1\n2\n3", 4);
+        assert_eq!(line_num, 3);
     }
 
     #[test]
