@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Don't panic when rendering typos on lines with non-ASCII character
+
 ## [1.0.1] - 2021-05-27
 
 #### Bug Fixes

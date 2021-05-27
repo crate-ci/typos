@@ -702,36 +702,78 @@ mod test {
 
     #[test]
     fn test_extract_line_single_line() {
-        let (line, offset) = extract_line(b"hello world", 6);
-        assert_eq!(line, b"hello world");
+        let buffer = b"hello world";
+        let buffer_offset = 6;
+        let expected_line = b"hello world";
+        let (line, offset) = extract_line(buffer, buffer_offset);
+        assert_eq!(line, expected_line);
         assert_eq!(offset, 6);
+        assert_eq!(line[offset], buffer[buffer_offset]);
     }
 
     #[test]
     fn test_extract_line_first() {
-        let (line, offset) = extract_line(b"1\n2\n3", 0);
-        assert_eq!(line, b"1");
+        let buffer = b"1\n2\n3";
+        let buffer_offset = 0;
+        let expected_line = b"1";
+        let (line, offset) = extract_line(buffer, buffer_offset);
+        assert_eq!(line, expected_line);
         assert_eq!(offset, 0);
+        assert_eq!(line[offset], buffer[buffer_offset]);
     }
 
     #[test]
     fn test_extract_line_middle() {
-        let (line, offset) = extract_line(b"1\n2\n3", 2);
-        assert_eq!(line, b"2");
+        let buffer = b"1\n2\n3";
+        let buffer_offset = 2;
+        let expected_line = b"2";
+        let (line, offset) = extract_line(buffer, buffer_offset);
+        assert_eq!(line, expected_line);
         assert_eq!(offset, 0);
+        assert_eq!(line[offset], buffer[buffer_offset]);
     }
 
     #[test]
     fn test_extract_line_end() {
-        let (line, offset) = extract_line(b"1\n2\n3", 4);
-        assert_eq!(line, b"3");
+        let buffer = b"1\n2\n3";
+        let buffer_offset = 4;
+        let expected_line = b"3";
+        let (line, offset) = extract_line(buffer, buffer_offset);
+        assert_eq!(line, expected_line);
         assert_eq!(offset, 0);
+        assert_eq!(line[offset], buffer[buffer_offset]);
     }
 
     #[test]
     fn test_extract_line_offset_change() {
-        let (line, offset) = extract_line(b"1\nhello world\n2", 8);
-        assert_eq!(line, b"hello world");
+        let buffer = b"1\nhello world\n2";
+        let buffer_offset = 8;
+        let expected_line = b"hello world";
+        let (line, offset) = extract_line(buffer, buffer_offset);
+        assert_eq!(line, expected_line);
         assert_eq!(offset, 6);
+        assert_eq!(line[offset], buffer[buffer_offset]);
+    }
+
+    #[test]
+    fn test_extract_line_windows() {
+        let buffer = b"1\r\nhello world\r\n2";
+        let buffer_offset = 9;
+        let expected_line = b"hello world";
+        let (line, offset) = extract_line(buffer, buffer_offset);
+        assert_eq!(line, expected_line);
+        assert_eq!(offset, 6);
+        assert_eq!(line[offset], buffer[buffer_offset]);
+    }
+
+    #[test]
+    fn test_extract_line_slovak() {
+        let buffer = b"LastErrorMessage=%1.%n%nChyba %2: %3\r\nSetupFileMissing=In\x9Atala\xE8n\xFD adres\xE1r neobsahuje s\xFAbor %1. Opravte, pros\xEDm, t\xFAto chybu alebo si zaobstarajte nov\xFA k\xF3piu tohto produktu.\r\nSetupFileCorrupt=S\xFAbory sprievodcu in\x9Atal\xE1ciou s\xFA po\x9Akoden\xE9. Zaobstarajte si, pros\xEDm, nov\xFA k\xF3piu tohto produktu.";
+        let buffer_offset = 66;
+        let expected_line = b"SetupFileMissing=In\x9Atala\xE8n\xFD adres\xE1r neobsahuje s\xFAbor %1. Opravte, pros\xEDm, t\xFAto chybu alebo si zaobstarajte nov\xFA k\xF3piu tohto produktu.";
+        let (line, offset) = extract_line(buffer, buffer_offset);
+        assert_eq!(line, expected_line);
+        assert_eq!(offset, 28);
+        assert_eq!(line[offset], buffer[buffer_offset]);
     }
 }
