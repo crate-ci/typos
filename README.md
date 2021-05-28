@@ -89,5 +89,21 @@ typos dir/file --diff
 typos dir/file --format json
 ```
 
+### Debugging
+
+You can see what the effective config looks like by running
+```bash
+typos --dump-config -
+```
+
+You can then see how typos is processing your project with
+```bash
+typos --files
+typos --identifiers
+typos -- words
+```
+
+If you need to dig in more, you can enable debug logging with `-v`
+
 [Crates.io]: https://crates.io/crates/typos-cli
 [Documentation]: https://docs.rs/typos
