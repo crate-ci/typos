@@ -66,7 +66,7 @@ AttributeIDSupressMenu = "AttributeIDSupressMenu"
 teh = "teh"
 ```
 
-For localized content, you can disable spell checking of file contents while still checking the file name:
+For cases like localized content, you can disable spell checking of file contents while still checking the file name:
 ```toml
 [type.po]
 extend-globs = ["*.po"]
@@ -74,7 +74,7 @@ check-file = false
 ```
 (run `typos --type-list` to see configured file types)
 
-If that doesn't catch the cases you can need, you can completely exclude some files from consideration:
+If you need some more flexibility, you can completely exclude some files from consideration:
 ```toml
 [files]
 extend-exclude = ["localized/*.po"]
