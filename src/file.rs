@@ -600,7 +600,7 @@ fn walk_entry(
         let explicit = entry.depth() == 0;
         let (path, lookup_path) = if entry.is_stdin() {
             let path = std::path::Path::new("-");
-            (path, path.to_owned())
+            (path, std::env::current_dir()?)
         } else {
             let path = entry.path();
             (path, path.canonicalize()?)

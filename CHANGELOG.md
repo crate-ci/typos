@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Fix crash when processing stdin (`-`)
+
 ## [1.0.2] - 2021-05-28
 
 #### Bug Fixes
