@@ -108,7 +108,7 @@ You can then see how typos is processing your project with
 ```bash
 typos --files
 typos --identifiers
-typos -- words
+typos --words
 ```
 
 If you need to dig in more, you can enable debug logging with `-v`
