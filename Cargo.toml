@@ -36,6 +36,7 @@ pre-release-replacements = [
   {file="CHANGELOG.md", search="ReleaseDate", replace="{{date}}", min=1},
   {file="CHANGELOG.md", search="<!-- next-header -->", replace="<!-- next-header -->\n## [Unreleased] - ReleaseDate\n", exactly=1},
   {file="CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/{{tag_name}}...HEAD", exactly=1},
+  {file="docker/Dockerfile", search="ARG VERSION=.*", replace="ARG VERSION={{version}}", min=1},
 ]
 
 [[bin]]

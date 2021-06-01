@@ -1,0 +1,33 @@
+name: "typos-action"
+author: "Vanessa Sochat"
+description: "Run typos to check spelling in GitHub actions"
+
+inputs:
+  files:
+    description: "Files or patterns to check"
+    required: false
+
+  extend_identifiers:
+    description: "Comma separated list of extend identifiers, like someone's name"
+    required: false
+
+  extend_words:
+    description: "Comma separated list of extend words."
+    required: false
+
+  isolated:
+    description: "Ignore implicit configuration files"
+    required: false
+    default: false
+
+  config:
+    description: "Use a custom config file."
+    required: false
+
+runs:
+  using: "docker"
+  image: "docker/Dockerfile"
+
+branding:
+  icon: "link"
+  color: "blue"
