@@ -79,7 +79,7 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
 
     writeln!(
         file,
-        "pub(crate) static VARS_DICTIONARY: &[(unicase::UniCase<&'static str>, &'static [(u8, &VariantsMap)])] = &["
+        "pub(crate) static VARS_DICTIONARY: &[(crate::EncodedStr, &[(u8, &VariantsMap)])] = &["
     )
     .unwrap();
     let entry_sets = entry_sets(entries.iter());
@@ -93,9 +93,9 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
         let value = generate_link(&data);
         let word = unicase::UniCase::new(word);
         let key = if word.is_ascii() {
-            format!("unicase::UniCase::ascii({:?})", word)
+            format!("crate::EncodedStr::Ascii({:?})", word)
         } else {
-            format!("unicase::UniCase::unicode({:?})", word)
+            format!("crate::EncodedStr::Unicode({:?})", word)
         };
         writeln!(file, "  ({}, {}),", key, &value).unwrap();
         smallest = std::cmp::min(smallest, word.len());
