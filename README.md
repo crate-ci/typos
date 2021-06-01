@@ -23,6 +23,7 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
   - [False Positives](#false-positives)
   - [Integrations](#integrations)
     - [GitHub Action](docs/github-action.md)
+    - [Custom](#custom)
   - [Debugging](#debugging)
 - [Reference](docs/reference.md)
 - [Comparison with other spell checkers](docs/comparison.md)
@@ -85,6 +86,10 @@ extend-exclude = ["localized/*.po"]
 
 ### Integrations
 
+- [GitHub Actions](docs/github-actions.md)
+
+#### Custom
+
 `typos` provides several building blocks for custom native integrations
 - `-` reads from `stdin`, `--write-changes` will be written to `stdout`
 - `--diff` to provide a diff
@@ -99,9 +104,6 @@ typos dir/file --diff
 # Fully programmatic control
 typos dir/file --format json
 ```
-
-In addition, see the documentation on [GitHub Actions](docs/github-actions.md),
-another integration.
 
 ### Debugging
 
