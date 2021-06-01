@@ -96,8 +96,8 @@ impl BuiltIn {
 
     fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
         if self.is_vars_enabled() && typos_vars::WORD_RANGE.contains(&word.len()) {
-            map_lookup(&typos_vars::VARS_DICTIONARY, word)
-                .map(|variants| self.select_variant(variants))
+            let word_case = unicase::UniCase::new(word);
+            typos_vars::find(&word_case).map(|variants| self.select_variant(variants))
         } else {
             None
         }
