@@ -200,8 +200,8 @@ impl ConfigArgs {
 #[derive(Debug, StructOpt)]
 #[structopt(rename_all = "kebab-case")]
 pub(crate) struct WalkArgs {
-    #[structopt(long)]
-    /// Ignore all files & directories matching the pattern.
+    #[structopt(long, name = "GLOB")]
+    /// Ignore files & directories matching the glob.
     exclude: Vec<String>,
 
     #[structopt(long, overrides_with("no-hidden"))]
