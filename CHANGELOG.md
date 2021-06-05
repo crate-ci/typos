@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.0.5] - 2021-06-05
+
 #### Bug Fixes
 
 - Don't error out on `typos <file>`
@@ -123,7 +125,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v1.0.4...HEAD
+[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v1.0.5...HEAD
+[1.0.5]: https://github.com/assert-rs/predicates-rs/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/assert-rs/predicates-rs/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/assert-rs/predicates-rs/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/assert-rs/predicates-rs/compare/v1.0.1...v1.0.2
