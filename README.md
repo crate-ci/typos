@@ -86,7 +86,7 @@ extend-exclude = ["localized/*.po"]
 
 ### Integrations
 
-- [GitHub Actions](docs/github-actions.md)
+- [GitHub Actions](docs/github-action.md)
 
 #### Custom
 
