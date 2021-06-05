@@ -172,13 +172,14 @@ fn run_checks(
     let mut errors_found = false;
     for path in args.path.iter() {
         let cwd = if path == std::path::Path::new("-") {
-            global_cwd.as_path()
+            global_cwd.clone()
         } else if path.is_file() {
-            path.parent().unwrap()
+            let mut cwd = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+            cwd.pop();
+            cwd
         } else {
-            path.as_path()
+            path.clone()
         };
-        let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
 
         engine
             .init_dir(&cwd)

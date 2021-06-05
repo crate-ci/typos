@@ -1,59 +1,34 @@
 #!/bin/bash
 
-set -e
+set -eu
 
-printf "Found files in workspace:\n"
-ls
+log() {
+    echo -e "$1" >&2
+}
 
-printf "\nLooking for typos installed...\n"
-which typos
+CMD_NAME="typos"
+TARGET=${INPUT_FILES:-"."}
 
-COMMAND="typos"
-
-# Show the _typos.toml file
-if [ -f "_typos.toml" ]; then
-    echo "_typos.toml:"
-    cat _typos.toml
-    echo
+if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
+    log "ERROR: Input files (${TARGET}) not found"
+    exit 1
 fi
+if [[ -z $(which ${CMD_NAME} 2>/dev/null) ]]; then
+    log "ERROR: 'typos' not found"
+    exit 1
+fi
+
+COMMAND="${CMD_NAME} ${TARGET}"
 
 # Ignore implicit configuration files
-if [ "${INPUT_ISOLATED}" == "true" ]; then
-    COMMAND="${COMMAND} --isolated"
+if [ "${INPUT_ISOLATED:-false}" == "true" ]; then
+    COMMAND+=" --isolated"
 fi
-
 
 # Use a custom configuration file
-if [ ! -z "${INPUT_CONFIG}" ]; then
-
-    # It must exist
-    if [ ! -f "${INPUT_CONFIG}" ]; then
-        printf "${INPUT_CONFIG} does not exist.\n"
-        exit 1;
-    else
-        # Show the custom config to the user
-        printf "Custom config:\n"
-        cat "${INPUT_CONFIG}"    
-        echo
-    fi
-    COMMAND="${COMMAND} --config ${INPUT_CONFIG}"
+if [[ -n "${INPUT_CONFIG:-}" ]]; then
+    COMMAND+=" --config ${INPUT_CONFIG}"
 fi
 
-# Files are technically optional
-if [ ! -z "${INPUT_FILES}" ]; then
-    COMMAND="${COMMAND} ${INPUT_FILES}"
-fi
-
-echo "Command: "
-echo "${COMMAND}"
-echo
-
+log "$ ${COMMAND}"
 ${COMMAND}
-retval=$?
-
-if [[ "${retval}" -eq 0 ]]; then
-   printf "No spelling mistakes found! 🎉️\n"
-else
-   printf "Spelling mistakes found! 😱️\n"
-   exit $retval;
-fi
