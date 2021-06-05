@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Don't error out on `typos <file>`
+- Reduce memory use when compiling for typos-vars
+
 ## [1.0.4] - 2021-05-31
 
 #### Features
