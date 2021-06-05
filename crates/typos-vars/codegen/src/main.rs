@@ -26,9 +26,6 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
     writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
 
-    writeln!(file, "use unicase::UniCase;").unwrap();
-    writeln!(file).unwrap();
-
     writeln!(file, "pub type Variants = &'static [&'static str];",).unwrap();
     writeln!(
         file,
@@ -82,12 +79,11 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
 
     writeln!(
         file,
-        "pub static VARS_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static [(u8, &VariantsMap)]> = "
+        "pub(crate) static VARS_DICTIONARY: &[(crate::EncodedStr, &[(u8, &VariantsMap)])] = &["
     )
     .unwrap();
     let entry_sets = entry_sets(entries.iter());
     let mut referenced_symbols: HashSet<&str> = HashSet::new();
-    let mut builder = phf_codegen::Map::new();
     for (word, data) in entry_sets.iter() {
         if is_always_valid(data) {
             // No need to convert from current form to target form
@@ -95,15 +91,19 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
         }
         referenced_symbols.extend(data.iter().map(|(s, _)| s));
         let value = generate_link(&data);
-        builder.entry(unicase::UniCase::new(word), &value);
+        let word = unicase::UniCase::new(word);
+        let key = if word.is_ascii() {
+            format!("crate::EncodedStr::Ascii({:?})", word)
+        } else {
+            format!("crate::EncodedStr::Unicode({:?})", word)
+        };
+        writeln!(file, "  ({}, {}),", key, &value).unwrap();
         smallest = std::cmp::min(smallest, word.len());
         largest = std::cmp::max(largest, word.len());
 
         no_invalid &= !is_always_invalid(data);
     }
-    let codegenned = builder.build();
-    writeln!(file, "{}", codegenned).unwrap();
-    writeln!(file, ";").unwrap();
+    writeln!(file, "];").unwrap();
 
     writeln!(file).unwrap();
     writeln!(

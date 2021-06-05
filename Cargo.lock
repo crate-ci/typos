@@ -1577,7 +1577,6 @@ name = "typos-vars"
 version = "0.5.0"
 dependencies = [
  "log",
- "phf",
  "unicase",
  "varcon-core",
 ]
@@ -1592,8 +1591,6 @@ dependencies = [
  "env_logger 0.7.1",
  "itertools 0.10.0",
  "log",
- "phf",
- "phf_codegen",
  "structopt",
  "typos",
  "unicase",
