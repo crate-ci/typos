@@ -17,18 +17,18 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Check spelling of file.txt
-      uses: crate-ci/typos@main
+      uses: crate-ci/typos@master
       with: 
         files: ./file.txt
 
     - name: Use custom config file
-      uses: crate-ci/typos@main
+      uses: crate-ci/typos@master
       with: 
         files: ./file.txt
         config: ./myconfig.toml
 
     - name: Ignore implicit configuration file
-      uses: crate-ci/typos@main
+      uses: crate-ci/typos@master
       with: 
         files: ./file.txt
         isolated: true
