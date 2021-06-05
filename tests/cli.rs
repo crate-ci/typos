@@ -22,3 +22,10 @@ fn test_stdin_correct() {
         .write_stdin("Apropriate world");
     cmd.assert().success().stdout("Appropriate world");
 }
+
+#[test]
+fn test_file_failure() {
+    let mut cmd = Command::cargo_bin("typos").unwrap();
+    cmd.arg("README.md");
+    cmd.assert().code(2);
+}
