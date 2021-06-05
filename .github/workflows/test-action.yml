@@ -10,16 +10,16 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Prepare file with mistakes.
-      run: echo "The quick brown foxx jumped over the slepy dog." > file.txt 
+      run: echo "Finallizes" > file.txt
     - name: Test force pass with mistakes
       continue-on-error: true
       uses: ./
-      with: 
+      with:
         files: ./file.txt
 
     - name: Prepare file with no mistakes.
-      run: echo "The quick brown fox jumped over the sleepy dog." > file.txt 
-    - name: Test force pass with no mistakes
+      run: echo "Finalizes" > file.txt
+    - name: Test pass with no mistakes
       uses: ./
-      with: 
+      with:
         files: ./file.txt
