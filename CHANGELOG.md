@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Fix the prior `typos <file>` fix that broke all other forms
+- Extend the fix to other modes (`--dump-config`, etc)
+
 ## [1.0.5] - 2021-06-05
 
 #### Bug Fixes

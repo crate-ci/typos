@@ -29,3 +29,16 @@ fn test_file_failure() {
     cmd.arg("README.md");
     cmd.assert().code(2);
 }
+
+#[test]
+fn test_relative_dir_failure() {
+    let mut cmd = Command::cargo_bin("typos").unwrap();
+    cmd.arg(".");
+    cmd.assert().code(2);
+}
+
+#[test]
+fn test_assumed_dir_failure() {
+    let mut cmd = Command::cargo_bin("typos").unwrap();
+    cmd.assert().code(2);
+}

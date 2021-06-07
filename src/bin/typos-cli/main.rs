@@ -66,11 +66,13 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
 
     let path = &args.path[0];
     let cwd = if path == std::path::Path::new("-") {
-        global_cwd.as_path()
+        global_cwd
     } else if path.is_file() {
-        path.parent().unwrap()
+        let mut cwd = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+        cwd.pop();
+        cwd
     } else {
-        path.as_path()
+        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
     };
     let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
 
@@ -108,11 +110,13 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
 
     let path = &args.path[0];
     let cwd = if path == std::path::Path::new("-") {
-        global_cwd.as_path()
+        global_cwd
     } else if path.is_file() {
-        path.parent().unwrap()
+        let mut cwd = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+        cwd.pop();
+        cwd
     } else {
-        path.as_path()
+        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
     };
     let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
 
@@ -178,7 +182,7 @@ fn run_checks(
             cwd.pop();
             cwd
         } else {
-            path.clone()
+            path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
         };
 
         engine
