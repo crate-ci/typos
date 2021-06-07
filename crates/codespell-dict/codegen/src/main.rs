@@ -32,24 +32,18 @@ fn generate<W: std::io::Write>(file: &mut W) {
     .unwrap();
     writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
-    writeln!(file, "use unicase::UniCase;").unwrap();
 
     let dict = parse_dict(DICT);
 
-    writeln!(
-        file,
-        "pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> = ",
-    )
-    .unwrap();
-    let mut builder = phf_codegen::Map::new();
+    writeln!(file, "pub static WORD_DICTIONARY: &[(&str, &[&str])] = &[").unwrap();
     for (typo, corrections) in dict {
         let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
         let value = format!("&[{}]", value);
-        builder.entry(unicase::UniCase::new(typo), &value);
+
+        let key = format!("{:?}", typo);
+        writeln!(file, "  ({}, {}),", key, &value).unwrap();
     }
-    let codegenned = builder.build();
-    writeln!(file, "{}", codegenned).unwrap();
-    writeln!(file, ";").unwrap();
+    writeln!(file, "];").unwrap();
 }
 
 #[derive(Debug, StructOpt)]

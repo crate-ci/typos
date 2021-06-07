@@ -222,8 +222,6 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "itertools 0.10.0",
- "phf",
- "phf_codegen",
  "structopt",
  "unicase",
 ]
@@ -233,7 +231,6 @@ name = "codespell-dict"
 version = "0.4.0"
 dependencies = [
  "log",
- "phf",
  "unicase",
 ]
 
@@ -808,8 +805,6 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "itertools 0.10.0",
- "phf",
- "phf_codegen",
  "regex",
  "structopt",
  "unicase",
@@ -820,7 +815,6 @@ name = "misspell-dict"
 version = "0.4.0"
 dependencies = [
  "log",
- "phf",
  "unicase",
 ]
 
@@ -1778,8 +1772,6 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "itertools 0.10.0",
- "phf",
- "phf_codegen",
  "structopt",
  "unicase",
 ]
@@ -1789,7 +1781,6 @@ name = "wikipedia-dict"
 version = "0.4.0"
 dependencies = [
  "log",
- "phf",
  "unicase",
 ]
 
