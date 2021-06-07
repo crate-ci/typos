@@ -64,60 +64,70 @@ fn generate<W: std::io::Write>(file: &mut W) {
     .unwrap();
     writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
-    writeln!(file, "use unicase::UniCase;").unwrap();
 
     let Words {
         main,
         american,
         british,
     } = parse_dict(DICT);
+    let mut main: Vec<_> = main.into_iter().collect();
+    main.sort_unstable_by(|a, b| {
+        unicase::UniCase::new(a.0)
+            .partial_cmp(&unicase::UniCase::new(b.0))
+            .unwrap()
+    });
+    let mut american: Vec<_> = american.into_iter().collect();
+    american.sort_unstable_by(|a, b| {
+        unicase::UniCase::new(a.0)
+            .partial_cmp(&unicase::UniCase::new(b.0))
+            .unwrap()
+    });
+    let mut british: Vec<_> = british.into_iter().collect();
+    british.sort_unstable_by(|a, b| {
+        unicase::UniCase::new(a.0)
+            .partial_cmp(&unicase::UniCase::new(b.0))
+            .unwrap()
+    });
 
-    writeln!(
-        file,
-        "pub static MAIN_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> = ",
-    )
-    .unwrap();
-    let mut builder = phf_codegen::Map::new();
-    for (typo, corrections) in main {
+    writeln!(file, "pub static MAIN_DICTIONARY: &[(&str, &[&str])] = &[").unwrap();
+    for (typo, corrections) in main.into_iter() {
         let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
         let value = format!("&[{}]", value);
-        builder.entry(unicase::UniCase::new(typo), &value);
+
+        let key = format!("{:?}", typo);
+        writeln!(file, "  ({}, {}),", key, &value).unwrap();
     }
-    let codegenned = builder.build();
-    writeln!(file, "{}", codegenned).unwrap();
-    writeln!(file, ";").unwrap();
+    writeln!(file, "];").unwrap();
     writeln!(file).unwrap();
 
     writeln!(
         file,
-        "pub static AMERICAN_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> = ",
+        "pub static AMERICAN_DICTIONARY: &[(&str, &[&str])] = &["
     )
     .unwrap();
-    let mut builder = phf_codegen::Map::new();
-    for (typo, corrections) in american {
+    for (typo, corrections) in american.into_iter() {
         let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
         let value = format!("&[{}]", value);
-        builder.entry(unicase::UniCase::new(typo), &value);
+
+        let key = format!("{:?}", typo);
+        writeln!(file, "  ({}, {}),", key, &value).unwrap();
     }
-    let codegenned = builder.build();
-    writeln!(file, "{}", codegenned).unwrap();
-    writeln!(file, ";").unwrap();
+    writeln!(file, "];").unwrap();
     writeln!(file).unwrap();
 
     writeln!(
         file,
-        "pub static BRITISH_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &[&'static str]> = ",
+        "pub static BRITISH_DICTIONARY: &[(&str, &[&str])] = &["
     )
     .unwrap();
-    let mut builder = phf_codegen::Map::new();
-    for (typo, corrections) in british {
+    for (typo, corrections) in british.into_iter() {
         let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
         let value = format!("&[{}]", value);
-        builder.entry(unicase::UniCase::new(typo), &value);
+
+        let key = format!("{:?}", typo);
+        writeln!(file, "  ({}, {}),", key, &value).unwrap();
     }
-    let codegenned = builder.build();
-    writeln!(file, "{}", codegenned).unwrap();
-    writeln!(file, ";").unwrap();
+    writeln!(file, "];").unwrap();
 }
 
 #[derive(Debug, StructOpt)]
