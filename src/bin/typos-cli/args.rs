@@ -126,7 +126,7 @@ pub(crate) struct FileArgs {
     check_filenames: bool,
 
     #[structopt(long, overrides_with("check-files"))]
-    /// Skip verifying spelling in filess.
+    /// Skip verifying spelling in files.
     no_check_files: bool,
     #[structopt(long, overrides_with("no-check-files"), hidden(true))]
     check_files: bool,
