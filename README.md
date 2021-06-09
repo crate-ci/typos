@@ -23,6 +23,7 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
   - [False Positives](#false-positives)
   - [Integrations](#integrations)
     - [GitHub Action](docs/github-action.md)
+    - [pre-commit](docs/pre-commit.md)
     - [Custom](#custom)
   - [Debugging](#debugging)
 - [Reference](docs/reference.md)
@@ -87,6 +88,7 @@ extend-exclude = ["localized/*.po"]
 ### Integrations
 
 - [GitHub Actions](docs/github-action.md)
+- [pre-commit](docs/pre-commit.md)
 
 #### Custom
 

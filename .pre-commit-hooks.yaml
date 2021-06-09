@@ -1,0 +1,7 @@
+- id: typos
+  name: typos
+  description: Source code spell checker
+  language: rust
+  entry: typos
+  args: [--write-changes]
+  types: [text]

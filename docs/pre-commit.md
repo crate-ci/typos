@@ -1,0 +1,21 @@
+# pre-commit
+
+To use `typos` with [`pre-commit`](https://pre-commit.com), point its
+config at this repository:
+
+```yaml
+repos:
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.0.6
+    hooks:
+      - id: typos
+```
+
+Be sure to change `rev` to use the desired `typos` git tag or
+revision.
+
+The hook configuration defaults to writing fixes, which triggers a
+`pre-commit` failure if any files are modified. To make it report its
+findings only instead, override the hook's `args` with something that
+does not contain `-w`/`--write-changes`, for example `[]` (meaning
+pass no options).
