@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Fix a crash from hitting a race condition
+
 ## [1.0.8] - 2021-06-15
 
 ## [1.0.7] - 2021-06-15
