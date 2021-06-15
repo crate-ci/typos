@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.0.9] - 2021-06-15
+
 #### Bug Fixes
 
 - Fix a crash from hitting a race condition
@@ -144,7 +146,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v1.0.8...HEAD
+[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v1.0.9...HEAD
+[1.0.9]: https://github.com/assert-rs/predicates-rs/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/assert-rs/predicates-rs/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/assert-rs/predicates-rs/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/assert-rs/predicates-rs/compare/v1.0.5...v1.0.6
