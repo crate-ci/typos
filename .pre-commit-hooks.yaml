@@ -1,6 +1,14 @@
 - id: typos
   name: typos
-  description: Source code spell checker
+  description: Source code spell checker, binary install
+  language: python
+  entry: typos
+  args: [--write-changes]
+  types: [text]
+
+- id: typos-src
+  name: typos
+  description: Source code spell checker, source install
   language: rust
   entry: typos
   args: [--write-changes]

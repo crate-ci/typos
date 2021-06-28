@@ -11,6 +11,10 @@ repos:
       - id: typos
 ```
 
+The `typos` id installs a prebuilt executable from GitHub releases. If
+one does not exist for the target platform, or if one built from
+sources is preferred, use `typos-src` as the hook id instead.
+
 Be sure to change `rev` to use the desired `typos` git tag or
 revision.
 
