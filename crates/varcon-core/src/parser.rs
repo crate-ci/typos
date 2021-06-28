@@ -230,6 +230,7 @@ impl Entry {
 
 #[cfg(test)]
 mod test_entry {
+    #![allow(clippy::bool_assert_comparison)]
     use super::*;
 
     #[test]

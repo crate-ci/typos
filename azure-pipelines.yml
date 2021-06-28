@@ -19,7 +19,7 @@ schedules:
     include:
     - master
 variables:
-  minrust: 1.49.0
+  minrust: 1.53.0
   codecov_token: $(CODECOV_TOKEN_SECRET)
   windows_vm: vs2017-win2016
   mac_vm: macos-10.14
@@ -184,6 +184,10 @@ stages:
       vmImage: ${{ variables.linux_vm }}
     steps:
     - template: install-rust.yml@templates
+      parameters:
+        rust: ${{ variables.minrust }}
+        components:
+            - rustfmt
     - script: |
         cargo run --package typos-dict-codegen -- --output crates/typos-dict/src/dict_codegen.rs --check
       displayName: Verify typos-dict
