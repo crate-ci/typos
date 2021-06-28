@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Remove reliance on compilation for pre-commit
+
 ## [1.0.9] - 2021-06-15
 
 #### Bug Fixes
