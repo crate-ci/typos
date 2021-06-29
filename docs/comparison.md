@@ -8,7 +8,12 @@
 | Per-Lang Dict  | Yes                   | ?                               | No          | Yes         |
 | CamelCase      | Yes                   | ?                               | No          | Yes         |
 | snake_case     | Yes                   | ?                               | No          | Yes         |
+| Ignore email   | Yes                   | yes                             | No          | No          |
+| Ignore url     | Yes                   | yes                             | No          | No          |
 | Ignore Hex     | Yes                   | ?                               | No          | Yes         |
+| Ignore UUID    | Yes                   | ?                               | No          | No          |
+| Ignore base64  | Yes                   | ?                               | No          | No          |
+| Ignore SHAs    | Yes                   | ?                               | No          | No          |
 | C-Escapes      | No ([#20][def-3])     | ?                               | No          | Yes         |
 | Encodings      | UTF-8 / UTF-16        | ?                               | Auto        | Auto        |
 | Whole-project  | Yes                   | Yes                             | Yes         | No          |
