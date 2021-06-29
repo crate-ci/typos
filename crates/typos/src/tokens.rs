@@ -1,3 +1,5 @@
+use bstr::ByteSlice;
+
 /// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TokenizerBuilder {
@@ -67,7 +69,7 @@ impl Tokenizer {
     }
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
-        let iter = if self.unicode {
+        let iter = if self.unicode && !ByteSlice::is_ascii(content.as_bytes()) {
             itertools::Either::Left(unicode_parser::iter_literals(content))
         } else {
             itertools::Either::Right(ascii_parser::iter_literals(content.as_bytes()))
@@ -79,7 +81,7 @@ impl Tokenizer {
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
-        let iter = if self.unicode {
+        let iter = if self.unicode && !ByteSlice::is_ascii(content) {
             let iter = Utf8Chunks::new(content).flat_map(move |c| unicode_parser::iter_literals(c));
             itertools::Either::Left(iter)
         } else {
