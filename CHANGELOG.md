@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Change of Behavior
+
+- `ignore-hex` and `identifier-leading-digit` are deprecated and `typos` acts as
+  if `ignore-hex=true` and `identifier-leading-digit=false`.
+
+#### Features
+
+- Automatically ignore
+  - UUIDs
+  - SHAs
+  - base64 encoded data (must be at least 90 bytes)
+  - emails
+  - URLs
+
+#### Performance
+
+- Due to new literal detection, finding identifiers is takes 10x longer.
+  Combined with word splitting, its only takes 3x longer.  The majority of the
+  time is spent in dictionary lookups, so we don't expect this to have too much impact in the end.
+
 ## [1.0.10] - 2021-06-28
 
 #### Bug Fixes

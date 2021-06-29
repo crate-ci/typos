@@ -4,8 +4,6 @@ use bstr::ByteSlice;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TokenizerBuilder {
     unicode: bool,
-    ignore_hex: bool,
-    leading_digits: bool,
 }
 
 impl TokenizerBuilder {
@@ -19,39 +17,15 @@ impl TokenizerBuilder {
         self
     }
 
-    /// Specify that hexadecimal numbers should be ignored.
-    pub fn ignore_hex(&mut self, yes: bool) -> &mut Self {
-        self.ignore_hex = yes;
-        self
-    }
-
-    /// Specify that leading digits are allowed for Identifiers.
-    pub fn leading_digits(&mut self, yes: bool) -> &mut Self {
-        self.leading_digits = yes;
-        self
-    }
-
     pub fn build(&self) -> Tokenizer {
-        let TokenizerBuilder {
-            unicode,
-            leading_digits,
-            ignore_hex,
-        } = self.clone();
-        Tokenizer {
-            unicode,
-            leading_digits,
-            ignore_hex,
-        }
+        let TokenizerBuilder { unicode } = self.clone();
+        Tokenizer { unicode }
     }
 }
 
 impl Default for TokenizerBuilder {
     fn default() -> Self {
-        Self {
-            unicode: true,
-            leading_digits: false,
-            ignore_hex: true,
-        }
+        Self { unicode: true }
     }
 }
 
@@ -59,8 +33,6 @@ impl Default for TokenizerBuilder {
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
     unicode: bool,
-    leading_digits: bool,
-    ignore_hex: bool,
 }
 
 impl Tokenizer {
@@ -70,9 +42,9 @@ impl Tokenizer {
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
         let iter = if self.unicode && !ByteSlice::is_ascii(content.as_bytes()) {
-            itertools::Either::Left(unicode_parser::iter_literals(content))
+            itertools::Either::Left(unicode_parser::iter_identifiers(content))
         } else {
-            itertools::Either::Right(ascii_parser::iter_literals(content.as_bytes()))
+            itertools::Either::Right(ascii_parser::iter_identifiers(content.as_bytes()))
         };
         iter.filter_map(move |identifier| {
             let offset = offset(content.as_bytes(), identifier.as_bytes());
@@ -82,10 +54,11 @@ impl Tokenizer {
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
         let iter = if self.unicode && !ByteSlice::is_ascii(content) {
-            let iter = Utf8Chunks::new(content).flat_map(move |c| unicode_parser::iter_literals(c));
+            let iter =
+                Utf8Chunks::new(content).flat_map(move |c| unicode_parser::iter_identifiers(c));
             itertools::Either::Left(iter)
         } else {
-            itertools::Either::Right(ascii_parser::iter_literals(content))
+            itertools::Either::Right(ascii_parser::iter_identifiers(content))
         };
         iter.filter_map(move |identifier| {
             let offset = offset(content, identifier.as_bytes());
@@ -95,17 +68,6 @@ impl Tokenizer {
 
     fn transform<'i>(&self, identifier: &'i str, offset: usize) -> Option<Identifier<'i>> {
         debug_assert!(!identifier.is_empty());
-        if self.leading_digits {
-            if is_number(identifier.as_bytes()) {
-                return None;
-            }
-
-            if self.ignore_hex && is_hex(identifier.as_bytes()) {
-                return None;
-            }
-        } else if is_digit(identifier.as_bytes()[0]) {
-            return None;
-        }
 
         let case = Case::None;
         Some(Identifier::new_unchecked(identifier, case, offset))
@@ -164,98 +126,348 @@ impl<'s> Iterator for Utf8Chunks<'s> {
     }
 }
 
-fn is_number(ident: &[u8]) -> bool {
-    ident.iter().all(|b| is_digit(*b) || is_digit_sep(*b))
-}
-
-fn is_hex(ident: &[u8]) -> bool {
-    if ident.len() < 3 {
-        false
-    } else {
-        ident[0] == b'0'
-            && ident[1] == b'x'
-            && ident[2..]
-                .iter()
-                .all(|b| is_hex_digit(*b) || is_digit_sep(*b))
-    }
-}
-
-#[inline]
-fn is_digit(chr: u8) -> bool {
-    chr.is_ascii_digit()
-}
-
-#[inline]
-fn is_digit_sep(chr: u8) -> bool {
-    // `_`: number literal separator in Rust and other languages
-    // `'`: number literal separator in C++
-    chr == b'_' || chr == b'\''
-}
-
-#[inline]
-fn is_hex_digit(chr: u8) -> bool {
-    chr.is_ascii_hexdigit()
-}
-
 mod parser {
+    use nom::branch::*;
     use nom::bytes::complete::*;
+    use nom::character::complete::*;
+    use nom::combinator::*;
     use nom::sequence::*;
-    use nom::IResult;
+    use nom::{AsChar, IResult};
 
-    pub(crate) trait AsChar: nom::AsChar {
-        #[allow(clippy::wrong_self_convention)]
-        fn is_xid_continue(self) -> bool;
-    }
-
-    impl AsChar for u8 {
-        fn is_xid_continue(self) -> bool {
-            (b'a'..=b'z').contains(&self)
-                || (b'A'..=b'Z').contains(&self)
-                || (b'0'..=b'9').contains(&self)
-                || self == b'_'
-        }
-    }
-
-    impl AsChar for char {
-        fn is_xid_continue(self) -> bool {
-            unicode_xid::UnicodeXID::is_xid_continue(self)
-        }
-    }
-
-    pub(crate) fn next_literal<T>(input: T) -> IResult<T, T>
+    pub(crate) fn next_identifier<T>(input: T) -> IResult<T, T>
     where
-        T: nom::InputTakeAtPosition,
-        <T as nom::InputTakeAtPosition>::Item: AsChar,
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Offset
+            + Clone
+            + PartialEq
+            + std::fmt::Debug,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
     {
-        preceded(literal_sep, identifier)(input)
-    }
-
-    fn literal_sep<T>(input: T) -> IResult<T, T>
-    where
-        T: nom::InputTakeAtPosition,
-        <T as nom::InputTakeAtPosition>::Item: AsChar,
-    {
-        take_till(AsChar::is_xid_continue)(input)
+        preceded(ignore, identifier)(input)
     }
 
     fn identifier<T>(input: T) -> IResult<T, T>
     where
         T: nom::InputTakeAtPosition,
-        <T as nom::InputTakeAtPosition>::Item: AsChar,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
         // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
         // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
         // or unexpected cases than strip off start characters to a word since we aren't doing a
         // proper word boundary parse
-        take_while1(AsChar::is_xid_continue)(input)
+        take_while1(is_xid_continue)(input)
+    }
+
+    fn ignore<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Offset
+            + Clone
+            + PartialEq
+            + std::fmt::Debug,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        take_many0(alt((
+            terminated(uuid_literal, sep1),
+            terminated(hash_literal, sep1),
+            terminated(hex_literal, sep1),
+            terminated(dec_literal, sep1),
+            terminated(base64_literal, sep1),
+            terminated(email_literal, sep1),
+            terminated(url_literal, sep1),
+            sep1,
+        )))(input)
+    }
+
+    fn sep1<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+    {
+        take_till1(is_xid_continue)(input)
+    }
+
+    fn dec_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+    {
+        take_while1(is_dec_digit_with_sep)(input)
+    }
+
+    fn hex_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        preceded(
+            pair(char('0'), alt((char('x'), char('X')))),
+            take_while1(is_hex_digit_with_sep),
+        )(input)
+    }
+
+    fn uuid_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            take_while_m_n(8, 8, is_lower_hex_digit),
+            char('-'),
+            take_while_m_n(4, 4, is_lower_hex_digit),
+            char('-'),
+            take_while_m_n(4, 4, is_lower_hex_digit),
+            char('-'),
+            take_while_m_n(4, 4, is_lower_hex_digit),
+            char('-'),
+            take_while_m_n(12, 12, is_lower_hex_digit),
+        )))(input)
+    }
+
+    fn hash_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        // Size considerations:
+        // - sha-1 is git's original hash
+        // - sha-256 is git's new hash
+        // - Git hashes can be abbreviated but we need a good abbreviation that won't be mistaken
+        //   for a variable name
+        const SHA_1_MAX: usize = 40;
+        const SHA_256_MAX: usize = 64;
+        take_while_m_n(SHA_1_MAX, SHA_256_MAX, is_lower_hex_digit)(input)
+    }
+
+    fn base64_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        let (padding, captured) = take_while1(is_base64_digit)(input.clone())?;
+        if captured.input_len() < 90 {
+            return Err(nom::Err::Error(nom::error::Error::new(
+                input,
+                nom::error::ErrorKind::LengthValue,
+            )));
+        }
+
+        const CHUNK: usize = 4;
+        let padding_offset = input.offset(&padding);
+        let mut padding_len = CHUNK - padding_offset % CHUNK;
+        if padding_len == CHUNK {
+            padding_len = 0;
+        }
+
+        let (after, _) = take_while_m_n(padding_len, padding_len, is_base64_padding)(padding)?;
+        let after_offset = input.offset(&after);
+        Ok(input.take_split(after_offset))
+    }
+
+    fn email_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            take_while1(is_localport_char),
+            char('@'),
+            take_while1(is_domain_char),
+        )))(input)
+    }
+
+    fn url_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            opt(terminated(
+                take_while1(is_scheme_char),
+                // HACK: Technically you can skip `//` if you don't have a domain but that would
+                // get messy to support.
+                tuple((char(':'), char('/'), char('/'))),
+            )),
+            tuple((
+                opt(terminated(take_while1(is_localport_char), char('@'))),
+                take_while1(is_domain_char),
+                opt(preceded(char(':'), take_while1(AsChar::is_dec_digit))),
+            )),
+            char('/'),
+            // HACK: Too lazy to enumerate
+            take_while(is_localport_char),
+        )))(input)
+    }
+
+    fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, I, E>
+    where
+        I: nom::Offset + nom::InputTake + Clone + PartialEq + std::fmt::Debug,
+        F: nom::Parser<I, I, E>,
+        E: nom::error::ParseError<I>,
+    {
+        move |i: I| {
+            let mut current = i.clone();
+            loop {
+                match f.parse(current.clone()) {
+                    Err(nom::Err::Error(_)) => {
+                        let offset = i.offset(&current);
+                        let (after, before) = i.take_split(offset);
+                        return Ok((after, before));
+                    }
+                    Err(e) => {
+                        return Err(e);
+                    }
+                    Ok((next, _)) => {
+                        if next == current {
+                            return Err(nom::Err::Error(E::from_error_kind(
+                                i,
+                                nom::error::ErrorKind::Many0,
+                            )));
+                        }
+
+                        current = next;
+                    }
+                }
+            }
+        }
+    }
+
+    #[inline]
+    fn is_dec_digit_with_sep(i: impl AsChar + Copy) -> bool {
+        i.is_dec_digit() || is_digit_sep(i.as_char())
+    }
+
+    #[inline]
+    fn is_hex_digit_with_sep(i: impl AsChar + Copy) -> bool {
+        i.is_hex_digit() || is_digit_sep(i.as_char())
+    }
+
+    #[inline]
+    fn is_lower_hex_digit(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='f').contains(&c) || ('0'..='9').contains(&c)
+    }
+
+    #[inline]
+    fn is_base64_digit(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c)
+            || ('A'..='Z').contains(&c)
+            || ('0'..='9').contains(&c)
+            || c == '+'
+            || c == '/'
+    }
+
+    #[inline]
+    fn is_base64_padding(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        c == '='
+    }
+
+    #[inline]
+    fn is_localport_char(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c)
+            || ('A'..='Z').contains(&c)
+            || ('0'..='9').contains(&c)
+            || "!#$%&'*+-/=?^_`{|}~().".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_domain_char(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c)
+            || ('A'..='Z').contains(&c)
+            || ('0'..='9').contains(&c)
+            || "-().".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_scheme_char(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c) || ('0'..='9').contains(&c) || "+.-".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_xid_continue(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        unicode_xid::UnicodeXID::is_xid_continue(c)
+    }
+
+    #[inline]
+    fn is_digit_sep(chr: char) -> bool {
+        // `_`: number literal separator in Rust and other languages
+        // `'`: number literal separator in C++
+        chr == '_' || chr == '\''
     }
 }
 
 mod unicode_parser {
-    use super::parser::next_literal;
+    use super::parser::next_identifier;
 
-    pub(crate) fn iter_literals(mut input: &str) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_literal(input) {
+    pub(crate) fn iter_identifiers(mut input: &str) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_identifier(input) {
             Ok((i, o)) => {
                 input = i;
                 debug_assert_ne!(o, "");
@@ -267,10 +479,10 @@ mod unicode_parser {
 }
 
 mod ascii_parser {
-    use super::parser::next_literal;
+    use super::parser::next_identifier;
 
-    pub(crate) fn iter_literals(mut input: &[u8]) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_literal(input) {
+    pub(crate) fn iter_identifiers(mut input: &[u8]) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_identifier(input) {
             Ok((i, o)) => {
                 input = i;
                 debug_assert_ne!(o, b"");
@@ -613,11 +825,8 @@ mod test {
     }
 
     #[test]
-    fn tokenize_ignore_hex_enabled() {
-        let parser = TokenizerBuilder::new()
-            .ignore_hex(true)
-            .leading_digits(true)
-            .build();
+    fn tokenize_ignore_hex() {
+        let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
@@ -631,17 +840,13 @@ mod test {
     }
 
     #[test]
-    fn tokenize_ignore_hex_disabled() {
-        let parser = TokenizerBuilder::new()
-            .ignore_hex(false)
-            .leading_digits(true)
-            .build();
+    fn tokenize_ignore_uuid() {
+        let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello 0xDEADBEEF World";
+        let input = "Hello 123e4567-e89b-12d3-a456-426652340000 World";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("0xDEADBEEF", Case::None, 6),
-            Identifier::new_unchecked("World", Case::None, 17),
+            Identifier::new_unchecked("World", Case::None, 43),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
@@ -650,35 +855,88 @@ mod test {
     }
 
     #[test]
-    fn tokenize_leading_digits_enabled() {
-        let parser = TokenizerBuilder::new()
-            .ignore_hex(false)
-            .leading_digits(true)
-            .build();
+    fn tokenize_ignore_hash() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello 485865fd0412e40d041e861506bb3ac11a3a91e3 World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 47),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_base64() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X1Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X122Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X12== Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 134),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_email() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good example@example.com Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 25),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_min_url() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good example.com/hello Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 23),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_max_url() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good http://user@example.com:3142/hello?query=value&extra=two#fragment Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 71),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_leading_digits() {
+        let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 0Hello 124 0xDEADBEEF World";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("0Hello", Case::None, 6),
-            Identifier::new_unchecked("0xDEADBEEF", Case::None, 17),
-            Identifier::new_unchecked("World", Case::None, 28),
-        ];
-        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
-    }
-
-    #[test]
-    fn tokenize_leading_digits_disabled() {
-        let parser = TokenizerBuilder::new()
-            .ignore_hex(false)
-            .leading_digits(false)
-            .build();
-
-        let input = "Hello 0Hello 124 0xDEADBEEF World";
-        let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 28),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();

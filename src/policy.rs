@@ -224,10 +224,15 @@ impl<'s> ConfigEngine<'s> {
             tokenizer.unwrap_or_else(crate::config::TokenizerConfig::from_defaults);
         let dict_config = dict.unwrap_or_else(crate::config::DictConfig::from_defaults);
 
+        if !tokenizer_config.ignore_hex() {
+            log::warn!("`ignore-hex` is deprecated");
+            if !tokenizer_config.identifier_leading_digits() {
+                log::warn!("`identifier-leading-digits` is deprecated");
+            }
+        }
+
         let tokenizer = typos::tokens::TokenizerBuilder::new()
             .unicode(tokenizer_config.unicode())
-            .ignore_hex(tokenizer_config.ignore_hex())
-            .leading_digits(tokenizer_config.identifier_leading_digits())
             .build();
 
         let dict = crate::dict::BuiltIn::new(dict_config.locale());
