@@ -182,6 +182,7 @@ mod parser {
         take_many0(alt((
             sep1,
             terminated(uuid_literal, sep1),
+            terminated(hash_literal, sep1),
             terminated(hex_literal, sep1),
             terminated(dec_literal, sep1),
         )))(input)
@@ -244,6 +245,29 @@ mod parser {
             char('-'),
             take_while_m_n(12, 12, is_lower_hex_digit),
         )))(input)
+    }
+
+    fn hash_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        // Size considerations:
+        // - sha-1 is git's original hash
+        // - sha-256 is git's new hash
+        // - Git hashes can be abbreviated but we need a good abbreviation that won't be mistaken
+        //   for a variable name
+        const SHA_1_MAX: usize = 40;
+        const SHA_256_MAX: usize = 64;
+        take_while_m_n(SHA_1_MAX, SHA_256_MAX, is_lower_hex_digit)(input)
     }
 
     fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, I, E>
@@ -689,6 +713,21 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 43),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_hash() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello 485865fd0412e40d041e861506bb3ac11a3a91e3 World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 47),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
