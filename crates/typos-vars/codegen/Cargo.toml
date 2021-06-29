@@ -17,7 +17,7 @@ codecov = { repository = "crate-ci/typos" }
 [dependencies]
 varcon = { version = "^0.5", path = "../../varcon", features = ["flags"] }
 varcon-core = { version = "^2.0", path = "../../varcon-core", features = ["flags"] }
-typos = { version = "^0.6", path = "../../typos" }
+typos = { version = "^0.7", path = "../../typos" }
 unicase = "2.5"
 codegenrs = "1.0"
 structopt = "0.3"

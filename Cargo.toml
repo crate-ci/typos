@@ -51,7 +51,7 @@ azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-typos = { version = "^0.6", path = "crates/typos" }
+typos = { version = "^0.7", path = "crates/typos" }
 varcon-core = { version = "^2.0.0", path = "crates/varcon-core" }
 typos-dict = { version = "^0.5", path = "crates/typos-dict", optional = true }
 typos-vars = { version = "^0.6", path = "crates/typos-vars", optional = true }
