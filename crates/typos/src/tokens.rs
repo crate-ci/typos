@@ -234,15 +234,15 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         recognize(tuple((
-            take_while_m_n(8, 8, AsChar::is_hex_digit),
+            take_while_m_n(8, 8, is_lower_hex_digit),
             char('-'),
-            take_while_m_n(4, 4, AsChar::is_hex_digit),
+            take_while_m_n(4, 4, is_lower_hex_digit),
             char('-'),
-            take_while_m_n(4, 4, AsChar::is_hex_digit),
+            take_while_m_n(4, 4, is_lower_hex_digit),
             char('-'),
-            take_while_m_n(4, 4, AsChar::is_hex_digit),
+            take_while_m_n(4, 4, is_lower_hex_digit),
             char('-'),
-            take_while_m_n(12, 12, AsChar::is_hex_digit),
+            take_while_m_n(12, 12, is_lower_hex_digit),
         )))(input)
     }
 
@@ -285,6 +285,11 @@ mod parser {
 
     fn is_hex_digit_with_sep(i: impl AsChar + Copy) -> bool {
         i.is_hex_digit() || is_digit_sep(i.as_char())
+    }
+
+    fn is_lower_hex_digit(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='f').contains(&c) || ('0'..='9').contains(&c)
     }
 
     fn is_xid_continue(i: impl AsChar + Copy) -> bool {
