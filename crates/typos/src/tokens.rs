@@ -186,6 +186,7 @@ mod parser {
             terminated(hex_literal, sep1),
             terminated(dec_literal, sep1),
             terminated(base64_literal, sep1),
+            terminated(email_literal, sep1),
         )))(input)
     }
 
@@ -305,6 +306,27 @@ mod parser {
         Ok(input.take_split(after_offset))
     }
 
+    fn email_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            take_while1(is_email_localport_char),
+            char('@'),
+            take_while1(is_email_domain_char),
+        )))(input)
+    }
+
     fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, I, E>
     where
         I: nom::Offset + nom::InputTake + Clone + PartialEq + std::fmt::Debug,
@@ -338,19 +360,23 @@ mod parser {
         }
     }
 
+    #[inline]
     fn is_dec_digit_with_sep(i: impl AsChar + Copy) -> bool {
         i.is_dec_digit() || is_digit_sep(i.as_char())
     }
 
+    #[inline]
     fn is_hex_digit_with_sep(i: impl AsChar + Copy) -> bool {
         i.is_hex_digit() || is_digit_sep(i.as_char())
     }
 
+    #[inline]
     fn is_lower_hex_digit(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         ('a'..='f').contains(&c) || ('0'..='9').contains(&c)
     }
 
+    #[inline]
     fn is_base64_digit(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         ('a'..='z').contains(&c)
@@ -360,11 +386,31 @@ mod parser {
             || c == '/'
     }
 
+    #[inline]
     fn is_base64_padding(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         c == '='
     }
 
+    #[inline]
+    fn is_email_localport_char(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c)
+            || ('A'..='Z').contains(&c)
+            || ('0'..='9').contains(&c)
+            || "!#$%&'*+-/=?^_`{|}~().".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_email_domain_char(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c)
+            || ('A'..='Z').contains(&c)
+            || ('0'..='9').contains(&c)
+            || "-().".find(c).is_some()
+    }
+
+    #[inline]
     fn is_xid_continue(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         unicode_xid::UnicodeXID::is_xid_continue(c)
@@ -792,6 +838,21 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
             Identifier::new_unchecked("Bye", Case::None, 134),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_email() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good example@example.com Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 25),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
