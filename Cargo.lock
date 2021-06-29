@@ -1479,6 +1479,7 @@ name = "typos"
 version = "0.6.0"
 dependencies = [
  "anyhow",
+ "bstr",
  "itertools 0.10.0",
  "log",
  "nom",
