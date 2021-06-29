@@ -180,13 +180,13 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         take_many0(alt((
-            sep1,
             terminated(uuid_literal, sep1),
             terminated(hash_literal, sep1),
             terminated(hex_literal, sep1),
             terminated(dec_literal, sep1),
             terminated(base64_literal, sep1),
             terminated(email_literal, sep1),
+            sep1,
         )))(input)
     }
 
