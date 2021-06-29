@@ -186,6 +186,7 @@ mod parser {
             terminated(dec_literal, sep1),
             terminated(base64_literal, sep1),
             terminated(email_literal, sep1),
+            terminated(url_literal, sep1),
             sep1,
         )))(input)
     }
@@ -321,9 +322,41 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         recognize(tuple((
-            take_while1(is_email_localport_char),
+            take_while1(is_localport_char),
             char('@'),
-            take_while1(is_email_domain_char),
+            take_while1(is_domain_char),
+        )))(input)
+    }
+
+    fn url_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            opt(terminated(
+                take_while1(is_scheme_char),
+                // HACK: Technically you can skip `//` if you don't have a domain but that would
+                // get messy to support.
+                tuple((char(':'), char('/'), char('/'))),
+            )),
+            tuple((
+                opt(terminated(take_while1(is_localport_char), char('@'))),
+                take_while1(is_domain_char),
+                opt(preceded(char(':'), take_while1(AsChar::is_dec_digit))),
+            )),
+            char('/'),
+            // HACK: Too lazy to enumerate
+            take_while(is_localport_char),
         )))(input)
     }
 
@@ -393,7 +426,7 @@ mod parser {
     }
 
     #[inline]
-    fn is_email_localport_char(i: impl AsChar + Copy) -> bool {
+    fn is_localport_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         ('a'..='z').contains(&c)
             || ('A'..='Z').contains(&c)
@@ -402,12 +435,18 @@ mod parser {
     }
 
     #[inline]
-    fn is_email_domain_char(i: impl AsChar + Copy) -> bool {
+    fn is_domain_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         ('a'..='z').contains(&c)
             || ('A'..='Z').contains(&c)
             || ('0'..='9').contains(&c)
             || "-().".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_scheme_char(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c) || ('0'..='9').contains(&c) || "+.-".find(c).is_some()
     }
 
     #[inline]
@@ -853,6 +892,36 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
             Identifier::new_unchecked("Bye", Case::None, 25),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_min_url() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good example.com/hello Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 23),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_max_url() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good http://user@example.com:3142/hello?query=value&extra=two#fragment Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 71),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
