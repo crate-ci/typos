@@ -195,10 +195,62 @@ fn is_hex_digit(chr: u8) -> bool {
     chr.is_ascii_hexdigit()
 }
 
-mod unicode_parser {
+mod parser {
     use nom::bytes::complete::*;
     use nom::sequence::*;
     use nom::IResult;
+
+    pub(crate) trait AsChar: nom::AsChar {
+        #[allow(clippy::wrong_self_convention)]
+        fn is_xid_continue(self) -> bool;
+    }
+
+    impl AsChar for u8 {
+        fn is_xid_continue(self) -> bool {
+            (b'a'..=b'z').contains(&self)
+                || (b'A'..=b'Z').contains(&self)
+                || (b'0'..=b'9').contains(&self)
+                || self == b'_'
+        }
+    }
+
+    impl AsChar for char {
+        fn is_xid_continue(self) -> bool {
+            unicode_xid::UnicodeXID::is_xid_continue(self)
+        }
+    }
+
+    pub(crate) fn next_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition,
+        <T as nom::InputTakeAtPosition>::Item: AsChar,
+    {
+        preceded(literal_sep, identifier)(input)
+    }
+
+    fn literal_sep<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition,
+        <T as nom::InputTakeAtPosition>::Item: AsChar,
+    {
+        take_till(AsChar::is_xid_continue)(input)
+    }
+
+    fn identifier<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition,
+        <T as nom::InputTakeAtPosition>::Item: AsChar,
+    {
+        // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
+        // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
+        // or unexpected cases than strip off start characters to a word since we aren't doing a
+        // proper word boundary parse
+        take_while1(AsChar::is_xid_continue)(input)
+    }
+}
+
+mod unicode_parser {
+    use super::parser::next_literal;
 
     pub(crate) fn iter_literals(mut input: &str) -> impl Iterator<Item = &str> {
         std::iter::from_fn(move || match next_literal(input) {
@@ -210,28 +262,10 @@ mod unicode_parser {
             _ => None,
         })
     }
-
-    fn next_literal(input: &str) -> IResult<&str, &str> {
-        preceded(literal_sep, identifier)(input)
-    }
-
-    fn literal_sep(input: &str) -> IResult<&str, &str> {
-        take_till(unicode_xid::UnicodeXID::is_xid_continue)(input)
-    }
-
-    fn identifier(input: &str) -> IResult<&str, &str> {
-        // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
-        // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
-        // or unexpected cases than strip off start characters to a word since we aren't doing a
-        // proper word boundary parse
-        take_while1(unicode_xid::UnicodeXID::is_xid_continue)(input)
-    }
 }
 
 mod ascii_parser {
-    use nom::bytes::complete::*;
-    use nom::sequence::*;
-    use nom::IResult;
+    use super::parser::next_literal;
 
     pub(crate) fn iter_literals(mut input: &[u8]) -> impl Iterator<Item = &str> {
         std::iter::from_fn(move || match next_literal(input) {
@@ -245,29 +279,6 @@ mod ascii_parser {
             }
             _ => None,
         })
-    }
-
-    fn next_literal(input: &[u8]) -> IResult<&[u8], &[u8]> {
-        preceded(literal_sep, identifier)(input)
-    }
-
-    fn literal_sep(input: &[u8]) -> IResult<&[u8], &[u8]> {
-        take_till(is_continue)(input)
-    }
-
-    fn identifier(input: &[u8]) -> IResult<&[u8], &[u8]> {
-        // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
-        // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
-        // or unexpected cases than strip off start characters to a word since we aren't doing a
-        // proper word boundary parse
-        take_while1(is_continue)(input)
-    }
-
-    fn is_continue(c: u8) -> bool {
-        (b'a'..=b'z').contains(&c)
-            || (b'A'..=b'Z').contains(&c)
-            || (b'0'..=b'9').contains(&c)
-            || c == b'_'
     }
 }
 
