@@ -130,6 +130,7 @@ mod parser {
     use nom::branch::*;
     use nom::bytes::complete::*;
     use nom::character::complete::*;
+    use nom::combinator::*;
     use nom::sequence::*;
     use nom::{AsChar, IResult};
 
@@ -140,6 +141,7 @@ mod parser {
             + nom::InputIter
             + nom::InputLength
             + nom::Slice<std::ops::RangeFrom<usize>>
+            + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Offset
             + Clone
             + PartialEq
@@ -169,6 +171,7 @@ mod parser {
             + nom::InputIter
             + nom::InputLength
             + nom::Slice<std::ops::RangeFrom<usize>>
+            + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Offset
             + Clone
             + PartialEq
@@ -178,6 +181,7 @@ mod parser {
     {
         take_many0(alt((
             sep1,
+            terminated(uuid_literal, sep1),
             terminated(hex_literal, sep1),
             terminated(dec_literal, sep1),
         )))(input)
@@ -196,7 +200,7 @@ mod parser {
         T: nom::InputTakeAtPosition,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
-        take_while1(is_dec_digit)(input)
+        take_while1(is_dec_digit_with_sep)(input)
     }
 
     fn hex_literal<T>(input: T) -> IResult<T, T>
@@ -212,8 +216,34 @@ mod parser {
     {
         preceded(
             pair(char('0'), alt((char('x'), char('X')))),
-            take_while1(is_hex_digit),
+            take_while1(is_hex_digit_with_sep),
         )(input)
+    }
+
+    fn uuid_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            take_while_m_n(8, 8, AsChar::is_hex_digit),
+            char('-'),
+            take_while_m_n(4, 4, AsChar::is_hex_digit),
+            char('-'),
+            take_while_m_n(4, 4, AsChar::is_hex_digit),
+            char('-'),
+            take_while_m_n(4, 4, AsChar::is_hex_digit),
+            char('-'),
+            take_while_m_n(12, 12, AsChar::is_hex_digit),
+        )))(input)
     }
 
     fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, I, E>
@@ -249,11 +279,11 @@ mod parser {
         }
     }
 
-    fn is_dec_digit(i: impl AsChar + Copy) -> bool {
+    fn is_dec_digit_with_sep(i: impl AsChar + Copy) -> bool {
         i.is_dec_digit() || is_digit_sep(i.as_char())
     }
 
-    fn is_hex_digit(i: impl AsChar + Copy) -> bool {
+    fn is_hex_digit_with_sep(i: impl AsChar + Copy) -> bool {
         i.is_hex_digit() || is_digit_sep(i.as_char())
     }
 
@@ -639,6 +669,21 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 17),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_uuid() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello 123e4567-e89b-12d3-a456-426652340000 World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 43),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
