@@ -185,6 +185,7 @@ mod parser {
             terminated(hash_literal, sep1),
             terminated(hex_literal, sep1),
             terminated(dec_literal, sep1),
+            terminated(base64_literal, sep1),
         )))(input)
     }
 
@@ -270,6 +271,40 @@ mod parser {
         take_while_m_n(SHA_1_MAX, SHA_256_MAX, is_lower_hex_digit)(input)
     }
 
+    fn base64_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        let (padding, captured) = take_while1(is_base64_digit)(input.clone())?;
+        if captured.input_len() < 90 {
+            return Err(nom::Err::Error(nom::error::Error::new(
+                input,
+                nom::error::ErrorKind::LengthValue,
+            )));
+        }
+
+        const CHUNK: usize = 4;
+        let padding_offset = input.offset(&padding);
+        let mut padding_len = CHUNK - padding_offset % CHUNK;
+        if padding_len == CHUNK {
+            padding_len = 0;
+        }
+
+        let (after, _) = take_while_m_n(padding_len, padding_len, is_base64_padding)(padding)?;
+        let after_offset = input.offset(&after);
+        Ok(input.take_split(after_offset))
+    }
+
     fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, I, E>
     where
         I: nom::Offset + nom::InputTake + Clone + PartialEq + std::fmt::Debug,
@@ -314,6 +349,20 @@ mod parser {
     fn is_lower_hex_digit(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         ('a'..='f').contains(&c) || ('0'..='9').contains(&c)
+    }
+
+    fn is_base64_digit(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c)
+            || ('A'..='Z').contains(&c)
+            || ('0'..='9').contains(&c)
+            || c == '+'
+            || c == '/'
+    }
+
+    fn is_base64_padding(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        c == '='
     }
 
     fn is_xid_continue(i: impl AsChar + Copy) -> bool {
@@ -728,6 +777,21 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 47),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_base64() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Good Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X1Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X122Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X12== Bye";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Good", Case::None, 0),
+            Identifier::new_unchecked("Bye", Case::None, 134),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
