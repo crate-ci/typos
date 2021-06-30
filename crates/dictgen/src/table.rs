@@ -15,8 +15,8 @@ pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
         "pub static {}: dictgen::DictTable<{}> = dictgen::DictTable {{",
         name, value_type
     )?;
-    writeln!(file, "    table: &[")?;
-    for (key, value) in data {
+    writeln!(file, "    keys: &[")?;
+    for (key, _value) in data.iter() {
         smallest = std::cmp::min(smallest, key.len());
         largest = std::cmp::max(largest, key.len());
 
@@ -26,34 +26,40 @@ pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
             format!("dictgen::InsensitiveStr::Unicode({:?})", key)
         };
 
-        writeln!(file, "      ({}, {}),", key, value)?;
+        writeln!(file, "      {},", key)?;
     }
-    writeln!(file, "   ],")?;
-    writeln!(file, "   range: {}..={},", smallest, largest)?;
+    writeln!(file, "    ],")?;
+    writeln!(file, "    values: &[")?;
+    for (_key, value) in data.iter() {
+        writeln!(file, "      {},", value)?;
+    }
+    writeln!(file, "    ],")?;
+    writeln!(file, "    range: {}..={},", smallest, largest)?;
     writeln!(file, "}};")?;
 
     Ok(())
 }
 
 pub struct DictTable<V: 'static> {
-    pub table: &'static [(InsensitiveStr, V)],
+    pub keys: &'static [InsensitiveStr],
+    pub values: &'static [V],
     pub range: std::ops::RangeInclusive<usize>,
 }
 
 impl<V> DictTable<V> {
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&'static V> {
         if self.range.contains(&word.len()) {
-            self.table
-                .binary_search_by_key(word, |(key, _)| key.convert())
-                .map(|i| &self.table[i].1)
+            self.keys
+                .binary_search_by_key(word, |key| key.convert())
+                .map(|i| &self.values[i])
                 .ok()
         } else {
             None
         }
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&'static str>, &'static V)> {
-        self.table.iter().map(|row| (row.0.convert(), &row.1))
+    pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&'static str>, &'static V)> + '_ {
+        (0..self.keys.len()).map(move |i| (self.keys[i].convert(), &self.values[i]))
     }
 }
 
