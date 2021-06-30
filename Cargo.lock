@@ -223,6 +223,7 @@ name = "codespell-codegen"
 version = "0.4.0"
 dependencies = [
  "codegenrs",
+ "dictgen",
  "itertools 0.10.0",
  "structopt",
  "unicase",
@@ -232,7 +233,7 @@ dependencies = [
 name = "codespell-dict"
 version = "0.4.0"
 dependencies = [
- "log",
+ "dictgen",
  "unicase",
 ]
 
@@ -410,6 +411,13 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "dictgen"
+version = "0.1.0"
+dependencies = [
+ "unicase",
 ]
 
 [[package]]
@@ -806,6 +814,7 @@ name = "misspell-codegen"
 version = "0.4.0"
 dependencies = [
  "codegenrs",
+ "dictgen",
  "itertools 0.10.0",
  "regex",
  "structopt",
@@ -816,6 +825,7 @@ dependencies = [
 name = "misspell-dict"
 version = "0.4.0"
 dependencies = [
+ "dictgen",
  "log",
  "unicase",
 ]
@@ -1573,6 +1583,7 @@ dependencies = [
 name = "typos-vars"
 version = "0.6.0"
 dependencies = [
+ "dictgen",
  "log",
  "unicase",
  "varcon-core",
@@ -1585,6 +1596,7 @@ dependencies = [
  "clap",
  "clap-verbosity-flag",
  "codegenrs",
+ "dictgen",
  "env_logger 0.7.1",
  "itertools 0.10.0",
  "log",
@@ -1774,6 +1786,7 @@ name = "wikipedia-codegen"
 version = "0.4.0"
 dependencies = [
  "codegenrs",
+ "dictgen",
  "itertools 0.10.0",
  "structopt",
  "unicase",
@@ -1783,7 +1796,7 @@ dependencies = [
 name = "wikipedia-dict"
 version = "0.4.0"
 dependencies = [
- "log",
+ "dictgen",
  "unicase",
 ]
 

@@ -20,4 +20,4 @@ disable-release = true
 
 [dependencies]
 unicase = "2.5"
-log = "0.4"
+dictgen = { version = "0.1", path = "../dictgen" }
