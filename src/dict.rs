@@ -34,14 +34,15 @@ impl BuiltIn {
         }
 
         let word = word_token.token();
-        let mut corrections = if let Some(corrections) = self.correct_with_dict(word) {
+        let word_case = unicase::UniCase::new(word);
+        let mut corrections = if let Some(corrections) = self.correct_with_dict(word_case) {
             if corrections.is_empty() {
                 Status::Invalid
             } else {
                 self.chain_with_vars(corrections)
             }
         } else {
-            self.correct_with_vars(word)?
+            self.correct_with_vars(word_case)?
         };
         corrections
             .corrections_mut()
@@ -53,7 +54,7 @@ impl BuiltIn {
 #[cfg(feature = "dict")]
 impl BuiltIn {
     // Not using `Status` to avoid the allocations
-    fn correct_with_dict(&self, word: &str) -> Option<&'static [&'static str]> {
+    fn correct_with_dict(&self, word: unicase::UniCase<&str>) -> Option<&'static [&'static str]> {
         if typos_dict::WORD_RANGE.contains(&word.len()) {
             map_lookup(&typos_dict::WORD_DICTIONARY, word)
         } else {
@@ -64,7 +65,7 @@ impl BuiltIn {
 
 #[cfg(not(feature = "dict"))]
 impl BuiltIn {
-    fn correct_with_dict(&self, _word: &str) -> Option<&'static [&'static str]> {
+    fn correct_with_dict(&self, _word: unicase::UniCase<&str>) -> Option<&'static [&'static str]> {
         None
     }
 }
@@ -75,7 +76,7 @@ impl BuiltIn {
         if self.is_vars_enabled() {
             let mut chained: Vec<_> = corrections
                 .iter()
-                .flat_map(|c| match self.correct_with_vars(c) {
+                .flat_map(|c| match self.correct_with_vars(unicase::UniCase::new(c)) {
                     Some(Status::Valid) | None => vec![Cow::Borrowed(*c)],
                     Some(Status::Corrections(vars)) => vars,
                     Some(Status::Invalid) => {
@@ -94,10 +95,11 @@ impl BuiltIn {
         }
     }
 
-    fn correct_with_vars(&self, word: &str) -> Option<Status<'static>> {
-        if self.is_vars_enabled() && typos_vars::WORD_RANGE.contains(&word.len()) {
-            let word_case = unicase::UniCase::new(word);
-            typos_vars::find(&word_case).map(|variants| self.select_variant(variants))
+    fn correct_with_vars(&self, word: unicase::UniCase<&str>) -> Option<Status<'static>> {
+        if self.is_vars_enabled() {
+            typos_vars::VARS_DICTIONARY
+                .find(&word)
+                .map(|variants| self.select_variant(variants))
         } else {
             None
         }
@@ -158,7 +160,7 @@ impl BuiltIn {
         Status::Corrections(corrections.iter().map(|c| Cow::Borrowed(*c)).collect())
     }
 
-    fn correct_with_vars(&self, _word: &str) -> Option<Status<'static>> {
+    fn correct_with_vars(&self, _word: unicase::UniCase<&str>) -> Option<Status<'static>> {
         None
     }
 }
@@ -173,7 +175,10 @@ impl typos::Dictionary for BuiltIn {
     }
 }
 
-fn map_lookup<V: Clone>(map: &'static phf::Map<UniCase<&'static str>, V>, key: &str) -> Option<V> {
+fn map_lookup<V: Clone>(
+    map: &'static phf::Map<UniCase<&'static str>, V>,
+    key: unicase::UniCase<&str>,
+) -> Option<V> {
     // This transmute should be safe as `get` will not store the reference with
     // the expanded lifetime. This is due to `Borrow` being overly strict and
     // can't have an impl for `&'static str` to `Borrow<&'a str>`.
@@ -181,8 +186,8 @@ fn map_lookup<V: Clone>(map: &'static phf::Map<UniCase<&'static str>, V>, key: &
     //
     // See https://github.com/rust-lang/rust/issues/28853#issuecomment-158735548
     unsafe {
-        let key = ::std::mem::transmute::<_, &'static str>(key);
-        map.get(&UniCase::new(key)).cloned()
+        let key = ::std::mem::transmute::<_, unicase::UniCase<&'static str>>(key);
+        map.get(&key).cloned()
     }
 }
 

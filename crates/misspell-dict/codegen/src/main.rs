@@ -62,7 +62,6 @@ fn generate<W: std::io::Write>(file: &mut W) {
         env!("CARGO_PKG_NAME")
     )
     .unwrap();
-    writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
 
     let Words {
@@ -70,64 +69,32 @@ fn generate<W: std::io::Write>(file: &mut W) {
         american,
         british,
     } = parse_dict(DICT);
-    let mut main: Vec<_> = main.into_iter().collect();
-    main.sort_unstable_by(|a, b| {
-        unicase::UniCase::new(a.0)
-            .partial_cmp(&unicase::UniCase::new(b.0))
-            .unwrap()
-    });
-    let mut american: Vec<_> = american.into_iter().collect();
-    american.sort_unstable_by(|a, b| {
-        unicase::UniCase::new(a.0)
-            .partial_cmp(&unicase::UniCase::new(b.0))
-            .unwrap()
-    });
-    let mut british: Vec<_> = british.into_iter().collect();
-    british.sort_unstable_by(|a, b| {
-        unicase::UniCase::new(a.0)
-            .partial_cmp(&unicase::UniCase::new(b.0))
-            .unwrap()
-    });
 
-    writeln!(file, "pub static MAIN_DICTIONARY: &[(&str, &[&str])] = &[").unwrap();
-    for (typo, corrections) in main.into_iter() {
-        let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
-        let value = format!("&[{}]", value);
-
-        let key = format!("{:?}", typo);
-        writeln!(file, "  ({}, {}),", key, &value).unwrap();
-    }
-    writeln!(file, "];").unwrap();
-    writeln!(file).unwrap();
-
-    writeln!(
+    dictgen::generate_table(
         file,
-        "pub static AMERICAN_DICTIONARY: &[(&str, &[&str])] = &["
+        "MAIN_DICTIONARY",
+        "&[&str]",
+        main.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),
     )
     .unwrap();
-    for (typo, corrections) in american.into_iter() {
-        let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
-        let value = format!("&[{}]", value);
 
-        let key = format!("{:?}", typo);
-        writeln!(file, "  ({}, {}),", key, &value).unwrap();
-    }
-    writeln!(file, "];").unwrap();
-    writeln!(file).unwrap();
-
-    writeln!(
+    dictgen::generate_table(
         file,
-        "pub static BRITISH_DICTIONARY: &[(&str, &[&str])] = &["
+        "AMERICAN_DICTIONARY",
+        "&[&str]",
+        american
+            .into_iter()
+            .map(|kv| (kv.0, format!("&{:?}", kv.1))),
     )
     .unwrap();
-    for (typo, corrections) in british.into_iter() {
-        let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
-        let value = format!("&[{}]", value);
 
-        let key = format!("{:?}", typo);
-        writeln!(file, "  ({}, {}),", key, &value).unwrap();
-    }
-    writeln!(file, "];").unwrap();
+    dictgen::generate_table(
+        file,
+        "BRITISH_DICTIONARY",
+        "&[&str]",
+        british.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),
+    )
+    .unwrap();
 }
 
 #[derive(Debug, StructOpt)]

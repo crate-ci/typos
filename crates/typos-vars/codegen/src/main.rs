@@ -73,46 +73,27 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
     writeln!(file, "}}").unwrap();
     writeln!(file).unwrap();
 
-    let mut smallest = usize::MAX;
-    let mut largest = usize::MIN;
-    let mut no_invalid = true;
-
-    writeln!(
-        file,
-        "pub(crate) static VARS_DICTIONARY: &[(crate::EncodedStr, &[(u8, &VariantsMap)])] = &["
-    )
-    .unwrap();
     let entry_sets = entry_sets(entries.iter());
     let mut referenced_symbols: HashSet<&str> = HashSet::new();
-    for (word, data) in entry_sets.iter() {
-        if is_always_valid(data) {
-            // No need to convert from current form to target form
-            continue;
-        }
-        referenced_symbols.extend(data.iter().map(|(s, _)| s));
-        let value = generate_link(&data);
-        let word = unicase::UniCase::new(word);
-        let key = if word.is_ascii() {
-            format!("crate::EncodedStr::Ascii({:?})", word)
-        } else {
-            format!("crate::EncodedStr::Unicode({:?})", word)
-        };
-        writeln!(file, "  ({}, {}),", key, &value).unwrap();
-        smallest = std::cmp::min(smallest, word.len());
-        largest = std::cmp::max(largest, word.len());
-
-        no_invalid &= !is_always_invalid(data);
-    }
-    writeln!(file, "];").unwrap();
-
-    writeln!(file).unwrap();
-    writeln!(
+    dictgen::generate_table(
         file,
-        "pub const WORD_RANGE: std::ops::RangeInclusive<usize> = {}..={};",
-        smallest, largest
+        "VARS_DICTIONARY",
+        "&[(u8, &VariantsMap)]",
+        entry_sets.iter().flat_map(|kv| {
+            let (word, data) = kv;
+            if is_always_valid(data) {
+                // No need to convert from current form to target form
+                None
+            } else {
+                referenced_symbols.extend(data.iter().map(|(s, _)| s));
+                let value = generate_link(&data);
+                Some((*word, value))
+            }
+        }),
     )
     .unwrap();
 
+    let no_invalid = entry_sets.values().all(|data| !is_always_invalid(data));
     writeln!(file).unwrap();
     writeln!(file, "pub const NO_INVALID: bool = {:?};", no_invalid,).unwrap();
 

@@ -30,20 +30,17 @@ fn generate<W: std::io::Write>(file: &mut W) {
         env!("CARGO_PKG_NAME")
     )
     .unwrap();
-    writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
 
     let dict = parse_dict(DICT);
 
-    writeln!(file, "pub static WORD_DICTIONARY: &[(&str, &[&str])] = &[").unwrap();
-    for (typo, corrections) in dict {
-        let value = itertools::join(corrections.iter().map(|s| format!("{:?}", s)), ", ");
-        let value = format!("&[{}]", value);
-
-        let key = format!("{:?}", typo);
-        writeln!(file, "  ({}, {}),", key, &value).unwrap();
-    }
-    writeln!(file, "];").unwrap();
+    dictgen::generate_table(
+        file,
+        "WORD_DICTIONARY",
+        "&[&str]",
+        dict.map(|kv| (kv.0, format!("&{:?}", kv.1))),
+    )
+    .unwrap();
 }
 
 #[derive(Debug, StructOpt)]
