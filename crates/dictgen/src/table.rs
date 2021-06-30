@@ -28,6 +28,9 @@ pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
 
         writeln!(file, "      {},", key)?;
     }
+    if largest == 0 {
+        smallest = 0;
+    }
     writeln!(file, "    ],")?;
     writeln!(file, "    values: &[")?;
     for (_key, value) in data.iter() {
