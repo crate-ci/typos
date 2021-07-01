@@ -1,7 +1,17 @@
 [package]
 name = "dictgen"
 version = "0.1.0"
+description = "Compile-time case-insensitive map"
+repository = "https://github.com/crate-ci/typos"
+categories = ["development-tools", "text-processing"]
+keywords = ["development", "spelling", "no_std"]
+license = "MIT"
 edition = "2018"
+
+[features]
+default = ["std", "codegen"]
+std = []
+codegen = ["std"]
 
 [dependencies]
 unicase = "2.5"

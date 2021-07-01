@@ -1,3 +1,4 @@
+#[cfg(feature = "codegen")]
 pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
     file: &mut W,
     name: &str,
@@ -46,7 +47,7 @@ pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
 pub struct DictTable<V: 'static> {
     pub keys: &'static [InsensitiveStr],
     pub values: &'static [V],
-    pub range: std::ops::RangeInclusive<usize>,
+    pub range: core::ops::RangeInclusive<usize>,
 }
 
 impl<V> DictTable<V> {

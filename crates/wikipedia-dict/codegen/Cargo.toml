@@ -22,4 +22,4 @@ unicase = "2.5"
 itertools = "0.10"
 codegenrs = "1.0"
 structopt = "0.3"
-dictgen = { version = "0.1", path = "../../dictgen" }
+dictgen = { version = "0.1", path = "../../dictgen", features = ["codegen"] }
