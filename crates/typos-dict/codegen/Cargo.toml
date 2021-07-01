@@ -19,7 +19,7 @@ disable-release = true
 
 [dependencies]
 phf = { version = "0.8", features = ["unicase"] }
-phf_codegen = "0.8"
+phf_codegen = "0.9"
 csv = "1.1"
 itertools = "0.10"
 unicase = "2.5"
