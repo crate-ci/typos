@@ -56,7 +56,7 @@ typos = { version = "^0.7", path = "crates/typos" }
 varcon-core = { version = "^2.0.0", path = "crates/varcon-core" }
 typos-dict = { version = "^0.5", path = "crates/typos-dict", optional = true }
 typos-vars = { version = "^0.6", path = "crates/typos-vars", optional = true }
-phf = { version = "0.8", features = ["unicase"] }
+phf = { version = "0.9", features = ["unicase"] }
 unicase = "2.5"
 anyhow = "1.0"
 structopt = "0.3"
