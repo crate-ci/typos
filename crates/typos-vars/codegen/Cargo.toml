@@ -29,4 +29,4 @@ log = "0.4"
 env_logger = "0.7"
 clap-verbosity-flag = "0.3"
 itertools = "0.10"
-dictgen = { version = "0.1", path = "../../dictgen" }
+dictgen = { version = "0.1", path = "../../dictgen", features = ["codegen"] }
