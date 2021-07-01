@@ -11,17 +11,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     .unwrap();
     writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
-    writeln!(file, "use unicase::UniCase;").unwrap();
 
-    let mut smallest = usize::MAX;
-    let mut largest = usize::MIN;
-
-    writeln!(
-        file,
-        "pub static WORD_DICTIONARY: phf::Map<unicase::UniCase<&'static str>, &'static [&'static str]> = "
-    )
-    .unwrap();
-    let mut builder = phf_codegen::Map::new();
     let records: Vec<_> = csv::ReaderBuilder::new()
         .has_headers(false)
         .flexible(true)
@@ -29,25 +19,20 @@ fn generate<W: std::io::Write>(file: &mut W) {
         .records()
         .map(|r| r.unwrap())
         .collect();
-    for record in &records {
-        let mut record_fields = record.iter();
-        let key = record_fields.next().unwrap();
-        smallest = std::cmp::min(smallest, key.len());
-        largest = std::cmp::max(largest, key.len());
-        let value = format!(
-            "&[{}]",
-            itertools::join(record_fields.map(|field| format!(r#""{}""#, field)), ", ")
-        );
-        builder.entry(unicase::UniCase::new(&record[0]), &value);
-    }
-    let codegenned = builder.build();
-    writeln!(file, "{}", codegenned).unwrap();
-    writeln!(file, ";").unwrap();
-    writeln!(file).unwrap();
-    writeln!(
+    dictgen::generate_trie(
         file,
-        "pub const WORD_RANGE: std::ops::RangeInclusive<usize> = {}..={};",
-        smallest, largest
+        "WORD",
+        "&'static [&'static str]",
+        records.iter().map(|record| {
+            let mut record_fields = record.iter();
+            let key = record_fields.next().unwrap();
+            let value = format!(
+                "&[{}]",
+                itertools::join(record_fields.map(|field| format!(r#""{}""#, field)), ", ")
+            );
+            (key, value)
+        }),
+        64,
     )
     .unwrap();
 }
