@@ -28,6 +28,7 @@ jobs:
       with:
         toolchain: stable
         profile: minimal
+        override: true
     - uses: Swatinem/rust-cache@v1
     - name: Default features
       run: cargo check --workspace --all-targets
@@ -55,6 +56,7 @@ jobs:
       with:
         toolchain: ${{ matrix.rust }}
         profile: minimal
+        override: true
     - uses: Swatinem/rust-cache@v1
     - name: Default features
       run: cargo test --workspace
@@ -74,6 +76,7 @@ jobs:
       with:
         toolchain: 1.53.0  # MSRV
         profile: minimal
+        override: true
     - uses: Swatinem/rust-cache@v1
     - name: Default features
       run: cargo check --workspace --all-targets
@@ -93,6 +96,7 @@ jobs:
       with:
         toolchain: stable
         profile: minimal
+        override: true
     - uses: Swatinem/rust-cache@v1
     - name: Check documentation
       env:
@@ -109,6 +113,7 @@ jobs:
       with:
         toolchain: stable
         profile: minimal
+        override: true
         components: rustfmt
     - uses: Swatinem/rust-cache@v1
     - name: Check formatting
@@ -124,6 +129,7 @@ jobs:
       with:
         toolchain: 1.53.0  # MSRV
         profile: minimal
+        override: true
         components: clippy
     - uses: Swatinem/rust-cache@v1
     - uses: actions-rs/clippy-check@v1
@@ -143,6 +149,7 @@ jobs:
       with:
         toolchain: stable
         profile: minimal
+        override: true
         components: clippy
     - uses: Swatinem/rust-cache@v1
     - uses: actions-rs/clippy-check@v1
