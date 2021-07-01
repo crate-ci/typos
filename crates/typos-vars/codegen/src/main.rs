@@ -23,7 +23,11 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
         env!("CARGO_PKG_NAME")
     )
     .unwrap();
-    writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
+    writeln!(
+        file,
+        "#![allow(clippy::unreadable_literal, clippy::type_complexity)]",
+    )
+    .unwrap();
     writeln!(file).unwrap();
 
     writeln!(file, "pub type Variants = &'static [&'static str];",).unwrap();
@@ -75,9 +79,9 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
 
     let entry_sets = entry_sets(entries.iter());
     let mut referenced_symbols: HashSet<&str> = HashSet::new();
-    dictgen::generate_table(
+    dictgen::generate_trie(
         file,
-        "VARS_DICTIONARY",
+        "VARS",
         "&[(u8, &VariantsMap)]",
         entry_sets.iter().flat_map(|kv| {
             let (word, data) = kv;
@@ -90,6 +94,7 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
                 Some((*word, value))
             }
         }),
+        64,
     )
     .unwrap();
 
