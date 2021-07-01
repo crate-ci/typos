@@ -20,91 +20,11 @@ schedules:
     - master
 variables:
   minrust: 1.53.0
-  codecov_token: $(CODECOV_TOKEN_SECRET)
-  windows_vm: vs2017-win2016
-  mac_vm: macos-10.14
-  linux_vm: ubuntu-16.04
+  windows_vm: windows-latest
+  mac_vm: macOS-latest
+  linux_vm: ubuntu-latest
 
 stages:
-- stage: check
-  displayName: Compilation Check
-  jobs:
-  - job: cargo_check
-    displayName: cargo check
-    pool:
-      vmImage: ${{ variables.linux_vm }}
-    steps:
-    - template: install-rust.yml@templates
-      parameters:
-        rust: stable
-    - script: cargo check --workspace --locked
-      displayName: Check that Cargo.lock is satisfiable
-    - script: cargo check --workspace --all-targets
-      displayName: Default features
-    - script: cargo check --all-targets --no-default-features
-      displayName: No features
-    - script: cargo check --all-targets --all-features
-      displayName: All features
-- stage: test
-  displayName: Test
-  jobs:
-  - job: test
-    displayName: Test
-    strategy:
-      matrix:
-        windows:
-          imageName: ${{ variables.windows_vm }}
-          target: 'x86_64-pc-windows-msvc'
-          channel: stable
-        mac:
-          imageName: ${{ variables.mac_vm }}
-          target: 'x86_64-apple-darwin'
-          channel: stable
-        linux:
-          imageName: ${{ variables.linux_vm }}
-          target: 'x86_64-unknown-linux-gnu'
-          channel: stable
-        # Check for upcoming platform-specific compiler breakages
-        windows_beta:
-          imageName: ${{ variables.windows_vm }}
-          target: 'x86_64-pc-windows-msvc'
-          channel: beta
-        mac_beta:
-          imageName: ${{ variables.mac_vm }}
-          target: 'x86_64-apple-darwin'
-          channel: beta
-        linux_beta:
-          imageName: ${{ variables.linux_vm }}
-          target: 'x86_64-unknown-linux-gnu'
-          channel: beta
-        # Check for compiler breakages
-        linux_nightly:
-          imageName: ${{ variables.linux_vm }}
-          target: 'x86_64-unknown-linux-gnu'
-          channel: nightly
-    continueOnError: $[ne(variables.channel, 'stable')]
-    pool:
-      vmImage: $(imageName)
-    steps:
-    - template: install-rust.yml@templates
-      parameters:
-        rust: $(channel)
-        targets: ["$(TARGET)"]
-    - script: cargo test --target $(TARGET) --workspace
-      displayName: cargo test
-    - script: cargo doc --target $(TARGET) --workspace --no-deps
-      displayName: cargo doc
-  - job: msrv
-    displayName: "${{ format('Minimum supported Rust version: {0}', variables.minrust) }}"
-    dependsOn: []
-    pool:
-      vmImage: ${{ variables.linux_vm }}
-    steps:
-      - template: install-rust.yml@templates
-        parameters:
-          rust: ${{ variables.minrust }}
-      - script: cargo check --all --bins --examples --tests
-        displayName: cargo check
 - stage: style
   displayName: Style checks
   dependsOn: []
@@ -132,49 +52,6 @@ stages:
         $(Build.StagingDirectory)/tools/committed HEAD~..HEAD^2 --no-merge-commit -vv
       displayName: Lint commit history
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
-  - job: style
-    displayName: Style checking
-    pool:
-      vmImage: ${{ variables.linux_vm }}
-    steps:
-    - template: install-rust.yml@templates
-      parameters:
-        rust: stable
-        components:
-          - rustfmt
-    - script: cargo fmt --all -- --check
-      displayName: rustfmt
-  - job: lint
-    displayName: Linting
-    strategy:
-      matrix:
-        current:
-          channel: ${{ variables.minrust }}
-        next:
-          channel: stable
-    continueOnError: $[eq(variables.channel, 'stable')]
-    pool:
-      vmImage: ${{ variables.linux_vm }}
-    steps:
-    - template: install-rust.yml@templates
-      parameters:
-        rust: $(channel)
-        components:
-          - clippy
-    - script: cargo check --workspace --all-targets --all-features
-      displayName: Warnings
-      env:
-        RUSTFLAGS: "-D warnings"
-    - script:  cargo clippy --workspace --all-features --all-targets -- -D warnings
-      displayName: clippy
-- ${{ if ne('', variables.codecov_token) }}:
-  - stage: coverage
-    displayName: Code coverage
-    dependsOn: test
-    jobs:
-      - template: coverage.yml@templates
-        parameters:
-          token: ${{ variables.codecov_token }}
 - stage: codegen
   displayName: Verify Code-gen
   dependsOn: ["check"]

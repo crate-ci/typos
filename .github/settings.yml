@@ -1,0 +1,47 @@
+# These settings are synced to GitHub by https://probot.github.io/apps/settings/
+
+repository:
+  description: Source code spell checker
+  topics: rust cli code-quality spell-checker
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+  has_downloads: true
+  default_branch: master
+
+  allow_squash_merge: true
+  allow_merge_commit: true
+  allow_rebase_merge: true
+
+  # Manual: allow_auto_merge: true, see https://github.com/probot/settings/issues/402
+  delete_branch_on_merge: true
+
+labels:
+  # Type
+  - name: bug
+    color: '#b60205'
+    description: Not as expected
+  - name: enhancement
+    color: '#1d76db'
+    description: Improve the expected
+  # Flavor
+  - name: question
+    color: "#cc317c"
+    description: Uncertainty is involved
+  - name: breaking-change
+    color: "#e99695"
+  - name: good first issue
+    color: '#c2e0c6'
+    description: Help wanted!
+
+branches:
+  - name: master
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: false
+        require_code_owner_reviews: false
+      # Manual: required_conversation_resolution: true, see https://github.com/probot/settings/issues/458
+      required_status_checks:
+        # Required. Require branches to be up to date before merging.
+        strict: true
