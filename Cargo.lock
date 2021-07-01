@@ -224,7 +224,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "structopt",
  "unicase",
 ]
@@ -263,7 +263,7 @@ dependencies = [
  "clap",
  "criterion-plot",
  "csv",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "lazy_static",
  "num-traits",
  "oorandom",
@@ -702,9 +702,9 @@ dependencies = [
 
 [[package]]
 name = "itertools"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37d572918e350e82412fe766d24b15e6682fb2ed2bbe018280caa810397cb319"
+checksum = "69ddb889f9d0d08a67338271fa9b62996bc788c7796a5c18cf057420aaed5eaf"
 dependencies = [
  "either",
 ]
@@ -804,7 +804,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "regex",
  "structopt",
  "unicase",
@@ -1408,7 +1408,7 @@ version = "0.7.0"
 dependencies = [
  "anyhow",
  "bstr",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "log",
  "nom",
  "once_cell",
@@ -1440,7 +1440,7 @@ dependencies = [
  "env_logger 0.8.3",
  "human-panic",
  "ignore",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "kstring",
  "log",
  "maplit",
@@ -1478,7 +1478,7 @@ dependencies = [
  "codegenrs",
  "csv",
  "dictgen",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "structopt",
  "unicase",
 ]
@@ -1490,7 +1490,7 @@ dependencies = [
  "codegenrs",
  "csv",
  "edit-distance",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "structopt",
  "unicase",
  "varcon",
@@ -1515,7 +1515,7 @@ dependencies = [
  "codegenrs",
  "dictgen",
  "env_logger 0.7.1",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "log",
  "structopt",
  "typos",
@@ -1698,7 +1698,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.10.0",
+ "itertools 0.10.1",
  "structopt",
  "unicase",
 ]
