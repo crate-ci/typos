@@ -19,7 +19,6 @@ schedules:
     include:
     - master
 variables:
-  minrust: 1.53.0
   windows_vm: windows-latest
   mac_vm: macOS-latest
   linux_vm: ubuntu-latest
@@ -52,40 +51,6 @@ stages:
         $(Build.StagingDirectory)/tools/committed HEAD~..HEAD^2 --no-merge-commit -vv
       displayName: Lint commit history
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
-- stage: codegen
-  displayName: Verify Code-gen
-  dependsOn: ["check"]
-  jobs:
-  - job: codegen
-    pool:
-      vmImage: ${{ variables.linux_vm }}
-    steps:
-    - template: install-rust.yml@templates
-      parameters:
-        rust: ${{ variables.minrust }}
-        components:
-            - rustfmt
-    - script: |
-        cargo run --package typos-dict-codegen -- --output crates/typos-dict/src/dict_codegen.rs --check
-      displayName: Verify typos-dict
-    - script: |
-        cargo run --package typos-vars-codegen -- --output crates/typos-vars/src/vars_codegen.rs --check
-      displayName: Verify typos-vars
-    - script: |
-        cargo run --package typos-dict-verify -- --input crates/typos-dict/assets/words.csv --output crates/typos-dict/assets/words.csv --check
-      displayName: Verify typos-dict-verify
-    - script: |
-        cargo run --package codespell-codegen -- --output crates/codespell-dict/src/dict_codegen.rs --check
-      displayName: Verify codespell-dict
-    - script: |
-        cargo run --package misspell-codegen -- --output crates/misspell-dict/src/dict_codegen.rs --check
-      displayName: Verify misspell-dict
-    - script: |
-        cargo run --package wikipedia-codegen -- --output crates/wikipedia-dict/src/dict_codegen.rs --check
-      displayName: Verify wikipedia-dict
-    - script: |
-        cargo run --package varcon-codegen -- --output crates/varcon/src/codegen.rs --check
-      displayName: Verify varcon-dict
 - stage: release
   displayName: Release
   dependsOn: []
