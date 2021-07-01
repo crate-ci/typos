@@ -15,6 +15,6 @@ azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
-phf = { version = "0.8", features = ["unicase"] }
 unicase = "2.5"
 log = "0.4"
+dictgen = { version = "0.1", path = "../dictgen" }

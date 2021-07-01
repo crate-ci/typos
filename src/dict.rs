@@ -55,11 +55,7 @@ impl BuiltIn {
 impl BuiltIn {
     // Not using `Status` to avoid the allocations
     fn correct_with_dict(&self, word: unicase::UniCase<&str>) -> Option<&'static [&'static str]> {
-        if typos_dict::WORD_RANGE.contains(&word.len()) {
-            map_lookup(&typos_dict::WORD_DICTIONARY, word)
-        } else {
-            None
-        }
+        typos_dict::WORD_TRIE.find(&word).copied()
     }
 }
 
@@ -172,22 +168,6 @@ impl typos::Dictionary for BuiltIn {
 
     fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Status<'s>> {
         BuiltIn::correct_word(self, word)
-    }
-}
-
-fn map_lookup<V: Clone>(
-    map: &'static phf::Map<UniCase<&'static str>, V>,
-    key: unicase::UniCase<&str>,
-) -> Option<V> {
-    // This transmute should be safe as `get` will not store the reference with
-    // the expanded lifetime. This is due to `Borrow` being overly strict and
-    // can't have an impl for `&'static str` to `Borrow<&'a str>`.
-    //
-    //
-    // See https://github.com/rust-lang/rust/issues/28853#issuecomment-158735548
-    unsafe {
-        let key = ::std::mem::transmute::<_, unicase::UniCase<&'static str>>(key);
-        map.get(&key).cloned()
     }
 }
 
