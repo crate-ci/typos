@@ -8,23 +8,9 @@ pub static WORD_TRIE: dictgen::DictTrie<&'static [&'static str]> = dictgen::Dict
 };
 
 pub static WORD_UNICODE_TABLE: dictgen::DictTable<&'static [&'static str]> = dictgen::DictTable {
-    keys: &[
-        dictgen::InsensitiveStr::Ascii("carnagie-mellon"),
-        dictgen::InsensitiveStr::Ascii("carnigie-mellon"),
-        dictgen::InsensitiveStr::Ascii("co-incided"),
-        dictgen::InsensitiveStr::Ascii("coca cola"),
-        dictgen::InsensitiveStr::Ascii("nightfa;;"),
-        dictgen::InsensitiveStr::Ascii("p0enis"),
-    ],
-    values: &[
-        &["carnegie-mellon"],
-        &["carnegie-mellon"],
-        &["coincided"],
-        &["coca-cola"],
-        &["nightfall"],
-        &["penis"],
-    ],
-    range: 6..=15,
+    keys: &[],
+    values: &[],
+    range: 0..=0,
 };
 
 static WORD_NODE: dictgen::DictTrieNode<&'static [&'static str]> = dictgen::DictTrieNode {
@@ -88918,7 +88904,7 @@ pub static WORD_ALL_CHILDREN: dictgen::DictTable<&'static [&'static str]> = dict
         &["allophones"],
         &["already"],
         &["although"],
-        &["all-time"],
+        &[],
         &["altogether"],
     ],
     range: 3..=9,
