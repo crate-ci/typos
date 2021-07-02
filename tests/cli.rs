@@ -1,6 +1,7 @@
 use assert_cmd::Command;
 
 #[test]
+#[cfg(feature = "dict")]
 fn test_stdin_success() {
     let mut cmd = Command::cargo_bin("typos").unwrap();
     cmd.arg("-").write_stdin("Hello world");
@@ -8,6 +9,7 @@ fn test_stdin_success() {
 }
 
 #[test]
+#[cfg(feature = "dict")]
 fn test_stdin_failure() {
     let mut cmd = Command::cargo_bin("typos").unwrap();
     cmd.arg("-").write_stdin("Apropriate world");
@@ -15,6 +17,7 @@ fn test_stdin_failure() {
 }
 
 #[test]
+#[cfg(feature = "dict")]
 fn test_stdin_correct() {
     let mut cmd = Command::cargo_bin("typos").unwrap();
     cmd.arg("-")
@@ -24,6 +27,7 @@ fn test_stdin_correct() {
 }
 
 #[test]
+#[cfg(feature = "dict")]
 fn test_file_failure() {
     let mut cmd = Command::cargo_bin("typos").unwrap();
     cmd.arg("README.md");
@@ -31,6 +35,7 @@ fn test_file_failure() {
 }
 
 #[test]
+#[cfg(feature = "dict")]
 fn test_relative_dir_failure() {
     let mut cmd = Command::cargo_bin("typos").unwrap();
     cmd.arg(".");
@@ -38,6 +43,7 @@ fn test_relative_dir_failure() {
 }
 
 #[test]
+#[cfg(feature = "dict")]
 fn test_assumed_dir_failure() {
     let mut cmd = Command::cargo_bin("typos").unwrap();
     cmd.assert().code(2);
