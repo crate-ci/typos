@@ -29,6 +29,7 @@ jobs:
         toolchain: 1.53.0  # MSRV
         profile: minimal
         override: true
+        components: rustfmt
     - uses: Swatinem/rust-cache@v1
     - name: Verify typos-dict
       run: |
