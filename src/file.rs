@@ -236,7 +236,7 @@ impl FileChecker for DiffTypos {
                 0,
             );
             for line in diff {
-                print!("{}", line);
+                write!(std::io::stdout(), "{}", line)?;
             }
         }
 
