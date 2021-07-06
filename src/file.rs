@@ -1,7 +1,9 @@
-use bstr::ByteSlice;
-use encoding::Encoding;
 use std::io::Read;
 use std::io::Write;
+
+use bstr::ByteSlice;
+use encoding::Encoding;
+use pushgen::GeneratorExt;
 
 use crate::report;
 

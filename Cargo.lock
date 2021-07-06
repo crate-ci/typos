@@ -1054,6 +1054,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "pushgen"
+version = "0.0.1"
+source = "git+https://github.com/AndWass/pushgen.git#bdaeafd3b5e6689b9f40dd4308581770c587d003"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "quick-error"
 version = "1.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1448,6 +1456,7 @@ dependencies = [
  "log",
  "nom",
  "once_cell",
+ "pushgen",
  "serde",
  "simdutf8",
  "thiserror",
@@ -1484,6 +1493,7 @@ dependencies = [
  "phf 0.8.0",
  "predicates",
  "proc-exit",
+ "pushgen",
  "serde",
  "serde_json",
  "structopt",

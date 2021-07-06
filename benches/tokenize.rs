@@ -1,6 +1,7 @@
 mod data;
 
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
+use pushgen::GeneratorExt;
 
 fn bench_parse_str(c: &mut Criterion) {
     let mut group = c.benchmark_group("parse_str");

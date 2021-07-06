@@ -1,4 +1,6 @@
 use bstr::ByteSlice;
+use pushgen::GeneratorExt;
+use pushgen::IntoGenerator;
 
 /// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -40,22 +42,28 @@ impl Tokenizer {
         TokenizerBuilder::default().build()
     }
 
-    pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
+    pub fn parse_str<'c>(
+        &'c self,
+        content: &'c str,
+    ) -> impl pushgen::Generator<Output = Identifier<'c>> {
         let iter = if self.unicode && !ByteSlice::is_ascii(content.as_bytes()) {
-            itertools::Either::Left(unicode_parser::iter_identifiers(content))
+            pushgen::Either::Left(unicode_parser::iter_identifiers(content))
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(content.as_bytes()))
+            pushgen::Either::Right(ascii_parser::iter_identifiers(content.as_bytes()))
         };
         iter.map(move |identifier| self.transform(identifier, content.as_bytes()))
     }
 
-    pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
+    pub fn parse_bytes<'c>(
+        &'c self,
+        content: &'c [u8],
+    ) -> impl pushgen::Generator<Output = Identifier<'c>> {
         let iter = if self.unicode && !ByteSlice::is_ascii(content) {
             let iter =
                 Utf8Chunks::new(content).flat_map(move |c| unicode_parser::iter_identifiers(c));
-            itertools::Either::Left(iter)
+            pushgen::Either::Left(iter)
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(content))
+            pushgen::Either::Right(ascii_parser::iter_identifiers(content))
         };
         iter.map(move |identifier| self.transform(identifier, content))
     }
@@ -92,32 +100,38 @@ impl<'s> Utf8Chunks<'s> {
     }
 }
 
-impl<'s> Iterator for Utf8Chunks<'s> {
-    type Item = &'s str;
+impl<'s> pushgen::Generator for Utf8Chunks<'s> {
+    type Output = &'s str;
 
-    fn next(&mut self) -> Option<&'s str> {
-        if self.source.is_empty() {
-            return None;
-        }
-
-        match simdutf8::compat::from_utf8(self.source) {
-            Ok(valid) => {
-                self.source = b"";
-                Some(valid)
-            }
-            Err(error) => {
-                let (valid, after_valid) = self.source.split_at(error.valid_up_to());
-
-                if let Some(invalid_sequence_length) = error.error_len() {
-                    self.source = &after_valid[invalid_sequence_length..];
-                } else {
+    fn run(
+        &mut self,
+        mut output: impl FnMut(Self::Output) -> pushgen::ValueResult,
+    ) -> pushgen::GeneratorResult {
+        while !self.source.is_empty() {
+            match simdutf8::compat::from_utf8(self.source) {
+                Ok(valid) => {
                     self.source = b"";
+                    if output(valid) == pushgen::ValueResult::Stop {
+                        return pushgen::GeneratorResult::Stopped;
+                    }
                 }
+                Err(error) => {
+                    let (valid, after_valid) = self.source.split_at(error.valid_up_to());
 
-                let valid = unsafe { std::str::from_utf8_unchecked(valid) };
-                Some(valid)
+                    if let Some(invalid_sequence_length) = error.error_len() {
+                        self.source = &after_valid[invalid_sequence_length..];
+                    } else {
+                        self.source = b"";
+                    }
+
+                    let valid = unsafe { std::str::from_utf8_unchecked(valid) };
+                    if output(valid) == pushgen::ValueResult::Stop {
+                        return pushgen::GeneratorResult::Stopped;
+                    }
+                }
             }
         }
+        pushgen::GeneratorResult::Complete
     }
 }
 
@@ -461,8 +475,8 @@ mod parser {
 mod unicode_parser {
     use super::parser::next_identifier;
 
-    pub(crate) fn iter_identifiers(mut input: &str) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_identifier(input) {
+    pub(crate) fn iter_identifiers(mut input: &str) -> impl pushgen::Generator<Output = &str> {
+        pushgen::from_fn(move || match next_identifier(input) {
             Ok((i, o)) => {
                 input = i;
                 debug_assert_ne!(o, "");
@@ -476,8 +490,8 @@ mod unicode_parser {
 mod ascii_parser {
     use super::parser::next_identifier;
 
-    pub(crate) fn iter_identifiers(mut input: &[u8]) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_identifier(input) {
+    pub(crate) fn iter_identifiers(mut input: &[u8]) -> impl pushgen::Generator<Output = &str> {
+        pushgen::from_fn(move || match next_identifier(input) {
             Ok((i, o)) => {
                 input = i;
                 debug_assert_ne!(o, b"");
@@ -521,11 +535,13 @@ impl<'t> Identifier<'t> {
     }
 
     /// Split into individual Words.
-    pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
+    pub fn split(&self) -> impl pushgen::Generator<Output = Word<'t>> {
         match self.case {
-            Case::None => itertools::Either::Left(SplitIdent::new(self.token, self.offset)),
-            _ => itertools::Either::Right(
-                Some(Word::new_unchecked(self.token, self.case, self.offset)).into_iter(),
+            Case::None => {
+                pushgen::Either::Left(pushgen::from_iter(SplitIdent::new(self.token, self.offset)))
+            }
+            _ => pushgen::Either::Right(
+                Some(Word::new_unchecked(self.token, self.case, self.offset)).into_gen(),
             ),
         }
     }

@@ -1,12 +1,16 @@
+use std::borrow::Cow;
+
+use pushgen::GeneratorExt;
+use pushgen::IntoGenerator;
+
 use crate::tokens;
 use crate::Dictionary;
-use std::borrow::Cow;
 
 pub fn check_str<'b, 's: 'b>(
     buffer: &'b str,
     tokenizer: &'s tokens::Tokenizer,
     dictionary: &'s dyn Dictionary,
-) -> impl Iterator<Item = Typo<'b>> {
+) -> impl pushgen::Generator<Output = Typo<'b>> {
     tokenizer
         .parse_str(buffer)
         .flat_map(move |ident| process_ident(ident, dictionary))
@@ -16,7 +20,7 @@ pub fn check_bytes<'b, 's: 'b>(
     buffer: &'b [u8],
     tokenizer: &'s tokens::Tokenizer,
     dictionary: &'s dyn Dictionary,
-) -> impl Iterator<Item = Typo<'b>> {
+) -> impl pushgen::Generator<Output = Typo<'b>> {
     tokenizer
         .parse_bytes(buffer)
         .flat_map(move |ident| process_ident(ident, dictionary))
@@ -25,18 +29,18 @@ pub fn check_bytes<'b, 's: 'b>(
 fn process_ident<'i, 's: 'i>(
     ident: tokens::Identifier<'i>,
     dictionary: &'s dyn Dictionary,
-) -> impl Iterator<Item = Typo<'i>> {
+) -> impl pushgen::Generator<Output = Typo<'i>> {
     match dictionary.correct_ident(ident) {
-        Some(crate::Status::Valid) => itertools::Either::Left(None.into_iter()),
+        Some(crate::Status::Valid) => pushgen::Either::Left(None.into_gen()),
         Some(corrections) => {
             let typo = Typo {
                 byte_offset: ident.offset(),
                 typo: ident.token().into(),
                 corrections,
             };
-            itertools::Either::Left(Some(typo).into_iter())
+            pushgen::Either::Left(Some(typo).into_gen())
         }
-        None => itertools::Either::Right(
+        None => pushgen::Either::Right(
             ident
                 .split()
                 .filter_map(move |word| process_word(word, dictionary)),
