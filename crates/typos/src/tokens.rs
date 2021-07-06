@@ -46,10 +46,7 @@ impl Tokenizer {
         } else {
             itertools::Either::Right(ascii_parser::iter_identifiers(content.as_bytes()))
         };
-        iter.filter_map(move |identifier| {
-            let offset = offset(content.as_bytes(), identifier.as_bytes());
-            self.transform(identifier, offset)
-        })
+        iter.map(move |identifier| self.transform(identifier, content.as_bytes()))
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
@@ -60,17 +57,15 @@ impl Tokenizer {
         } else {
             itertools::Either::Right(ascii_parser::iter_identifiers(content))
         };
-        iter.filter_map(move |identifier| {
-            let offset = offset(content, identifier.as_bytes());
-            self.transform(identifier, offset)
-        })
+        iter.map(move |identifier| self.transform(identifier, content))
     }
 
-    fn transform<'i>(&self, identifier: &'i str, offset: usize) -> Option<Identifier<'i>> {
+    fn transform<'i>(&self, identifier: &'i str, content: &[u8]) -> Identifier<'i> {
         debug_assert!(!identifier.is_empty());
 
         let case = Case::None;
-        Some(Identifier::new_unchecked(identifier, case, offset))
+        let offset = offset(content, identifier.as_bytes());
+        Identifier::new_unchecked(identifier, case, offset)
     }
 }
 
