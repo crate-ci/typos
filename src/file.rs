@@ -28,16 +28,18 @@ impl FileChecker for Typos {
     ) -> Result<(), std::io::Error> {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
-                    let msg = report::Typo {
-                        context: Some(report::PathContext { path }.into()),
-                        buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
-                        byte_offset: typo.byte_offset,
-                        typo: typo.typo.as_ref(),
-                        corrections: typo.corrections,
-                    };
-                    reporter.report(msg.into())?;
-                }
+                typos::check_str(file_name, policy.tokenizer, policy.dict).try_for_each(
+                    |typo| {
+                        let msg = report::Typo {
+                            context: Some(report::PathContext { path }.into()),
+                            buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                            byte_offset: typo.byte_offset,
+                            typo: typo.typo.as_ref(),
+                            corrections: typo.corrections,
+                        };
+                        reporter.report(msg.into())
+                    },
+                )?;
             }
         }
 
@@ -48,18 +50,20 @@ impl FileChecker for Typos {
                 reporter.report(msg.into())?;
             } else {
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
-                    let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
-                    let msg = report::Typo {
-                        context: Some(report::FileContext { path, line_num }.into()),
-                        buffer: std::borrow::Cow::Borrowed(line),
-                        byte_offset: line_offset,
-                        typo: typo.typo.as_ref(),
-                        corrections: typo.corrections,
-                    };
-                    reporter.report(msg.into())?;
-                }
+                typos::check_bytes(&buffer, policy.tokenizer, policy.dict).try_for_each(
+                    |typo| {
+                        let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
+                        let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
+                        let msg = report::Typo {
+                            context: Some(report::FileContext { path, line_num }.into()),
+                            buffer: std::borrow::Cow::Borrowed(line),
+                            byte_offset: line_offset,
+                            typo: typo.typo.as_ref(),
+                            corrections: typo.corrections,
+                        };
+                        reporter.report(msg.into())
+                    },
+                )?;
             }
         }
 
@@ -86,22 +90,25 @@ impl FileChecker for FixTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
-                    } else {
-                        let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
-                        let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
-                        let msg = report::Typo {
-                            context: Some(report::FileContext { path, line_num }.into()),
-                            buffer: std::borrow::Cow::Borrowed(line),
-                            byte_offset: line_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
-                    }
-                }
+                typos::check_bytes(&buffer, policy.tokenizer, policy.dict).try_for_each(
+                    |typo| {
+                        if is_fixable(&typo) {
+                            fixes.push(typo.into_owned());
+                            Ok(())
+                        } else {
+                            let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
+                            let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
+                            let msg = report::Typo {
+                                context: Some(report::FileContext { path, line_num }.into()),
+                                buffer: std::borrow::Cow::Borrowed(line),
+                                byte_offset: line_offset,
+                                typo: typo.typo.as_ref(),
+                                corrections: typo.corrections,
+                            };
+                            reporter.report(msg.into())
+                        }
+                    },
+                )?;
                 if !fixes.is_empty() || path == std::path::Path::new("-") {
                     let buffer = fix_buffer(buffer, fixes.into_iter());
                     write_file(path, content_type, buffer, reporter)?;
@@ -113,20 +120,23 @@ impl FileChecker for FixTypos {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
-                    } else {
-                        let msg = report::Typo {
-                            context: Some(report::PathContext { path }.into()),
-                            buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
-                            byte_offset: typo.byte_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
-                    }
-                }
+                typos::check_str(file_name, policy.tokenizer, policy.dict).try_for_each(
+                    |typo| {
+                        if is_fixable(&typo) {
+                            fixes.push(typo.into_owned());
+                            Ok(())
+                        } else {
+                            let msg = report::Typo {
+                                context: Some(report::PathContext { path }.into()),
+                                buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                                byte_offset: typo.byte_offset,
+                                typo: typo.typo.as_ref(),
+                                corrections: typo.corrections,
+                            };
+                            reporter.report(msg.into())
+                        }
+                    },
+                )?;
                 if !fixes.is_empty() {
                     let file_name = file_name.to_owned().into_bytes();
                     let new_name = fix_buffer(file_name, fixes.into_iter());
@@ -163,22 +173,25 @@ impl FileChecker for DiffTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
-                    } else {
-                        let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
-                        let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
-                        let msg = report::Typo {
-                            context: Some(report::FileContext { path, line_num }.into()),
-                            buffer: std::borrow::Cow::Borrowed(line),
-                            byte_offset: line_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
-                    }
-                }
+                typos::check_bytes(&buffer, policy.tokenizer, policy.dict).try_for_each(
+                    |typo| {
+                        if is_fixable(&typo) {
+                            fixes.push(typo.into_owned());
+                            Ok(())
+                        } else {
+                            let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
+                            let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
+                            let msg = report::Typo {
+                                context: Some(report::FileContext { path, line_num }.into()),
+                                buffer: std::borrow::Cow::Borrowed(line),
+                                byte_offset: line_offset,
+                                typo: typo.typo.as_ref(),
+                                corrections: typo.corrections,
+                            };
+                            reporter.report(msg.into())
+                        }
+                    },
+                )?;
                 if !fixes.is_empty() {
                     new_content = fix_buffer(buffer.clone(), fixes.into_iter());
                     content = buffer
@@ -191,20 +204,23 @@ impl FileChecker for DiffTypos {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
-                    } else {
-                        let msg = report::Typo {
-                            context: Some(report::PathContext { path }.into()),
-                            buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
-                            byte_offset: typo.byte_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
-                    }
-                }
+                typos::check_str(file_name, policy.tokenizer, policy.dict).try_for_each(
+                    |typo| {
+                        if is_fixable(&typo) {
+                            fixes.push(typo.into_owned());
+                            Ok(())
+                        } else {
+                            let msg = report::Typo {
+                                context: Some(report::PathContext { path }.into()),
+                                buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                                byte_offset: typo.byte_offset,
+                                typo: typo.typo.as_ref(),
+                                corrections: typo.corrections,
+                            };
+                            reporter.report(msg.into())
+                        }
+                    },
+                )?;
                 if !fixes.is_empty() {
                     let file_name = file_name.to_owned().into_bytes();
                     let new_name = fix_buffer(file_name, fixes.into_iter());
@@ -237,9 +253,8 @@ impl FileChecker for DiffTypos {
             );
             let stdout = std::io::stdout();
             let mut handle = stdout.lock();
-            for line in diff {
-                write!(handle, "{}", line)?;
-            }
+            diff.into_iter()
+                .try_for_each(|line| write!(handle, "{}", line))?;
         }
 
         Ok(())
@@ -259,14 +274,14 @@ impl FileChecker for Identifiers {
     ) -> Result<(), std::io::Error> {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for word in policy.tokenizer.parse_str(file_name) {
+                policy.tokenizer.parse_str(file_name).try_for_each(|word| {
                     let msg = report::Parse {
                         context: Some(report::PathContext { path }.into()),
                         kind: report::ParseKind::Identifier,
                         data: word.token(),
                     };
-                    reporter.report(msg.into())?;
-                }
+                    reporter.report(msg.into())
+                })?;
             }
         }
 
@@ -276,7 +291,7 @@ impl FileChecker for Identifiers {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
-                for word in policy.tokenizer.parse_bytes(&buffer) {
+                policy.tokenizer.parse_bytes(&buffer).try_for_each(|word| {
                     // HACK: Don't look up the line_num per entry to better match the performance
                     // of Typos for comparison purposes.  We don't really get much out of it
                     // anyway.
@@ -286,8 +301,8 @@ impl FileChecker for Identifiers {
                         kind: report::ParseKind::Identifier,
                         data: word.token(),
                     };
-                    reporter.report(msg.into())?;
-                }
+                    reporter.report(msg.into())
+                })?;
             }
         }
 
@@ -308,18 +323,18 @@ impl FileChecker for Words {
     ) -> Result<(), std::io::Error> {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for word in policy
+                policy
                     .tokenizer
                     .parse_str(file_name)
                     .flat_map(|i| i.split())
-                {
-                    let msg = report::Parse {
-                        context: Some(report::PathContext { path }.into()),
-                        kind: report::ParseKind::Word,
-                        data: word.token(),
-                    };
-                    reporter.report(msg.into())?;
-                }
+                    .try_for_each(|word| {
+                        let msg = report::Parse {
+                            context: Some(report::PathContext { path }.into()),
+                            kind: report::ParseKind::Word,
+                            data: word.token(),
+                        };
+                        reporter.report(msg.into())
+                    })?;
             }
         }
 
@@ -329,22 +344,22 @@ impl FileChecker for Words {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
-                for word in policy
+                policy
                     .tokenizer
                     .parse_bytes(&buffer)
                     .flat_map(|i| i.split())
-                {
-                    // HACK: Don't look up the line_num per entry to better match the performance
-                    // of Typos for comparison purposes.  We don't really get much out of it
-                    // anyway.
-                    let line_num = 0;
-                    let msg = report::Parse {
-                        context: Some(report::FileContext { path, line_num }.into()),
-                        kind: report::ParseKind::Word,
-                        data: word.token(),
-                    };
-                    reporter.report(msg.into())?;
-                }
+                    .try_for_each(|word| {
+                        // HACK: Don't look up the line_num per entry to better match the performance
+                        // of Typos for comparison purposes.  We don't really get much out of it
+                        // anyway.
+                        let line_num = 0;
+                        let msg = report::Parse {
+                            context: Some(report::FileContext { path, line_num }.into()),
+                            kind: report::ParseKind::Word,
+                            data: word.token(),
+                        };
+                        reporter.report(msg.into())
+                    })?;
             }
         }
 
@@ -539,7 +554,7 @@ fn is_fixable(typo: &typos::Typo<'_>) -> bool {
 
 fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'static>>) -> Vec<u8> {
     let mut offset = 0isize;
-    for typo in typos {
+    typos.for_each(|typo| {
         let fix = extract_fix(&typo).expect("Caller only provides fixable typos");
         let start = ((typo.byte_offset as isize) + offset) as usize;
         let end = start + typo.typo.len();
@@ -547,19 +562,17 @@ fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'stat
         buffer.splice(start..end, fix.as_bytes().iter().copied());
 
         offset += (fix.len() as isize) - (typo.typo.len() as isize);
-    }
+    });
     buffer
 }
 
 pub fn walk_path(
-    walk: ignore::Walk,
+    mut walk: ignore::Walk,
     checks: &dyn FileChecker,
     engine: &crate::policy::ConfigEngine,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
-    for entry in walk {
-        walk_entry(entry, checks, engine, reporter)?;
-    }
+    walk.try_for_each(|entry| walk_entry(entry, checks, engine, reporter))?;
     Ok(())
 }
 
