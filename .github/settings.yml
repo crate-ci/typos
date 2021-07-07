@@ -37,11 +37,7 @@ labels:
 branches:
   - name: master
     protection:
-      required_pull_request_reviews:
-        required_approving_review_count: 1
-        dismiss_stale_reviews: false
-        require_code_owner_reviews: false
       # Manual: required_conversation_resolution: true, see https://github.com/probot/settings/issues/458
       required_status_checks:
         # Required. Require branches to be up to date before merging.
-        strict: true
+        strict: false
