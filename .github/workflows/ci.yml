@@ -14,8 +14,6 @@ on:
     - '!/*.md'
     - '!/docs/**'
     - "!/LICENSE-*"
-  schedule:
-  - cron: '3 3 3 * *'
 jobs:
   smoke:
     name: Quick Check
@@ -42,10 +40,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
-        rust: ["stable", "beta"]
-        include:
-        - os: ubuntu-latest
-          rust: "nightly"
+        rust: ["stable"]
     continue-on-error: ${{ matrix.rust != 'stable' }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -128,26 +123,6 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: 1.53.0  # MSRV
-        profile: minimal
-        override: true
-        components: clippy
-    - uses: Swatinem/rust-cache@v1
-    - uses: actions-rs/clippy-check@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        args: --workspace --all-features --all-targets -- -D warnings
-  clippy-next:
-    name: clippy (next)
-    needs: clippy
-    continue-on-error: true
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
         profile: minimal
         override: true
         components: clippy
