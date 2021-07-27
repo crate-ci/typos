@@ -1,34 +1,67 @@
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::collections::HashSet;
+use unicase::UniCase;
 
 use structopt::StructOpt;
 
+type Dict = BTreeMap<UniCase<String>, Vec<String>>;
+
 fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
-    let mut wtr = csv::WriterBuilder::new().flexible(true).from_writer(file);
+    let mut rows = Dict::new();
+    csv::ReaderBuilder::new()
+        .has_headers(false)
+        .flexible(true)
+        .from_reader(dict)
+        .records()
+        .map(Result::unwrap)
+        .for_each(|r| {
+            let mut i = r.iter();
+            let mut typo = i.next().expect("typo").to_owned();
+            typo.make_ascii_lowercase();
+            let typo = UniCase::new(typo);
+            rows.entry(typo).or_insert_with(Vec::new).extend(i.map(|c| {
+                let mut c = c.to_owned();
+                c.make_ascii_lowercase();
+                c
+            }));
+        });
 
     let disallowed_typos = varcon_words();
     let word_variants = proper_word_variants();
+    let rows: Dict = rows
+        .into_iter()
+        .filter(|(typo, _)| {
+            let is_disallowed = disallowed_typos.contains(&unicase::UniCase::new(typo));
+            if is_disallowed {
+                eprintln!("{:?} is disallowed", typo);
+            }
+            !is_disallowed
+        })
+        .map(|(typo, corrections)| {
+            let mut new_corrections = vec![];
+            for correction in corrections {
+                let correction = word_variants
+                    .get(correction.as_str())
+                    .and_then(|words| find_best_match(&typo, correction.as_str(), words))
+                    .unwrap_or(&correction);
+                new_corrections.push(correction.to_owned());
+            }
+            (typo, new_corrections)
+        })
+        .collect();
 
-    let mut reader = csv::ReaderBuilder::new()
-        .has_headers(false)
-        .flexible(true)
-        .from_reader(dict);
-    for record in reader.records() {
-        let record = record.unwrap();
-        let mut record_fields = record.iter();
-        let typo = record_fields.next().unwrap();
-        if disallowed_typos.contains(&unicase::UniCase::new(typo)) {
-            continue;
-        }
+    let corrections: std::collections::HashSet<_> =
+        rows.values().flatten().map(ToOwned::to_owned).collect();
+    let rows: Vec<_> = rows
+        .into_iter()
+        .filter(|(typo, _)| !corrections.contains(typo.as_str()))
+        .collect();
 
-        let mut row = vec![typo];
-        for correction in record_fields {
-            let correction = word_variants
-                .get(correction)
-                .and_then(|words| find_best_match(typo, correction, words))
-                .unwrap_or(correction);
-            row.push(correction);
-        }
+    let mut wtr = csv::WriterBuilder::new().flexible(true).from_writer(file);
+    for (typo, corrections) in rows {
+        let mut row = corrections;
+        row.insert(0, typo.as_str().to_owned());
         wtr.write_record(&row).unwrap();
     }
     wtr.flush().unwrap();
