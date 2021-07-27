@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Correct the Linux binary link after switching to musl
+
 ## [1.1.0] - 2021-07-27
 
 #### Features

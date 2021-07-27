@@ -18,7 +18,7 @@ from setuptools.command.install import install as orig_install
 TYPOS_VERSION = '1.1.0'
 POSTFIX_SHA256 = {
     'linux': (
-        'x86_64-unknown-linux-gnu.tar.gz',
+        'x86_64-unknown-linux-musl.tar.gz',
         '',  # TODO: sha256 hexhash when we can generate it with release
     ),
     'darwin': (
