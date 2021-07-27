@@ -27,6 +27,19 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
             }));
         });
 
+    let rows: Dict = rows
+        .into_iter()
+        .filter(|(t, _)| is_word(t))
+        .filter_map(|(t, c)| {
+            let new_c: Vec<_> = c.into_iter().filter(|c| is_word(c)).collect();
+            if new_c.is_empty() {
+                None
+            } else {
+                Some((t, new_c))
+            }
+        })
+        .collect();
+
     let disallowed_typos = varcon_words();
     let word_variants = proper_word_variants();
     let rows: Dict = rows
@@ -65,6 +78,10 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
         wtr.write_record(&row).unwrap();
     }
     wtr.flush().unwrap();
+}
+
+fn is_word(word: &str) -> bool {
+    word.chars().all(|c| c.is_alphabetic())
 }
 
 fn varcon_words() -> HashSet<unicase::UniCase<&'static str>> {
