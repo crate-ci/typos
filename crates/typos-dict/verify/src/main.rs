@@ -4,31 +4,60 @@ use std::collections::HashSet;
 use structopt::StructOpt;
 
 fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
-    let mut wtr = csv::WriterBuilder::new().flexible(true).from_writer(file);
+    let rows: Vec<Vec<_>> = csv::ReaderBuilder::new()
+        .has_headers(false)
+        .flexible(true)
+        .from_reader(dict)
+        .records()
+        .map(Result::unwrap)
+        .map(|r| {
+            let row: Vec<String> = r.iter().map(ToOwned::to_owned).collect();
+            row
+        })
+        .collect();
 
     let disallowed_typos = varcon_words();
     let word_variants = proper_word_variants();
+    let rows: Vec<_> = rows
+        .into_iter()
+        .filter(|r| {
+            let typo = &r[0];
+            let is_disallowed = disallowed_typos.contains(&unicase::UniCase::new(typo));
+            if is_disallowed {
+                eprintln!("{:?} is disallowed", typo);
+            }
+            !is_disallowed
+        })
+        .map(|r| {
+            let mut fields = r.into_iter();
+            let typo = fields.next().expect("at least a typo");
+            let mut row = vec![typo.clone()];
+            for correction in fields {
+                let correction = word_variants
+                    .get(correction.as_str())
+                    .and_then(|words| find_best_match(&typo, correction.as_str(), words))
+                    .unwrap_or(&correction);
+                row.push(correction.to_owned());
+            }
+            row
+        })
+        .collect();
 
-    let mut reader = csv::ReaderBuilder::new()
-        .has_headers(false)
-        .flexible(true)
-        .from_reader(dict);
-    for record in reader.records() {
-        let record = record.unwrap();
-        let mut record_fields = record.iter();
-        let typo = record_fields.next().unwrap();
-        if disallowed_typos.contains(&unicase::UniCase::new(typo)) {
-            continue;
-        }
+    let corrections: std::collections::HashSet<_> = rows
+        .iter()
+        .flat_map(|r| {
+            let mut i = r.iter();
+            i.next();
+            i.map(ToOwned::to_owned)
+        })
+        .collect();
+    let rows: Vec<_> = rows
+        .into_iter()
+        .filter(|r| !corrections.contains(&r[0]))
+        .collect();
 
-        let mut row = vec![typo];
-        for correction in record_fields {
-            let correction = word_variants
-                .get(correction)
-                .and_then(|words| find_best_match(typo, correction, words))
-                .unwrap_or(correction);
-            row.push(correction);
-        }
+    let mut wtr = csv::WriterBuilder::new().flexible(true).from_writer(file);
+    for row in rows {
         wtr.write_record(&row).unwrap();
     }
     wtr.flush().unwrap();
