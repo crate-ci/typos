@@ -17,10 +17,16 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
         .map(Result::unwrap)
         .for_each(|r| {
             let mut i = r.iter();
-            let typo = UniCase::new(i.next().expect("typo").to_owned());
+            let mut typo = i.next().expect("typo").to_owned();
+            typo.make_ascii_lowercase();
+            let typo = UniCase::new(typo);
             rows.entry(typo)
                 .or_insert_with(|| Vec::new())
-                .extend(i.map(ToOwned::to_owned));
+                .extend(i.map(|c| {
+                    let mut c = c.to_owned();
+                    c.make_ascii_lowercase();
+                    c
+                }));
         });
 
     let disallowed_typos = varcon_words();
