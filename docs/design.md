@@ -25,8 +25,10 @@ Quick feedback and resolution for developer:
 Corrections: Known misspellings that map to their corresponding dictionary word
 - Ignores unknown typos
 - Ignores typos that follow c-escapes if they aren't handled correctly
+- Good for unassisted automated correcting
+- Fast, can quickly run across large code bases
 
 Dictionary: A confidence rating is given for how close a word is to one in a dictionary
 - Sensitive to false positives due to hex numbers and c-escapes
-- Traditional spell checkers use a dictionary.
-
+- Used in word processors and other traditional spell checking applications
+- Good when there is a UI to let the user know and override any decisions

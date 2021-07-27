@@ -27,6 +27,7 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
     - [Custom](#custom)
   - [Debugging](#debugging)
 - [Reference](docs/reference.md)
+- [FAQ](#faq)
 - [Comparison with other spell checkers](docs/comparison.md)
 - [Benchmarks](benchsuite/runs)
 - [Design](docs/design.md)
@@ -122,6 +123,26 @@ typos --words
 ```
 
 If you need to dig in more, you can enable debug logging with `-v`
+
+## FAQ
+
+### Why was ... not corrected?
+
+tl;dr `typos` doesn't know about it yet
+
+`typos` maintains a list of known typo corrections to keep the false positive
+count low so it can safely run unassisted.
+
+This is in contrast to most spell checking UIs people use where there is a
+known list of valid words.  In this case, the spell checker tries to guess your
+intent by finding the closest-looking word.  It then has a gauge for when a
+word isn't close enough and assumes you know best.  The user has the
+opportunity to verify these corrections and explicitly allow or reject them.
+
+For more on the trade offs of these approaches, see [Design](docs/design.md).
+
+- To correct it locally, see also our [False Positives documentation](#false-positives).
+- To contribute your correction, see [Contribute](CONTRIBUTING.md)
 
 [Crates.io]: https://crates.io/crates/typos-cli
 [Documentation]: https://docs.rs/typos
