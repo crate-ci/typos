@@ -20,13 +20,11 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
             let mut typo = i.next().expect("typo").to_owned();
             typo.make_ascii_lowercase();
             let typo = UniCase::new(typo);
-            rows.entry(typo)
-                .or_insert_with(|| Vec::new())
-                .extend(i.map(|c| {
-                    let mut c = c.to_owned();
-                    c.make_ascii_lowercase();
-                    c
-                }));
+            rows.entry(typo).or_insert_with(Vec::new).extend(i.map(|c| {
+                let mut c = c.to_owned();
+                c.make_ascii_lowercase();
+                c
+            }));
         });
 
     let disallowed_typos = varcon_words();
