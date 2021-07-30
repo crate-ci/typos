@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Reduce false-positives by ignoring words following possible c-escape sequences or printf patterns.
+
 ## [1.1.2] - 2021-07-30
 
 #### Bug Fixes

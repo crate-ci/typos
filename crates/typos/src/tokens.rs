@@ -175,6 +175,8 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         take_many0(alt((
+            // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
+            // then you need to update `is_ignore_char` to make sure `sep1` doesn't eat it all up.
             terminated(uuid_literal, sep1),
             terminated(hash_literal, sep1),
             terminated(hex_literal, sep1),
@@ -182,6 +184,8 @@ mod parser {
             terminated(base64_literal, sep1),
             terminated(email_literal, sep1),
             terminated(url_literal, sep1),
+            terminated(c_escape, sep1),
+            terminated(printf, sep1),
             sep1,
         )))(input)
     }
@@ -191,7 +195,7 @@ mod parser {
         T: nom::InputTakeAtPosition,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
-        take_till1(is_xid_continue)(input)
+        take_while1(is_ignore_char)(input)
     }
 
     fn dec_literal<T>(input: T) -> IResult<T, T>
@@ -355,6 +359,40 @@ mod parser {
         )))(input)
     }
 
+    fn c_escape<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        preceded(char('\\'), take_while1(is_xid_continue))(input)
+    }
+
+    fn printf<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + std::fmt::Debug
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        preceded(char('%'), take_while1(is_xid_continue))(input)
+    }
+
     fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, I, E>
     where
         I: nom::Offset + nom::InputTake + Clone + PartialEq + std::fmt::Debug,
@@ -442,6 +480,13 @@ mod parser {
     fn is_scheme_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         ('a'..='z').contains(&c) || ('0'..='9').contains(&c) || "+.-".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_ignore_char(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        // See c_escape and printf
+        !unicode_xid::UnicodeXID::is_xid_continue(c) && c != '\\' && c != '%'
     }
 
     #[inline]
@@ -933,6 +978,36 @@ mod test {
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("0Hello", Case::None, 6),
             Identifier::new_unchecked("World", Case::None, 28),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_c_escape() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello \\Hello World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 13),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_printf() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello %Hello World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 13),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
