@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- `wasn,was` correction causes problems with `wasn't`
+
 ## [1.1.1] - 2021-07-27
 
 #### Bug Fixes
