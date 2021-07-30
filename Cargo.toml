@@ -89,7 +89,7 @@ typed-arena = "2.0.1"
 [dev-dependencies]
 assert_fs = "1.0"
 assert_cmd = "1.0"
-predicates = "1.0"
+predicates = "2.0"
 criterion = "0.3"
 maplit = "1.0"
 
