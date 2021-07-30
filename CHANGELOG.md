@@ -196,22 +196,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/assert-rs/predicates-rs/compare/v1.1.2...HEAD
-[1.1.2]: https://github.com/assert-rs/predicates-rs/compare/v1.1.1...v1.1.2
-[1.1.1]: https://github.com/assert-rs/predicates-rs/compare/v1.1.0...v1.1.1
-[1.1.0]: https://github.com/assert-rs/predicates-rs/compare/v1.0.11...v1.1.0
-[1.0.11]: https://github.com/assert-rs/predicates-rs/compare/v1.0.10...v1.0.11
-[1.0.10]: https://github.com/assert-rs/predicates-rs/compare/v1.0.9...v1.0.10
-[1.0.9]: https://github.com/assert-rs/predicates-rs/compare/v1.0.8...v1.0.9
-[1.0.8]: https://github.com/assert-rs/predicates-rs/compare/v1.0.7...v1.0.8
-[1.0.7]: https://github.com/assert-rs/predicates-rs/compare/v1.0.6...v1.0.7
-[1.0.6]: https://github.com/assert-rs/predicates-rs/compare/v1.0.5...v1.0.6
-[1.0.5]: https://github.com/assert-rs/predicates-rs/compare/v1.0.4...v1.0.5
-[1.0.4]: https://github.com/assert-rs/predicates-rs/compare/v1.0.3...v1.0.4
-[1.0.3]: https://github.com/assert-rs/predicates-rs/compare/v1.0.2...v1.0.3
-[1.0.2]: https://github.com/assert-rs/predicates-rs/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/assert-rs/predicates-rs/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/assert-rs/predicates-rs/compare/v0.4.0...v1.0.0
-[0.4.0]: https://github.com/assert-rs/predicates-rs/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/assert-rs/predicates-rs/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/assert-rs/predicates-rs/compare/v0.1.4...v0.2.0
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/crate-ci/typos/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/crate-ci/typos/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/crate-ci/typos/compare/v1.0.11...v1.1.0
+[1.0.11]: https://github.com/crate-ci/typos/compare/v1.0.10...v1.0.11
+[1.0.10]: https://github.com/crate-ci/typos/compare/v1.0.9...v1.0.10
+[1.0.9]: https://github.com/crate-ci/typos/compare/v1.0.8...v1.0.9
+[1.0.8]: https://github.com/crate-ci/typos/compare/v1.0.7...v1.0.8
+[1.0.7]: https://github.com/crate-ci/typos/compare/v1.0.6...v1.0.7
+[1.0.6]: https://github.com/crate-ci/typos/compare/v1.0.5...v1.0.6
+[1.0.5]: https://github.com/crate-ci/typos/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/crate-ci/typos/compare/v1.0.3...v1.0.4
+[1.0.3]: https://github.com/crate-ci/typos/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/crate-ci/typos/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/crate-ci/typos/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/crate-ci/typos/compare/v0.4.0...v1.0.0
+[0.4.0]: https://github.com/crate-ci/typos/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/crate-ci/typos/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/crate-ci/typos/compare/v0.1.4...v0.2.0
