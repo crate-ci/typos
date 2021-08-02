@@ -176,7 +176,8 @@ mod parser {
     {
         take_many0(alt((
             // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
-            // then you need to update `is_ignore_char` to make sure `sep1` doesn't eat it all up.
+            // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
+            // - Make sure you always consume it
             terminated(uuid_literal, sep1),
             terminated(hash_literal, sep1),
             terminated(hex_literal, sep1),
@@ -373,7 +374,7 @@ mod parser {
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
-        preceded(char('\\'), take_while1(is_xid_continue))(input)
+        preceded(char('\\'), take_while(is_xid_continue))(input)
     }
 
     fn printf<T>(input: T) -> IResult<T, T>
@@ -989,10 +990,10 @@ mod test {
     fn tokenize_c_escape() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello \\Hello World";
+        let input = "Hello \\Hello \\ World";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 13),
+            Identifier::new_unchecked("World", Case::None, 15),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
