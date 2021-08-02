@@ -374,7 +374,7 @@ mod parser {
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
-        preceded(char('\\'), take_while(is_xid_continue))(input)
+        preceded(take_while1(is_escape), take_while(is_xid_continue))(input)
     }
 
     fn printf<T>(input: T) -> IResult<T, T>
@@ -494,6 +494,12 @@ mod parser {
     fn is_xid_continue(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         unicode_xid::UnicodeXID::is_xid_continue(c)
+    }
+
+    #[inline]
+    fn is_escape(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        c == '\\'
     }
 
     #[inline]
@@ -990,10 +996,10 @@ mod test {
     fn tokenize_c_escape() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello \\Hello \\ World";
+        let input = "Hello \\Hello \\ \\\\ World";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 15),
+            Identifier::new_unchecked("World", Case::None, 18),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
