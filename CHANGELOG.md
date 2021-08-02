@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Don't stop parsing at c-escape but continue on
+
 ## [1.1.3] - 2021-07-30
 
 #### Bug Fixes
