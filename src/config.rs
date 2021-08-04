@@ -7,7 +7,7 @@ pub struct Config {
     pub files: Walk,
     pub default: EngineConfig,
     #[serde(rename = "type")]
-    pub type_: std::collections::HashMap<kstring::KString, TypeEngineConfig>,
+    pub type_: TypeEngineConfig,
     #[serde(skip)]
     pub overrides: EngineConfig,
 }
@@ -39,7 +39,7 @@ impl Config {
         Self {
             files: Walk::from_defaults(),
             default: EngineConfig::from_defaults(),
-            type_: Default::default(),
+            type_: TypeEngineConfig::from_defaults(),
             overrides: EngineConfig::default(),
         }
     }
@@ -47,12 +47,7 @@ impl Config {
     pub fn update(&mut self, source: &Config) {
         self.files.update(&source.files);
         self.default.update(&source.default);
-        for (type_name, engine) in source.type_.iter() {
-            self.type_
-                .entry(type_name.to_owned())
-                .or_insert_with(TypeEngineConfig::default)
-                .update(engine);
-        }
+        self.type_.update(&source.type_);
         self.overrides.update(&source.overrides);
     }
 }
@@ -148,15 +143,71 @@ impl Walk {
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields, default)]
-#[serde(rename_all = "kebab-case")]
+#[serde(transparent)]
 pub struct TypeEngineConfig {
+    pub patterns: std::collections::HashMap<kstring::KString, GlobEngineConfig>,
+}
+
+impl TypeEngineConfig {
+    pub fn from_defaults() -> Self {
+        let empty = Self::default();
+        Self {
+            patterns: empty.patterns().collect(),
+        }
+    }
+
+    pub fn update(&mut self, source: &Self) {
+        for (type_name, engine) in source.patterns.iter() {
+            self.patterns
+                .entry(type_name.to_owned())
+                .or_insert_with(GlobEngineConfig::default)
+                .update(engine);
+        }
+    }
+
+    pub fn patterns(&self) -> impl Iterator<Item = (kstring::KString, GlobEngineConfig)> {
+        let mut patterns = self.patterns.clone();
+        patterns.entry("cert".into()).or_insert_with(|| {
+            GlobEngineConfig {
+                extend_glob: vec![
+                    // Certificate files:
+                    "*.crt".into(),
+                    "*.cer".into(),
+                    "*.ca-bundle".into(),
+                    "*.p7b".into(),
+                    "*.p7c".into(),
+                    "*.p7s".into(),
+                    "*.pem".into(),
+                    // Keystore Files:
+                    "*.key".into(),
+                    "*.keystore".into(),
+                    "*.jks".into(),
+                    // Combined certificate and key files:
+                    "*.p12".into(),
+                    "*.pfx".into(),
+                    "*.pem".into(),
+                ],
+                engine: EngineConfig {
+                    check_file: Some(false),
+                    ..Default::default()
+                },
+            }
+        });
+        patterns.into_iter()
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields, default)]
+#[serde(rename_all = "kebab-case")]
+pub struct GlobEngineConfig {
     pub extend_glob: Vec<kstring::KString>,
     #[serde(flatten)]
     pub engine: EngineConfig,
 }
 
-impl TypeEngineConfig {
-    pub fn update(&mut self, source: &TypeEngineConfig) {
+impl GlobEngineConfig {
+    pub fn update(&mut self, source: &GlobEngineConfig) {
         self.extend_glob.extend(source.extend_glob.iter().cloned());
         self.engine.update(&source.engine);
     }
@@ -449,8 +500,8 @@ mod test {
 
     #[test]
     fn test_extend_glob_updates() {
-        let null = TypeEngineConfig::default();
-        let extended = TypeEngineConfig {
+        let null = GlobEngineConfig::default();
+        let extended = GlobEngineConfig {
             extend_glob: vec!["*.foo".into()],
             ..Default::default()
         };
@@ -463,11 +514,11 @@ mod test {
 
     #[test]
     fn test_extend_glob_extends() {
-        let base = TypeEngineConfig {
+        let base = GlobEngineConfig {
             extend_glob: vec!["*.foo".into()],
             ..Default::default()
         };
-        let extended = TypeEngineConfig {
+        let extended = GlobEngineConfig {
             extend_glob: vec!["*.bar".into()],
             ..Default::default()
         };
