@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Reduce false-positives by not checking file contents of certs
+
 ## [1.1.4] - 2021-08-02
 
 #### Bug Fixes
