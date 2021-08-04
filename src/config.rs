@@ -166,7 +166,34 @@ impl TypeEngineConfig {
     }
 
     pub fn patterns(&self) -> impl Iterator<Item = (kstring::KString, GlobEngineConfig)> {
-        self.patterns.clone().into_iter()
+        let mut patterns = self.patterns.clone();
+        patterns.entry("cert".into()).or_insert_with(|| {
+            GlobEngineConfig {
+                extend_glob: vec![
+                    // Certificate files:
+                    "*.crt".into(),
+                    "*.cer".into(),
+                    "*.ca-bundle".into(),
+                    "*.p7b".into(),
+                    "*.p7c".into(),
+                    "*.p7s".into(),
+                    "*.pem".into(),
+                    // Keystore Files:
+                    "*.key".into(),
+                    "*.keystore".into(),
+                    "*.jks".into(),
+                    // Combined certificate and key files:
+                    "*.p12".into(),
+                    "*.pfx".into(),
+                    "*.pem".into(),
+                ],
+                engine: EngineConfig {
+                    check_file: Some(false),
+                    ..Default::default()
+                },
+            }
+        });
+        patterns.into_iter()
     }
 }
 
