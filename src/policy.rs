@@ -139,21 +139,21 @@ impl<'s> ConfigEngine<'s> {
         }
 
         let mut types = Default::default();
-        std::mem::swap(&mut types, &mut config.type_);
+        std::mem::swap(&mut types, &mut config.type_.patterns);
         let mut types = types
             .into_iter()
             .map(|(type_, type_engine)| {
                 let mut new_engine = config.default.clone();
                 new_engine.update(&type_engine.engine);
                 new_engine.update(&config.overrides);
-                let new_type_engine = crate::config::TypeEngineConfig {
+                let new_type_engine = crate::config::GlobEngineConfig {
                     extend_glob: type_engine.extend_glob,
                     engine: new_engine,
                 };
                 (type_, new_type_engine)
             })
             .collect();
-        std::mem::swap(&mut types, &mut config.type_);
+        std::mem::swap(&mut types, &mut config.type_.patterns);
 
         config.default.update(&config.overrides);
 
@@ -179,7 +179,7 @@ impl<'s> ConfigEngine<'s> {
         let mut type_matcher = ignore::types::TypesBuilder::new();
         type_matcher.add_defaults();
         let mut types: std::collections::HashMap<_, _> = Default::default();
-        for (type_name, type_engine) in type_.into_iter() {
+        for (type_name, type_engine) in type_.patterns() {
             if type_engine.extend_glob.is_empty() {
                 if type_matcher
                     .definitions()
@@ -371,14 +371,16 @@ mod test {
                 check_filename: Some(true),
                 ..Default::default()
             },
-            type_: maplit::hashmap! {
-                type_name.clone() => crate::config::TypeEngineConfig {
-                    engine: crate::config::EngineConfig {
-                        check_filename: Some(false),
-                        check_file: Some(true),
+            type_: crate::config::TypeEngineConfig {
+                patterns: maplit::hashmap! {
+                    type_name.clone() => crate::config::GlobEngineConfig {
+                        engine: crate::config::EngineConfig {
+                            check_filename: Some(false),
+                            check_file: Some(true),
+                            ..Default::default()
+                        },
                         ..Default::default()
                     },
-                    ..Default::default()
                 },
             },
             overrides: crate::config::EngineConfig {
@@ -395,13 +397,18 @@ mod test {
         assert_eq!(loaded.default.binary, Some(false));
         assert_eq!(loaded.default.check_filename, Some(true));
         assert_eq!(loaded.default.check_file, Some(false));
-        assert_eq!(loaded.type_[type_name.as_str()].engine.binary, Some(false));
         assert_eq!(
-            loaded.type_[type_name.as_str()].engine.check_filename,
+            loaded.type_.patterns[type_name.as_str()].engine.binary,
             Some(false)
         );
         assert_eq!(
-            loaded.type_[type_name.as_str()].engine.check_file,
+            loaded.type_.patterns[type_name.as_str()]
+                .engine
+                .check_filename,
+            Some(false)
+        );
+        assert_eq!(
+            loaded.type_.patterns[type_name.as_str()].engine.check_file,
             Some(false)
         );
     }
@@ -415,9 +422,11 @@ mod test {
         let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
 
         let config = crate::config::Config {
-            type_: maplit::hashmap! {
-                type_name => crate::config::TypeEngineConfig {
-                    ..Default::default()
+            type_: crate::config::TypeEngineConfig {
+                patterns: maplit::hashmap! {
+                    type_name => crate::config::GlobEngineConfig {
+                        ..Default::default()
+                    },
                 },
             },
             ..Default::default()
@@ -457,12 +466,14 @@ mod test {
                 binary: Some(true),
                 ..Default::default()
             },
-            type_: maplit::hashmap! {
-                type_name.clone() => crate::config::TypeEngineConfig {
-                    extend_glob: vec![type_name],
-                    engine: crate::config::EngineConfig {
-                        binary: Some(false),
-                        ..Default::default()
+            type_: crate::config::TypeEngineConfig {
+                patterns: maplit::hashmap! {
+                    type_name.clone() => crate::config::GlobEngineConfig {
+                        extend_glob: vec![type_name],
+                        engine: crate::config::EngineConfig {
+                            binary: Some(false),
+                            ..Default::default()
+                        },
                     },
                 },
             },
@@ -489,14 +500,15 @@ mod test {
                 binary: Some(true),
                 ..Default::default()
             },
-            type_: maplit::hashmap! {
-                type_name.clone() => crate::config::TypeEngineConfig {
+            type_: crate::config::TypeEngineConfig {
+                patterns: maplit::hashmap! {
+                type_name.clone() => crate::config::GlobEngineConfig {
                     extend_glob: vec![type_name],
                     engine: crate::config::EngineConfig {
                         binary: Some(false),
                         ..Default::default()
                     },
-                },
+                }},
             },
             ..Default::default()
         };
