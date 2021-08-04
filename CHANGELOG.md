@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.1.5] - 2021-08-04
+
 #### Bug Fixes
 
 - Reduce false-positives by not checking file contents of certs
@@ -208,7 +210,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.1.4...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.1.5...HEAD
+[1.1.5]: https://github.com/crate-ci/typos/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/crate-ci/typos/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/crate-ci/typos/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/crate-ci/typos/compare/v1.1.1...v1.1.2
