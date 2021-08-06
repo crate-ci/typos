@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Add `instantialed` typo
+
 ## [1.1.5] - 2021-08-04
 
 #### Bug Fixes
