@@ -3,3 +3,4 @@ no-dev-version = true
 tag-message = "{{tag_name}}"
 tag-name = "{{prefix}}v{{version}}"
 consolidate-commits = true
+consolidate-pushes = true
