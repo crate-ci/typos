@@ -5,7 +5,7 @@ description = "Compile-time case-insensitive map"
 repository = "https://github.com/crate-ci/typos"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling", "no_std"]
-license = "MIT"
+license = "MIT OR Apache-2.0"
 edition = "2018"
 
 [features]

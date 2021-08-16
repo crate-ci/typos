@@ -6,11 +6,10 @@ description = "Varcon-relevant data structures"
 repository = "https://github.com/crate-ci/typos"
 readme = "../../README.md"
 categories = ["text-processing"]
-license = "MIT"
+license = "MIT OR Apache-2.0"
 edition = "2018"
 
 [badges]
-azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [features]

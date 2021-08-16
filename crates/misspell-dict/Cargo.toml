@@ -7,12 +7,11 @@ repository = "https://github.com/crate-ci/typos"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
-license = "MIT"
+license = "MIT OR Apache-2.0"
 edition = "2018"
 publish = false
 
 [badges]
-azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [package.metadata.release]

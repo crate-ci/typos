@@ -12,7 +12,6 @@ edition = "2018"
 publish = false
 
 [badges]
-azure-devops = { project = "crate-ci", pipeline = "typos" }
 codecov = { repository = "crate-ci/typos" }
 
 [package.metadata.release]
