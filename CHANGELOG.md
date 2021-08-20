@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Improve hex/hash detection
+
 ## [1.1.6] - 2021-08-06
 
 #### Bug Fixes
