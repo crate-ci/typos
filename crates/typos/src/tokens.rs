@@ -264,13 +264,20 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         // Size considerations:
-        // - sha-1 is git's original hash
-        // - sha-256 is git's new hash
-        // - Git hashes can be abbreviated but we need a good abbreviation that won't be mistaken
-        //   for a variable name
-        const SHA_1_MAX: usize = 40;
-        const SHA_256_MAX: usize = 64;
-        take_while_m_n(SHA_1_MAX, SHA_256_MAX, is_lower_hex_digit)(input)
+        //   - 40 characters holds for a SHA-1 hash from older Git versions.
+        //   - 64 characters holds for a SHA-256 hash from newer Git versions.
+        //   - Git allows abbreviated hashes, but we need a good abbreviation
+        //     that won't be mistaken for a variable name.
+        //   - Through experimentation we've found that there is almost
+        //     never any actual text inside a hex string of 32 characters
+        //     or more.
+
+        const IGNORE_HEX_MIN: usize = 32;
+        const IGNORE_HEX_MAX: usize = usize::MAX;
+        alt((
+            take_while_m_n(IGNORE_HEX_MIN, IGNORE_HEX_MAX, is_lower_hex_digit),
+            take_while_m_n(IGNORE_HEX_MIN, IGNORE_HEX_MAX, is_upper_hex_digit),
+        ))(input)
     }
 
     fn base64_literal<T>(input: T) -> IResult<T, T>
@@ -441,6 +448,12 @@ mod parser {
     fn is_lower_hex_digit(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         ('a'..='f').contains(&c) || ('0'..='9').contains(&c)
+    }
+
+    #[inline]
+    fn is_upper_hex_digit(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('A'..='F').contains(&c) || ('0'..='9').contains(&c)
     }
 
     #[inline]
@@ -905,15 +918,39 @@ mod test {
     fn tokenize_ignore_hash() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello 485865fd0412e40d041e861506bb3ac11a3a91e3 World";
-        let expected: Vec<Identifier> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 47),
-        ];
-        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
-        let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        for (hashlike, is_ignored) in [
+            // A SHA-1 output, in lower case.
+            ("485865fd0412e40d041e861506bb3ac11a3a91e3", true),
+            // A SHA-1 output, in mixed case: Not a ignored.
+            ("485865fd0412e40d041E861506BB3AC11A3A91E3", false),
+            // A SHA-256 output, in upper case.
+            ("E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855", true),
+            // A SHA-512 output, in lower case.
+            ("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e", true),
+            // An MD5 (deprecated) output, in upper case.
+            ("D41D8CD98F00B204E9800998ECF8427E", true),
+            // A 31-character hexadecimal string: too short to be a hash.
+            ("D41D8CD98F00B204E9800998ECF8427", false),
+            // A 40-character string, but with non-hex characters (in
+            // several positions.)
+            ("Z85865fd0412e40d041e861506bb3ac11a3a91e3", false),
+            ("485865fd04Z2e40d041e861506bb3ac11a3a91e3", false),
+            ("485865fd0412e40d041e8Z1506bb3ac11a3a91e3", false),
+            ("485865fd0412e40d041e861506bb3ac11a3a91eZ", false),
+        ] {
+            let input = format!("Hello {} World", hashlike);
+            let mut expected: Vec<Identifier> = vec![
+                Identifier::new_unchecked("Hello", Case::None, 0),
+                Identifier::new_unchecked("World", Case::None, 7+hashlike.len()),
+            ];
+            if ! is_ignored {
+                expected.insert(1, Identifier::new_unchecked(hashlike, Case::None, 6));
+            }
+            let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+            assert_eq!(expected, actual);
+            let actual: Vec<_> = parser.parse_str(&input).collect();
+            assert_eq!(expected, actual);
+        }
     }
 
     #[test]
