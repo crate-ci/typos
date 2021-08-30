@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.1.8] - 2021-08-30
+
 #### Bug Fixes
 
 - Correct `surrouned` to `surround` and now `surrounded`
@@ -226,7 +228,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.1.7...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.1.8...HEAD
+[1.1.8]: https://github.com/crate-ci/typos/compare/v1.1.7...v1.1.8
 [1.1.7]: https://github.com/crate-ci/typos/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/crate-ci/typos/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/crate-ci/typos/compare/v1.1.4...v1.1.5
