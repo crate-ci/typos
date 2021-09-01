@@ -414,7 +414,7 @@ version = "0.1.1"
 dependencies = [
  "phf 0.9.0",
  "phf_codegen",
- "phf_shared 0.9.0",
+ "phf_shared 0.10.0",
  "unicase",
 ]
 
@@ -925,6 +925,15 @@ checksum = "a68318426de33640f02be62b4ae8eb1261be2efbc337b60c54d845bf4484e0d9"
 dependencies = [
  "siphasher",
  "unicase",
+]
+
+[[package]]
+name = "phf_shared"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b6796ad771acdc0123d2a88dc428b5e38ef24456743ddb1744ed628f9815c096"
+dependencies = [
+ "siphasher",
 ]
 
 [[package]]
