@@ -17,5 +17,5 @@ map = ["phf", "phf_shared"]
 [dependencies]
 unicase = "2.5"
 phf = { version = "0.9", features = ["unicase"], optional = true }
-phf_codegen = { version = "0.9", optional = true }
+phf_codegen = { version = "0.10", optional = true }
 phf_shared = { version = "0.9", optional = true }
