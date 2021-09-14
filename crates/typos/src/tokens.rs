@@ -182,6 +182,7 @@ mod parser {
             terminated(hash_literal, sep1),
             terminated(hex_literal, sep1),
             terminated(dec_literal, sep1),
+            terminated(ordinal_literal, sep1),
             terminated(base64_literal, sep1),
             terminated(email_literal, sep1),
             terminated(url_literal, sep1),
@@ -197,6 +198,30 @@ mod parser {
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
         take_while1(is_ignore_char)(input)
+    }
+
+    fn ordinal_literal<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        terminated(
+            take_while1(is_dec_digit),
+            alt((
+                pair(char('s'), char('t')),
+                pair(char('n'), char('d')),
+                pair(char('r'), char('d')),
+                pair(char('t'), char('h')),
+            )),
+        )(input)
     }
 
     fn dec_literal<T>(input: T) -> IResult<T, T>
@@ -432,6 +457,11 @@ mod parser {
                 }
             }
         }
+    }
+
+    #[inline]
+    fn is_dec_digit(i: impl AsChar + Copy) -> bool {
+        i.is_dec_digit()
     }
 
     #[inline]
@@ -878,6 +908,21 @@ mod test {
 
         let input = "A_B";
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", Case::None, 0)];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_ordinal() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello 1st 2nd 3rd 4th World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 22),
+        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
