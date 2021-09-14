@@ -1,6 +1,6 @@
 [package]
 name = "typos"
-version = "0.7.3"
+version = "0.7.4"
 authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
 repository = "https://github.com/crate-ci/typos"
