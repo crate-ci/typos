@@ -7,16 +7,19 @@ pub struct TokenizerBuilder {
 }
 
 impl TokenizerBuilder {
+    #[inline]
     pub fn new() -> Self {
         Default::default()
     }
 
     /// Specify that unicode Identifiers are allowed.
+    #[inline]
     pub fn unicode(&mut self, yes: bool) -> &mut Self {
         self.unicode = yes;
         self
     }
 
+    #[inline]
     pub fn build(&self) -> Tokenizer {
         let TokenizerBuilder { unicode } = self.clone();
         Tokenizer { unicode }
@@ -36,6 +39,7 @@ pub struct Tokenizer {
 }
 
 impl Tokenizer {
+    #[inline]
     pub fn new() -> Self {
         TokenizerBuilder::default().build()
     }
@@ -595,6 +599,7 @@ pub struct Identifier<'t> {
 }
 
 impl<'t> Identifier<'t> {
+    #[inline]
     pub fn new_unchecked(token: &'t str, case: Case, offset: usize) -> Self {
         Self {
             token,
@@ -603,19 +608,23 @@ impl<'t> Identifier<'t> {
         }
     }
 
+    #[inline]
     pub fn token(&self) -> &'t str {
         self.token
     }
 
+    #[inline]
     pub fn case(&self) -> Case {
         self.case
     }
 
+    #[inline]
     pub fn offset(&self) -> usize {
         self.offset
     }
 
     /// Split into individual Words.
+    #[inline]
     pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
         match self.case {
             Case::None => itertools::Either::Left(SplitIdent::new(self.token, self.offset)),
@@ -659,6 +668,7 @@ impl<'t> Word<'t> {
         Ok(item)
     }
 
+    #[inline]
     pub fn new_unchecked(token: &'t str, case: Case, offset: usize) -> Self {
         Self {
             token,
@@ -667,14 +677,17 @@ impl<'t> Word<'t> {
         }
     }
 
+    #[inline]
     pub fn token(&self) -> &'t str {
         self.token
     }
 
+    #[inline]
     pub fn case(&self) -> Case {
         self.case
     }
 
+    #[inline]
     pub fn offset(&self) -> usize {
         self.offset
     }
