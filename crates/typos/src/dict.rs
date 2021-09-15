@@ -24,16 +24,20 @@ pub enum Status<'c> {
 }
 
 impl<'c> Status<'c> {
+    #[inline]
     pub fn is_invalid(&self) -> bool {
         matches!(self, Status::Invalid)
     }
+    #[inline]
     pub fn is_valid(&self) -> bool {
         matches!(self, Status::Valid)
     }
+    #[inline]
     pub fn is_correction(&self) -> bool {
         matches!(self, Status::Corrections(_))
     }
 
+    #[inline]
     pub fn corrections_mut(&mut self) -> impl Iterator<Item = &mut Cow<'c, str>> {
         match self {
             Status::Corrections(corrections) => itertools::Either::Left(corrections.iter_mut()),
