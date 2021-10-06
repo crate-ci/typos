@@ -44,7 +44,8 @@ impl Default for Format {
 #[structopt(
         setting = structopt::clap::AppSettings::UnifiedHelpMessage,
         setting = structopt::clap::AppSettings::DeriveDisplayOrder,
-        setting = structopt::clap::AppSettings::DontCollapseArgsInUsage
+        setting = structopt::clap::AppSettings::DontCollapseArgsInUsage,
+        setting = concolor_clap::color_choice(),
     )]
 #[structopt(group = structopt::clap::ArgGroup::with_name("mode").multiple(false))]
 pub(crate) struct Args {
@@ -104,7 +105,7 @@ pub(crate) struct Args {
     pub(crate) config: ConfigArgs,
 
     #[structopt(flatten)]
-    pub(crate) color: crate::color::ColorArgs,
+    pub(crate) color: concolor_clap::Color,
 
     #[structopt(flatten)]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,

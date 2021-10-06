@@ -232,6 +232,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "concolor-clap"
+version = "0.0.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4eb23c99e877c098e60ba3e84410153bfc311ac91b6ac7eabc0da0414ffa12e4"
+dependencies = [
+ "concolor-control",
+ "structopt",
+]
+
+[[package]]
+name = "concolor-control"
+version = "0.0.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7104119c2f80d887239879d0c50e033cd40eac9a3f3561e0684ba7d5d654f4da"
+dependencies = [
+ "atty",
+ "bitflags",
+ "concolor-query",
+]
+
+[[package]]
+name = "concolor-query"
+version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad159cc964ac8f9d407cbc0aa44b02436c054b541f2b4b5f06972e1efdc54bc7"
+
+[[package]]
 name = "content_inspector"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1454,6 +1481,8 @@ dependencies = [
  "bstr",
  "clap",
  "clap-verbosity-flag",
+ "concolor-clap",
+ "concolor-control",
  "content_inspector",
  "criterion",
  "derive_more",
