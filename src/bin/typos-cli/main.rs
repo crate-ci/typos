@@ -7,7 +7,6 @@ use std::io::Write;
 use structopt::StructOpt;
 
 mod args;
-mod color;
 mod report;
 
 use proc_exit::WithCodeResultExt;
@@ -31,22 +30,16 @@ fn run() -> proc_exit::ExitResult {
         }
     };
 
-    let colored = args.color.colored().or_else(color::colored_env);
-    let mut colored_stdout = colored.or_else(color::colored_stdout).unwrap_or(true);
-    let mut colored_stderr = colored.or_else(color::colored_stderr).unwrap_or(true);
-    if (colored_stdout || colored_stderr) && !yansi::Paint::enable_windows_ascii() {
-        colored_stdout = false;
-        colored_stderr = false;
-    }
+    args.color.apply();
 
-    init_logging(args.verbose.log_level(), colored_stderr);
+    init_logging(args.verbose.log_level());
 
-    let stdout_palette = if colored_stdout {
+    let stdout_palette = if concolor_control::get(concolor_control::Stream::Stdout).ansi_color() {
         report::Palette::colored()
     } else {
         report::Palette::plain()
     };
-    let stderr_palette = if colored_stderr {
+    let stderr_palette = if concolor_control::get(concolor_control::Stream::Stderr).ansi_color() {
         report::Palette::colored()
     } else {
         report::Palette::plain()
@@ -272,9 +265,11 @@ fn run_checks(
     }
 }
 
-fn init_logging(level: Option<log::Level>, colored: bool) {
+fn init_logging(level: Option<log::Level>) {
     if let Some(level) = level {
         let mut builder = env_logger::Builder::new();
+
+        let colored = concolor_control::get(concolor_control::Stream::Stderr).ansi_color();
         builder.write_style(if colored {
             env_logger::WriteStyle::Always
         } else {
