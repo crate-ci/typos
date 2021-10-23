@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Bug Fixes
+
+- Remove some overhead
+- Smarter color control
+- Remove some general false positives
+- Remove some Rust-specific false positives
+- Check language packaging with language (due to overlap of dependency names
+- Skip checking lock files since they are machine generated
+- Fix default/override config overlaying
+
 ## [1.1.9] - 2021-09-14
 
 ## [1.1.8] - 2021-08-30
