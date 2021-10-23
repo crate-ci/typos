@@ -167,6 +167,40 @@ impl TypeEngineConfig {
 
     pub fn patterns(&self) -> impl Iterator<Item = (kstring::KString, GlobEngineConfig)> {
         let mut patterns = self.patterns.clone();
+        patterns
+            .entry("lock".into())
+            .or_insert_with(|| GlobEngineConfig {
+                extend_glob: Vec::new(),
+                engine: EngineConfig {
+                    check_file: Some(false),
+                    ..Default::default()
+                },
+            });
+        patterns
+            .entry("rust".into())
+            .or_insert_with(|| GlobEngineConfig {
+                // From a spell-check perspective, these are more closely related to Rust than Toml
+                extend_glob: vec!["Cargo.toml".into()],
+                engine: EngineConfig {
+                    dict: Some(DictConfig {
+                        extend_words: maplit::hashmap! {
+                            "flate".into() => "flate".into(),
+                            "ser".into() => "ser".into(),
+                        },
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                },
+            });
+        patterns
+            .entry("python".into())
+            .or_insert_with(|| GlobEngineConfig {
+                // From a spell-check perspective, these are more closely related to Python than Toml
+                extend_glob: vec!["pyproject.toml".into()],
+                engine: EngineConfig {
+                    ..Default::default()
+                },
+            });
         patterns.entry("cert".into()).or_insert_with(|| {
             GlobEngineConfig {
                 extend_glob: vec![

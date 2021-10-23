@@ -194,7 +194,11 @@ impl<'s> ConfigEngine<'s> {
                 }
             }
 
-            let type_config = self.init_file_config(type_engine.engine);
+            let mut engine = default.clone();
+            engine.update(&type_engine.engine);
+            engine.update(&overrides);
+
+            let type_config = self.init_file_config(engine);
             types.insert(type_name, type_config);
         }
         default.update(&overrides);
