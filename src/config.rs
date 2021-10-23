@@ -167,6 +167,15 @@ impl TypeEngineConfig {
 
     pub fn patterns(&self) -> impl Iterator<Item = (kstring::KString, GlobEngineConfig)> {
         let mut patterns = self.patterns.clone();
+        patterns
+            .entry("lock".into())
+            .or_insert_with(|| GlobEngineConfig {
+                extend_glob: Vec::new(),
+                engine: EngineConfig {
+                    check_file: Some(false),
+                    ..Default::default()
+                },
+            });
         patterns.entry("cert".into()).or_insert_with(|| {
             GlobEngineConfig {
                 extend_glob: vec![
