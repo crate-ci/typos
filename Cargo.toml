@@ -12,7 +12,7 @@ members = [
 
 [package]
 name = "typos-cli"
-version = "1.1.9"
+version = "1.2.0"
 description = "Source Code Spelling Correction"
 authors = ["Ed Page <eopage@gmail.com>"]
 license = "MIT OR Apache-2.0"
