@@ -176,6 +176,24 @@ impl TypeEngineConfig {
                     ..Default::default()
                 },
             });
+        patterns
+            .entry("rust".into())
+            .or_insert_with(|| GlobEngineConfig {
+                // From a spell-check perspective, these are more closely related to Rust than Toml
+                extend_glob: vec!["Cargo.toml".into()],
+                engine: EngineConfig {
+                    ..Default::default()
+                },
+            });
+        patterns
+            .entry("python".into())
+            .or_insert_with(|| GlobEngineConfig {
+                // From a spell-check perspective, these are more closely related to Python than Toml
+                extend_glob: vec!["pyproject.toml".into()],
+                engine: EngineConfig {
+                    ..Default::default()
+                },
+            });
         patterns.entry("cert".into()).or_insert_with(|| {
             GlobEngineConfig {
                 extend_glob: vec![
