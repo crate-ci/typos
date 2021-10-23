@@ -182,6 +182,13 @@ impl TypeEngineConfig {
                 // From a spell-check perspective, these are more closely related to Rust than Toml
                 extend_glob: vec!["Cargo.toml".into()],
                 engine: EngineConfig {
+                    dict: Some(DictConfig {
+                        extend_words: maplit::hashmap! {
+                            "flate".into() => "flate".into(),
+                            "ser".into() => "ser".into(),
+                        },
+                        ..Default::default()
+                    }),
                     ..Default::default()
                 },
             });
