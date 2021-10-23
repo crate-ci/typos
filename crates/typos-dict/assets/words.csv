@@ -15063,11 +15063,11 @@ deviceremoveable,deviceremovable
 devicesr,devices
 devicess,devices
 devicest,devices
-devide,divide
+devide,divide,device
 devided,divided
 devider,divider
 deviders,dividers
-devides,divides
+devides,divides,devices
 deviding,dividing
 deviece,device
 devied,device
@@ -16677,8 +16677,8 @@ documnet,document
 documument,document
 docunment,document
 doed,does
-doen,done
-doens,does
+doen,done,don,doesn
+doens,does,doesn
 doese,does
 doesing,doing,does,dosing,dozing
 doess,does
