@@ -186,4 +186,4 @@ bench_file "subtitles_ru" "$subtitles_ru_version" "$subtitles_ru_path" "$report_
 
 subtitles_ru_small_path=`$current_dir/fixtures/subtitles_ru_small.sh path $base_dir`
 subtitles_ru_small_version=`$current_dir/fixtures/subtitles_ru_small.sh version $base_dir`
-bench_file "subtitles_ru_small" "$subtitles_ru_smal_version" "$subtitles_ru_small_path" "$report_path"
+bench_file "subtitles_ru_small" "$subtitles_ru_small_version" "$subtitles_ru_small_path" "$report_path"
