@@ -437,7 +437,7 @@ dependencies = [
 
 [[package]]
 name = "dictgen"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "phf",
  "phf_codegen",
@@ -1454,7 +1454,7 @@ checksum = "0685c84d5d54d1c26f7d3eb96cd41550adb97baed141a761cf335d3d33bcd0ae"
 
 [[package]]
 name = "typos"
-version = "0.7.4"
+version = "0.7.5"
 dependencies = [
  "anyhow",
  "bstr",
@@ -1471,7 +1471,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "ahash",
  "anyhow",
@@ -1515,7 +1515,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.6.2"
+version = "0.6.3"
 dependencies = [
  "dictgen",
  "log",
@@ -1549,7 +1549,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.7.1"
+version = "0.7.2"
 dependencies = [
  "dictgen",
  "log",

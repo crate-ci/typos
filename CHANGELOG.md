@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.2.1] - 2021-11-03
+
 ## [1.2.0] - 2021-10-23
 
 #### Bug Fixes
@@ -242,7 +244,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/crate-ci/typos/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/crate-ci/typos/compare/v1.1.9...v1.2.0
 [1.1.9]: https://github.com/crate-ci/typos/compare/v1.1.8...v1.1.9
 [1.1.8]: https://github.com/crate-ci/typos/compare/v1.1.7...v1.1.8
