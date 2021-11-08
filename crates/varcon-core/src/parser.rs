@@ -39,8 +39,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
 
 ",
         );
-        let all: Vec<_> = iter.collect();
-        assert_eq!(all.len(), 1);
+        assert_eq!(iter.count(), 1);
     }
 
     #[test]
@@ -58,8 +57,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
 
 ",
         );
-        let all: Vec<_> = iter.collect();
-        assert_eq!(all.len(), 2);
+        assert_eq!(iter.count(), 2);
     }
 }
 
