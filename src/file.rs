@@ -620,15 +620,14 @@ mod test {
 
     fn fix_simple(line: &str, corrections: Vec<(usize, &'static str, &'static str)>) -> String {
         let line = line.as_bytes().to_vec();
-        let corrections: Vec<_> = corrections
+        let corrections = corrections
             .into_iter()
             .map(|(byte_offset, typo, correction)| typos::Typo {
                 byte_offset,
                 typo: typo.into(),
                 corrections: typos::Status::Corrections(vec![correction.into()]),
-            })
-            .collect();
-        let actual = fix_buffer(line, corrections.into_iter());
+            });
+        let actual = fix_buffer(line, corrections);
         String::from_utf8(actual).unwrap()
     }
 
