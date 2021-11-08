@@ -14,6 +14,8 @@ on:
     - '!/*.md'
     - '!/docs/**'
     - "!/LICENSE-*"
+  schedule:
+  - cron: '3 3 3 * *'
 jobs:
   ci:
     name: CI
@@ -113,6 +115,8 @@ jobs:
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
+        # Not MSRV because its harder to jump between versions and people are
+        # more likely to have stable
         toolchain: stable
         profile: minimal
         override: true

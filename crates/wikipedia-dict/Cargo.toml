@@ -1,18 +1,22 @@
 [package]
 name = "wikipedia-dict"
 version = "0.4.0"
-authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
+authors = ["Ed Page <eopage@gmail.com>"]
+license = "CC-BY-SA-3.0"
 repository = "https://github.com/crate-ci/typos"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
-license = "CC-BY-SA-3.0"
 edition = "2018"
 publish = false
-
-[badges]
-codecov = { repository = "crate-ci/typos" }
+include = [
+  "src/**/*",
+  "Cargo.toml",
+  "LICENSE*",
+  "README.md",
+  "examples/**/*"
+]
 
 [package.metadata.release]
 disable-release = true

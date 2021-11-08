@@ -1,17 +1,21 @@
 [package]
 name = "typos"
 version = "0.7.5"
-authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
+authors = ["Ed Page <eopage@gmail.com>"]
+license = "MIT OR Apache-2.0"
 repository = "https://github.com/crate-ci/typos"
 readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
-license = "MIT OR Apache-2.0"
 edition = "2018"
-
-[badges]
-codecov = { repository = "crate-ci/typos" }
+include = [
+  "src/**/*",
+  "Cargo.toml",
+  "LICENSE*",
+  "README.md",
+  "examples/**/*"
+]
 
 [dependencies]
 anyhow = "1.0"

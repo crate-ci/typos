@@ -7,6 +7,13 @@ categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling", "no_std"]
 license = "MIT OR Apache-2.0"
 edition = "2018"
+include = [
+  "src/**/*",
+  "Cargo.toml",
+  "LICENSE*",
+  "README.md",
+  "examples/**/*"
+]
 
 [features]
 default = ["std"]

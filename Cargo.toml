@@ -21,6 +21,13 @@ readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
 edition = "2018"
+include = [
+  "src/**/*",
+  "Cargo.toml",
+  "LICENSE*",
+  "README.md",
+  "examples/**/*"
+]
 
 [package.metadata.docs.rs]
 no-default-features = true
@@ -48,10 +55,6 @@ vars = ["typos-vars"]
 name = "typos"
 path = "src/bin/typos-cli/main.rs"
 doc = false
-
-[badges]
-azure-devops = { project = "crate-ci", pipeline = "typos" }
-codecov = { repository = "crate-ci/typos" }
 
 [dependencies]
 typos = { version = "^0.7", path = "crates/typos" }
