@@ -720,6 +720,7 @@ impl<'s> Iterator for SplitIdent<'s> {
     type Item = Word<'s>;
 
     fn next(&mut self) -> Option<Word<'s>> {
+        #[allow(clippy::while_let_on_iterator)]
         while let Some((i, c)) = self.char_indices.next() {
             let cur_mode = WordMode::classify(c);
             if cur_mode == WordMode::Boundary {

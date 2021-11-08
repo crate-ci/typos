@@ -1,0 +1,3 @@
+bin.name = "typos"
+args = "README.md"
+status.code = 2

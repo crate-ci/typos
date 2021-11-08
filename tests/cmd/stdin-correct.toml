@@ -1,0 +1,2 @@
+bin.name = "typos"
+args = "--write-changes -"

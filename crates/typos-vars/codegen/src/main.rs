@@ -90,7 +90,7 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
                 None
             } else {
                 referenced_symbols.extend(data.iter().map(|(s, _)| s));
-                let value = generate_link(&data);
+                let value = generate_link(data);
                 Some((*word, value))
             }
         }),
@@ -165,7 +165,7 @@ fn entries() -> BTreeMap<String, varcon_core::Entry> {
         .filter(|e| {
             e.variants
                 .iter()
-                .all(|v| typos::tokens::Word::new(&v.word, 0).is_ok())
+                .all(|v| typos::tokens::Word::new(v.word, 0).is_ok())
         })
         .map(|e| {
             let mut e = e.into_owned();
