@@ -924,6 +924,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ab1bc2a289d34bd04a330323ac98a1b4bc82c9d9fcb1e66b63caa84da26b575"
 
 [[package]]
+name = "os_pipe"
+version = "0.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb233f06c2307e1f5ce2ecad9f8121cffbbee2c95428f44ea85222e460d0d213"
+dependencies = [
+ "libc",
+ "winapi",
+]
+
+[[package]]
 name = "os_type"
 version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1489,9 +1499,9 @@ checksum = "a7f741b240f1a48843f9b8e0444fb55fb2a4ff67293b50a9179dfd5ea67f8d41"
 
 [[package]]
 name = "trycmd"
-version = "0.2.2"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3756168da9e15c2ba53478a9e14661162bd724cc45dc650d1009d80ad46f0cad"
+checksum = "0b15571a9c85f2dc93e93907813b8b82583a60c1ee738ef5fa5123f4c96863b5"
 dependencies = [
  "concolor-control",
  "difflib",
@@ -1499,6 +1509,7 @@ dependencies = [
  "humantime",
  "humantime-serde",
  "normalize-line-endings",
+ "os_pipe",
  "rayon",
  "serde",
  "shlex",
