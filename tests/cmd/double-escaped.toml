@@ -1,0 +1,3 @@
+bin.name = "typos"
+args = "--write-changes -"
+status.code = 0

@@ -1499,9 +1499,9 @@ checksum = "a7f741b240f1a48843f9b8e0444fb55fb2a4ff67293b50a9179dfd5ea67f8d41"
 
 [[package]]
 name = "trycmd"
-version = "0.4.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b15571a9c85f2dc93e93907813b8b82583a60c1ee738ef5fa5123f4c96863b5"
+checksum = "2d034538089e906ac14df42c19aae52a55aa1014102d6895d9748080e043cc48"
 dependencies = [
  "concolor-control",
  "difflib",
