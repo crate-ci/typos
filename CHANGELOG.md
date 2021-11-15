@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+Note: MSRV is now 1.54
+
+#### Fixes
+
+- Fix multiple escape sequences in a row
+- Large batch of additional corrections
+- Use static CRT for pre-built Windows binaries
+
 ## [1.2.1] - 2021-11-03
 
 ## [1.2.0] - 2021-10-23
