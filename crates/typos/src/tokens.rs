@@ -190,8 +190,8 @@ mod parser {
             terminated(base64_literal, sep1),
             terminated(email_literal, sep1),
             terminated(url_literal, sep1),
-            terminated(c_escape, sep1),
-            terminated(printf, sep1),
+            c_escape,
+            printf,
             sep1,
         )))(input)
     }
@@ -410,6 +410,10 @@ mod parser {
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
+        // We don't know whether the string we are parsing is a literal string (no escaping) or
+        // regular string that does escaping. The escaped letter might be part of a word, or it
+        // might not be. Rather than guess and be wrong part of the time and correct people's words
+        // incorrectly, we opt for just not evaluating it at all.
         preceded(take_while1(is_escape), take_while(is_xid_continue))(input)
     }
 
@@ -1096,6 +1100,36 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 18),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_double_escape() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello \\n\\n World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 11),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_escape() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello \\nanana\\nanana World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 21),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
