@@ -1,6 +1,6 @@
 [package]
 name = "typos-vars"
-version = "0.7.2"
+version = "0.8.0"
 description = "Source Code Spelling Correction"
 authors = ["Ed Page <eopage@gmail.com>"]
 license = "MIT OR Apache-2.0"
@@ -20,5 +20,5 @@ include = [
 [dependencies]
 unicase = "2.5"
 log = "0.4"
-dictgen = { version = "0.1", path = "../dictgen" }
+dictgen = { version = "^0.2", path = "../dictgen" }
 varcon-core = { version = "^2.0", path = "../varcon-core", features = ["flags"] }

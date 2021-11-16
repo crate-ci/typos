@@ -14,9 +14,9 @@ publish = false
 release = false
 
 [dependencies]
-varcon = { version = "^0.5", path = "../../varcon", features = ["flags"] }
+varcon = { version = "^0.6", path = "../../varcon", features = ["flags"] }
 varcon-core = { version = "^2.0", path = "../../varcon-core", features = ["flags"] }
-typos = { version = "^0.7", path = "../../typos" }
+typos = { version = "^0.8", path = "../../typos" }
 unicase = "2.5"
 codegenrs = "1.0"
 structopt = "0.3"
@@ -25,4 +25,4 @@ log = "0.4"
 env_logger = "0.9"
 clap-verbosity-flag = "0.3"
 itertools = "0.10"
-dictgen = { version = "0.1", path = "../../dictgen", features = ["codegen"] }
+dictgen = { version = "^0.2", path = "../../dictgen", features = ["codegen"] }

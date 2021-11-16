@@ -19,4 +19,4 @@ itertools = "0.10"
 codegenrs = "1.0"
 structopt = "0.3"
 regex = "1"
-dictgen = { version = "0.1", path = "../../dictgen", features = ["codegen"] }
+dictgen = { version = "^0.2", path = "../../dictgen", features = ["codegen"] }

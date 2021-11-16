@@ -18,6 +18,6 @@ csv = "1.1"
 unicase = "2.5"
 codegenrs = "1.0"
 structopt = "0.3"
-varcon = { version = "^0.5", path = "../../varcon" }
+varcon = { version = "^0.6", path = "../../varcon" }
 itertools = "0.10"
 edit-distance = "2.1"

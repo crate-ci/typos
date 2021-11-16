@@ -23,4 +23,4 @@ release = false
 
 [dependencies]
 unicase = "2.5"
-dictgen = { version = "0.1", path = "../dictgen" }
+dictgen = { version = "^0.2", path = "../dictgen" }
