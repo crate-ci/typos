@@ -11,7 +11,7 @@ edition = "2018"
 publish = false
 
 [package.metadata.release]
-disable-release = true
+release = false
 
 [dependencies]
 varcon = { version = "^0.5", path = "../../varcon", features = ["flags"] }

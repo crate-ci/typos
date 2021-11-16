@@ -11,7 +11,7 @@ edition = "2018"
 publish = false
 
 [package.metadata.release]
-disable-release = true
+release = false
 
 [dependencies]
 unicase = "2.5"
