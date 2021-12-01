@@ -1,5 +1,6 @@
 use nom::IResult;
 use nom::InputTakeAtPosition;
+use nom::Parser;
 
 use crate::*;
 
@@ -536,12 +537,12 @@ impl Pos {
         let verb = tag("<V>");
         let adjective = tag("<Adj>");
         let adverb = tag("<Adv>");
-        nom::alt!(input,
-            noun => {|_| Pos::Noun } |
-            verb => {|_| Pos::Verb } |
-            adjective => {|_| Pos::Adjective } |
-            adverb => {|_| Pos::Adverb }
-        )
+        nom::branch::alt((
+            noun.map(|_| Pos::Noun),
+            verb.map(|_| Pos::Verb),
+            adjective.map(|_| Pos::Adjective),
+            adverb.map(|_| Pos::Adverb),
+        ))(input)
     }
 }
 
