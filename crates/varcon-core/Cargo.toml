@@ -22,7 +22,7 @@ parser = ["nom"]
 flags = ["enumflags2"]
 
 [dependencies]
-nom = { version = "6", optional = true }
+nom = { version = "7", optional = true }
 enumflags2 = { version = "0.7", optional = true }
 
 [package.metadata.docs.rs]
