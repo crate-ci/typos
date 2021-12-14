@@ -46,7 +46,7 @@ impl BuiltIn {
         };
         corrections
             .corrections_mut()
-            .for_each(|mut s| case_correct(&mut s, word_token.case()));
+            .for_each(|s| case_correct(s, word_token.case()));
         Some(corrections)
     }
 }
