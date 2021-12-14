@@ -72,6 +72,7 @@ As a heads up, we'll be running your PR through the following gauntlet:
 - `rustfmt`
 - `clippy`
 - `rustdoc`
+- [`committed`](https://github.com/crate-ci/committed) to enforce [conventional commits](conventionalcommits.org/)
 
 Check out our [CI][travis] for more information.
 
