@@ -8,7 +8,6 @@ use typos_cli::report::{Context, Message, Report, Typo};
 #[derive(Copy, Clone, Debug)]
 pub struct Palette {
     error: yansi::Style,
-    warn: yansi::Style,
     info: yansi::Style,
     strong: yansi::Style,
 }
@@ -17,7 +16,6 @@ impl Palette {
     pub fn colored() -> Self {
         Self {
             error: yansi::Style::new(yansi::Color::Red),
-            warn: yansi::Style::new(yansi::Color::Yellow),
             info: yansi::Style::new(yansi::Color::Blue),
             strong: yansi::Style::default().bold(),
         }
@@ -26,7 +24,6 @@ impl Palette {
     pub fn plain() -> Self {
         Self {
             error: yansi::Style::default(),
-            warn: yansi::Style::default(),
             info: yansi::Style::default(),
             strong: yansi::Style::default(),
         }

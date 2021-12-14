@@ -55,8 +55,7 @@ impl Tokenizer {
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
         let iter = if self.unicode && !ByteSlice::is_ascii(content) {
-            let iter =
-                Utf8Chunks::new(content).flat_map(move |c| unicode_parser::iter_identifiers(c));
+            let iter = Utf8Chunks::new(content).flat_map(unicode_parser::iter_identifiers);
             itertools::Either::Left(iter)
         } else {
             itertools::Either::Right(ascii_parser::iter_identifiers(content))
