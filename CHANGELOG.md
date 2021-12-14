@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Fixes
+
+- Correct "requierment" to "requirement", not "requirements"
+- Correct "descrepancy" to "discrepancy"
+
 ## [1.3.1] - 2021-11-16
 
 ## [1.3.0] - 2021-11-15
