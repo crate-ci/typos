@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Fixes
+
+- Hopefully fix pre-commit hook on cygwin
+
 ## [1.3.2] - 2021-12-14
 
 #### Fixes
