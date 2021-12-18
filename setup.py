@@ -30,6 +30,7 @@ POSTFIX_SHA256 = {
         '',  # TODO: sha256 hexhash when we can generate it with release
     ),
 }
+POSTFIX_SHA256['cygwin'] = POSTFIX_SHA256['win32']
 PY_VERSION = '1'
 
 
