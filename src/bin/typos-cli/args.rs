@@ -1,15 +1,13 @@
-use structopt::StructOpt;
+use clap::Parser;
 
 use typos_cli::config;
 
-arg_enum! {
-    #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-    pub enum Format {
-        Silent,
-        Brief,
-        Long,
-        Json,
-    }
+#[derive(Debug, Copy, Clone, PartialEq, Eq, clap::ArgEnum)]
+pub enum Format {
+    Silent,
+    Brief,
+    Long,
+    Json,
 }
 
 impl Format {
@@ -39,109 +37,101 @@ impl Default for Format {
     }
 }
 
-#[derive(Debug, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
-#[structopt(
-        setting = structopt::clap::AppSettings::UnifiedHelpMessage,
-        setting = structopt::clap::AppSettings::DeriveDisplayOrder,
-        setting = structopt::clap::AppSettings::DontCollapseArgsInUsage,
-        setting = concolor_clap::color_choice(),
+#[derive(Debug, Parser)]
+#[clap(rename_all = "kebab-case")]
+#[clap(about, author, version)]
+#[clap(
+        setting = clap::AppSettings::DeriveDisplayOrder,
+        setting = clap::AppSettings::DontCollapseArgsInUsage,
+        color = concolor_clap::color_choice(),
     )]
-#[structopt(group = structopt::clap::ArgGroup::with_name("mode").multiple(false))]
+#[clap(group = clap::ArgGroup::new("mode").multiple(false))]
 pub(crate) struct Args {
-    #[structopt(parse(from_os_str), default_value = ".")]
+    #[clap(parse(from_os_str), default_value = ".")]
     /// Paths to check with `-` for stdin
     pub(crate) path: Vec<std::path::PathBuf>,
 
-    #[structopt(short = "c", long = "config")]
+    #[clap(short = 'c', long = "config", parse(from_os_str))]
     /// Custom config file
     pub(crate) custom_config: Option<std::path::PathBuf>,
 
-    #[structopt(long)]
+    #[clap(long)]
     /// Ignore implicit configuration files.
     pub(crate) isolated: bool,
 
-    #[structopt(long, group = "mode")]
+    #[clap(long, group = "mode")]
     /// Print a diff of what would change
     pub(crate) diff: bool,
 
-    #[structopt(long, short = "w", group = "mode")]
+    #[clap(long, short = 'w', group = "mode")]
     /// Write fixes out
     pub(crate) write_changes: bool,
 
-    #[structopt(long, group = "mode")]
+    #[clap(long, group = "mode")]
     /// Debug: Print each file that would be spellchecked.
     pub(crate) files: bool,
 
-    #[structopt(long, group = "mode")]
+    #[clap(long, group = "mode")]
     /// Debug: Print each identifier that would be spellchecked.
     pub(crate) identifiers: bool,
 
-    #[structopt(long, group = "mode")]
+    #[clap(long, group = "mode")]
     /// Debug: Print each word that would be spellchecked.
     pub(crate) words: bool,
 
-    #[structopt(long, group = "mode")]
+    #[clap(long, parse(from_os_str), group = "mode")]
     /// Write the current configuration to file with `-` for stdout
     pub(crate) dump_config: Option<std::path::PathBuf>,
 
-    #[structopt(long, group = "mode")]
+    #[clap(long, group = "mode")]
     /// Show all supported file types.
     pub(crate) type_list: bool,
 
-    #[structopt(
-        long,
-        possible_values(&Format::variants()),
-        case_insensitive(true),
-        default_value("long")
-    )]
+    #[clap(long, arg_enum, ignore_case = true, default_value("long"))]
     pub(crate) format: Format,
 
-    #[structopt(short = "j", long = "threads", default_value = "0")]
+    #[clap(short = 'j', long = "threads", default_value = "0")]
     /// The approximate number of threads to use.
     pub(crate) threads: usize,
 
-    #[structopt(flatten)]
+    #[clap(flatten)]
     pub(crate) config: ConfigArgs,
 
-    #[structopt(flatten)]
+    #[clap(flatten)]
     pub(crate) color: concolor_clap::Color,
 
-    #[structopt(flatten)]
+    #[clap(flatten)]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
 }
 
-#[derive(Debug, Clone, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
+#[derive(Debug, Clone, clap::Args)]
+#[clap(rename_all = "kebab-case")]
 pub(crate) struct FileArgs {
-    #[structopt(long, overrides_with("no-binary"))]
+    #[clap(long, overrides_with("no-binary"))]
     /// Search binary files.
     binary: bool,
-    #[structopt(long, overrides_with("binary"), hidden(true))]
+    #[clap(long, overrides_with("binary"), hide = true)]
     no_binary: bool,
 
-    #[structopt(long, overrides_with("check-filenames"))]
+    #[clap(long, overrides_with("check-filenames"))]
     /// Skip verifying spelling in file names.
     no_check_filenames: bool,
-    #[structopt(long, overrides_with("no-check-filenames"), hidden(true))]
+    #[clap(long, overrides_with("no-check-filenames"), hide = true)]
     check_filenames: bool,
 
-    #[structopt(long, overrides_with("check-files"))]
+    #[clap(long, overrides_with("check-files"))]
     /// Skip verifying spelling in files.
     no_check_files: bool,
-    #[structopt(long, overrides_with("no-check-files"), hidden(true))]
+    #[clap(long, overrides_with("no-check-files"), hide = true)]
     check_files: bool,
 
-    #[structopt(long, overrides_with("no-unicode"), hidden(true))]
+    #[clap(long, overrides_with("no-unicode"), hide = true)]
     unicode: bool,
-    #[structopt(long, overrides_with("unicode"))]
+    #[clap(long, overrides_with("unicode"))]
     /// Only allow ASCII characters in identifiers
     no_unicode: bool,
 
-    #[structopt(
-        long,
-        possible_values(&config::Locale::variants()),
-    )]
+    #[clap(long, possible_values(config::Locale::variants()))]
     pub(crate) locale: Option<config::Locale>,
 }
 
@@ -179,12 +169,12 @@ impl FileArgs {
     }
 }
 
-#[derive(Debug, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
+#[derive(Debug, clap::Args)]
+#[clap(rename_all = "kebab-case")]
 pub(crate) struct ConfigArgs {
-    #[structopt(flatten)]
+    #[clap(flatten)]
     walk: WalkArgs,
-    #[structopt(flatten)]
+    #[clap(flatten)]
     overrides: FileArgs,
 }
 
@@ -198,47 +188,47 @@ impl ConfigArgs {
     }
 }
 
-#[derive(Debug, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
+#[derive(Debug, clap::Args)]
+#[clap(rename_all = "kebab-case")]
 pub(crate) struct WalkArgs {
-    #[structopt(long, name = "GLOB")]
+    #[clap(long, name = "GLOB")]
     /// Ignore files & directories matching the glob.
     exclude: Vec<String>,
 
-    #[structopt(long, overrides_with("no-hidden"))]
+    #[clap(long, overrides_with("no-hidden"))]
     /// Search hidden files and directories.
     hidden: bool,
-    #[structopt(long, overrides_with("hidden"), hidden(true))]
+    #[clap(long, overrides_with("hidden"), hide = true)]
     no_hidden: bool,
 
-    #[structopt(long, overrides_with("ignore"))]
+    #[clap(long, overrides_with("ignore"))]
     /// Don't respect ignore files.
     no_ignore: bool,
-    #[structopt(long, overrides_with("no-ignore"), hidden(true))]
+    #[clap(long, overrides_with("no-ignore"), hide = true)]
     ignore: bool,
 
-    #[structopt(long, overrides_with("ignore-dot"))]
+    #[clap(long, overrides_with("ignore-dot"))]
     /// Don't respect .ignore files.
     no_ignore_dot: bool,
-    #[structopt(long, overrides_with("no-ignore-dot"), hidden(true))]
+    #[clap(long, overrides_with("no-ignore-dot"), hide = true)]
     ignore_dot: bool,
 
-    #[structopt(long, overrides_with("ignore-global"))]
+    #[clap(long, overrides_with("ignore-global"))]
     /// Don't respect global ignore files.
     no_ignore_global: bool,
-    #[structopt(long, overrides_with("no-ignore-global"), hidden(true))]
+    #[clap(long, overrides_with("no-ignore-global"), hide = true)]
     ignore_global: bool,
 
-    #[structopt(long, overrides_with("ignore-parent"))]
+    #[clap(long, overrides_with("ignore-parent"))]
     /// Don't respect ignore files in parent directories.
     no_ignore_parent: bool,
-    #[structopt(long, overrides_with("no-ignore-parent"), hidden(true))]
+    #[clap(long, overrides_with("no-ignore-parent"), hide = true)]
     ignore_parent: bool,
 
-    #[structopt(long, overrides_with("ignore-vcs"))]
+    #[clap(long, overrides_with("ignore-vcs"))]
     /// Don't respect ignore files in vcs directories.
     no_ignore_vcs: bool,
-    #[structopt(long, overrides_with("no-ignore-vcs"), hidden(true))]
+    #[clap(long, overrides_with("no-ignore-vcs"), hide = true)]
     ignore_vcs: bool,
 }
 
@@ -285,6 +275,17 @@ fn resolve_bool_arg(yes: bool, no: bool) -> Option<bool> {
         (true, false) => Some(true),
         (false, true) => Some(false),
         (false, false) => None,
-        (_, _) => unreachable!("StructOpt should make this impossible"),
+        (_, _) => unreachable!("clap should make this impossible"),
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn verify_app() {
+        use clap::IntoApp;
+        Args::into_app().debug_assert()
     }
 }
