@@ -1049,9 +1049,9 @@ dependencies = [
 
 [[package]]
 name = "proc-exit"
-version = "1.0.2"
+version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d94a40d6d1c03eb98fdf7c983a6b550798e6e805afa46112c54aaaaeb48a276f"
+checksum = "0da6bbc8ef87314d4f596ad9d02db375c3f2d77fba91067a6f6a5754fdc8cb49"
 
 [[package]]
 name = "proc-macro-error"
