@@ -921,9 +921,9 @@ checksum = "0ab1bc2a289d34bd04a330323ac98a1b4bc82c9d9fcb1e66b63caa84da26b575"
 
 [[package]]
 name = "os_pipe"
-version = "0.9.2"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb233f06c2307e1f5ce2ecad9f8121cffbbee2c95428f44ea85222e460d0d213"
+checksum = "0e3492ebca331b895fe23ed427dce2013d9b2e00c45964f12040b0db38b8ab27"
 dependencies = [
  "libc",
  "winapi",
@@ -1449,9 +1449,9 @@ dependencies = [
 
 [[package]]
 name = "toml_edit"
-version = "0.8.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8c29c21e11af3c58476a1063cb550e255c45c60928bf7f272462a533e7a2b406"
+checksum = "2782eb01c48f7f6f66d63bebe64dd8302dbf6bc0be0d65a85a1854d472e2dfa8"
 dependencies = [
  "combine",
  "indexmap",
@@ -1462,9 +1462,9 @@ dependencies = [
 
 [[package]]
 name = "trycmd"
-version = "0.8.2"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "834217fa34d960175e66d42cf7bd948f24b3f7401af59e15d0128260cec5cb4c"
+checksum = "e4a8fc99df11abc3ce63c8e2aa666ad3346df4e3893f65c8175c11361de9726d"
 dependencies = [
  "concolor-control",
  "difflib",
