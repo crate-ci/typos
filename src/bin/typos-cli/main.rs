@@ -31,12 +31,12 @@ fn run() -> proc_exit::ExitResult {
 
     init_logging(args.verbose.log_level());
 
-    let stdout_palette = if concolor_control::get(concolor_control::Stream::Stdout).ansi_color() {
+    let stdout_palette = if concolor::get(concolor::Stream::Stdout).ansi_color() {
         report::Palette::colored()
     } else {
         report::Palette::plain()
     };
-    let stderr_palette = if concolor_control::get(concolor_control::Stream::Stderr).ansi_color() {
+    let stderr_palette = if concolor::get(concolor::Stream::Stderr).ansi_color() {
         report::Palette::colored()
     } else {
         report::Palette::plain()
@@ -266,7 +266,7 @@ fn init_logging(level: Option<log::Level>) {
     if let Some(level) = level {
         let mut builder = env_logger::Builder::new();
 
-        let colored = concolor_control::get(concolor_control::Stream::Stderr).ansi_color();
+        let colored = concolor::get(concolor::Stream::Stderr).ansi_color();
         builder.write_style(if colored {
             env_logger::WriteStyle::Always
         } else {
