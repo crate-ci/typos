@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Fixes
+
+- Don't error on `type` settings in config
+
 ## [1.3.5] - 2022-01-21
 
 ## [1.3.4] - 2022-01-12
