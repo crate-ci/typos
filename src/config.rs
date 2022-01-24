@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
     pub files: Walk,
@@ -53,7 +54,8 @@ impl Config {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
     pub extend_exclude: Vec<String>,
@@ -142,7 +144,8 @@ impl Walk {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(transparent)]
 pub struct TypeEngineConfig {
     pub patterns: std::collections::HashMap<kstring::KString, GlobEngineConfig>,
@@ -232,7 +235,8 @@ impl TypeEngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct GlobEngineConfig {
     pub extend_glob: Vec<kstring::KString>,
@@ -248,7 +252,8 @@ impl GlobEngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct EngineConfig {
     /// Check binary files.
@@ -321,7 +326,8 @@ impl EngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct TokenizerConfig {
     /// Allow unicode characters in identifiers (and not just ASCII)
@@ -368,7 +374,8 @@ impl TokenizerConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct DictConfig {
     pub locale: Option<Locale>,
