@@ -594,4 +594,37 @@ check-file = true
         let actual = Config::from_toml(input).unwrap();
         assert_eq!(actual, expected);
     }
+
+    #[test]
+    fn parse_extend_words() {
+        let input = r#"[type.shaders]
+extend-glob = [
+  '*.shader',
+  '*.cginc',
+]
+
+[type.shaders.extend-words]
+inout = "inout"
+"#;
+        let mut expected = Config::default();
+        expected.type_.patterns.insert(
+            "shaders".into(),
+            GlobEngineConfig {
+                extend_glob: vec!["*.shader".into(), "*.cginc".into()],
+                engine: EngineConfig {
+                    tokenizer: Some(TokenizerConfig::default()),
+                    dict: Some(DictConfig {
+                        extend_words: maplit::hashmap! {
+                            "inout".into() => "inout".into(),
+                        },
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+        );
+        let actual = Config::from_toml(input).unwrap();
+        assert_eq!(actual, expected);
+    }
 }
