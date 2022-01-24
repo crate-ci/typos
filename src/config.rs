@@ -235,7 +235,7 @@ impl TypeEngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+//#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct GlobEngineConfig {
@@ -252,7 +252,7 @@ impl GlobEngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields)]
+//#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct EngineConfig {
@@ -575,6 +575,7 @@ mod test {
     fn parse_extend_globs() {
         let input = r#"[type.po]
 extend-glob = ["*.po"]
+check-file = true
 "#;
         let mut expected = Config::default();
         expected.type_.patterns.insert(
@@ -584,6 +585,7 @@ extend-glob = ["*.po"]
                 engine: EngineConfig {
                     tokenizer: Some(TokenizerConfig::default()),
                     dict: Some(DictConfig::default()),
+                    check_file: Some(true),
                     ..Default::default()
                 },
                 ..Default::default()
