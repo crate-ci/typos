@@ -588,7 +588,6 @@ check-file = true
                     check_file: Some(true),
                     ..Default::default()
                 },
-                ..Default::default()
             },
         );
         let actual = Config::from_toml(input).unwrap();
@@ -621,7 +620,6 @@ inout = "inout"
                     }),
                     ..Default::default()
                 },
-                ..Default::default()
             },
         );
         let actual = Config::from_toml(input).unwrap();
