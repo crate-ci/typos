@@ -74,7 +74,7 @@ teh = "teh"
 For cases like localized content, you can disable spell checking of file contents while still checking the file name:
 ```toml
 [type.po]
-extend-globs = ["*.po"]
+extend-glob = ["*.po"]
 check-file = false
 ```
 (run `typos --type-list` to see configured file types)

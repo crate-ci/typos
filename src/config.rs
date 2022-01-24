@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Config {
     pub files: Walk,
@@ -31,7 +32,7 @@ impl Config {
     }
 
     pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
-        let content = toml::from_str(data)?;
+        let content = toml_edit::easy::from_str(data)?;
         Ok(content)
     }
 
@@ -53,7 +54,8 @@ impl Config {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct Walk {
     pub extend_exclude: Vec<String>,
@@ -142,7 +144,8 @@ impl Walk {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(transparent)]
 pub struct TypeEngineConfig {
     pub patterns: std::collections::HashMap<kstring::KString, GlobEngineConfig>,
@@ -232,7 +235,8 @@ impl TypeEngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+//#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct GlobEngineConfig {
     pub extend_glob: Vec<kstring::KString>,
@@ -248,7 +252,8 @@ impl GlobEngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+//#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct EngineConfig {
     /// Check binary files.
@@ -321,7 +326,8 @@ impl EngineConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct TokenizerConfig {
     /// Allow unicode characters in identifiers (and not just ASCII)
@@ -368,7 +374,8 @@ impl TokenizerConfig {
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(deny_unknown_fields, default)]
+#[serde(deny_unknown_fields)]
+#[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct DictConfig {
     pub locale: Option<Locale>,
@@ -562,5 +569,60 @@ mod test {
 
         let expected: Vec<kstring::KString> = vec!["*.foo".into(), "*.bar".into()];
         assert_eq!(actual.extend_glob, expected);
+    }
+
+    #[test]
+    fn parse_extend_globs() {
+        let input = r#"[type.po]
+extend-glob = ["*.po"]
+check-file = true
+"#;
+        let mut expected = Config::default();
+        expected.type_.patterns.insert(
+            "po".into(),
+            GlobEngineConfig {
+                extend_glob: vec!["*.po".into()],
+                engine: EngineConfig {
+                    tokenizer: Some(TokenizerConfig::default()),
+                    dict: Some(DictConfig::default()),
+                    check_file: Some(true),
+                    ..Default::default()
+                },
+            },
+        );
+        let actual = Config::from_toml(input).unwrap();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn parse_extend_words() {
+        let input = r#"[type.shaders]
+extend-glob = [
+  '*.shader',
+  '*.cginc',
+]
+
+[type.shaders.extend-words]
+inout = "inout"
+"#;
+        let mut expected = Config::default();
+        expected.type_.patterns.insert(
+            "shaders".into(),
+            GlobEngineConfig {
+                extend_glob: vec!["*.shader".into(), "*.cginc".into()],
+                engine: EngineConfig {
+                    tokenizer: Some(TokenizerConfig::default()),
+                    dict: Some(DictConfig {
+                        extend_words: maplit::hashmap! {
+                            "inout".into() => "inout".into(),
+                        },
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                },
+            },
+        );
+        let actual = Config::from_toml(input).unwrap();
+        assert_eq!(actual, expected);
     }
 }

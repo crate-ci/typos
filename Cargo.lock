@@ -247,9 +247,9 @@ dependencies = [
 
 [[package]]
 name = "combine"
-version = "4.6.2"
+version = "4.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b2b2f5d0ee456f3928812dfc8c6d9a1d592b98678f6d56db9b0cd2b7bc6c8db5"
+checksum = "50b727aacc797f9fc28e355d21f34709ac4fc9adecfe470ad07b8f4464f53062"
 dependencies = [
  "bytes",
  "memchr",
@@ -1478,6 +1478,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "toml_edit"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b80ac5e1b91e3378c63dab121962472b5ca20cf9ab1975e3d588548717807a8"
+dependencies = [
+ "combine",
+ "indexmap",
+ "itertools",
+ "kstring",
+ "serde",
+]
+
+[[package]]
 name = "trycmd"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1494,7 +1507,7 @@ dependencies = [
  "serde",
  "shlex",
  "tempfile",
- "toml_edit",
+ "toml_edit 0.10.1",
  "wait-timeout",
  "walkdir",
  "yansi",
@@ -1553,7 +1566,7 @@ dependencies = [
  "proc-exit",
  "serde",
  "serde_json",
- "toml",
+ "toml_edit 0.13.0",
  "trycmd",
  "typed-arena",
  "typos",
