@@ -563,4 +563,26 @@ mod test {
         let expected: Vec<kstring::KString> = vec!["*.foo".into(), "*.bar".into()];
         assert_eq!(actual.extend_glob, expected);
     }
+
+    #[test]
+    fn parse_extend_globs() {
+        let input = r#"[type.po]
+extend-glob = ["*.po"]
+"#;
+        let mut expected = Config::default();
+        expected.type_.patterns.insert(
+            "po".into(),
+            GlobEngineConfig {
+                extend_glob: vec!["*.po".into()],
+                engine: EngineConfig {
+                    tokenizer: Some(TokenizerConfig::default()),
+                    dict: Some(DictConfig::default()),
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+        );
+        let actual = Config::from_toml(input).unwrap();
+        assert_eq!(actual, expected);
+    }
 }
