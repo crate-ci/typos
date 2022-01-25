@@ -216,7 +216,14 @@ mod parser {
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
-        terminated(
+        fn is_sep(c: impl AsChar) -> bool {
+            let c = c.as_char();
+            // Avoid markdown throwing off our ordinal detection
+            ['_'].contains(&c)
+        }
+
+        recognize(tuple((
+            take_while(is_sep),
             take_while1(is_dec_digit),
             alt((
                 pair(char('s'), char('t')),
@@ -224,7 +231,8 @@ mod parser {
                 pair(char('r'), char('d')),
                 pair(char('t'), char('h')),
             )),
-        )(input)
+            take_while(is_sep),
+        )))(input)
     }
 
     fn dec_literal<T>(input: T) -> IResult<T, T>
@@ -935,10 +943,10 @@ mod test {
     fn tokenize_ignore_ordinal() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello 1st 2nd 3rd 4th World";
+        let input = "Hello 1st 2nd 3rd 4th __5th__ World";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 22),
+            Identifier::new_unchecked("World", Case::None, 30),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
