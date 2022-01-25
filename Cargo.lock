@@ -1521,7 +1521,7 @@ checksum = "0685c84d5d54d1c26f7d3eb96cd41550adb97baed141a761cf335d3d33bcd0ae"
 
 [[package]]
 name = "typos"
-version = "0.8.2"
+version = "0.8.3"
 dependencies = [
  "anyhow",
  "bstr",
@@ -1538,7 +1538,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.3.6"
+version = "1.3.7"
 dependencies = [
  "ahash",
  "anyhow",
