@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Fixes
+
+- Don't complain when mixing ordinals with markdown
+
 ## [1.3.6] - 2022-01-24
 
 #### Fixes
