@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Fixes
+
+- Don't stop parsing on `%`, `\\` when outside of an escape sequence or printf interpolation
+
 ## [1.3.7] - 2022-01-24
 
 #### Fixes
