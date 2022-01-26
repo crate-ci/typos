@@ -152,7 +152,7 @@ mod parser {
 
     fn identifier<T>(input: T) -> IResult<T, T>
     where
-        T: nom::InputTakeAtPosition,
+        T: nom::InputTakeAtPosition + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
         // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
@@ -191,16 +191,37 @@ mod parser {
             terminated(url_literal, sep1),
             c_escape,
             printf,
-            sep1,
+            other,
         )))(input)
     }
 
     fn sep1<T>(input: T) -> IResult<T, T>
     where
-        T: nom::InputTakeAtPosition,
+        T: nom::InputTakeAtPosition + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
         take_while1(is_ignore_char)(input)
+    }
+
+    fn other<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Offset
+            + Clone
+            + PartialEq
+            + std::fmt::Debug,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            satisfy(|c| !is_xid_continue(c)),
+            take_while(is_ignore_char),
+        )))(input)
     }
 
     fn ordinal_literal<T>(input: T) -> IResult<T, T>
@@ -212,7 +233,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -237,7 +259,7 @@ mod parser {
 
     fn dec_literal<T>(input: T) -> IResult<T, T>
     where
-        T: nom::InputTakeAtPosition,
+        T: nom::InputTakeAtPosition + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
         take_while1(is_dec_digit_with_sep)(input)
@@ -250,7 +272,8 @@ mod parser {
             + nom::InputIter
             + nom::InputLength
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -269,7 +292,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -295,7 +319,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -325,8 +350,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + std::fmt::Debug
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -359,8 +384,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + std::fmt::Debug
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -380,8 +405,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + std::fmt::Debug
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -412,8 +437,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + std::fmt::Debug
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -433,8 +458,8 @@ mod parser {
             + nom::Offset
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
-            + std::fmt::Debug
-            + Clone,
+            + Clone
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
@@ -1152,6 +1177,22 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 13),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_template() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello {{% foo %}} world!";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("foo", Case::None, 10),
+            Identifier::new_unchecked("world", Case::None, 18),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
