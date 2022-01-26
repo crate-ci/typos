@@ -356,7 +356,11 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         let (padding, captured) = take_while1(is_base64_digit)(input.clone())?;
-        if captured.input_len() < 90 {
+        if captured.input_len() < 90
+            && captured
+                .iter_elements()
+                .all(|c| !['/', '+'].contains(&c.as_char()))
+        {
             return Err(nom::Err::Error(nom::error::Error::new(
                 input,
                 nom::error::ErrorKind::LengthValue,
@@ -1049,7 +1053,7 @@ mod test {
     }
 
     #[test]
-    fn tokenize_ignore_base64() {
+    fn tokenize_ignore_base64_case_1() {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Good Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X1Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X122Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X12== Bye";
@@ -1057,6 +1061,18 @@ mod test {
             Identifier::new_unchecked("Good", Case::None, 0),
             Identifier::new_unchecked("Bye", Case::None, 134),
         ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_base64_case_2() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = r#""ed25519:1": "Wm+VzmOUOz08Ds+0NTWb1d4CZrVsJSikkeRxh6aCcUwu6pNC78FunoD7KNWzqFn241eYHYMGCA5McEiVPdhzBA==""#;
+        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("ed25519", Case::None, 1)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
