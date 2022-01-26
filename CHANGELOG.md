@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Fixes
+
+- Attempt to detect base64 values shorter than 90 characters
+
 ## [1.3.8] - 2022-01-26
 
 #### Fixes
