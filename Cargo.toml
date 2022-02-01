@@ -94,7 +94,7 @@ maplit = "1.0"
 
 [dev-dependencies]
 assert_fs = "1.0"
-trycmd = "0.8.3"
+trycmd = "0.12.2"
 criterion = "0.3"
 
 [profile.dev]

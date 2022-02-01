@@ -263,7 +263,7 @@ checksum = "015267563b1df20adccdd00cb05257b1dfbea70a04928e9cf88ffb850c1a40af"
 dependencies = [
  "atty",
  "bitflags",
- "concolor-query 0.0.5",
+ "concolor-query",
 ]
 
 [[package]]
@@ -275,23 +275,6 @@ dependencies = [
  "clap 3.0.13",
  "concolor",
 ]
-
-[[package]]
-name = "concolor-control"
-version = "0.0.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7104119c2f80d887239879d0c50e033cd40eac9a3f3561e0684ba7d5d654f4da"
-dependencies = [
- "atty",
- "bitflags",
- "concolor-query 0.0.4",
-]
-
-[[package]]
-name = "concolor-query"
-version = "0.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad159cc964ac8f9d407cbc0aa44b02436c054b541f2b4b5f06972e1efdc54bc7"
 
 [[package]]
 name = "concolor-query"
@@ -503,6 +486,12 @@ name = "doc-comment"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fea41bba32d969b513997752735605054bc0dfa92b4c56bf1189f2e174be7a10"
+
+[[package]]
+name = "dunce"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "453440c271cf5577fd2a40e4942540cb7d0d2f85e27c8d07dd0023c925a67541"
 
 [[package]]
 name = "edit-distance"
@@ -1466,9 +1455,9 @@ dependencies = [
 
 [[package]]
 name = "toml_edit"
-version = "0.10.1"
+version = "0.12.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2782eb01c48f7f6f66d63bebe64dd8302dbf6bc0be0d65a85a1854d472e2dfa8"
+checksum = "94217a6d6a89fb646cbc9f28283cf4745f77eb0b04c4f680c4b3ae4450e3a473"
 dependencies = [
  "combine",
  "indexmap",
@@ -1492,12 +1481,14 @@ dependencies = [
 
 [[package]]
 name = "trycmd"
-version = "0.8.3"
+version = "0.12.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e4a8fc99df11abc3ce63c8e2aa666ad3346df4e3893f65c8175c11361de9726d"
+checksum = "170d4db4fe81231f42ba55a50675f72590153d3c6ede8ae979bf3084bf2d8ae7"
 dependencies = [
- "concolor-control",
+ "concolor",
+ "content_inspector",
  "difflib",
+ "dunce",
  "glob",
  "humantime",
  "humantime-serde",
@@ -1507,7 +1498,7 @@ dependencies = [
  "serde",
  "shlex",
  "tempfile",
- "toml_edit 0.10.1",
+ "toml_edit 0.12.6",
  "wait-timeout",
  "walkdir",
  "yansi",
