@@ -1479,9 +1479,9 @@ dependencies = [
 
 [[package]]
 name = "toml_edit"
-version = "0.13.0"
+version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b80ac5e1b91e3378c63dab121962472b5ca20cf9ab1975e3d588548717807a8"
+checksum = "744e9ed5b352340aa47ce033716991b5589e23781acb97cad37d4ea70560f55b"
 dependencies = [
  "combine",
  "indexmap",
@@ -1566,7 +1566,7 @@ dependencies = [
  "proc-exit",
  "serde",
  "serde_json",
- "toml_edit 0.13.0",
+ "toml_edit 0.13.4",
  "trycmd",
  "typed-arena",
  "typos",
