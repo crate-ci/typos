@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::collections::HashSet;
 use std::io::Write;
 
-use structopt::StructOpt;
+use clap::Parser;
 
 static CATEGORIES: [varcon::Category; 4] = [
     varcon::Category::American,
@@ -273,15 +273,14 @@ fn ignore_variant(variant: &varcon_core::Variant) -> bool {
 // varcon needs
 // all entries by name
 
-#[derive(Debug, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
+#[derive(Debug, Parser)]
 struct Options {
-    #[structopt(flatten)]
+    #[clap(flatten)]
     codegen: codegenrs::CodeGenArgs,
-    #[structopt(flatten)]
+    #[clap(flatten)]
     rustmft: codegenrs::RustfmtArgs,
 
-    #[structopt(flatten)]
+    #[clap(flatten)]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
 }
 
@@ -309,7 +308,7 @@ fn init_logging(level: Option<log::Level>) {
 }
 
 fn run() -> Result<i32, Box<dyn std::error::Error>> {
-    let mut options = Options::from_args();
+    let mut options = Options::parse();
     options.verbose.set_default(Some(log::Level::Info));
     init_logging(options.verbose.log_level());
 

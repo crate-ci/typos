@@ -1,4 +1,4 @@
-use structopt::StructOpt;
+use clap::Parser;
 
 pub const DICT: &str = include_str!("../../assets/dictionary.txt");
 
@@ -43,17 +43,16 @@ fn generate<W: std::io::Write>(file: &mut W) {
     .unwrap();
 }
 
-#[derive(Debug, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
+#[derive(Debug, Parser)]
 struct Options {
-    #[structopt(flatten)]
+    #[clap(flatten)]
     codegen: codegenrs::CodeGenArgs,
-    #[structopt(flatten)]
+    #[clap(flatten)]
     rustmft: codegenrs::RustfmtArgs,
 }
 
 fn run() -> Result<i32, Box<dyn std::error::Error>> {
-    let options = Options::from_args();
+    let options = Options::parse();
 
     let mut content = vec![];
     generate(&mut content);

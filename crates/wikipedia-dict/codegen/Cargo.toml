@@ -16,6 +16,6 @@ release = false
 [dependencies]
 unicase = "2.5"
 itertools = "0.10"
-codegenrs = "1.0"
-structopt = "0.3"
+codegenrs = "2.0"
+clap = { version = "3.0", features = ["derive"] }
 dictgen = { version = "^0.2", path = "../../dictgen", features = ["codegen"] }
