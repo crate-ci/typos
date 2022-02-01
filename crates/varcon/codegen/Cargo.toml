@@ -14,6 +14,6 @@ publish = false
 release = false
 
 [dependencies]
-codegenrs = "1.0"
-structopt = "0.3"
+codegenrs = "2.0"
+clap = { version = "3.0", features = ["derive"] }
 varcon-core = { version = "^2.0", path = "../../varcon-core", features = ["parser"] }

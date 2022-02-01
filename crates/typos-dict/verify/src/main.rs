@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 use unicase::UniCase;
 
-use structopt::StructOpt;
+use clap::Parser;
 
 type Dict = BTreeMap<UniCase<String>, Vec<String>>;
 
@@ -128,17 +128,16 @@ fn find_best_match<'c>(
     matches.into_iter().next().map(|(_, r)| r)
 }
 
-#[derive(Debug, StructOpt)]
-#[structopt(rename_all = "kebab-case")]
+#[derive(Debug, Parser)]
 struct Options {
-    #[structopt(short("-i"), long, parse(from_os_str))]
+    #[clap(short('i'), long, parse(from_os_str))]
     input: std::path::PathBuf,
-    #[structopt(flatten)]
+    #[clap(flatten)]
     codegen: codegenrs::CodeGenArgs,
 }
 
 fn run() -> Result<i32, Box<dyn std::error::Error>> {
-    let options = Options::from_args();
+    let options = Options::parse();
 
     let data = std::fs::read(&options.input).unwrap();
 

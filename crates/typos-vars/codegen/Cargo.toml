@@ -18,11 +18,10 @@ varcon = { version = "^0.6", path = "../../varcon", features = ["flags"] }
 varcon-core = { version = "^2.0", path = "../../varcon-core", features = ["flags"] }
 typos = { version = "^0.8", path = "../../typos" }
 unicase = "2.5"
-codegenrs = "1.0"
-structopt = "0.3"
-clap = "3"
+codegenrs = "2.0"
+clap = { version = "3.0", features = ["derive"] }
+clap-verbosity-flag = "0.4"
 log = "0.4"
 env_logger = "0.9"
-clap-verbosity-flag = "0.3"
 itertools = "0.10"
 dictgen = { version = "^0.2", path = "../../dictgen", features = ["codegen"] }

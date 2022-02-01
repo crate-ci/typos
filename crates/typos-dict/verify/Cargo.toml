@@ -16,8 +16,8 @@ release = false
 [dependencies]
 csv = "1.1"
 unicase = "2.5"
-codegenrs = "1.0"
-structopt = "0.3"
+codegenrs = "2.0"
+clap = { version = "3.0", features = ["derive"] }
 varcon = { version = "^0.6", path = "../../varcon" }
 itertools = "0.10"
 edit-distance = "2.1"
