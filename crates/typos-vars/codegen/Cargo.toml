@@ -23,6 +23,6 @@ structopt = "0.3"
 clap = "3"
 log = "0.4"
 env_logger = "0.9"
-clap-verbosity-flag = "0.3"
+clap-verbosity-flag = "0.4"
 itertools = "0.10"
 dictgen = { version = "^0.2", path = "../../dictgen", features = ["codegen"] }
