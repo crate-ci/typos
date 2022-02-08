@@ -1,6 +1,6 @@
 [package]
 name = "typos-dict"
-version = "0.7.2"
+version = "0.8.0"
 description = "Source Code Spelling Correction"
 authors = ["Ed Page <eopage@gmail.com>"]
 license = "MIT OR Apache-2.0"

@@ -1491,7 +1491,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.3.9"
+version = "1.4.0"
 dependencies = [
  "ahash",
  "anyhow",
@@ -1533,7 +1533,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.7.2"
+version = "0.8.0"
 dependencies = [
  "dictgen",
  "log",
