@@ -82,58 +82,74 @@ pub struct PrintGithub {
 
 impl Report for PrintGithub {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
-        let mut attributes = vec![];
 
         match &msg {
             Message::BinaryFile(msg) => {
-                attributes.push(format!("file={}", msg.path.display()))
+                log::info!("{}", msg);
             }
             Message::Typo(msg) => {
-                match &msg.context {
-                    Some(Context::File(c)) => {
-                        attributes.push(format!("file={}", c.path.display()));
-                        attributes.push(format!("line={}", c.line_num))
-                    }
-                    Some(Context::Path(c)) => {
-                        attributes.push(format!("file={}", c.path.display()))
-                    }
-                    Some(_) => {}
-                    &None => {}
-                }
+                let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
+                let column = unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count();
+
+                let col_context = if column > 0 {
+                    format!(",col={},endColumn={},", column, column + msg.typo.len())
+                } else {
+                    format!("")
+                };
+
 
                 match &msg.corrections {
                     typos::Status::Valid => {}
                     typos::Status::Invalid => {
                         writeln!(
                             io::stdout(),
-                            "::error {}::`{}` is disallowed",
-                            attributes.join(","),
+                            "::error {}{}::`{}` is disallowed",
+                            github_context_display(&msg.context),
+                            col_context,
                             msg.typo
                         )?;
                     }
                     typos::Status::Corrections(corrections) => {
                         writeln!(
                             io::stdout(),
-                            "::error {}::{}",
-                            attributes.join(","),
+                            "::error {}{}::{}",
+                            github_context_display(&msg.context),
+                            col_context,
                             format!("`{}` -> {}", msg.typo, itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", "))
                         )?;
                     },
                 };
             }
             Message::File(msg) => {
-                writeln!(io::stdout(), "{}", msg.path.display())?;
+                writeln!(io::stdout(), "::error file={}::{}", msg.path.display(), msg.path.display())?;
             }
             Message::Parse(msg) => {
-                writeln!(io::stdout(), "{}", msg.data)?;
+                writeln!(io::stderr(), "::error {}::{}", github_context_display(&msg.context),msg.data)?;
             }
             Message::Error(msg) => {
-                log::error!("{}: {}", context_display(&msg.context), msg.msg);
+                writeln!(io::stderr(), "::error {}::{}", github_context_display(&msg.context), msg.msg)?;
             }
             _ => unimplemented!("New message {:?}", msg),
         }
         Ok(())
     }
+}
+
+fn github_context_display<'c>(context: &'c Option<Context<'c>>) -> String {
+    let mut attributes = vec![];
+    match &context {
+        Some(Context::File(c)) => {
+            attributes.push(format!("file={}", c.path.display()));
+            attributes.push(format!("line={}", c.line_num))
+        }
+        Some(Context::Path(c)) => {
+            attributes.push(format!("file={}", c.path.display()))
+        }
+        Some(_) => {}
+        &None => {}
+    }
+
+    attributes.join(",")
 }
 
 pub struct PrintBrief {
