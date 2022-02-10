@@ -92,7 +92,7 @@ impl Report for PrintGithub {
                 let column = unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count();
 
                 let col_context = if column > 0 {
-                    format!(",col={},endColumn={},", column, column + msg.typo.len())
+                    format!(",col={},endColumn={}", column, column + msg.typo.len())
                 } else {
                     format!("")
                 };
