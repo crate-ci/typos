@@ -6,6 +6,7 @@ use typos_cli::config;
 pub enum Format {
     Silent,
     Brief,
+    Github,
     Long,
     Json,
 }
@@ -18,6 +19,10 @@ impl Format {
     ) -> Box<dyn typos_cli::report::Report> {
         match self {
             Format::Silent => Box::new(crate::report::PrintSilent),
+            Format::Github => Box::new(crate::report::PrintGithub {
+                stdout_palette,
+                stderr_palette,
+            }),
             Format::Brief => Box::new(crate::report::PrintBrief {
                 stdout_palette,
                 stderr_palette,

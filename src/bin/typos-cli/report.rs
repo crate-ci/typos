@@ -75,6 +75,67 @@ impl Report for PrintSilent {
     }
 }
 
+pub struct PrintGithub {
+    pub stdout_palette: Palette,
+    pub stderr_palette: Palette,
+}
+
+impl Report for PrintGithub {
+    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+        let mut attributes = vec![];
+
+        match &msg {
+            Message::BinaryFile(msg) => {
+                attributes.push(format!("file={}", msg.path.display()))
+            }
+            Message::Typo(msg) => {
+                match &msg.context {
+                    Some(Context::File(c)) => {
+                        attributes.push(format!("file={}", c.path.display()));
+                        attributes.push(format!("line={}", c.line_num))
+                    }
+                    Some(Context::Path(c)) => {
+                        attributes.push(format!("file={}", c.path.display()))
+                    }
+                    Some(_) => {}
+                    &None => {}
+                }
+
+                match &msg.corrections {
+                    typos::Status::Valid => {}
+                    typos::Status::Invalid => {
+                        writeln!(
+                            io::stdout(),
+                            "::error {}::`{}` is disallowed",
+                            attributes.join(","),
+                            msg.typo
+                        )?;
+                    }
+                    typos::Status::Corrections(corrections) => {
+                        writeln!(
+                            io::stdout(),
+                            "::error {}::{}",
+                            attributes.join(","),
+                            format!("`{}` -> {}", msg.typo, itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", "))
+                        )?;
+                    },
+                };
+            }
+            Message::File(msg) => {
+                writeln!(io::stdout(), "{}", msg.path.display())?;
+            }
+            Message::Parse(msg) => {
+                writeln!(io::stdout(), "{}", msg.data)?;
+            }
+            Message::Error(msg) => {
+                log::error!("{}: {}", context_display(&msg.context), msg.msg);
+            }
+            _ => unimplemented!("New message {:?}", msg),
+        }
+        Ok(())
+    }
+}
+
 pub struct PrintBrief {
     pub stdout_palette: Palette,
     pub stderr_palette: Palette,
