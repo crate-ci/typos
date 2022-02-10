@@ -115,7 +115,7 @@ impl Report for PrintGithub {
                             "::error {}{}::{}",
                             github_context_display(&msg.context),
                             col_context,
-                            format!("`{}` -> {}", msg.typo, itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", "))
+                            format!("`{}` should be {}", msg.typo, itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", "))
                         )?;
                     },
                 };
