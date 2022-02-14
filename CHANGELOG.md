@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+#### Fixes
+
+- Improve URL detection to avoid spell checking them
+
 ## [1.4.0] - 2022-02-08
 
 #### Fixes
