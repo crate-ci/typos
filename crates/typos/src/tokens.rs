@@ -428,7 +428,7 @@ mod parser {
             )),
             char('/'),
             // HACK: Too lazy to enumerate
-            take_while(is_localport_char),
+            take_while(is_path_query_fragment),
         )))(input)
     }
 
@@ -582,6 +582,33 @@ mod parser {
             || ('A'..='Z').contains(&c)
             || ('0'..='9').contains(&c)
             || "-().".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_path_query_fragment(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        is_pchar(c) || "/?#".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_pchar(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        is_uri_unreserved(c) || is_uri_sub_delims(c) || "%:@".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_uri_unreserved(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        ('a'..='z').contains(&c)
+            || ('A'..='Z').contains(&c)
+            || ('0'..='9').contains(&c)
+            || "-._~".find(c).is_some()
+    }
+
+    #[inline]
+    fn is_uri_sub_delims(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        "!$&'()*+,;=".find(c).is_some()
     }
 
     #[inline]
@@ -1134,10 +1161,10 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input =
-            "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment Bye";
+            "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment,split Bye";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
-            Identifier::new_unchecked("Bye", Case::None, 80),
+            Identifier::new_unchecked("Bye", Case::None, 86),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
