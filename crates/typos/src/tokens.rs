@@ -422,13 +422,33 @@ mod parser {
                 tuple((char(':'), char('/'), char('/'))),
             )),
             tuple((
-                opt(terminated(take_while1(is_localport_char), char('@'))),
+                opt(terminated(url_userinfo, char('@'))),
                 take_while1(is_domain_char),
                 opt(preceded(char(':'), take_while1(AsChar::is_dec_digit))),
             )),
             char('/'),
             // HACK: Too lazy to enumerate
             take_while(is_localport_char),
+        )))(input)
+    }
+
+    fn url_userinfo<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone
+            + std::fmt::Debug,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        recognize(tuple((
+            take_while1(is_localport_char),
+            opt(preceded(char(':'), take_while(is_localport_char))),
         )))(input)
     }
 
@@ -1113,10 +1133,11 @@ mod test {
     fn tokenize_ignore_max_url() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Good http://user@example.com:3142/hello?query=value&extra=two#fragment Bye";
+        let input =
+            "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment Bye";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
-            Identifier::new_unchecked("Bye", Case::None, 71),
+            Identifier::new_unchecked("Bye", Case::None, 80),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
