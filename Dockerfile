@@ -1,8 +1,8 @@
-FROM ubuntu:20.04
-ARG VERSION=1.4.0
-ENV VERSION=${VERSION}
-RUN apt-get update && apt-get install -y wget
-RUN wget https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz && \
-    tar -xzvf typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz && \
-    mv typos /usr/local/bin
-ENTRYPOINT ["/usr/local/bin/typos"]
+FROM rust:1.58.1 as builder
+WORKDIR /usr/src/typos
+COPY . .
+RUN cargo install --path .
+
+FROM debian:buster-slim
+COPY --from=builder /usr/local/cargo/bin/typos /usr/local/bin/typos
+CMD ["typos"]
