@@ -19,33 +19,13 @@ on:
 jobs:
   ci:
     name: CI
-    needs: [smoke, test, msrv, docs, rustfmt, clippy]
+    needs: [test, msrv, docs, rustfmt, clippy]
     runs-on: ubuntu-latest
     steps:
       - name: Done
         run: exit 0
-  smoke:
-    name: Quick Check
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        profile: minimal
-        override: true
-    - uses: Swatinem/rust-cache@v1
-    - name: Default features
-      run: cargo check --workspace --all-targets
-    - name: All features
-      run: cargo check --workspace --all-targets --all-features
-    - name: No-default features
-      run: cargo check --workspace --all-targets --no-default-features
   test:
     name: Test
-    needs: smoke
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
@@ -62,6 +42,8 @@ jobs:
         profile: minimal
         override: true
     - uses: Swatinem/rust-cache@v1
+    - name: Build
+      run: cargo test --no-run --workspace --all-features
     - name: Default features
       run: cargo test --workspace
     - name: All features
@@ -70,7 +52,6 @@ jobs:
       run: cargo test --workspace --no-default-features
   msrv:
     name: "Check MSRV: 1.54.0"
-    needs: smoke
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -90,7 +71,6 @@ jobs:
       run: cargo check --workspace --all-targets --no-default-features
   docs:
     name: Docs
-    needs: smoke
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -105,7 +85,7 @@ jobs:
     - name: Check documentation
       env:
         RUSTDOCFLAGS: -D warnings
-      run: cargo doc --no-deps --document-private-items --workspace
+      run: cargo doc --workspace --all-features --no-deps --document-private-items
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -141,4 +121,4 @@ jobs:
     - uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        args: --workspace --all-features --all-targets -- -D warnings
+        args: --workspace --all-features --all-targets -- -D warnings --allow deprecated
