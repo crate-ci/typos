@@ -29,7 +29,7 @@ to re-work some of it and the discouragement that goes along with that.
 
 ### Updating the Dictionary
 
-`typos` dictionary is a mapping of typos to a list of possible corrections (see [Design](docs/design.nd)).  To add to the dictionary:
+`typos` dictionary is a mapping of typos to a list of possible corrections (see [Design](docs/design.md)).  To add to the dictionary:
 
 1. Add your type to our data file `crates/typos-dict/assets/words.csv`
 
