@@ -153,9 +153,9 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "3.0.13"
+version = "3.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08799f92c961c7a1cf0cc398a9073da99e21ce388b46372c37f3191f2f3eed3e"
+checksum = "86f8c0e2a6b902acc18214e24a6935cdaf8a8e34231913d4404dcaee659f65a1"
 dependencies = [
  "atty",
  "bitflags",
@@ -174,15 +174,15 @@ version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2474445ef3370e4844f9082eef2f80e4abaf7d985781afd78b89b58e2f69a14"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "log",
 ]
 
 [[package]]
 name = "clap_derive"
-version = "3.0.12"
+version = "3.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0fd2078197a22f338bd4fbf7d6387eb6f0d6a3c69e6cbc09f5c93e97321fd92a"
+checksum = "01d42c94ce7c2252681b5fed4d3627cc807b13dfc033246bd05d5b252399000e"
 dependencies = [
  "heck",
  "proc-macro-error",
@@ -197,7 +197,7 @@ version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d7ecb55fae620b95dc3586f10bf6d93d4bfc73b34b0adddf18445b9291458dd6"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "derive_more",
  "difference",
  "normalize-line-endings",
@@ -207,7 +207,7 @@ dependencies = [
 name = "codespell-codegen"
 version = "0.4.0"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "codegenrs",
  "dictgen",
  "itertools",
@@ -249,7 +249,7 @@ version = "0.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0efdfa40e7f50b7ac8b2e336fad01c7071b9ab935b9082174cdb4e9fd5f6dc38"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "concolor",
 ]
 
@@ -843,7 +843,7 @@ dependencies = [
 name = "misspell-codegen"
 version = "0.4.0"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "codegenrs",
  "dictgen",
  "itertools",
@@ -1498,7 +1498,7 @@ dependencies = [
  "assert_fs",
  "atty",
  "bstr",
- "clap 3.0.13",
+ "clap 3.1.3",
  "clap-verbosity-flag",
  "concolor",
  "concolor-clap",
@@ -1544,7 +1544,7 @@ dependencies = [
 name = "typos-dict-codegen"
 version = "1.3.0"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "codegenrs",
  "csv",
  "dictgen",
@@ -1556,7 +1556,7 @@ dependencies = [
 name = "typos-dict-verify"
 version = "1.3.0"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "codegenrs",
  "csv",
  "edit-distance",
@@ -1579,7 +1579,7 @@ dependencies = [
 name = "typos-vars-codegen"
 version = "1.3.0"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "clap-verbosity-flag",
  "codegenrs",
  "dictgen",
@@ -1639,7 +1639,7 @@ dependencies = [
 name = "varcon-codegen"
 version = "1.3.0"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "codegenrs",
  "varcon-core",
 ]
@@ -1752,7 +1752,7 @@ dependencies = [
 name = "wikipedia-codegen"
 version = "0.4.0"
 dependencies = [
- "clap 3.0.13",
+ "clap 3.1.3",
  "codegenrs",
  "dictgen",
  "itertools",
