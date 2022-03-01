@@ -27,5 +27,5 @@ serde = { version = "1.0", features = ["derive"] }
 simdutf8 = "0.1.1"
 itertools = "0.10"
 log = "0.4"
-unicode-segmentation = "1.7.1"
+unicode-segmentation = "1.9.0"
 bstr = "0.2"
