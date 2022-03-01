@@ -42,7 +42,7 @@ impl Default for Format {
 #[clap(about, author, version)]
 #[clap(
         setting = clap::AppSettings::DeriveDisplayOrder,
-        setting = clap::AppSettings::DontCollapseArgsInUsage,
+        dont_collapse_args_in_usage = true,
         color = concolor_clap::color_choice(),
     )]
 #[clap(group = clap::ArgGroup::new("mode").multiple(false))]
@@ -285,7 +285,7 @@ mod test {
 
     #[test]
     fn verify_app() {
-        use clap::IntoApp;
-        Args::into_app().debug_assert()
+        use clap::CommandFactory;
+        Args::command().debug_assert()
     }
 }
