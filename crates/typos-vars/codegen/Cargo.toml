@@ -20,7 +20,7 @@ typos = { version = "^0.8", path = "../../typos" }
 unicase = "2.5"
 codegenrs = "2.0"
 clap = { version = "3.1", features = ["derive"] }
-clap-verbosity-flag = "0.4"
+clap-verbosity-flag = "1.0"
 log = "0.4"
 env_logger = "0.9"
 itertools = "0.10"
