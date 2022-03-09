@@ -182,8 +182,7 @@ impl TypeEngineConfig {
         patterns
             .entry("rust".into())
             .or_insert_with(|| GlobEngineConfig {
-                // From a spell-check perspective, these are more closely related to Rust than Toml
-                extend_glob: vec!["Cargo.toml".into()],
+                extend_glob: Vec::new(),
                 engine: EngineConfig {
                     dict: Some(DictConfig {
                         extend_words: maplit::hashmap! {
@@ -196,40 +195,14 @@ impl TypeEngineConfig {
                 },
             });
         patterns
-            .entry("python".into())
+            .entry("cert".into())
             .or_insert_with(|| GlobEngineConfig {
-                // From a spell-check perspective, these are more closely related to Python than Toml
-                extend_glob: vec!["pyproject.toml".into()],
-                engine: EngineConfig {
-                    ..Default::default()
-                },
-            });
-        patterns.entry("cert".into()).or_insert_with(|| {
-            GlobEngineConfig {
-                extend_glob: vec![
-                    // Certificate files:
-                    "*.crt".into(),
-                    "*.cer".into(),
-                    "*.ca-bundle".into(),
-                    "*.p7b".into(),
-                    "*.p7c".into(),
-                    "*.p7s".into(),
-                    "*.pem".into(),
-                    // Keystore Files:
-                    "*.key".into(),
-                    "*.keystore".into(),
-                    "*.jks".into(),
-                    // Combined certificate and key files:
-                    "*.p12".into(),
-                    "*.pfx".into(),
-                    "*.pem".into(),
-                ],
+                extend_glob: Vec::new(),
                 engine: EngineConfig {
                     check_file: Some(false),
                     ..Default::default()
                 },
-            }
-        });
+            });
         patterns.into_iter()
     }
 }

@@ -31,6 +31,24 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("c", &["*.[chH]", "*.[chH].in", "*.cats"]),
     ("cabal", &["*.cabal"]),
     ("cbor", &["*.cbor"]),
+    ("cert", &[
+        // Certificate files:
+        "*.crt",
+        "*.cer",
+        "*.ca-bundle",
+        "*.p7b",
+        "*.p7c",
+        "*.p7s",
+        "*.pem",
+        // Keystore Files:
+        "*.key",
+        "*.keystore",
+        "*.jks",
+        // Combined certificate and key files:
+        "*.p12",
+        "*.pfx",
+        "*.pem",
+    ]),
     ("ceylon", &["*.ceylon"]),
     ("clojure", &["*.clj", "*.cljc", "*.cljs", "*.cljx"]),
     ("cmake", &["*.cmake", "CMakeLists.txt"]),
@@ -170,7 +188,11 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("ps", &["*.cdxml", "*.ps1", "*.ps1xml", "*.psd1", "*.psm1"]),
     ("puppet", &["*.erb", "*.pp", "*.rb"]),
     ("purs", &["*.purs"]),
-    ("py", &["*.py"]),
+    ("py", &[
+        "*.py",
+        // From a spell-check perspective, this is more like Python than toml
+        "pyproject.toml",
+    ]),
     ("qmake", &["*.pro", "*.pri", "*.prf"]),
     ("qml", &["*.qml"]),
     ("r", &["*.R", "*.r", "*.Rmd", "*.Rnw"]),
@@ -186,7 +208,11 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
         // Extensions
         "*.gemspec", "*.rb", "*.rbw"
     ]),
-    ("rust", &["*.rs"]),
+    ("rust", &[
+        "*.rs",
+        // From a spell-check perspective, this is more like Python than toml
+        "Cargo.toml",
+    ]),
     ("sass", &["*.sass", "*.scss"]),
     ("scala", &["*.scala", "*.sbt"]),
     ("sh", &[
