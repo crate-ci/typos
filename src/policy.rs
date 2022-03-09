@@ -177,7 +177,11 @@ impl<'s> ConfigEngine<'s> {
         let walk = self.walk.intern(files);
 
         let mut type_matcher = ignore::types::TypesBuilder::new();
-        type_matcher.add_defaults();
+        for &(name, exts) in crate::default_types::DEFAULT_TYPES {
+            for ext in exts {
+                type_matcher.add(name, ext).expect("all defaults are valid");
+            }
+        }
         let mut types: std::collections::HashMap<_, _> = Default::default();
         for (type_name, type_engine) in type_.patterns() {
             if type_engine.extend_glob.is_empty() {
