@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- File-types in the default config were moved to being built-in
+- Lock files have moved to the same file type, regardless of syntax
+
+### Fixes
+
+- Don't spell check lock files as the user shouldn't have to manage their config to handle transitive dependency names
+
 ## [1.4.1] - 2022-02-14
 
 #### Fixes
