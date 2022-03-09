@@ -11,3 +11,5 @@ pub mod file;
 pub mod policy;
 #[doc(hidden)]
 pub mod report;
+
+mod default_types;
