@@ -47,7 +47,7 @@ pub struct Variant {
 impl Variant {
     pub fn into_owned(self) -> crate::Variant {
         crate::Variant {
-            types: self.types.iter().copied().collect(),
+            types: self.types.to_vec(),
             word: self.word.to_owned(),
         }
     }
