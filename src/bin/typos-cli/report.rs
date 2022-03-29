@@ -131,7 +131,7 @@ impl Report for PrintLong {
 
 fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Error> {
     let line = String::from_utf8_lossy(msg.buffer.as_ref());
-    let line = line.replace("\t", " ");
+    let line = line.replace('\t', " ");
     let column = unicode_segmentation::UnicodeSegmentation::graphemes(
         line.get(0..msg.byte_offset).unwrap(),
         true,
@@ -177,7 +177,7 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
     let mut handle = stdout.lock();
 
     let line = String::from_utf8_lossy(msg.buffer.as_ref());
-    let line = line.replace("\t", " ");
+    let line = line.replace('\t', " ");
     let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
     let column = unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count();
     match &msg.corrections {
