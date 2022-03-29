@@ -74,7 +74,7 @@ env_logger = { version = "0.9", default-features = false, features = ["termcolor
 atty = "0.2.14"
 yansi = "0.5.0"
 concolor = { version = "0.0.8" }
-concolor-clap = { version = "0.0.9", features = ["api_unstable"] }
+concolor-clap = { version = "0.0.10", features = ["api_unstable"] }
 bstr = "0.2"
 once_cell = "1.2.0"
 ahash = "0.7"
@@ -88,13 +88,13 @@ derive_setters = "0.1"
 itertools = "0.10"
 serde_json = "1.0"
 encoding = "0.2"
-kstring = "1.0"
+kstring = { version = "2.0.0", features = ["serde"] }
 typed-arena = "2.0.1"
 maplit = "1.0"
 
 [dev-dependencies]
 assert_fs = "1.0"
-trycmd = "0.12.2"
+trycmd = "0.13.3"
 criterion = "0.3"
 
 [profile.dev]
