@@ -72,7 +72,7 @@ toml_edit = { version = "0.14.2", features = ["easy"] }
 log = "0.4"
 env_logger = { version = "0.9", default-features = false, features = ["termcolor"] }
 atty = "0.2.14"
-yansi = "0.5.0"
+yansi = "0.5.1"
 concolor = { version = "0.0.8" }
 concolor-clap = { version = "0.0.10", features = ["api_unstable"] }
 bstr = "0.2"
