@@ -203,15 +203,6 @@ impl TypeEngineConfig {
                     ..Default::default()
                 },
             });
-        patterns
-            .entry("lock".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    check_file: Some(false),
-                    ..Default::default()
-                },
-            });
         patterns.into_iter()
     }
 }
