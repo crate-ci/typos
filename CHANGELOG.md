@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Treat `go.mod` as go-lang source like we do manifests for other languages
+- Treat `go.sum` as a lock file, ignoring it by default
+
 ## [1.5.0] - 2022-03-09
 
 ### Compatibility
