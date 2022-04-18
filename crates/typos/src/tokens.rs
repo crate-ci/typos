@@ -189,6 +189,7 @@ mod parser {
             terminated(base64_literal, sep1),
             terminated(email_literal, sep1),
             terminated(url_literal, sep1),
+            terminated(css_color, sep1),
             c_escape,
             printf,
             other,
@@ -280,6 +281,27 @@ mod parser {
         preceded(
             pair(char('0'), alt((char('x'), char('X')))),
             take_while1(is_hex_digit_with_sep),
+        )(input)
+    }
+
+    fn css_color<T>(input: T) -> IResult<T, T>
+    where
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + Clone
+            + std::fmt::Debug,
+        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
+    {
+        preceded(
+            char('#'),
+            alt((
+                take_while_m_n(3, 8, is_lower_hex_digit),
+                take_while_m_n(3, 8, is_upper_hex_digit),
+            )),
         )(input)
     }
 
@@ -620,8 +642,13 @@ mod parser {
     #[inline]
     fn is_ignore_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        // See c_escape and printf
-        !unicode_xid::UnicodeXID::is_xid_continue(c) && c != '\\' && c != '%'
+        !unicode_xid::UnicodeXID::is_xid_continue(c) &&
+            // See c_escape
+            c != '\\' &&
+            // See printf
+            c != '%' &&
+            // See css_color
+            c != '#'
     }
 
     #[inline]
@@ -1241,6 +1268,23 @@ mod test {
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 13),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_color() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "#[derive(Clone)] #aaa # #111 #AABBCC #hello #AABBCCDD World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("derive", Case::None, 2),
+            Identifier::new_unchecked("Clone", Case::None, 9),
+            Identifier::new_unchecked("hello", Case::None, 38),
+            Identifier::new_unchecked("World", Case::None, 54),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
