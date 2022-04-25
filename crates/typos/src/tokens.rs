@@ -319,16 +319,29 @@ mod parser {
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
-        recognize(tuple((
-            take_while_m_n(8, 8, is_lower_hex_digit),
-            char('-'),
-            take_while_m_n(4, 4, is_lower_hex_digit),
-            char('-'),
-            take_while_m_n(4, 4, is_lower_hex_digit),
-            char('-'),
-            take_while_m_n(4, 4, is_lower_hex_digit),
-            char('-'),
-            take_while_m_n(12, 12, is_lower_hex_digit),
+        recognize(alt((
+            tuple((
+                take_while_m_n(8, 8, is_lower_hex_digit),
+                char('-'),
+                take_while_m_n(4, 4, is_lower_hex_digit),
+                char('-'),
+                take_while_m_n(4, 4, is_lower_hex_digit),
+                char('-'),
+                take_while_m_n(4, 4, is_lower_hex_digit),
+                char('-'),
+                take_while_m_n(12, 12, is_lower_hex_digit),
+            )),
+            tuple((
+                take_while_m_n(8, 8, is_upper_hex_digit),
+                char('-'),
+                take_while_m_n(4, 4, is_upper_hex_digit),
+                char('-'),
+                take_while_m_n(4, 4, is_upper_hex_digit),
+                char('-'),
+                take_while_m_n(4, 4, is_upper_hex_digit),
+                char('-'),
+                take_while_m_n(12, 12, is_upper_hex_digit),
+            )),
         )))(input)
     }
 
@@ -1077,6 +1090,21 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 123e4567-e89b-12d3-a456-426652340000 World";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("Hello", Case::None, 0),
+            Identifier::new_unchecked("World", Case::None, 43),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_uuid_uppercase() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "Hello 123E4567-E89B-12D3-A456-426652340000 World";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 43),
