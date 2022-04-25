@@ -91,6 +91,7 @@ encoding = "0.2"
 kstring = { version = "2.0.0", features = ["serde"] }
 typed-arena = "2.0.1"
 maplit = "1.0"
+unicode-width = "0.1.9"
 
 [dev-dependencies]
 assert_fs = "1.0"

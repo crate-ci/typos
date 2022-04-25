@@ -3,6 +3,8 @@
 use std::io::{self, Write};
 use std::sync::atomic;
 
+use unicode_width::UnicodeWidthStr;
+
 use typos_cli::report::{Context, Message, Report, Typo};
 
 #[derive(Copy, Clone, Debug)]
@@ -218,8 +220,11 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
         let line_num = context.line_num.to_string();
         let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
-        let hl_indent: String = itertools::repeat_n(" ", column).collect();
-        let hl: String = itertools::repeat_n("^", msg.typo.len()).collect();
+        let visible_column = UnicodeWidthStr::width(start.as_ref());
+        let visible_len = UnicodeWidthStr::width(msg.typo);
+
+        let hl_indent: String = itertools::repeat_n(" ", visible_column).collect();
+        let hl: String = itertools::repeat_n("^", visible_len).collect();
 
         writeln!(handle, "{} |", line_indent)?;
         writeln!(
