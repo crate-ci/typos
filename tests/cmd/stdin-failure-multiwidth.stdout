@@ -1,0 +1,30 @@
+error: `Apropriate` should be `Appropriate`
+  --> -:1:2
+  |
+1 | 한 Apropriate world
+  |    ^^^^^^^^^^
+  |
+error: `Apropriate` should be `Appropriate`
+  --> -:2:2
+  |
+2 | 한 Apropriate world
+  |    ^^^^^^^^^^
+  |
+error: `Apropriate` should be `Appropriate`
+  --> -:3:2
+  |
+3 | 😵‍💫 Apropriate world
+  |      ^^^^^^^^^^
+  |
+error: `Apropriate` should be `Appropriate`
+  --> -:4:2
+  |
+4 | 👁️‍🗨️ Apropriate world
+  |    ^^^^^^^^^^
+  |
+error: `Apropriate` should be `Appropriate`
+  --> -:5:1
+  |
+5 |  Apropriate world
+  | ^^^^^^^^^^
+  |
