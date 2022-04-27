@@ -20,11 +20,11 @@ error: `Apropriate` should be `Appropriate`
   --> -:26:3
    |
 26 | 😵‍💫 Apropriate world
-   |      ^^^^^^^^^^
+   |    ^^^^^^^^^^
    |
 error: `Apropriate` should be `Appropriate`
   --> -:33:2
    |
 33 |  Apropriate world
-   | ^^^^^^^^^^
+   |  ^^^^^^^^^^
    |

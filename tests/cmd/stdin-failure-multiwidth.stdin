@@ -24,11 +24,11 @@ Face with spiral eyes (U+1F635 U+200D U+1F4AB, Recommended Emoji ZWJ Sequence, v
 Grapheme clusters: 1, codepoints: 3, UnicodeWidthStr::width() == 4 (Read NOTE: https://github.com/unicode-rs/unicode-width)
 
 😵‍💫 Apropriate world
-     ^^^^^^^^^^ highlight here
+   ^^^^^^^^^^ highlight here
 
 ---
 Horizontal tab (\t, U+09)
 Grapheme clusters: 1, codepoints: 1, UnicodeWidthStr::width() == 0
 
 	Apropriate world
-^^^^^^^^^^ highlight here
+ ^^^^^^^^^^ highlight here
