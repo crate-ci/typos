@@ -1,0 +1,34 @@
+---
+Korean character (NFC)
+Grapheme clusters: 1, codepoints: 1, UnicodeWidthStr::width() == 2
+
+한 Apropriate world
+   ^^^^^^^^^^ highlight here
+
+---
+Korean character (NFD).
+Grapheme clusters: 1, codepoints: 3, UnicodeWidthStr::width() == 2
+
+한 Apropriate world
+   ^^^^^^^^^^ highlight here
+
+---
+Eye in Speech Bubble Emoji (U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F, Recommended Emoji ZWJ Sequences, v2.0)
+Grapheme clusters: 1, codepoints: 5, UnicodeWidthStr::width() == 2 (Read NOTE: https://github.com/unicode-rs/unicode-width)
+
+👁️‍🗨️ Apropriate world
+   ^^^^^^^^^^ highlight here
+
+---
+Face with spiral eyes (U+1F635 U+200D U+1F4AB, Recommended Emoji ZWJ Sequence, v13.1)
+Grapheme clusters: 1, codepoints: 3, UnicodeWidthStr::width() == 4 (Read NOTE: https://github.com/unicode-rs/unicode-width)
+
+😵‍💫 Apropriate world
+     ^^^^^^^^^^ highlight here
+
+---
+Horizontal tab (\t, U+09)
+Grapheme clusters: 1, codepoints: 1, UnicodeWidthStr::width() == 0
+
+	Apropriate world
+^^^^^^^^^^ highlight here

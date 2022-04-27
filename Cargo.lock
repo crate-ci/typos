@@ -1576,6 +1576,7 @@ dependencies = [
  "typos-vars",
  "unicase",
  "unicode-segmentation",
+ "unicode-width",
  "varcon-core",
  "yansi",
 ]
