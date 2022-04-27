@@ -181,7 +181,8 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
     let line = String::from_utf8_lossy(msg.buffer.as_ref());
     let line = line.replace('\t', " ");
     let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
-    let column = unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count();
+    let column_number =
+        unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count() + 1;
     match &msg.corrections {
         typos::Status::Valid => {}
         typos::Status::Invalid => {
@@ -213,7 +214,7 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
         "  --> {}{}{}",
         palette.info.paint(context_display(&msg.context)),
         palette.info.paint(divider),
-        palette.info.paint(column)
+        palette.info.paint(column_number)
     )?;
 
     if let Some(Context::File(context)) = &msg.context {

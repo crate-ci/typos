@@ -1,29 +1,29 @@
 error: `Apropriate` should be `Appropriate`
-  --> -:5:2
+  --> -:5:3
   |
 5 | 한 Apropriate world
   |    ^^^^^^^^^^
   |
 error: `Apropriate` should be `Appropriate`
-  --> -:12:2
+  --> -:12:3
    |
 12 | 한 Apropriate world
    |    ^^^^^^^^^^
    |
 error: `Apropriate` should be `Appropriate`
-  --> -:19:2
+  --> -:19:3
    |
 19 | 👁️‍🗨️ Apropriate world
    |    ^^^^^^^^^^
    |
 error: `Apropriate` should be `Appropriate`
-  --> -:26:2
+  --> -:26:3
    |
 26 | 😵‍💫 Apropriate world
    |      ^^^^^^^^^^
    |
 error: `Apropriate` should be `Appropriate`
-  --> -:33:1
+  --> -:33:2
    |
 33 |  Apropriate world
    | ^^^^^^^^^^
