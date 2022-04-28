@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix misalignment in the detailed report with multiwidth characters
+- Fix report to show columns as 1-indexed
+
 ## [1.7.1] - 2022-04-25
 
 ### Fixes
+
 - Ignore uppercase UUID because Microsoft
 - Correct `unencyrpted`
 - Correct `signign`
