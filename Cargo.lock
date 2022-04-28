@@ -1540,7 +1540,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.7.2"
+version = "1.7.3"
 dependencies = [
  "ahash",
  "anyhow",
@@ -1584,7 +1584,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.8.1"
+version = "0.8.2"
 dependencies = [
  "dictgen",
  "log",
@@ -1738,7 +1738,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "2.2.1"
+version = "2.2.2"
 dependencies = [
  "enumflags2",
  "nom",
