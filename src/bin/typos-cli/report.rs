@@ -254,7 +254,7 @@ fn calculate_visible_column_width(str: &str) -> usize {
         result += if grapheme == "\t" {
             // TODO: config tab width
             1
-        } else if grapheme.chars().any(unic_emoji_char::is_emoji) {
+        } else if is_emoji(grapheme) {
             // UnicodeWidthStr::width doesn't cover for emoji according to their README.
             // See: https://github.com/unicode-rs/unicode-width#unicode-width
             // Also, the actual rendered column width may differ from calculation, especially for emojis.
@@ -266,6 +266,20 @@ fn calculate_visible_column_width(str: &str) -> usize {
     }
 
     result
+}
+
+fn is_emoji(grapheme: &str) -> bool {
+    if grapheme.is_ascii() {
+        return false;
+    }
+
+    for ch in grapheme.chars() {
+        if unic_emoji_char::is_emoji(ch) {
+            return true;
+        }
+    }
+
+    false
 }
 
 fn context_display<'c>(context: &'c Option<Context<'c>>) -> &'c dyn std::fmt::Display {
@@ -282,5 +296,82 @@ impl Report for PrintJson {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
         writeln!(io::stdout(), "{}", serde_json::to_string(&msg).unwrap())?;
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_calculate_visible_column_width_visible_ascii() {
+        for c in '!'..'~' {
+            assert_eq!(1, calculate_visible_column_width(&c.to_string()));
+        }
+    }
+
+    #[test]
+    fn test_calculate_visible_column_width_horizontal_tab() {
+        assert_eq!(1, calculate_visible_column_width("\t"));
+    }
+
+    #[test]
+    fn test_calculate_visible_column_width_latin_cyrillic() {
+        let latin_cyrillic_chars = [
+            "À",  /* U+00C0; Latin Capital Letter A with Grave */
+            "À", /* U+0041 U+0300; Latin Capital Letter A, Combining Grave Accent */
+            "А",  /* U+0410 Cyrillic Capital Letter A */
+        ];
+        for (i, ch) in latin_cyrillic_chars.iter().enumerate() {
+            let width = calculate_visible_column_width(ch);
+            assert_eq!(1, width, "latin_cyrillic[{}]: {}", i, ch,);
+        }
+    }
+
+    #[test]
+    fn test_calculate_visible_column_width_cjk() {
+        let cjk_chars = [
+            "中", /* U+4E2D */
+            "あ", /* U+3042 */
+            "한", /* U+1F635 U+200D U+1F4AB, NFC Korean */
+            "한", /* U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F, NFD Korean */
+        ];
+        for (i, ch) in cjk_chars.iter().enumerate() {
+            let width = calculate_visible_column_width(ch);
+            assert_eq!(2, width, "cjk[{}]: {}", i, ch);
+        }
+    }
+
+    #[test]
+    fn test_calculate_visible_column_width_simple_emojis() {
+        // First non-component emojis of each gropus in "Full Emoji List, v14.0"
+        // https://unicode.org/Public/emoji/14.0/emoji-test.txt
+        let simple_emojis = [
+            "😀", /* U+1F600 */
+            "👋", /* U+1F44B */
+            "🐵", /* U+1F435 */
+            "🍇", /* U+1F347 */
+            "🌍", /* U+1F30D */
+            "🎃", /* U+1F383 */
+            "👓", /* U+1F453 */
+            "🏧", /* U+1F3E7 */
+            "🏁", /* U+1F3C1 */
+        ];
+        for (i, ch) in simple_emojis.iter().enumerate() {
+            let width = calculate_visible_column_width(ch);
+            assert_eq!(2, width, "emoji[{}]: {}", i, ch);
+        }
+    }
+
+    #[test]
+    fn test_calculate_visible_column_width_zwj_sequences() {
+        let zwj_sequences = [
+            "😵‍💫",       /* U+1F635 U+200D U+1F4AB */
+            "👁️‍🗨️", /* U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F */
+        ];
+        for (i, ch) in zwj_sequences.iter().enumerate() {
+            let width = calculate_visible_column_width(ch);
+            assert_eq!(2, width, "zwj[{}]: {}", i, ch);
+        }
     }
 }
