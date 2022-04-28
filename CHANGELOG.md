@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix alignment in reports for numbers, broken in 1.7.2
+- Correct `identitiy`
+
 ## [1.7.2] - 2022-04-28
 
 ### Fixes
