@@ -181,7 +181,8 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
     let line = String::from_utf8_lossy(msg.buffer.as_ref());
     let line = line.replace('\t', " ");
     let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
-    let column = unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count();
+    let column_number =
+        unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count() + 1;
     match &msg.corrections {
         typos::Status::Valid => {}
         typos::Status::Invalid => {
@@ -213,15 +214,15 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
         "  --> {}{}{}",
         palette.info.paint(context_display(&msg.context)),
         palette.info.paint(divider),
-        palette.info.paint(column)
+        palette.info.paint(column_number)
     )?;
 
     if let Some(Context::File(context)) = &msg.context {
         let line_num = context.line_num.to_string();
         let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
 
-        let visible_column = UnicodeWidthStr::width(start.as_ref());
-        let visible_len = UnicodeWidthStr::width(msg.typo);
+        let visible_column = calculate_visible_column_width(start.as_ref());
+        let visible_len = calculate_visible_column_width(msg.typo);
 
         let hl_indent: String = itertools::repeat_n(" ", visible_column).collect();
         let hl: String = itertools::repeat_n("^", visible_len).collect();
@@ -244,6 +245,27 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
     }
 
     Ok(())
+}
+
+fn calculate_visible_column_width(str: &str) -> usize {
+    let mut result = 0;
+    let graphemes = unicode_segmentation::UnicodeSegmentation::graphemes(str, true);
+    for grapheme in graphemes {
+        result += if grapheme == "\t" {
+            // TODO: config tab width
+            1
+        } else if grapheme.chars().any(unic_emoji_char::is_emoji) {
+            // UnicodeWidthStr::width doesn't cover for emoji according to their README.
+            // See: https://github.com/unicode-rs/unicode-width#unicode-width
+            // Also, the actual rendered column width may differ from calculation, especially for emojis.
+            // In here, we expect emoji renderers should render this emoji properly.
+            2
+        } else {
+            UnicodeWidthStr::width(grapheme)
+        }
+    }
+
+    result
 }
 
 fn context_display<'c>(context: &'c Option<Context<'c>>) -> &'c dyn std::fmt::Display {

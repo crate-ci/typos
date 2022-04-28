@@ -92,6 +92,7 @@ kstring = { version = "2.0.0", features = ["serde"] }
 typed-arena = "2.0.1"
 maplit = "1.0"
 unicode-width = "0.1.9"
+unic-emoji-char = "0.9.0"
 
 [dev-dependencies]
 assert_fs = "1.0"
