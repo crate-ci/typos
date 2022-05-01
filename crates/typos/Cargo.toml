@@ -24,7 +24,7 @@ nom = "7.1"
 unicode-xid = "0.2.2"
 once_cell = "1.10.0"
 serde = { version = "1.0", features = ["derive"] }
-simdutf8 = "0.1.1"
+simdutf8 = "0.1.4"
 itertools = "0.10"
 log = "0.4"
 unicode-segmentation = "1.9.0"
