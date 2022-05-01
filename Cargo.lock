@@ -153,16 +153,16 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "3.1.7"
+version = "3.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c67e7973e74896f4bba06ca2dcfd28d54f9cb8c035e940a32b88ed48f5f5ecf2"
+checksum = "535434c063ced786eb04aaf529308092c5ab60889e8fe24275d15de07b01fa97"
 dependencies = [
  "atty",
  "bitflags",
  "clap_derive",
+ "clap_lex",
  "indexmap",
  "lazy_static",
- "os_str_bytes",
  "strsim 0.10.0",
  "termcolor",
  "textwrap 0.15.0",
@@ -174,7 +174,7 @@ version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2474445ef3370e4844f9082eef2f80e4abaf7d985781afd78b89b58e2f69a14"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "log",
 ]
 
@@ -184,7 +184,7 @@ version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17e437250f23cdd03daf3de763093aa27873a026ef9a156800da9ddd617c51d4"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "log",
 ]
 
@@ -202,12 +202,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "clap_lex"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a37c35f1112dad5e6e0b1adaff798507497a18fceeb30cceb3bae7d1427b9213"
+dependencies = [
+ "os_str_bytes",
+]
+
+[[package]]
 name = "codegenrs"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d7ecb55fae620b95dc3586f10bf6d93d4bfc73b34b0adddf18445b9291458dd6"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "derive_more",
  "difference",
  "normalize-line-endings",
@@ -217,7 +226,7 @@ dependencies = [
 name = "codespell-codegen"
 version = "0.4.0"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "codegenrs",
  "dictgen",
  "itertools",
@@ -259,7 +268,7 @@ version = "0.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b35b55e880d42d4626e6a1aa5b4e63a4df61cf024472a31495ecbbb712402985"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "concolor",
 ]
 
@@ -875,7 +884,7 @@ dependencies = [
 name = "misspell-codegen"
 version = "0.4.0"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "codegenrs",
  "dictgen",
  "itertools",
@@ -963,9 +972,6 @@ name = "os_str_bytes"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8e22443d1643a904602595ba1cd8f7d896afe56d26712531c5ff73a15b2fbf64"
-dependencies = [
- "memchr",
-]
 
 [[package]]
 name = "os_type"
@@ -1547,7 +1553,7 @@ dependencies = [
  "assert_fs",
  "atty",
  "bstr",
- "clap 3.1.7",
+ "clap 3.1.14",
  "clap-verbosity-flag 1.0.0",
  "concolor",
  "concolor-clap",
@@ -1595,7 +1601,7 @@ dependencies = [
 name = "typos-dict-codegen"
 version = "1.3.0"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "codegenrs",
  "csv",
  "dictgen",
@@ -1607,7 +1613,7 @@ dependencies = [
 name = "typos-dict-verify"
 version = "1.3.0"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "codegenrs",
  "csv",
  "edit-distance",
@@ -1630,7 +1636,7 @@ dependencies = [
 name = "typos-vars-codegen"
 version = "1.3.0"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "clap-verbosity-flag 0.4.1",
  "codegenrs",
  "dictgen",
@@ -1731,7 +1737,7 @@ dependencies = [
 name = "varcon-codegen"
 version = "1.3.0"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "codegenrs",
  "varcon-core",
 ]
@@ -1844,7 +1850,7 @@ dependencies = [
 name = "wikipedia-codegen"
 version = "0.4.0"
 dependencies = [
- "clap 3.1.7",
+ "clap 3.1.14",
  "codegenrs",
  "dictgen",
  "itertools",
