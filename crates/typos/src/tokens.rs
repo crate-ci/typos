@@ -1138,6 +1138,9 @@ mod test {
             ("485865fd04Z2e40d041e861506bb3ac11a3a91e3", false),
             ("485865fd0412e40d041e8Z1506bb3ac11a3a91e3", false),
             ("485865fd0412e40d041e861506bb3ac11a3a91eZ", false),
+            // Ignore when inside of a path
+            ("c7087fe00d2ba919df1d813c040a5d47e43b0fe7", true),
+            ("/c7087fe00d2ba919df1d813c040a5d47e43b0fe7/", true),
         ] {
             let input = format!("Hello {} World", hashlike);
             let mut expected: Vec<Identifier> = vec![
@@ -1147,11 +1150,42 @@ mod test {
             if ! is_ignored {
                 expected.insert(1, Identifier::new_unchecked(hashlike, Case::None, 6));
             }
+            dbg!(hashlike);
             let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
             assert_eq!(expected, actual);
             let actual: Vec<_> = parser.parse_str(&input).collect();
             assert_eq!(expected, actual);
         }
+    }
+
+    #[test]
+    fn tokenize_ignore_hash_in_windows_path() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "///                 at /rustc/c7087fe00d2ba919df1d813c040a5d47e43b0fe7\\/src\\libstd\\rt.rs:51\n";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("at", Case::None, 20),
+            Identifier::new_unchecked("rs", Case::None, 85),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_hash_in_linux_path() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "///                 at /rustc/c7087fe00d2ba919df1d813c040a5d47e43b0fe7/src/libstd/rt.rs:51\n";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("at", Case::None, 20),
+            Identifier::new_unchecked("rs", Case::None, 85),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
     }
 
     #[test]
