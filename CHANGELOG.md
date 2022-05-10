@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Actually ignore items, like hashes, at the end of input
+- Actually ignore items, like hashes, that have trailing backslashes
+- Better detect short base64's by watching the padding bytes
+
 ## [1.7.3] - 2022-04-28
 
 ### Fixes
