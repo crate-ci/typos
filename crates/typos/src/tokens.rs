@@ -142,6 +142,7 @@ mod parser {
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Offset
             + Clone
+            + Default
             + PartialEq
             + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
@@ -172,6 +173,7 @@ mod parser {
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Offset
             + Clone
+            + Default
             + PartialEq
             + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
@@ -181,15 +183,15 @@ mod parser {
             // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
             // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
             // - Make sure you always consume it
-            terminated(uuid_literal, sep1),
-            terminated(hash_literal, sep1),
-            terminated(hex_literal, sep1),
-            terminated(dec_literal, sep1),
-            terminated(ordinal_literal, sep1),
-            terminated(base64_literal, sep1),
-            terminated(email_literal, sep1),
-            terminated(url_literal, sep1),
-            terminated(css_color, sep1),
+            terminated(uuid_literal, peek(sep1)),
+            terminated(hash_literal, peek(sep1)),
+            terminated(base64_literal, peek(sep1)), // base64 should be quoted or something
+            terminated(ordinal_literal, peek(sep1)),
+            terminated(hex_literal, peek(sep1)),
+            terminated(dec_literal, peek(sep1)), // Allow digit-prefixed words
+            terminated(email_literal, peek(sep1)),
+            terminated(url_literal, peek(sep1)),
+            terminated(css_color, peek(sep1)),
             c_escape,
             printf,
             other,
@@ -198,10 +200,24 @@ mod parser {
 
     fn sep1<T>(input: T) -> IResult<T, T>
     where
-        T: nom::InputTakeAtPosition + std::fmt::Debug,
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Offset
+            + Clone
+            + Default
+            + PartialEq
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
     {
-        take_while1(is_ignore_char)(input)
+        alt((
+            recognize(satisfy(|c| !is_xid_continue(c))),
+            map(eof, |_| T::default()),
+        ))(input)
     }
 
     fn other<T>(input: T) -> IResult<T, T>
@@ -391,7 +407,16 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         let (padding, captured) = take_while1(is_base64_digit)(input.clone())?;
+
+        const CHUNK: usize = 4;
+        let padding_offset = input.offset(&padding);
+        let mut padding_len = CHUNK - padding_offset % CHUNK;
+        if padding_len == CHUNK {
+            padding_len = 0;
+        }
+
         if captured.input_len() < 90
+            && padding_len == 0
             && captured
                 .iter_elements()
                 .all(|c| !['/', '+'].contains(&c.as_char()))
@@ -402,14 +427,8 @@ mod parser {
             )));
         }
 
-        const CHUNK: usize = 4;
-        let padding_offset = input.offset(&padding);
-        let mut padding_len = CHUNK - padding_offset % CHUNK;
-        if padding_len == CHUNK {
-            padding_len = 0;
-        }
-
         let (after, _) = take_while_m_n(padding_len, padding_len, is_base64_padding)(padding)?;
+
         let after_offset = input.offset(&after);
         Ok(input.take_split(after_offset))
     }
@@ -1132,12 +1151,6 @@ mod test {
             ("D41D8CD98F00B204E9800998ECF8427E", true),
             // A 31-character hexadecimal string: too short to be a hash.
             ("D41D8CD98F00B204E9800998ECF8427", false),
-            // A 40-character string, but with non-hex characters (in
-            // several positions.)
-            ("Z85865fd0412e40d041e861506bb3ac11a3a91e3", false),
-            ("485865fd04Z2e40d041e861506bb3ac11a3a91e3", false),
-            ("485865fd0412e40d041e8Z1506bb3ac11a3a91e3", false),
-            ("485865fd0412e40d041e861506bb3ac11a3a91eZ", false),
         ] {
             let input = format!("Hello {} World", hashlike);
             let mut expected: Vec<Identifier> = vec![
@@ -1152,6 +1165,22 @@ mod test {
             let actual: Vec<_> = parser.parse_str(&input).collect();
             assert_eq!(expected, actual);
         }
+    }
+
+    #[test]
+    fn tokenize_hash_in_mixed_path() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "     ///                 at /rustc/c7087fe00d2ba919df1d813c040a5d47e43b0fe7\\/src\\libstd\\rt.rs:51";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("at", Case::None, 25),
+            // `rustc...` looks like the start of a URL
+            Identifier::new_unchecked("rs", Case::None, 91),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
     }
 
     #[test]
@@ -1175,6 +1204,21 @@ mod test {
 
         let input = r#""ed25519:1": "Wm+VzmOUOz08Ds+0NTWb1d4CZrVsJSikkeRxh6aCcUwu6pNC78FunoD7KNWzqFn241eYHYMGCA5McEiVPdhzBA==""#;
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("ed25519", Case::None, 1)];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_base64_case_3() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = r#"       "integrity": "sha512-hCmlUAIlUiav8Xdqw3Io4LcpA1DOt7h3LSTAC4G6JGHFFaWzI6qvFt9oilvl8BmkbBRX1IhM90ZAmpk68zccQA==","#;
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("integrity", Case::None, 8),
+            Identifier::new_unchecked("sha512", Case::None, 21),
+        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
