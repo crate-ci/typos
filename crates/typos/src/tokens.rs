@@ -183,15 +183,15 @@ mod parser {
             // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
             // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
             // - Make sure you always consume it
-            terminated(uuid_literal, sep1),
-            terminated(hash_literal, sep1),
-            terminated(base64_literal, sep1), // base64 should be quoted or something
-            terminated(ordinal_literal, sep1),
-            terminated(hex_literal, sep1),
-            terminated(dec_literal, sep1), // Allow digit-prefixed words
-            terminated(email_literal, sep1),
-            terminated(url_literal, sep1),
-            terminated(css_color, sep1),
+            terminated(uuid_literal, peek(sep1)),
+            terminated(hash_literal, peek(sep1)),
+            terminated(base64_literal, peek(sep1)), // base64 should be quoted or something
+            terminated(ordinal_literal, peek(sep1)),
+            terminated(hex_literal, peek(sep1)),
+            terminated(dec_literal, peek(sep1)), // Allow digit-prefixed words
+            terminated(email_literal, peek(sep1)),
+            terminated(url_literal, peek(sep1)),
+            terminated(css_color, peek(sep1)),
             c_escape,
             printf,
             other,
@@ -212,8 +212,12 @@ mod parser {
             + PartialEq
             + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        <T as nom::InputIter>::Item: AsChar + Copy,
     {
-        alt((take_while1(is_ignore_char), map(eof, |_| T::default())))(input)
+        alt((
+            recognize(satisfy(|c| !is_xid_continue(c))),
+            map(eof, |_| T::default()),
+        ))(input)
     }
 
     fn other<T>(input: T) -> IResult<T, T>
@@ -1167,9 +1171,7 @@ mod test {
         let input = "     ///                 at /rustc/c7087fe00d2ba919df1d813c040a5d47e43b0fe7\\/src\\libstd\\rt.rs:51";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("at", Case::None, 25),
-            Identifier::new_unchecked("rustc", Case::None, 29),
-            Identifier::new_unchecked("c7087fe00d2ba919df1d813c040a5d47e43b0fe7", Case::None, 35), // BUG: This shouldn't be here
-            Identifier::new_unchecked("src", Case::None, 77),
+            // `rustc...` looks like the start of a URL
             Identifier::new_unchecked("rs", Case::None, 91),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
