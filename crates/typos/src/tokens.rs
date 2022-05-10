@@ -407,7 +407,16 @@ mod parser {
         <T as nom::InputIter>::Item: AsChar + Copy,
     {
         let (padding, captured) = take_while1(is_base64_digit)(input.clone())?;
+
+        const CHUNK: usize = 4;
+        let padding_offset = input.offset(&padding);
+        let mut padding_len = CHUNK - padding_offset % CHUNK;
+        if padding_len == CHUNK {
+            padding_len = 0;
+        }
+
         if captured.input_len() < 90
+            && padding_len == 0
             && captured
                 .iter_elements()
                 .all(|c| !['/', '+'].contains(&c.as_char()))
@@ -418,14 +427,8 @@ mod parser {
             )));
         }
 
-        const CHUNK: usize = 4;
-        let padding_offset = input.offset(&padding);
-        let mut padding_len = CHUNK - padding_offset % CHUNK;
-        if padding_len == CHUNK {
-            padding_len = 0;
-        }
-
         let (after, _) = take_while_m_n(padding_len, padding_len, is_base64_padding)(padding)?;
+
         let after_offset = input.offset(&after);
         Ok(input.take_split(after_offset))
     }
@@ -1201,6 +1204,21 @@ mod test {
 
         let input = r#""ed25519:1": "Wm+VzmOUOz08Ds+0NTWb1d4CZrVsJSikkeRxh6aCcUwu6pNC78FunoD7KNWzqFn241eYHYMGCA5McEiVPdhzBA==""#;
         let expected: Vec<Identifier> = vec![Identifier::new_unchecked("ed25519", Case::None, 1)];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn tokenize_ignore_base64_case_3() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = r#"       "integrity": "sha512-hCmlUAIlUiav8Xdqw3Io4LcpA1DOt7h3LSTAC4G6JGHFFaWzI6qvFt9oilvl8BmkbBRX1IhM90ZAmpk68zccQA==","#;
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("integrity", Case::None, 8),
+            Identifier::new_unchecked("sha512", Case::None, 21),
+        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
