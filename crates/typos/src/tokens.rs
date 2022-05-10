@@ -1149,6 +1149,25 @@ mod test {
     }
 
     #[test]
+    fn tokenize_hash_in_mixed_path() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "     ///                 at /rustc/c7087fe00d2ba919df1d813c040a5d47e43b0fe7\\/src\\libstd\\rt.rs:51";
+        let expected: Vec<Identifier> = vec![
+            Identifier::new_unchecked("at", Case::None, 25),
+            Identifier::new_unchecked("rustc", Case::None, 29),
+            Identifier::new_unchecked("c7087fe00d2ba919df1d813c040a5d47e43b0fe7", Case::None, 35), // BUG: This shouldn't be here
+            Identifier::new_unchecked("src", Case::None, 77),
+            Identifier::new_unchecked("rs", Case::None, 91),
+            Identifier::new_unchecked("51", Case::None, 94),
+        ];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
     fn tokenize_ignore_base64_case_1() {
         let parser = TokenizerBuilder::new().build();
 
