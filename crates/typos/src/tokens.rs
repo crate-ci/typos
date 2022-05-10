@@ -183,10 +183,10 @@ mod parser {
             // - Make sure you always consume it
             terminated(uuid_literal, sep1),
             terminated(hash_literal, sep1),
-            terminated(hex_literal, sep1),
-            terminated(dec_literal, sep1),
+            terminated(base64_literal, sep1), // base64 should be quoted or something
             terminated(ordinal_literal, sep1),
-            terminated(base64_literal, sep1),
+            terminated(hex_literal, sep1),
+            terminated(dec_literal, sep1), // Allow digit-prefixed words
             terminated(email_literal, sep1),
             terminated(url_literal, sep1),
             terminated(css_color, sep1),
