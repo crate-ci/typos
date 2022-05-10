@@ -142,6 +142,7 @@ mod parser {
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Offset
             + Clone
+            + Default
             + PartialEq
             + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
@@ -172,6 +173,7 @@ mod parser {
             + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Offset
             + Clone
+            + Default
             + PartialEq
             + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
@@ -198,10 +200,20 @@ mod parser {
 
     fn sep1<T>(input: T) -> IResult<T, T>
     where
-        T: nom::InputTakeAtPosition + std::fmt::Debug,
+        T: nom::InputTakeAtPosition
+            + nom::InputTake
+            + nom::InputIter
+            + nom::InputLength
+            + nom::Slice<std::ops::RangeFrom<usize>>
+            + nom::Slice<std::ops::RangeTo<usize>>
+            + nom::Offset
+            + Clone
+            + Default
+            + PartialEq
+            + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
     {
-        take_while1(is_ignore_char)(input)
+        alt((take_while1(is_ignore_char), map(eof, |_| T::default())))(input)
     }
 
     fn other<T>(input: T) -> IResult<T, T>
@@ -1159,7 +1171,6 @@ mod test {
             Identifier::new_unchecked("c7087fe00d2ba919df1d813c040a5d47e43b0fe7", Case::None, 35), // BUG: This shouldn't be here
             Identifier::new_unchecked("src", Case::None, 77),
             Identifier::new_unchecked("rs", Case::None, 91),
-            Identifier::new_unchecked("51", Case::None, 94),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
