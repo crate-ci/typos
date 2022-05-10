@@ -1132,12 +1132,6 @@ mod test {
             ("D41D8CD98F00B204E9800998ECF8427E", true),
             // A 31-character hexadecimal string: too short to be a hash.
             ("D41D8CD98F00B204E9800998ECF8427", false),
-            // A 40-character string, but with non-hex characters (in
-            // several positions.)
-            ("Z85865fd0412e40d041e861506bb3ac11a3a91e3", false),
-            ("485865fd04Z2e40d041e861506bb3ac11a3a91e3", false),
-            ("485865fd0412e40d041e8Z1506bb3ac11a3a91e3", false),
-            ("485865fd0412e40d041e861506bb3ac11a3a91eZ", false),
         ] {
             let input = format!("Hello {} World", hashlike);
             let mut expected: Vec<Identifier> = vec![
