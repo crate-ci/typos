@@ -171,6 +171,7 @@ impl typos::Dictionary for BuiltIn {
     }
 }
 
+#[allow(clippy::ptr_arg)]
 fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
     match case {
         Case::Lower | Case::None => (),

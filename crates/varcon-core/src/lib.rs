@@ -47,7 +47,7 @@ impl Entry {
     }
 }
 
-fn imply(variants: &mut Vec<Variant>, required: Category, missing: Category) {
+fn imply(variants: &mut [Variant], required: Category, missing: Category) {
     let missing_exists = variants
         .iter()
         .any(|v| v.types.iter().any(|t| t.category == missing));
