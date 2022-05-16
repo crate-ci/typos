@@ -1545,7 +1545,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.8.0"
+version = "1.8.1"
 dependencies = [
  "ahash",
  "anyhow",
@@ -1743,7 +1743,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "2.2.2"
+version = "2.2.3"
 dependencies = [
  "enumflags2",
  "nom",
