@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+- Extra debug logging
+
 ## [1.8.0] - 2022-05-10
 
 ### Fixes
