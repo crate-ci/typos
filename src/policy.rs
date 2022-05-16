@@ -313,8 +313,18 @@ impl DirConfig {
             .and_then(|g| g.file_type_def())
             .map(|f| f.name());
 
-        name.and_then(|name| self.types.get(name).copied())
-            .unwrap_or(self.default)
+        name.and_then(|name| {
+            log::debug!("{}: `{}` policy", path.display(), name);
+            self.types.get(name).copied()
+        })
+        .unwrap_or_else(|| {
+            log::debug!(
+                "{}: default policy for `{}` file type",
+                path.display(),
+                name.unwrap_or("<unknown>")
+            );
+            self.default
+        })
     }
 }
 
