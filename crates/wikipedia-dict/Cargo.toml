@@ -9,6 +9,7 @@ readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
 edition = "2018"
+rust-version = "1.59.0"  # MSRV
 publish = false
 include = [
   "src/**/*",

@@ -8,6 +8,7 @@ repository = "https://github.com/crate-ci/typos"
 readme = "../../README.md"
 categories = ["text-processing"]
 edition = "2018"
+rust-version = "1.59.0"  # MSRV
 include = [
   "src/**/*",
   "Cargo.toml",

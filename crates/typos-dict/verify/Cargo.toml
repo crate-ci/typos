@@ -8,6 +8,7 @@ readme = "../../../README.md"
 categories = ["text-processing"]
 license = "MIT"
 edition = "2018"
+rust-version = "1.59.0"  # MSRV
 publish = false
 
 [package.metadata.release]

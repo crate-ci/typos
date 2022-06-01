@@ -9,6 +9,7 @@ categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
 license = "MIT OR Apache-2.0"
 edition = "2018"
+rust-version = "1.59.0"  # MSRV
 publish = false
 include = [
   "src/**/*",
