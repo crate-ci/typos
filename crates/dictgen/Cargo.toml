@@ -6,7 +6,8 @@ repository = "https://github.com/crate-ci/typos"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling", "no_std"]
 license = "MIT OR Apache-2.0"
-edition = "2018"
+edition = "2021"
+rust-version = "1.59.0"  # MSRV
 include = [
   "src/**/*",
   "Cargo.toml",
