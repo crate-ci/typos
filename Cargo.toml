@@ -76,7 +76,7 @@ yansi = "0.5.1"
 concolor = { version = "0.0.8" }
 concolor-clap = { version = "0.0.10", features = ["api_unstable"] }
 bstr = "0.2"
-once_cell = "1.10.0"
+once_cell = "1.12.0"
 ahash = "0.7"
 difflib = "0.4"
 proc-exit = "1.0"
