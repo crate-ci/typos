@@ -806,15 +806,6 @@ dependencies = [
 
 [[package]]
 name = "kstring"
-version = "1.0.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b310ccceade8121d7d77fee406160e457c2f4e7c7982d589da3499bc7ea4526"
-dependencies = [
- "serde",
-]
-
-[[package]]
-name = "kstring"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec3066350882a1cd6d950d055997f379ac37fd39f81cd4d8ed186032eb3c5747"
@@ -1481,19 +1472,6 @@ dependencies = [
 
 [[package]]
 name = "toml_edit"
-version = "0.13.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "744e9ed5b352340aa47ce033716991b5589e23781acb97cad37d4ea70560f55b"
-dependencies = [
- "combine",
- "indexmap",
- "itertools",
- "kstring 1.0.6",
- "serde",
-]
-
-[[package]]
-name = "toml_edit"
 version = "0.14.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba98375fd631b83696f87c64e4ed8e29e6a1f3404d6aed95fa95163bad38e705"
@@ -1506,9 +1484,9 @@ dependencies = [
 
 [[package]]
 name = "trycmd"
-version = "0.13.3"
+version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2c21f68a540a24b162ca101e3f7f4ce3c8458f594f28080018f29da23ad8567b"
+checksum = "ffb4185126cc904642173a54c185083f410c86d1202ada6761aacf7c40829f13"
 dependencies = [
  "glob",
  "humantime",
@@ -1517,7 +1495,7 @@ dependencies = [
  "serde",
  "shlex",
  "snapbox",
- "toml_edit 0.13.4",
+ "toml_edit",
 ]
 
 [[package]]
@@ -1566,14 +1544,14 @@ dependencies = [
  "human-panic",
  "ignore",
  "itertools",
- "kstring 2.0.0",
+ "kstring",
  "log",
  "maplit",
  "once_cell",
  "proc-exit",
  "serde",
  "serde_json",
- "toml_edit 0.14.3",
+ "toml_edit",
  "trycmd",
  "typed-arena",
  "typos",
