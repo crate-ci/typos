@@ -76,7 +76,10 @@ impl<'s> ConfigEngine<'s> {
         self.get_walk(dir)
     }
 
-    pub fn file_types(&self, cwd: &std::path::Path) -> &[ignore::types::FileTypeDef] {
+    pub fn file_types(
+        &self,
+        cwd: &std::path::Path,
+    ) -> &std::collections::BTreeMap<kstring::KString, Vec<kstring::KString>> {
         debug_assert!(cwd.is_absolute(), "{} is not absolute", cwd.display());
         let dir = self
             .configs
@@ -176,25 +179,17 @@ impl<'s> ConfigEngine<'s> {
 
         let walk = self.walk.intern(files);
 
-        let mut type_matcher = ignore::types::TypesBuilder::new();
-        for &(name, exts) in crate::default_types::DEFAULT_TYPES {
-            for ext in exts {
-                type_matcher.add(name, ext).expect("all defaults are valid");
-            }
-        }
+        let mut type_matcher = crate::file_type::TypesBuilder::new();
+        type_matcher.add_defaults();
         let mut types: std::collections::HashMap<_, _> = Default::default();
         for (type_name, type_engine) in type_.patterns() {
             if type_engine.extend_glob.is_empty() {
-                if type_matcher
-                    .definitions()
-                    .iter()
-                    .all(|def| def.name() != type_name.as_str())
-                {
+                if !type_matcher.contains_name(&type_name) {
                     anyhow::bail!("Unknown type definition `{}`, pass `--type-list` to see valid names or set `extend_glob` to add a new one.", type_name);
                 }
             } else {
                 for glob in type_engine.extend_glob.iter() {
-                    type_matcher.add(type_name.as_str(), glob.as_str())?;
+                    type_matcher.add(type_name.as_ref(), glob.as_ref());
                 }
             }
 
@@ -207,8 +202,6 @@ impl<'s> ConfigEngine<'s> {
         }
         default.update(&overrides);
         let default = self.init_file_config(default);
-
-        type_matcher.select("all");
 
         let dir = DirConfig {
             walk,
@@ -302,16 +295,12 @@ struct DirConfig {
     walk: usize,
     default: FileConfig,
     types: std::collections::HashMap<kstring::KString, FileConfig>,
-    type_matcher: ignore::types::Types,
+    type_matcher: crate::file_type::Types,
 }
 
 impl DirConfig {
     fn get_file_config(&self, path: &std::path::Path) -> FileConfig {
-        let match_ = self.type_matcher.matched(path, false);
-        let name = match_
-            .inner()
-            .and_then(|g| g.file_type_def())
-            .map(|f| f.name());
+        let name = self.type_matcher.file_matched(path);
 
         name.and_then(|name| {
             log::debug!("{}: `{}` policy", path.display(), name);
