@@ -131,13 +131,8 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
 
     let stdout = std::io::stdout();
     let mut handle = stdout.lock();
-    for def in definitions {
-        writeln!(
-            handle,
-            "{}: {}",
-            def.name(),
-            itertools::join(def.globs(), ", ")
-        )?;
+    for (name, globs) in definitions {
+        writeln!(handle, "{}: {}", name, itertools::join(globs, ", "))?;
     }
 
     Ok(())

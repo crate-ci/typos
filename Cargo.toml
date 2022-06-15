@@ -94,6 +94,8 @@ typed-arena = "2.0.1"
 maplit = "1.0"
 unicode-width = "0.1.9"
 unic-emoji-char = "0.9.0"
+thread_local = "1.1.4"
+globset = "0.4.9"
 
 [dev-dependencies]
 assert_fs = "1.0"

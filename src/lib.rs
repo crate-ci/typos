@@ -13,3 +13,4 @@ pub mod policy;
 pub mod report;
 
 mod default_types;
+mod file_type;
