@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Made overlapping file definitions deterministic (most specific one wins) (#500)
+
 ## [1.8.1] - 2022-05-16
 
 - Extra debug logging
