@@ -14,6 +14,10 @@ if [[ -n "${GITHUB_BASE_REF:-}" ]]; then
     if git rev-parse --verify ${BASE_REF} 2>/dev/null ; then
         log "Limiting checks to ${GITHUB_BASE_REF}...HEAD"
         TARGET=$(git diff ${BASE_REF}...HEAD --name-only --diff-filter=AM -- ${TARGET})
+        if [[ -z "${TARGET:-}" ]]; then
+                log "INPUT_FILES are unchanged"
+                exit 0
+        fi
     else
         log "WARN: Not limiting checks to ${BASE_REF}...HEAD, ${GITHUB_BASE_REF} is not available"
     fi
