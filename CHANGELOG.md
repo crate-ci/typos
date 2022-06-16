@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- When stdout is redirected to a file, don't spell check that file
+
 ## [1.10.0] - 2022-06-16
 
 ### Features
