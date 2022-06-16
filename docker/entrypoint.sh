@@ -40,4 +40,9 @@ if [[ -n "${INPUT_CONFIG:-}" ]]; then
 fi
 
 log "$ ${COMMAND}"
+${COMMAND} --format json |
+  jq --sort-keys --raw-output '"::warning file=\(.path),line=\(.line_num),col=\(.byte_offset)::\"\(.typo)\" should be \"" + (.corrections // [] | join("\" or \"") + "\".")' |
+  while IFS= read -r line; do
+    echo "$line"
+  done || true
 ${COMMAND}
