@@ -26,6 +26,8 @@ if [[ -z $(which ${CMD_NAME} 2>/dev/null) ]]; then
     log "ERROR: 'typos' not found"
     exit 1
 fi
+log "typos: $(typos --version)"
+log "jq: $(jq --version)"
 
 COMMAND="${CMD_NAME} ${TARGET}"
 
