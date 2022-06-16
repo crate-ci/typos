@@ -181,6 +181,7 @@ fn run_checks(
 
         let mut walk = ignore::WalkBuilder::new(path);
         walk.threads(args.threads)
+            .skip_stdout(true)
             .hidden(walk_policy.ignore_hidden())
             .ignore(walk_policy.ignore_dot())
             .git_global(walk_policy.ignore_global())
