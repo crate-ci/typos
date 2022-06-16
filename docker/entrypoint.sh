@@ -9,12 +9,13 @@ log() {
 CMD_NAME="typos"
 TARGET=${INPUT_FILES:-"."}
 if [[ -n "${GITHUB_BASE_REF:-}" ]]; then
+    BASE_REF=HEAD~  # HACK: GITHUB_BASE_REF is failing the `--verify` but `HEAD~ should be the same for pull requests
     git config --global --add safe.directory /github/workspace
-    if git rev-parse --verify master 2>/dev/null ; then
+    if git rev-parse --verify ${BASE_REF} 2>/dev/null ; then
         log "Limiting checks to ${GITHUB_BASE_REF}...HEAD"
-        TARGET=$(git diff ${GITHUB_BASE_REF}...HEAD --name-only --diff-filter=AM -- ${TARGET})
+        TARGET=$(git diff ${BASE_REF}...HEAD --name-only --diff-filter=AM -- ${TARGET})
     else
-        log "WARN: Not limiting checks to ${GITHUB_BASE_REF}...HEAD, ${GITHUB_BASE_REF} is not available"
+        log "WARN: Not limiting checks to ${BASE_REF}...HEAD, ${GITHUB_BASE_REF} is not available"
     fi
 fi
 
