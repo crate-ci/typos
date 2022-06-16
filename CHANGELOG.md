@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(Github Action)* Report typos as annotations
+
+### Performance
+
+- *(Github Action)* Only check the files changed in a PR
+
 ## [1.9.0] - 2022-06-15
 
 ### Fixes
