@@ -2,6 +2,8 @@
 
 set -eu
 
+SOURCE_DIR="$(dirname -- ${BASH_SOURCE[0]:-$0})";
+
 log() {
     echo -e "$1" >&2
 }
@@ -47,10 +49,5 @@ if [[ -n "${INPUT_CONFIG:-}" ]]; then
 fi
 
 log "$ ${CMD_NAME} ${ARGS}"
-${CMD_NAME} ${ARGS} --format json |
-  grep '"type":"typo"' |
-  jq --sort-keys --raw-output '"::warning file=\(.path),line=\(.line_num),col=\(.byte_offset)::\"\(.typo)\" should be \"" + (.corrections // [] | join("\" or \"") + "\".")' |
-  while IFS= read -r line; do
-    echo "$line"
-  done || true
+${CMD_NAME} ${ARGS} --format json | ${SOURCE_DIR}/format_gh.sh || true
 ${CMD_NAME} ${ARGS}
