@@ -2,6 +2,8 @@
 
 set -eu
 
+SOURCE_DIR="$(dirname -- ${BASH_SOURCE[0]:-$0})";
+
 log() {
     echo -e "$1" >&2
 }
@@ -34,22 +36,18 @@ fi
 log "typos: $(typos --version)"
 log "jq: $(jq --version)"
 
-COMMAND="${CMD_NAME} ${TARGET}"
+ARGS="${TARGET}"
 
 # Ignore implicit configuration files
 if [ "${INPUT_ISOLATED:-false}" == "true" ]; then
-    COMMAND+=" --isolated"
+    ARGS+=" --isolated"
 fi
 
 # Use a custom configuration file
 if [[ -n "${INPUT_CONFIG:-}" ]]; then
-    COMMAND+=" --config ${INPUT_CONFIG}"
+    ARGS+=" --config ${INPUT_CONFIG}"
 fi
 
-log "$ ${COMMAND}"
-${COMMAND} --format json |
-  jq --sort-keys --raw-output '"::warning file=\(.path),line=\(.line_num),col=\(.byte_offset)::\"\(.typo)\" should be \"" + (.corrections // [] | join("\" or \"") + "\".")' |
-  while IFS= read -r line; do
-    echo "$line"
-  done || true
-${COMMAND}
+log "$ ${CMD_NAME} ${ARGS}"
+${CMD_NAME} ${ARGS} --format json | ${SOURCE_DIR}/format_gh.sh || true
+${CMD_NAME} ${ARGS}
