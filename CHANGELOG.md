@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(Github Action)* Don't add annotation for binary files
+
 ## [1.10.1] - 2022-06-16
 
 ### Fixes
