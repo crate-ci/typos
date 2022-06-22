@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.10.2] - 2022-06-22
+
 ### Fixes
 
 - *(Github Action)* Don't add annotation for binary files
@@ -393,7 +395,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.10.1...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.10.2...HEAD
+[1.10.2]: https://github.com/crate-ci/typos/compare/v1.10.1...v1.10.2
 [1.10.1]: https://github.com/crate-ci/typos/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/crate-ci/typos/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/crate-ci/typos/compare/v1.8.1...v1.9.0
