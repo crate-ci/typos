@@ -170,19 +170,9 @@ dependencies = [
 
 [[package]]
 name = "clap-verbosity-flag"
-version = "0.4.1"
+version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2474445ef3370e4844f9082eef2f80e4abaf7d985781afd78b89b58e2f69a14"
-dependencies = [
- "clap 3.2.8",
- "log",
-]
-
-[[package]]
-name = "clap-verbosity-flag"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "17e437250f23cdd03daf3de763093aa27873a026ef9a156800da9ddd617c51d4"
+checksum = "0636f9c040082f8e161555a305f8cec1a1c2828b3d981c812b8c39f4ac00c42c"
 dependencies = [
  "clap 3.2.8",
  "log",
@@ -1531,7 +1521,7 @@ dependencies = [
  "atty",
  "bstr",
  "clap 3.2.8",
- "clap-verbosity-flag 1.0.0",
+ "clap-verbosity-flag",
  "concolor",
  "concolor-clap",
  "content_inspector",
@@ -1616,7 +1606,7 @@ name = "typos-vars-codegen"
 version = "1.3.0"
 dependencies = [
  "clap 3.2.8",
- "clap-verbosity-flag 0.4.1",
+ "clap-verbosity-flag",
  "codegenrs",
  "dictgen",
  "env_logger",
