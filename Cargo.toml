@@ -65,7 +65,7 @@ typos-dict = { version = "^0.8", path = "crates/typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "crates/typos-vars", optional = true }
 unicase = "2.5"
 anyhow = "1.0"
-clap = "3.1"
+clap = "3.2"
 clap-verbosity-flag = "1.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
