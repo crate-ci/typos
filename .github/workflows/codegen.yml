@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
     - 'Cargo.lock'
+    - '**/assets/**'
     - '**/codegen/**'
     - '**/verify/**'
     - '**/*codegen.rs'
@@ -11,6 +12,7 @@ on:
     - master
     paths:
     - 'Cargo.lock'
+    - '**/assets/**'
     - '**/codegen/**'
     - '**/verify/**'
     - '**/*codegen.rs'
