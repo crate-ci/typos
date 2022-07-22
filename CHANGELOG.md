@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `anonimised`, `anonimized`
+
 ## [1.10.2] - 2022-06-22
 
 ### Fixes
