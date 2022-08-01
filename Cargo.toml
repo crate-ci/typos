@@ -1,13 +1,6 @@
 [workspace]
 members = [
-    "crates/typos",
-    "crates/typos-dict", "crates/typos-dict/codegen", "crates/typos-dict/verify",
-    "crates/typos-vars", "crates/typos-vars/codegen",
-    "crates/dictgen",
-    "crates/codespell-dict", "crates/codespell-dict/codegen",
-    "crates/misspell-dict", "crates/misspell-dict/codegen",
-    "crates/wikipedia-dict", "crates/wikipedia-dict/codegen",
-    "crates/varcon", "crates/varcon/codegen", "crates/varcon-core",
+    "crates/*",
 ]
 
 [package]

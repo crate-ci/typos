@@ -1,4 +1,4 @@
-// This file is code-genned by codespell-codegen
+// This file is @generated crates/codespell-dict/tests/codegen.rs
 
 pub static WORD_DICTIONARY: dictgen::DictTable<&[&str]> = dictgen::DictTable {
     keys: &[
