@@ -9,7 +9,7 @@ readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
 edition = "2021"
-rust-version = "1.59.0"  # MSRV
+rust-version = "1.60.0"  # MSRV
 include = [
   "src/**/*",
   "Cargo.toml",
@@ -19,16 +19,16 @@ include = [
 ]
 
 [dependencies]
-unicase = "2.5"
+unicase = "2.6"
 log = "0.4"
 dictgen = { version = "^0.2", path = "../dictgen" }
-snapbox = { version = "0.3.0", features = ["path"] }
+snapbox = { version = "0.3.1", features = ["path"] }
 
 [dev-dependencies]
 csv = "1.1"
 itertools = "0.10"
 edit-distance = "2.1"
-unicase = "2.5"
+unicase = "2.6"
 codegenrs = "2.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 varcon = { version = "^0.6", path = "../varcon" }

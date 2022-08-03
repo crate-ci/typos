@@ -9,7 +9,7 @@ categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
-rust-version = "1.59.0"  # MSRV
+rust-version = "1.60.0"  # MSRV
 publish = false
 include = [
   "src/**/*",
@@ -23,13 +23,13 @@ include = [
 release = false
 
 [dependencies]
-unicase = "2.5"
+unicase = "2.6"
 log = "0.4"
 dictgen = { version = "^0.2", path = "../dictgen" }
-snapbox = { version = "0.3.0", features = ["path"] }
+snapbox = { version = "0.3.1", features = ["path"] }
 
 [dev-dependencies]
-unicase = "2.5"
+unicase = "2.6"
 itertools = "0.10"
 codegenrs = "2.0"
 regex = "1"
