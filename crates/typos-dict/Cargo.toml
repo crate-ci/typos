@@ -22,3 +22,13 @@ include = [
 unicase = "2.5"
 log = "0.4"
 dictgen = { version = "^0.2", path = "../dictgen" }
+snapbox = { version = "0.3.0", features = ["path"] }
+
+[dev-dependencies]
+csv = "1.1"
+itertools = "0.10"
+edit-distance = "2.1"
+unicase = "2.5"
+codegenrs = "2.0"
+dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
+varcon = { version = "^0.6", path = "../varcon" }
