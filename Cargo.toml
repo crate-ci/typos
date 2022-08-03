@@ -53,16 +53,16 @@ doc = false
 
 [dependencies]
 typos = { version = "^0.10", path = "crates/typos" }
-varcon-core = { version = "^2.0.0", path = "crates/varcon-core" }
+varcon-core = { version = "^2.2.4", path = "crates/varcon-core" }
 typos-dict = { version = "^0.8", path = "crates/typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "crates/typos-vars", optional = true }
-unicase = "2.5"
+unicase = "2.6"
 anyhow = "1.0"
 clap = "3.2"
 clap-verbosity-flag = "1.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml_edit = { version = "0.14.2", features = ["easy"] }
+toml_edit = { version = "0.14.4", features = ["easy"] }
 log = "0.4"
 env_logger = { version = "0.9", default-features = false, features = ["termcolor"] }
 atty = "0.2.14"
@@ -92,7 +92,7 @@ globset = "0.4.9"
 
 [dev-dependencies]
 assert_fs = "1.0"
-trycmd = "0.13.3"
+trycmd = "0.13.5"
 criterion = "0.3"
 
 [profile.dev]

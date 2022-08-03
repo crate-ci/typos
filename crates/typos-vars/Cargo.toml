@@ -19,17 +19,17 @@ include = [
 ]
 
 [dependencies]
-unicase = "2.5"
+unicase = "2.6"
 log = "0.4"
 dictgen = { version = "^0.2", path = "../dictgen" }
-varcon-core = { version = "^2.0", path = "../varcon-core", features = ["flags"] }
-snapbox = { version = "0.3.0", features = ["path"] }
+varcon-core = { version = "^2.2", path = "../varcon-core", features = ["flags"] }
+snapbox = { version = "0.3.1", features = ["path"] }
 
 [dev-dependencies]
 varcon = { version = "^0.6", path = "../varcon", features = ["flags"] }
-varcon-core = { version = "^2.0", path = "../varcon-core", features = ["flags"] }
+varcon-core = { version = "^2.2", path = "../varcon-core", features = ["flags"] }
 typos = { version = "^0.10", path = "../typos" }
-unicase = "2.5"
+unicase = "2.6"
 codegenrs = "2.0"
 itertools = "0.10"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
