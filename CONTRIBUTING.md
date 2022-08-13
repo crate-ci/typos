@@ -35,24 +35,24 @@ to re-work some of it and the discouragement that goes along with that.
 
 Format: `typo,correction[,correction...]`
 
-2. Verify your change
+2. Code-gen the dictionary
 
 Run
-```bash
-cargo run --package typos-dict-verify -- --input crates/typos-dict/assets/words.csv --output crates/typos-dict/assets/words.csv
+```console
+$ SNAPSHOTS=overwrite cargo test --workspace
+```
+(we do development-time code-gen to speed up builds)
+
+3. Verify your change
+
+Run
+```console
+$ cargo test --workspace
 ```
 Auto-cleans up your change according to some rules we have like:
 - Don't prefer specific dialects in the dictionary, leaving those to [`varcon`](http://wordlist.aspell.net/varcon-readme/).
 - Mixing up corrections and typos
 - etc
-
-3. Code-gen the dictionary
-
-Run
-```bash
-cargo run --package typos-dict-codegen -- --output crates/typos-dict/src/dict_codegen.rs
-```
-(we do development-time code-gen to speed up builds)
 
 ### Process
 
