@@ -24,7 +24,6 @@ release = false
 
 [dependencies]
 unicase = "2.6"
-log = "0.4"
 dictgen = { version = "^0.2", path = "../dictgen" }
 
 [dev-dependencies]

@@ -20,7 +20,6 @@ include = [
 
 [dependencies]
 unicase = "2.6"
-log = "0.4"
 dictgen = { version = "^0.2", path = "../dictgen" }
 varcon-core = { version = "^2.2", path = "../varcon-core", features = ["flags"] }
 
