@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `thead` tag
+- Correct `deffer` to either `differ` or `defer`
+- Correct `opauqe` to `opaque`
+
 ## [1.11.0] - 2022-08-13
 
 ### Fixes
