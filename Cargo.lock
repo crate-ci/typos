@@ -1552,7 +1552,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.8.6"
+version = "0.8.7"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1567,7 +1567,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.8.3"
+version = "0.8.4"
 dependencies = [
  "codegenrs",
  "dictgen",
@@ -1665,7 +1665,7 @@ dependencies = [
 
 [[package]]
 name = "varcon"
-version = "0.6.3"
+version = "0.6.4"
 dependencies = [
  "codegenrs",
  "snapbox",
