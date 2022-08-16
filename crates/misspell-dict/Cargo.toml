@@ -26,7 +26,6 @@ release = false
 unicase = "2.6"
 log = "0.4"
 dictgen = { version = "^0.2", path = "../dictgen" }
-snapbox = { version = "0.3.1", features = ["path"] }
 
 [dev-dependencies]
 unicase = "2.6"
@@ -34,3 +33,4 @@ itertools = "0.10"
 codegenrs = "2.0"
 regex = "1"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
+snapbox = { version = "0.3.1", features = ["path"] }
