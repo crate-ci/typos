@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct "inappropriate[ly]"
+- Ignore `thead` tag only in HTML
+- Ignore `windo` in vim
+- Narrow scope of ignoring `flate` to the `flate2` identifier
+
 ## [1.11.1] - 2022-08-16
 
 ### Fixes
