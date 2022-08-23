@@ -227,8 +227,10 @@ impl TypeEngineConfig {
                 extend_glob: Vec::new(),
                 engine: EngineConfig {
                     dict: Some(DictConfig {
+                        extend_identifiers: maplit::hashmap! {
+                            "flate2".into() => "flate2".into(),
+                        },
                         extend_words: maplit::hashmap! {
-                            "flate".into() => "flate".into(),
                             "ser".into() => "ser".into(),
                         },
                         ..Default::default()
