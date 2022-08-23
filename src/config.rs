@@ -180,13 +180,57 @@ impl TypeEngineConfig {
                 },
             });
         patterns
+            .entry("html".into())
+            .or_insert_with(|| GlobEngineConfig {
+                extend_glob: Vec::new(),
+                engine: EngineConfig {
+                    dict: Some(DictConfig {
+                        extend_identifiers: maplit::hashmap! {
+                            "thead".into() => "thead".into(),
+                        },
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                },
+            });
+        patterns
+            .entry("vim".into())
+            .or_insert_with(|| GlobEngineConfig {
+                extend_glob: Vec::new(),
+                engine: EngineConfig {
+                    dict: Some(DictConfig {
+                        extend_identifiers: maplit::hashmap! {
+                            "windo".into() => "windo".into(),
+                        },
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                },
+            });
+        patterns
+            .entry("vimscript".into())
+            .or_insert_with(|| GlobEngineConfig {
+                extend_glob: Vec::new(),
+                engine: EngineConfig {
+                    dict: Some(DictConfig {
+                        extend_identifiers: maplit::hashmap! {
+                            "windo".into() => "windo".into(),
+                        },
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                },
+            });
+        patterns
             .entry("rust".into())
             .or_insert_with(|| GlobEngineConfig {
                 extend_glob: Vec::new(),
                 engine: EngineConfig {
                     dict: Some(DictConfig {
+                        extend_identifiers: maplit::hashmap! {
+                            "flate2".into() => "flate2".into(),
+                        },
                         extend_words: maplit::hashmap! {
-                            "flate".into() => "flate".into(),
                             "ser".into() => "ser".into(),
                         },
                         ..Default::default()
