@@ -306,8 +306,12 @@ mod parser {
             + nom::InputTake
             + nom::InputIter
             + nom::InputLength
+            + nom::Offset
+            + nom::Slice<std::ops::RangeTo<usize>>
             + nom::Slice<std::ops::RangeFrom<usize>>
             + Clone
+            + Default
+            + PartialEq
             + std::fmt::Debug,
         <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
         <T as nom::InputIter>::Item: AsChar + Copy,
@@ -315,8 +319,8 @@ mod parser {
         preceded(
             char('#'),
             alt((
-                take_while_m_n(3, 8, is_lower_hex_digit),
-                take_while_m_n(3, 8, is_upper_hex_digit),
+                terminated(take_while_m_n(3, 8, is_lower_hex_digit), peek(sep1)),
+                terminated(take_while_m_n(3, 8, is_upper_hex_digit), peek(sep1)),
             )),
         )(input)
     }
@@ -1351,12 +1355,12 @@ mod test {
     fn tokenize_color() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "#[derive(Clone)] #aaa # #111 #AABBCC #hello #AABBCCDD World";
+        let input = "#[derive(Clone)] #aaa # #111 #AABBCC #hello #AABBCCDD #1175BA World";
         let expected: Vec<Identifier> = vec![
             Identifier::new_unchecked("derive", Case::None, 2),
             Identifier::new_unchecked("Clone", Case::None, 9),
             Identifier::new_unchecked("hello", Case::None, 38),
-            Identifier::new_unchecked("World", Case::None, 54),
+            Identifier::new_unchecked("World", Case::None, 62),
         ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
