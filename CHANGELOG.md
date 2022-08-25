@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Ignore CSS hex numbers starting with decimal values, like #111AAA
+
 ## [1.11.3] - 2022-08-25
 
 ### Fixes
