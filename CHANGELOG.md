@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Ignore `thead` for CSS
+
 ## [1.11.2] - 2022-08-23
 
 ### Fixes
