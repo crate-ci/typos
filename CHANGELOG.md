@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Ignore `thead` tag also in tsx/jsx
+
 ## [1.11.4] - 2022-08-25
 
 ### Fixes
