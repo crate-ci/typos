@@ -5,7 +5,7 @@ members = [
 
 [package]
 name = "typos-cli"
-version = "1.11.5"
+version = "1.12.0"
 description = "Source Code Spelling Correction"
 authors = ["Ed Page <eopage@gmail.com>"]
 license = "MIT OR Apache-2.0"
@@ -54,7 +54,7 @@ doc = false
 [dependencies]
 typos = { version = "^0.10", path = "crates/typos" }
 varcon-core = { version = "^2.2.4", path = "crates/varcon-core" }
-typos-dict = { version = "^0.8", path = "crates/typos-dict", optional = true }
+typos-dict = { version = "^0.9", path = "crates/typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "crates/typos-vars", optional = true }
 unicase = "2.6"
 anyhow = "1.0"
