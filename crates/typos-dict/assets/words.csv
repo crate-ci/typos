@@ -1479,6 +1479,7 @@ agants,agents,against
 aggaravates,aggravates
 aggegate,aggregate
 aggegrate,aggregate
+aggergate,aggregate
 aggessive,aggressive
 aggessively,aggressively
 agggregate,aggregate
@@ -4600,6 +4601,7 @@ austrila,austria
 austrlaian,australians,australian
 autasave,autosave
 autasaves,autosaves
+autcomplete,autocomplete
 autenticate,authenticate
 autenticated,authenticated
 autenticates,authenticates
@@ -9825,7 +9827,7 @@ compleate,complete
 compleated,completed
 compleates,completes
 compleating,completing
-compleation,compilation
+compleation,compilation,completion
 compleatly,completely
 complecate,complicate
 complecated,complicated
@@ -13066,6 +13068,7 @@ curriculm,curriculum
 curriences,currencies
 currious,curious
 currnet,current
+currnetly,currently
 currnt,current
 currntly,currently
 curroption,corruption
@@ -14369,6 +14372,7 @@ densly,densely
 denstiy,density
 dentistas,dentists
 dentistes,dentists
+denyed,denied
 deocde,decode
 deocded,decoded
 deocder,decoder
@@ -18613,6 +18617,7 @@ epscially,specially
 epsiode,episode
 epsiodes,episodes
 epsionage,espionage
+epslion,epsilon
 epsorts,esports
 epsresso,espresso
 eptied,emptied
@@ -26645,6 +26650,7 @@ insertos,inserts
 insesitive,insensitive
 insetad,instead
 inseted,inserted
+insetion,insertion
 insided,inside
 insidios,insidious
 insidiuos,insidious
@@ -26976,6 +26982,7 @@ integraded,integrated
 integrarla,integral
 integrarlo,integral
 integratie,integrated
+integratione,integration
 integrato,integration
 integratron,integration
 integreated,integrated
@@ -28149,6 +28156,7 @@ itentionaly,intentionally
 iteract,interact
 iterater,iterator
 iteratered,iterated
+iteratior,iterator
 iteratons,iterations
 itereating,iterating
 itereator,iterator
@@ -28229,6 +28237,7 @@ japaneese,japanese
 japanes,japanese
 japanses,japanese
 jaques,jacques
+jaring,jarring
 jasmien,jasmine
 jaugars,jaguars
 jaunary,january
@@ -28264,6 +28273,7 @@ jerusaleum,jerusalem
 jerusalm,jerusalem
 jeruselam,jerusalem
 jeruslaem,jerusalem
+jetbrain,jetbrains
 jewelrey,jewelry
 jewerly,jewelry
 jewl,jew,jewel
@@ -33253,6 +33263,7 @@ obersvant,observant
 obersvation,observation
 obersvations,observations
 obersvers,observers
+oberver,observer
 obeserve,observe
 obession,obsession
 obessions,obsessions
@@ -34932,6 +34943,7 @@ paremter,parameter
 paremters,parameters
 parentesis,parentheses,parenthesis
 parenthasis,parenthesis
+parentheesis,parenthesis
 parenthese,parentheses
 parenthesed,parenthesized
 parenthesees,parentheses
@@ -38813,8 +38825,12 @@ psrameter,parameter
 pssed,passed
 pssibility,possibility
 psudo,pseudo
+psudocode,pseudocode
+psudoterminal,pseudoterminal
 psuedo,pseudo
+psuedocode,pseudocode
 psuedolayer,pseudolayer
+psuedoterminal,pseudoterminal
 psuh,push
 psychadelic,psychedelic
 psychaitric,psychiatric
@@ -43630,6 +43646,7 @@ serailized,serialized
 serailze,serialize
 serailzed,serialized
 serailzied,serialized
+seralized,serialized
 serbain,serbian
 sercive,service
 sercived,serviced
@@ -45047,6 +45064,7 @@ specificato,specification
 specificaton,specification
 specificatons,specifications
 specificed,specified
+specificer,specifier
 specifices,specifics,specifies
 specifich,specify,specific
 specificially,specifically
@@ -47965,6 +47983,7 @@ telegramm,telegram
 telegrapgh,telegraph
 telegrpah,telegraph
 telelevision,television
+telementry,telemetry
 teleporing,teleporting
 teleportaion,teleportation
 teleportating,teleportation
