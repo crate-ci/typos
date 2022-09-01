@@ -236,20 +236,6 @@ impl TypeEngineConfig {
                 },
             });
         patterns
-            .entry("md".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    dict: Some(DictConfig {
-                        extend_identifiers: maplit::hashmap! {
-                            "thead".into() => "thead".into(),
-                        },
-                        ..Default::default()
-                    }),
-                    ..Default::default()
-                },
-            });
-        patterns
             .entry("vim".into())
             .or_insert_with(|| GlobEngineConfig {
                 extend_glob: Vec::new(),
