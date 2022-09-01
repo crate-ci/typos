@@ -29,4 +29,4 @@ varcon-core = { version = "^2.2", path = "../varcon-core" }
 [dev-dependencies]
 codegenrs = "2.0"
 varcon-core = { version = "^2.2", path = "../varcon-core", features = ["parser"] }
-snapbox = { version = "0.3.1", features = ["path"] }
+snapbox = { version = "0.3.3", features = ["path"] }

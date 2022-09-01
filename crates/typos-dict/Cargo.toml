@@ -30,4 +30,4 @@ unicase = "2.6"
 codegenrs = "2.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 varcon = { version = "^0.6", path = "../varcon" }
-snapbox = { version = "0.3.1", features = ["path"] }
+snapbox = { version = "0.3.3", features = ["path"] }
