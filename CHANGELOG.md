@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.12.1] - 2022-09-01
+
 ### Fixes
 
 - Ignore `thead` tag also in markdown
@@ -452,7 +454,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.12.1...HEAD
+[1.12.1]: https://github.com/crate-ci/typos/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/crate-ci/typos/compare/v1.11.5...v1.12.0
 [1.11.5]: https://github.com/crate-ci/typos/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/crate-ci/typos/compare/v1.11.3...v1.11.4
