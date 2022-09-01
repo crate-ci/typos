@@ -71,7 +71,7 @@ concolor = { version = "0.0.8" }
 concolor-clap = { version = "0.0.10", features = ["api_unstable"] }
 bstr = "0.2"
 once_cell = "1.13.0"
-ahash = "0.7"
+ahash = "0.8"
 difflib = "0.4"
 proc-exit = "1.0"
 human-panic = "1.0.3"
