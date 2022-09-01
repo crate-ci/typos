@@ -11,7 +11,12 @@ fn codegen() {
 }
 
 fn generate<W: std::io::Write>(file: &mut W) {
-    writeln!(file, "// This file is @generated {}", file!()).unwrap();
+    writeln!(
+        file,
+        "// This file is @generated {}",
+        file!().replace('\\', "/")
+    )
+    .unwrap();
     writeln!(file).unwrap();
 
     let dict = parse_dict(DICT);

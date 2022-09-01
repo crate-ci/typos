@@ -7,10 +7,7 @@ fn codegen() {
 
     let content = String::from_utf8(content).unwrap();
     let content = codegenrs::rustfmt(&content, None).unwrap();
-    snapbox::Assert::new()
-        .normalize_paths(false)
-        .action_env(snapbox::DEFAULT_ACTION_ENV)
-        .eq_path("./src/codegen.rs", content);
+    snapbox::assert_eq_path("./src/codegen.rs", content);
 }
 
 fn generate<W: std::io::Write>(file: &mut W) {
