@@ -225,6 +225,20 @@ impl TypeEngineConfig {
                 },
             });
         patterns
+            .entry("py".into())
+            .or_insert_with(|| GlobEngineConfig {
+                extend_glob: Vec::new(),
+                engine: EngineConfig {
+                    dict: Some(DictConfig {
+                        extend_identifiers: maplit::hashmap! {
+                            "NDArray".into() => "NDArray".into(),
+                        },
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                },
+            });
+        patterns
             .entry("cert".into())
             .or_insert_with(|| GlobEngineConfig {
                 extend_glob: Vec::new(),
