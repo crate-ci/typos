@@ -15,7 +15,7 @@ from typing import Tuple
 from setuptools import setup
 from setuptools.command.install import install as orig_install
 
-TYPOS_VERSION = '1.12.4'
+TYPOS_VERSION = '1.12.5'
 POSTFIX_SHA256 = {
     'linux': (
         'x86_64-unknown-linux-musl.tar.gz',
