@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `stte` to `state`
+
 ## [1.12.4] - 2022-09-08
 
 ### Fixes
