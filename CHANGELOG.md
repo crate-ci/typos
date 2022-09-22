@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `pararmeter` to `parameter`
+
 ## [1.12.5] - 2022-09-15
 
 ### Fixes
