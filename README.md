@@ -89,6 +89,7 @@ extend-exclude = ["localized/*.po"]
 
 - [GitHub Actions](docs/github-action.md)
 - [pre-commit](docs/pre-commit.md)
+- [🐊Putout Processor](https://github.com/putoutjs/putout-processor-typos)
 
 #### Custom
 
