@@ -1,5 +1,5 @@
 FROM ubuntu:20.04
-ARG VERSION=1.12.7
+ARG VERSION=1.12.8
 ENV VERSION=${VERSION}
 RUN apt-get update && apt-get install -y wget git jq
 RUN wget https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz && \
