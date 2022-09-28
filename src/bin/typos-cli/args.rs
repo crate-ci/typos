@@ -2,7 +2,7 @@ use clap::Parser;
 
 use typos_cli::config;
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, clap::ArgEnum)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, clap::ValueEnum)]
 pub enum Format {
     Silent,
     Brief,
@@ -38,100 +38,98 @@ impl Default for Format {
 }
 
 #[derive(Debug, Parser)]
-#[clap(rename_all = "kebab-case")]
-#[clap(about, author, version)]
-#[clap(
-        setting = clap::AppSettings::DeriveDisplayOrder,
-        dont_collapse_args_in_usage = true,
+#[command(rename_all = "kebab-case")]
+#[command(about, author, version)]
+#[command(
         color = concolor_clap::color_choice(),
     )]
-#[clap(group = clap::ArgGroup::new("mode").multiple(false))]
+#[command(group = clap::ArgGroup::new("mode").multiple(false))]
 pub(crate) struct Args {
-    #[clap(parse(from_os_str), default_value = ".")]
+    #[arg(default_value = ".")]
     /// Paths to check with `-` for stdin
     pub(crate) path: Vec<std::path::PathBuf>,
 
-    #[clap(short = 'c', long = "config", parse(from_os_str))]
+    #[arg(short = 'c', long = "config")]
     /// Custom config file
     pub(crate) custom_config: Option<std::path::PathBuf>,
 
-    #[clap(long)]
+    #[arg(long)]
     /// Ignore implicit configuration files.
     pub(crate) isolated: bool,
 
-    #[clap(long, group = "mode")]
+    #[arg(long, group = "mode")]
     /// Print a diff of what would change
     pub(crate) diff: bool,
 
-    #[clap(long, short = 'w', group = "mode")]
+    #[arg(long, short = 'w', group = "mode")]
     /// Write fixes out
     pub(crate) write_changes: bool,
 
-    #[clap(long, group = "mode")]
+    #[arg(long, group = "mode")]
     /// Debug: Print each file that would be spellchecked.
     pub(crate) files: bool,
 
-    #[clap(long, group = "mode")]
+    #[arg(long, group = "mode")]
     /// Debug: Print each identifier that would be spellchecked.
     pub(crate) identifiers: bool,
 
-    #[clap(long, group = "mode")]
+    #[arg(long, group = "mode")]
     /// Debug: Print each word that would be spellchecked.
     pub(crate) words: bool,
 
-    #[clap(long, parse(from_os_str), group = "mode")]
+    #[arg(long, group = "mode")]
     /// Write the current configuration to file with `-` for stdout
     pub(crate) dump_config: Option<std::path::PathBuf>,
 
-    #[clap(long, group = "mode")]
+    #[arg(long, group = "mode")]
     /// Show all supported file types.
     pub(crate) type_list: bool,
 
-    #[clap(long, arg_enum, ignore_case = true, default_value("long"))]
+    #[arg(long, value_enum, ignore_case = true, default_value("long"))]
     pub(crate) format: Format,
 
-    #[clap(short = 'j', long = "threads", default_value = "0")]
+    #[arg(short = 'j', long = "threads", default_value = "0")]
     /// The approximate number of threads to use.
     pub(crate) threads: usize,
 
-    #[clap(flatten)]
+    #[command(flatten)]
     pub(crate) config: ConfigArgs,
 
-    #[clap(flatten)]
+    #[command(flatten)]
     pub(crate) color: concolor_clap::Color,
 
-    #[clap(flatten)]
+    #[command(flatten)]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
 }
 
 #[derive(Debug, Clone, clap::Args)]
-#[clap(rename_all = "kebab-case")]
+#[command(rename_all = "kebab-case")]
 pub(crate) struct FileArgs {
-    #[clap(long, overrides_with("no-binary"))]
+    #[arg(long, overrides_with("no_binary"))]
     /// Search binary files.
     binary: bool,
-    #[clap(long, overrides_with("binary"), hide = true)]
+    #[arg(long, overrides_with("binary"), hide = true)]
     no_binary: bool,
 
-    #[clap(long, overrides_with("check-filenames"))]
+    #[arg(long, overrides_with("check_filenames"))]
     /// Skip verifying spelling in file names.
     no_check_filenames: bool,
-    #[clap(long, overrides_with("no-check-filenames"), hide = true)]
+    #[arg(long, overrides_with("no_check_filenames"), hide = true)]
     check_filenames: bool,
 
-    #[clap(long, overrides_with("check-files"))]
+    #[arg(long, overrides_with("check_files"))]
     /// Skip verifying spelling in files.
     no_check_files: bool,
-    #[clap(long, overrides_with("no-check-files"), hide = true)]
+    #[arg(long, overrides_with("no_check_files"), hide = true)]
     check_files: bool,
 
-    #[clap(long, overrides_with("no-unicode"), hide = true)]
+    #[arg(long, overrides_with("no_unicode"), hide = true)]
     unicode: bool,
-    #[clap(long, overrides_with("unicode"))]
+    #[arg(long, overrides_with("unicode"))]
     /// Only allow ASCII characters in identifiers
     no_unicode: bool,
 
-    #[clap(long, possible_values(config::Locale::variants()))]
+    #[arg(long, value_parser = clap::builder::PossibleValuesParser::new(config::Locale::variants()))]
     pub(crate) locale: Option<config::Locale>,
 }
 
@@ -195,7 +193,7 @@ pub(crate) struct WalkArgs {
     /// Ignore files & directories matching the glob.
     exclude: Vec<String>,
 
-    #[clap(long, overrides_with("no-hidden"))]
+    #[clap(long, overrides_with("no_hidden"))]
     /// Search hidden files and directories.
     hidden: bool,
     #[clap(long, overrides_with("hidden"), hide = true)]
@@ -204,31 +202,31 @@ pub(crate) struct WalkArgs {
     #[clap(long, overrides_with("ignore"))]
     /// Don't respect ignore files.
     no_ignore: bool,
-    #[clap(long, overrides_with("no-ignore"), hide = true)]
+    #[clap(long, overrides_with("no_ignore"), hide = true)]
     ignore: bool,
 
-    #[clap(long, overrides_with("ignore-dot"))]
+    #[clap(long, overrides_with("ignore_dot"))]
     /// Don't respect .ignore files.
     no_ignore_dot: bool,
-    #[clap(long, overrides_with("no-ignore-dot"), hide = true)]
+    #[clap(long, overrides_with("no_ignore_dot"), hide = true)]
     ignore_dot: bool,
 
-    #[clap(long, overrides_with("ignore-global"))]
+    #[clap(long, overrides_with("ignore_global"))]
     /// Don't respect global ignore files.
     no_ignore_global: bool,
-    #[clap(long, overrides_with("no-ignore-global"), hide = true)]
+    #[clap(long, overrides_with("no_ignore_global"), hide = true)]
     ignore_global: bool,
 
-    #[clap(long, overrides_with("ignore-parent"))]
+    #[clap(long, overrides_with("ignore_parent"))]
     /// Don't respect ignore files in parent directories.
     no_ignore_parent: bool,
-    #[clap(long, overrides_with("no-ignore-parent"), hide = true)]
+    #[clap(long, overrides_with("no_ignore_parent"), hide = true)]
     ignore_parent: bool,
 
-    #[clap(long, overrides_with("ignore-vcs"))]
+    #[clap(long, overrides_with("ignore_vcs"))]
     /// Don't respect ignore files in vcs directories.
     no_ignore_vcs: bool,
-    #[clap(long, overrides_with("no-ignore-vcs"), hide = true)]
+    #[clap(long, overrides_with("no_ignore_vcs"), hide = true)]
     ignore_vcs: bool,
 }
 
