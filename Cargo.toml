@@ -85,7 +85,7 @@ encoding = "0.2"
 kstring = { version = "2.0.0", features = ["serde"] }
 typed-arena = "2.0.1"
 maplit = "1.0"
-unicode-width = "0.1.9"
+unicode-width = "0.1.10"
 unic-emoji-char = "0.9.0"
 thread_local = "1.1.4"
 globset = "0.4.9"
