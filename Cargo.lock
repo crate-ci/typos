@@ -254,7 +254,7 @@ dependencies = [
  "codegenrs",
  "dictgen",
  "itertools",
- "snapbox",
+ "snapbox 0.4.0",
  "unicase",
 ]
 
@@ -893,7 +893,7 @@ dependencies = [
  "dictgen",
  "itertools",
  "regex",
- "snapbox",
+ "snapbox 0.4.0",
  "unicase",
 ]
 
@@ -1343,6 +1343,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "snapbox"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f98a96656eecd1621c5830831b48eb6903a9f86aaeb61b9f358a9bd462414ddd"
+dependencies = [
+ "concolor",
+ "content_inspector",
+ "dunce",
+ "filetime",
+ "normalize-line-endings",
+ "similar",
+ "snapbox-macros",
+ "tempfile",
+ "walkdir",
+ "yansi",
+]
+
+[[package]]
 name = "snapbox-macros"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1493,7 +1511,7 @@ dependencies = [
  "rayon",
  "serde",
  "shlex",
- "snapbox",
+ "snapbox 0.3.3",
  "toml_edit",
 ]
 
@@ -1574,7 +1592,7 @@ dependencies = [
  "dictgen",
  "edit-distance",
  "itertools",
- "snapbox",
+ "snapbox 0.4.0",
  "unicase",
  "varcon",
 ]
@@ -1586,7 +1604,7 @@ dependencies = [
  "codegenrs",
  "dictgen",
  "itertools",
- "snapbox",
+ "snapbox 0.4.0",
  "typos",
  "unicase",
  "varcon",
@@ -1681,7 +1699,7 @@ name = "varcon"
 version = "0.6.4"
 dependencies = [
  "codegenrs",
- "snapbox",
+ "snapbox 0.4.0",
  "varcon-core",
 ]
 
@@ -1796,7 +1814,7 @@ dependencies = [
  "codegenrs",
  "dictgen",
  "itertools",
- "snapbox",
+ "snapbox 0.4.0",
  "unicase",
 ]
 
