@@ -5,7 +5,7 @@ use clap::Parser;
 mod args;
 mod report;
 
-use proc_exit::WithCodeResultExt;
+use proc_exit::prelude::*;
 
 fn main() {
     human_panic::setup_panic!();
@@ -19,7 +19,7 @@ fn run() -> proc_exit::ExitResult {
         Ok(args) => args,
         Err(e) if e.use_stderr() => {
             let _ = e.print();
-            return proc_exit::Code::USAGE_ERR.ok();
+            return proc_exit::sysexits::USAGE_ERR.ok();
         }
         Err(e) => {
             let _ = e.print();
@@ -52,19 +52,24 @@ fn run() -> proc_exit::ExitResult {
 }
 
 fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exit::ExitResult {
-    let global_cwd = std::env::current_dir()?;
+    let global_cwd = std::env::current_dir().to_sysexits()?;
 
     let path = &args.path[0];
     let cwd = if path == std::path::Path::new("-") {
         global_cwd
     } else if path.is_file() {
-        let mut cwd = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+        let mut cwd = path
+            .canonicalize()
+            .with_code(proc_exit::sysexits::USAGE_ERR)?;
         cwd.pop();
         cwd
     } else {
-        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
+        path.canonicalize()
+            .with_code(proc_exit::sysexits::USAGE_ERR)?
     };
-    let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+    let cwd = cwd
+        .canonicalize()
+        .with_code(proc_exit::sysexits::USAGE_ERR)?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
@@ -72,8 +77,8 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
 
     let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom =
-            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom = typos_cli::config::Config::from_file(path)
+            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -81,35 +86,42 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
 
     let config = engine
         .load_config(&cwd)
-        .with_code(proc_exit::Code::CONFIG_ERR)?;
+        .with_code(proc_exit::sysexits::CONFIG_ERR)?;
 
     let mut defaulted_config = typos_cli::config::Config::from_defaults();
     defaulted_config.update(&config);
     let output =
         toml_edit::easy::to_string_pretty(&defaulted_config).with_code(proc_exit::Code::FAILURE)?;
     if output_path == std::path::Path::new("-") {
-        std::io::stdout().write_all(output.as_bytes())?;
+        std::io::stdout()
+            .write_all(output.as_bytes())
+            .to_sysexits()?;
     } else {
-        std::fs::write(output_path, &output)?;
+        std::fs::write(output_path, &output).to_sysexits()?;
     }
 
     Ok(())
 }
 
 fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
-    let global_cwd = std::env::current_dir()?;
+    let global_cwd = std::env::current_dir().to_sysexits()?;
 
     let path = &args.path[0];
     let cwd = if path == std::path::Path::new("-") {
         global_cwd
     } else if path.is_file() {
-        let mut cwd = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+        let mut cwd = path
+            .canonicalize()
+            .with_code(proc_exit::sysexits::USAGE_ERR)?;
         cwd.pop();
         cwd
     } else {
-        path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
+        path.canonicalize()
+            .with_code(proc_exit::sysexits::USAGE_ERR)?
     };
-    let cwd = cwd.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+    let cwd = cwd
+        .canonicalize()
+        .with_code(proc_exit::sysexits::USAGE_ERR)?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
@@ -117,8 +129,8 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
 
     let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom =
-            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom = typos_cli::config::Config::from_file(path)
+            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -126,13 +138,13 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
 
     engine
         .init_dir(&cwd)
-        .with_code(proc_exit::Code::CONFIG_ERR)?;
+        .with_code(proc_exit::sysexits::CONFIG_ERR)?;
     let definitions = engine.file_types(&cwd);
 
     let stdout = std::io::stdout();
     let mut handle = stdout.lock();
     for (name, globs) in definitions {
-        writeln!(handle, "{}: {}", name, itertools::join(globs, ", "))?;
+        writeln!(handle, "{}: {}", name, itertools::join(globs, ", ")).to_sysexits()?;
     }
 
     Ok(())
@@ -143,7 +155,7 @@ fn run_checks(
     stdout_palette: report::Palette,
     stderr_palette: report::Palette,
 ) -> proc_exit::ExitResult {
-    let global_cwd = std::env::current_dir()?;
+    let global_cwd = std::env::current_dir().to_sysexits()?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
@@ -151,8 +163,8 @@ fn run_checks(
 
     let mut overrides = typos_cli::config::Config::default();
     if let Some(path) = args.custom_config.as_ref() {
-        let custom =
-            typos_cli::config::Config::from_file(path).with_code(proc_exit::Code::CONFIG_ERR)?;
+        let custom = typos_cli::config::Config::from_file(path)
+            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
         overrides.update(&custom);
     }
     overrides.update(&args.config.to_config());
@@ -164,16 +176,19 @@ fn run_checks(
         let cwd = if path == std::path::Path::new("-") {
             global_cwd.clone()
         } else if path.is_file() {
-            let mut cwd = path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?;
+            let mut cwd = path
+                .canonicalize()
+                .with_code(proc_exit::sysexits::USAGE_ERR)?;
             cwd.pop();
             cwd
         } else {
-            path.canonicalize().with_code(proc_exit::Code::USAGE_ERR)?
+            path.canonicalize()
+                .with_code(proc_exit::sysexits::USAGE_ERR)?
         };
 
         engine
             .init_dir(&cwd)
-            .with_code(proc_exit::Code::CONFIG_ERR)?;
+            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
         let walk_policy = engine.walk(&cwd);
 
         let threads = if path.is_file() { 1 } else { args.threads };
@@ -193,9 +208,11 @@ fn run_checks(
             for pattern in walk_policy.extend_exclude.iter() {
                 overrides
                     .add(&format!("!{}", pattern))
-                    .with_code(proc_exit::Code::CONFIG_ERR)?;
+                    .with_code(proc_exit::sysexits::CONFIG_ERR)?;
             }
-            let overrides = overrides.build().with_code(proc_exit::Code::CONFIG_ERR)?;
+            let overrides = overrides
+                .build()
+                .with_code(proc_exit::sysexits::CONFIG_ERR)?;
             walk.overrides(overrides);
         }
 
@@ -234,7 +251,12 @@ fn run_checks(
         }
         .map_err(|e| {
             e.io_error()
-                .map(|i| proc_exit::Code::from(i.kind()))
+                .map(|i| {
+                    let kind = i.kind();
+                    proc_exit::sysexits::io_to_sysexists(kind)
+                        .or_else(|| proc_exit::bash::io_to_signal(kind))
+                        .unwrap_or(proc_exit::sysexits::IO_ERR)
+                })
                 .unwrap_or_default()
                 .with_message(e)
         })?;
@@ -253,7 +275,7 @@ fn run_checks(
         // `Failure` from something else and get it mixed up with typos.
         //
         // Can't use DataErr or anything else an std::io::ErrorKind might map to.
-        proc_exit::Code::UNKNOWN.ok()
+        proc_exit::Code::new(2).ok()
     } else {
         proc_exit::Code::SUCCESS.ok()
     }
