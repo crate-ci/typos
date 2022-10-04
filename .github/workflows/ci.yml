@@ -51,7 +51,7 @@ jobs:
     - name: No-default features
       run: cargo test --workspace --no-default-features
   msrv:
-    name: "Check MSRV: 1.60.0"
+    name: "Check MSRV: 1.64.0"
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -59,7 +59,7 @@ jobs:
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: 1.60.0  # MSRV
+        toolchain: 1.64.0  # MSRV
         profile: minimal
         override: true
     - uses: Swatinem/rust-cache@v1
@@ -113,7 +113,7 @@ jobs:
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
-        toolchain: 1.60.0  # MSRV
+        toolchain: 1.64.0  # MSRV
         profile: minimal
         override: true
         components: clippy
