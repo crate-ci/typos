@@ -507,7 +507,7 @@ dependencies = [
 
 [[package]]
 name = "dictgen"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
  "phf",
  "phf_codegen",
@@ -1518,7 +1518,7 @@ checksum = "0685c84d5d54d1c26f7d3eb96cd41550adb97baed141a761cf335d3d33bcd0ae"
 
 [[package]]
 name = "typos"
-version = "0.10.4"
+version = "0.10.5"
 dependencies = [
  "anyhow",
  "bstr 1.0.1",
@@ -1534,7 +1534,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.12.8"
+version = "1.12.9"
 dependencies = [
  "ahash",
  "anyhow",
@@ -1580,7 +1580,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.9.5"
+version = "0.9.6"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1594,7 +1594,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.8.5"
+version = "0.8.6"
 dependencies = [
  "codegenrs",
  "dictgen",
@@ -1691,7 +1691,7 @@ dependencies = [
 
 [[package]]
 name = "varcon"
-version = "0.6.4"
+version = "0.6.5"
 dependencies = [
  "codegenrs",
  "snapbox",
@@ -1700,7 +1700,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "2.2.5"
+version = "2.2.6"
 dependencies = [
  "enumflags2",
  "nom",

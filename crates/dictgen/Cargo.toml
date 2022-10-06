@@ -1,6 +1,6 @@
 [package]
 name = "dictgen"
-version = "0.2.3"
+version = "0.2.4"
 description = "Compile-time case-insensitive map"
 repository = "https://github.com/crate-ci/typos"
 categories = ["development-tools", "text-processing"]
