@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `whaat` to `what`
+
 ## [1.12.8] - 2022-09-28
 
 ### Fixes
