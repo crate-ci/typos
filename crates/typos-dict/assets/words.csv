@@ -5246,6 +5246,7 @@ badnits,bandits
 badnwagon,bandwagon
 badnwidth,bandwidth
 bage,bag
+baged,badge,bagged
 bahaving,behaving
 bahavior,behavior
 bahavioral,behavioral
@@ -8803,6 +8804,8 @@ cocuments,document
 codde,code,coded,coddle
 codeing,coding
 codepoitn,codepoint
+codesbase,codebase
+codesbases,codebases
 codesc,codecs
 codespel,codespell
 codesream,codestream
@@ -14521,6 +14524,9 @@ depenent,dependent
 depenently,dependently
 depening,depending,deepening
 depennding,depending
+depercate,deprecate
+depercated,deprecated
+depercation,deprecation
 deperecated,deprecated
 deperecation,deprecation
 depicitng,depicting
@@ -20941,6 +20947,7 @@ fallatious,fallacious
 fallbck,fallback
 fallhrough,fallthrough
 fallicious,fallacious
+fallthough,fallthrough
 fallthruogh,fallthrough
 falltrough,fallthrough
 falmethrower,flamethrower
