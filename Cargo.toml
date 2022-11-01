@@ -92,7 +92,7 @@ globset = "0.4.9"
 
 [dev-dependencies]
 assert_fs = "1.0"
-trycmd = "0.13.7"
+trycmd = "0.14.1"
 criterion = "0.4"
 
 [profile.dev]

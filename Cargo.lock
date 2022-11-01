@@ -1483,6 +1483,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "toml_datetime"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "808b51e57d0ef8f71115d8f3a01e7d3750d01c79cac4b3eda910f4389fdf92fd"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "toml_edit"
 version = "0.14.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1495,10 +1504,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "trycmd"
-version = "0.13.7"
+name = "toml_edit"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5377b33cbe8bb69d97da63e2a2266065a642a47cc9bb3d783c28279d0029fea"
+checksum = "b1541ba70885967e662f69d31ab3aeca7b1aaecfcd58679590b893e9239c3646"
+dependencies = [
+ "combine",
+ "indexmap",
+ "itertools",
+ "serde",
+ "toml_datetime",
+]
+
+[[package]]
+name = "trycmd"
+version = "0.14.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ea164949c690a45580a50ebb8b4d5e3f907b134d26009dbe45878225ebb0374"
 dependencies = [
  "glob",
  "humantime",
@@ -1507,7 +1529,7 @@ dependencies = [
  "serde",
  "shlex",
  "snapbox",
- "toml_edit",
+ "toml_edit 0.15.0",
 ]
 
 [[package]]
@@ -1564,7 +1586,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thread_local",
- "toml_edit",
+ "toml_edit 0.14.4",
  "trycmd",
  "typed-arena",
  "typos",
