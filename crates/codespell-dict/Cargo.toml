@@ -1,23 +1,16 @@
 [package]
 name = "codespell-dict"
 version = "0.4.0"
-authors = ["Ed Page <eopage@gmail.com>"]
 description = "Source Code Spelling Correction"
-repository = "https://github.com/crate-ci/typos"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]
-license = "CC-BY-SA-3.0"
-edition = "2021"
-rust-version = "1.64.0"  # MSRV
 publish = false
-include = [
-  "src/**/*",
-  "Cargo.toml",
-  "LICENSE*",
-  "README.md",
-  "examples/**/*"
-]
+license = "CC-BY-SA-3.0"
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+include.workspace = true
 
 [package.metadata.release]
 release = false
