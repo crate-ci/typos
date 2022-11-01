@@ -62,7 +62,7 @@ clap = { version = "4.0.8", features = ["derive"] }
 clap-verbosity-flag = "2.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml_edit = { version = "0.14.4", features = ["easy"] }
+toml_edit = { version = "0.15.0", features = ["easy"] }
 log = "0.4"
 env_logger = { version = "0.9", default-features = false, features = ["termcolor"] }
 atty = "0.2.14"
