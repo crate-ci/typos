@@ -314,13 +314,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "concolor"
+version = "0.0.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b90f9dcd9490a97db91a85ccd79e38a87e14323f0bb824659ee3274e9143ba37"
+
+[[package]]
 name = "concolor-clap"
 version = "0.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "95a363283eeb30dc209fca344607b1b40135bfcca5172aa90fb72d912b992bbf"
 dependencies = [
  "clap 4.0.8",
- "concolor",
+ "concolor 0.0.8",
 ]
 
 [[package]]
@@ -1350,7 +1356,7 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f98a96656eecd1621c5830831b48eb6903a9f86aaeb61b9f358a9bd462414ddd"
 dependencies = [
- "concolor",
+ "concolor 0.0.8",
  "content_inspector",
  "dunce",
  "filetime",
@@ -1543,7 +1549,7 @@ dependencies = [
  "bstr 1.0.1",
  "clap 4.0.8",
  "clap-verbosity-flag",
- "concolor",
+ "concolor 0.0.9",
  "concolor-clap",
  "content_inspector",
  "criterion",
