@@ -2,19 +2,13 @@
 name = "dictgen"
 version = "0.2.4"
 description = "Compile-time case-insensitive map"
-repository = "https://github.com/crate-ci/typos"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling", "no_std"]
-license = "MIT OR Apache-2.0"
-edition = "2021"
-rust-version = "1.64.0"  # MSRV
-include = [
-  "src/**/*",
-  "Cargo.toml",
-  "LICENSE*",
-  "README.md",
-  "examples/**/*"
-]
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+include.workspace = true
 
 [features]
 default = ["std"]

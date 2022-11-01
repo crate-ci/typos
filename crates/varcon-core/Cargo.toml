@@ -2,20 +2,13 @@
 name = "varcon-core"
 version = "2.2.6"
 description = "Varcon-relevant data structures"
-authors = ["Ed Page <eopage@gmail.com>"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/crate-ci/typos"
 readme = "../../README.md"
 categories = ["text-processing"]
-edition = "2021"
-rust-version = "1.64.0"  # MSRV
-include = [
-  "src/**/*",
-  "Cargo.toml",
-  "LICENSE*",
-  "README.md",
-  "examples/**/*"
-]
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+include.workspace = true
 
 [features]
 default = []

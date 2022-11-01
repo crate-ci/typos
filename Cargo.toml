@@ -2,17 +2,11 @@
 members = [
     "crates/*",
 ]
+resolver = "2"
 
-[package]
-name = "typos-cli"
-version = "1.12.12"
-description = "Source Code Spelling Correction"
-authors = ["Ed Page <eopage@gmail.com>"]
+[workspace.package]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/crate-ci/typos"
-readme = "README.md"
-categories = ["development-tools", "text-processing"]
-keywords = ["development", "spelling"]
 edition = "2021"
 rust-version = "1.64.0"  # MSRV
 include = [
@@ -24,6 +18,19 @@ include = [
   "benches/**/*",
   "examples/**/*"
 ]
+
+[package]
+name = "typos-cli"
+version = "1.12.12"
+description = "Source Code Spelling Correction"
+readme = "README.md"
+categories = ["development-tools", "text-processing"]
+keywords = ["development", "spelling"]
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+include.workspace = true
 
 [package.metadata.docs.rs]
 no-default-features = true
