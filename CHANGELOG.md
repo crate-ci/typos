@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't crash on `--locale en-us`
+
 ## [1.12.12] - 2022-10-25
 
 ### Fixes
