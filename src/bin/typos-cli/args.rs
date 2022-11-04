@@ -1,3 +1,4 @@
+use clap::builder::TypedValueParser;
 use clap::Parser;
 
 use typos_cli::config;
@@ -129,7 +130,11 @@ pub(crate) struct FileArgs {
     /// Only allow ASCII characters in identifiers
     no_unicode: bool,
 
-    #[arg(long, value_parser = clap::builder::PossibleValuesParser::new(config::Locale::variants()))]
+    #[arg(long)]
+    #[arg(
+        value_parser = clap::builder::PossibleValuesParser::new(config::Locale::variants())
+            .map(|l| l.parse::<config::Locale>().unwrap())
+    )]
     pub(crate) locale: Option<config::Locale>,
 }
 
