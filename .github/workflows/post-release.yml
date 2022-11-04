@@ -17,7 +17,7 @@ name: post-release
 on:
   push:
     tags:
-    - "v*"
+    - "v*.*.*"
 env:
   BIN_NAME: typos
 jobs:
