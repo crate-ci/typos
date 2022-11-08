@@ -42,6 +42,11 @@ Or use rust to install:
 ```bash
 cargo install typos-cli
 ```
+
+Or use [Homebrew](https://brew.sh/) to install:
+```bash
+brew install typos-cli
+```
 ## Getting Started
 
 Most commonly, you'll either want to see what typos are available with
