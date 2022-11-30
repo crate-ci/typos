@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't crash in non-UTF8 cases with `--format brief`
+- Report correct column with `--format brief`
+
 ## [1.13.0] - 2022-11-22
 
 ### Fixes
