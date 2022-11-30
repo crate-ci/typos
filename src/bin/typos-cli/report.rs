@@ -132,13 +132,9 @@ impl Report for PrintLong {
 }
 
 fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Error> {
-    let line = String::from_utf8_lossy(msg.buffer.as_ref());
-    let line = line.replace('\t', " ");
-    let column = unicode_segmentation::UnicodeSegmentation::graphemes(
-        line.get(0..msg.byte_offset).unwrap(),
-        true,
-    )
-    .count();
+    let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
+    let column_number =
+        unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count() + 1;
     match &msg.corrections {
         typos::Status::Valid => {}
         typos::Status::Invalid => {
@@ -148,7 +144,7 @@ fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::E
                 "{}{}{}: {}",
                 palette.info.paint(context_display(&msg.context)),
                 palette.info.paint(divider),
-                palette.info.paint(column),
+                palette.info.paint(column_number),
                 palette
                     .strong
                     .paint(format_args!("`{}` is disallowed:", msg.typo)),
@@ -161,7 +157,7 @@ fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::E
                 "{}{}{}: {}",
                 palette.info.paint(context_display(&msg.context)),
                 palette.info.paint(divider),
-                palette.info.paint(column),
+                palette.info.paint(column_number),
                 palette.strong.paint(format_args!(
                     "`{}` -> {}",
                     msg.typo,
