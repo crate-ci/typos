@@ -134,7 +134,7 @@ impl Report for PrintLong {
 fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Error> {
     let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
     let column_number =
-        unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count();
+        unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count() + 1;
     match &msg.corrections {
         typos::Status::Valid => {}
         typos::Status::Invalid => {
