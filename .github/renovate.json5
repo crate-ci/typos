@@ -7,7 +7,15 @@
     // - Have lockfile and manifest in-sync
     {
       "matchManagers": ["cargo"],
+      "matchCurrentVersion": ">=0.1.0",
       "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "groupName": "safe",
+    },
+    {
+      "matchManagers": ["cargo"],
+      "matchCurrentVersion": ">=1.0.0",
+      "matchUpdateTypes": ["minor"],
       "automerge": true,
       "groupName": "safe",
     },
