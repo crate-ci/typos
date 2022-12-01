@@ -1,0 +1,15 @@
+{
+  "semanticCommits": "enabled",
+  "configMigration": true,
+  "packageRules": [
+    // Goals:
+    // - Rollup safe upgrades to reduce CI runner load
+    // - Have lockfile and manifest in-sync
+    {
+      "matchManagers": ["cargo"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "groupName": "safe",
+    },
+  ],
+}
