@@ -71,7 +71,7 @@ ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 toml_edit = { version = "0.15.0", features = ["easy"] }
 log = "0.4"
-env_logger = { version = "0.9", default-features = false, features = ["termcolor"] }
+env_logger = { version = "0.10", default-features = false, features = ["termcolor"] }
 atty = "0.2.14"
 yansi = "0.5.1"
 concolor = { version = "0.0.9" }
