@@ -307,11 +307,6 @@ name = "concolor"
 version = "0.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b90f9dcd9490a97db91a85ccd79e38a87e14323f0bb824659ee3274e9143ba37"
-dependencies = [
- "atty",
- "bitflags",
- "concolor-query",
-]
 
 [[package]]
 name = "concolor"
@@ -326,12 +321,12 @@ dependencies = [
 
 [[package]]
 name = "concolor-clap"
-version = "0.0.12"
+version = "0.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a384cbd2fa7c6e31abf8df89a38c977780f684d61dee1e20531e8dd7c8122a8e"
+checksum = "64a9572308414bfdbda25e41cdd4a15a90e68d93f2d5a66e3ff6e1cdc856f923"
 dependencies = [
  "clap 4.0.29",
- "concolor 0.0.9",
+ "concolor 0.0.11",
 ]
 
 [[package]]
