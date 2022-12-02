@@ -146,9 +146,9 @@ checksum = "37b2a672a2cb129a2e41c10b1224bb368f9f37a2b16b612598138befd7b37eb5"
 
 [[package]]
 name = "cc"
-version = "1.0.73"
+version = "1.0.77"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fff2a6927b3bb87f9595d67196a70493f627687a71d87a0d692242c33f58c11"
+checksum = "e9f73505338f7d905b19d18738976aae232eb46b8efc15554ffc56deb5d9ebe4"
 
 [[package]]
 name = "cfg-if"
@@ -304,17 +304,6 @@ dependencies = [
 
 [[package]]
 name = "concolor"
-version = "0.0.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b90f9dcd9490a97db91a85ccd79e38a87e14323f0bb824659ee3274e9143ba37"
-dependencies = [
- "atty",
- "bitflags",
- "concolor-query",
-]
-
-[[package]]
-name = "concolor"
 version = "0.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "318d6c16e73b3a900eb212ad6a82fc7d298c5ab8184c7a9998646455bc474a16"
@@ -326,12 +315,12 @@ dependencies = [
 
 [[package]]
 name = "concolor-clap"
-version = "0.0.12"
+version = "0.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a384cbd2fa7c6e31abf8df89a38c977780f684d61dee1e20531e8dd7c8122a8e"
+checksum = "64a9572308414bfdbda25e41cdd4a15a90e68d93f2d5a66e3ff6e1cdc856f923"
 dependencies = [
  "clap 4.0.29",
- "concolor 0.0.9",
+ "concolor",
 ]
 
 [[package]]
@@ -648,10 +637,11 @@ dependencies = [
 
 [[package]]
 name = "env_logger"
-version = "0.9.1"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c90bf5f19754d10198ccb95b70664fc925bd1fc090a0fd9a6ebc54acc8cd6272"
+checksum = "85cdab6a89accf66733ad5a1693a4dcced6aeff64602b634530dd73c1f3ee9f0"
 dependencies = [
+ "is-terminal",
  "log",
  "termcolor",
 ]
@@ -1433,7 +1423,7 @@ version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "efbd7b250c7243273b5aec4ca366fced84ad716d110bb7baae4814678952ebde"
 dependencies = [
- "concolor 0.0.11",
+ "concolor",
  "content_inspector",
  "dunce",
  "filetime",
@@ -1638,7 +1628,7 @@ dependencies = [
  "bstr 1.0.1",
  "clap 4.0.29",
  "clap-verbosity-flag",
- "concolor 0.0.9",
+ "concolor",
  "concolor-clap",
  "content_inspector",
  "criterion",
