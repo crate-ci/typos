@@ -65,7 +65,7 @@ If there is any ambiguity (multiple possible corrections), `typos` will just rep
 
 Sometimes, what looks like a typo is intentional, like with people's names, acronyms, or localized content.
 
-To mark an identifier or word as valid, add it your [`_typos.toml`](docs/reference.md) by declaring itself as the valid spelling:
+To mark a word or an identifer (grouping of words) as valid, add it your [`_typos.toml`](docs/reference.md) by declaring itself as the valid spelling:
 ```toml
 [default.extend-identifiers]
 # *sigh* this just isn't worth the cost of fixing
