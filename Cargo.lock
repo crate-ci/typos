@@ -1619,7 +1619,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.13.1"
+version = "1.13.2"
 dependencies = [
  "ahash",
  "anyhow",
@@ -1665,7 +1665,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.9.11"
+version = "0.9.12"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1679,7 +1679,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.8.7"
+version = "0.8.8"
 dependencies = [
  "codegenrs",
  "dictgen",
@@ -1776,7 +1776,7 @@ dependencies = [
 
 [[package]]
 name = "varcon"
-version = "0.6.6"
+version = "0.6.7"
 dependencies = [
  "codegenrs",
  "snapbox",
