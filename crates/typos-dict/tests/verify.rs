@@ -50,16 +50,25 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
         })
         .collect();
 
-    let disallowed_typos = varcon_words();
+    let varcon_words = varcon_words();
+    let allowed_words = allowed_words();
     let word_variants = proper_word_variants();
     let rows: Dict = rows
         .into_iter()
         .filter(|(typo, _)| {
-            let is_disallowed = disallowed_typos.contains(&unicase::UniCase::new(typo));
+            let is_disallowed = varcon_words.contains(&unicase::UniCase::new(typo));
             if is_disallowed {
-                eprintln!("{:?} is disallowed", typo);
+                eprintln!("{:?} is disallowed; in varcon", typo);
             }
             !is_disallowed
+        })
+        .filter(|(typo, _)| {
+            if let Some(reason) = allowed_words.get(typo.as_ref()) {
+                eprintln!("{:?} is disallowed; {}", typo, reason);
+                false
+            } else {
+                true
+            }
         })
         .map(|(typo, corrections)| {
             let mut new_corrections = vec![];
@@ -136,4 +145,23 @@ fn find_best_match<'c>(
         .collect();
     matches.sort_unstable();
     matches.into_iter().next().map(|(_, r)| r)
+}
+
+fn allowed_words() -> std::collections::HashMap<String, String> {
+    let allowed_path = "assets/allowed.csv";
+    let data = std::fs::read(allowed_path).unwrap();
+    csv::ReaderBuilder::new()
+        .has_headers(false)
+        .flexible(true)
+        .from_reader(data.as_slice())
+        .records()
+        .map(Result::unwrap)
+        .map(|r| {
+            let mut i = r.iter();
+            let mut typo = i.next().expect("typo").to_owned();
+            typo.make_ascii_lowercase();
+            let reason = i.next().expect("reason").to_owned();
+            (typo, reason)
+        })
+        .collect()
 }
