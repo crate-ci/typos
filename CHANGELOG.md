@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `nilable` as its used by the Ruby community
+
 ## [1.13.3] - 2022-12-02
 
 ## [1.13.2] - 2022-12-02
