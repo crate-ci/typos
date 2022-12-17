@@ -5,6 +5,7 @@
   entry: typos
   args: [--write-changes]
   types: [text]
+  stages: [commit, merge-commit, push, manual]
 
 - id: typos-src
   name: typos
@@ -13,3 +14,4 @@
   entry: typos
   args: [--write-changes]
   types: [text]
+  stages: [commit, merge-commit, push, manual]
