@@ -1,4 +1,4 @@
-FROM rust:1.65.0 as builder
+FROM rust:bullseye as builder
 WORKDIR /usr/src/typos
 COPY . .
 RUN cargo install --path .
