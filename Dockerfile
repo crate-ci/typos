@@ -5,4 +5,5 @@ RUN cargo install --path .
 
 FROM debian:buster-slim
 COPY --from=builder /usr/local/cargo/bin/typos /usr/local/bin/typos
-CMD ["typos"]
+ENTRYPOINT ["typos"]
+CMD ["--help"]
