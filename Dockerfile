@@ -1,8 +1,10 @@
-FROM rust:1.65.0 as builder
+ARG DEBIAN_DIST=bullseye
+
+FROM rust:${DEBIAN_DIST} as builder
 WORKDIR /usr/src/typos
 COPY . .
 RUN cargo install --path .
 
-FROM debian:buster-slim
+FROM debian:${DEBIAN_DIST}-slim
 COPY --from=builder /usr/local/cargo/bin/typos /usr/local/bin/typos
 CMD ["typos"]
