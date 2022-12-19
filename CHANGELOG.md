@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+- *(docker)* Ensure correct libc is available
+- *(precommit)* Restrict what stages it runs during
+
 ## [1.13.4] - 2022-12-06
 
 ### Fixes
