@@ -7,6 +7,15 @@
   types: [text]
   stages: [commit, merge-commit, push, manual]
 
+- id: typos-docker
+  name: typos
+  description: Source code spell checker, Docker image
+  language: docker
+  entry: typos
+  args: [--write-changes]
+  types: [text]
+  stages: [commit, merge-commit, push, manual]
+
 - id: typos-src
   name: typos
   description: Source code spell checker, source install
