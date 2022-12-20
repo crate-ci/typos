@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(precommit)* Add a docker variant
+
 ## [1.13.5] - 2022-12-19
 
 - *(docker)* Ensure correct libc is available
