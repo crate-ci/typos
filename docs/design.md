@@ -32,3 +32,21 @@ Dictionary: A confidence rating is given for how close a word is to one in a dic
 - Sensitive to false positives due to hex numbers and c-escapes
 - Used in word processors and other traditional spell checking applications
 - Good when there is a UI to let the user know and override any decisions
+
+## Identifiers and Words
+
+With a focus on spell checking source code, most text will be in the form of
+identifiers that are made up of words conjoined via `snake_case`, `CamelCase`,
+etc.  A typo at the word level might not be a typo as part of
+an identifier, so identifiers get checked and, if not in a dictionary, will
+then be split into words to be checked.
+
+Identifiers are defined using
+[unicode's `XID_Continue`](https://www.unicode.org/reports/tr31/#Table_Lexical_Classes_for_Identifiers)
+which includes `[a-zA-Z0-9_]`.
+
+Words are split from identifiers on case changes as well as breaks in
+`[a-zA-Z]` with a special case to handle acronyms.  For example,
+`First10HTMLTokens` would be split as `first`, `html`, `tokens`.
+
+To see this in action, run `typos --identifiers` or `typos --words`.
