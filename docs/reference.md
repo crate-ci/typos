@@ -27,7 +27,7 @@ Configuration is read from the following (in precedence order)
 | default.check-file     | \-                | bool   | Verifying spelling in files. |
 | default.unicode        | --unicode         | bool   | Allow unicode characters in identifiers (and not just ASCII) |
 | default.locale         | --locale          | en, en-us, en-gb, en-ca, en-au   | English dialect to correct to. |
-| default.extend-identifiers | \-            | table of strings | Corrections for identifiers (as defined by [unicode's `XID_Continue`](https://www.unicode.org/reports/tr31/)). When the correction is blank, the identifier is never valid. When the correction is the key, the identifier is always valid. |
-| default.extend-words       | \-            | table of strings | Corrections for words (split from identifiers). When the correction is blank, the word is never valid. When the correction is the key, the word is always valid. |
+| default.extend-identifiers | \-            | table of strings | Corrections for identifiers (groups of words, defined in [design.md](./design.md#words-vs-identifiers)). When the correction is blank, the identifier is never valid. When the correction is the key, the identifier is always valid. |
+| default.extend-words       | \-            | table of strings | Corrections for words (split from identifiers, defined in [design.md](./design.md#words-vs-identifiers)). When the correction is blank, the word is never valid. When the correction is the key, the word is always valid. |
 | type.\<name>.\<field>      | \<varied>     | \<varied>  | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s |
 | type.\<name>.extend_globs  | \-            | list of strings  | File globs for matching `<name>` |

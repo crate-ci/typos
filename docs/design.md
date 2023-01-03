@@ -32,3 +32,18 @@ Dictionary: A confidence rating is given for how close a word is to one in a dic
 - Sensitive to false positives due to hex numbers and c-escapes
 - Used in word processors and other traditional spell checking applications
 - Good when there is a UI to let the user know and override any decisions
+
+## Words vs Identifiers
+
+`typos` reuses Unicode's 'word' and 'identifier' definitions, see in particular [unicode's `XID_Continue`](https://www.unicode.org/reports/tr31/#Table_Lexical_Classes_for_Identifiers).
+The Unicode standard is hard to read, thus here's an incomplete TL;DR that should cover the most common cases for `typos`.
+
+From any text such as `my_string = "Hello TyposWorld"`, identifiers (sequences of words) and words are relevant sequences of characters for our purposes.
+Characters such as spaces separate identifiers from each other, in the example `my_string`, `Hello`, and `TyposWorld`.
+In addition to identifier separators, characters such as underscore are uppercase characters separate words from each other, in the example `my`, `string`, `Hello`, `Typos`, and `World`.
+
+The specific rules are:
+
+- A word is continued when the next character matches `[a-z0-9]`
+- An identifier is continued when the next character matches `[A-Z_]`
+- Other characters separate identifiers and hence words.
