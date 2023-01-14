@@ -173,11 +173,11 @@ impl FileArgs {
 }
 
 #[derive(Debug, clap::Args)]
-#[clap(rename_all = "kebab-case")]
+#[command(rename_all = "kebab-case")]
 pub(crate) struct ConfigArgs {
-    #[clap(flatten)]
+    #[command(flatten)]
     walk: WalkArgs,
-    #[clap(flatten)]
+    #[command(flatten)]
     overrides: FileArgs,
 }
 
@@ -192,46 +192,46 @@ impl ConfigArgs {
 }
 
 #[derive(Debug, clap::Args)]
-#[clap(rename_all = "kebab-case")]
+#[command(rename_all = "kebab-case")]
 pub(crate) struct WalkArgs {
     /// Ignore files & directories matching the glob.
-    #[clap(long, name = "GLOB")]
+    #[arg(long, value_name = "GLOB")]
     exclude: Vec<String>,
 
     /// Search hidden files and directories.
-    #[clap(long, overrides_with("no_hidden"))]
+    #[arg(long, overrides_with("no_hidden"))]
     hidden: bool,
-    #[clap(long, overrides_with("hidden"), hide = true)]
+    #[arg(long, overrides_with("hidden"), hide = true)]
     no_hidden: bool,
 
     /// Don't respect ignore files.
-    #[clap(long, overrides_with("ignore"))]
+    #[arg(long, overrides_with("ignore"))]
     no_ignore: bool,
-    #[clap(long, overrides_with("no_ignore"), hide = true)]
+    #[arg(long, overrides_with("no_ignore"), hide = true)]
     ignore: bool,
 
     /// Don't respect .ignore files.
-    #[clap(long, overrides_with("ignore_dot"))]
+    #[arg(long, overrides_with("ignore_dot"))]
     no_ignore_dot: bool,
-    #[clap(long, overrides_with("no_ignore_dot"), hide = true)]
+    #[arg(long, overrides_with("no_ignore_dot"), hide = true)]
     ignore_dot: bool,
 
     /// Don't respect global ignore files.
-    #[clap(long, overrides_with("ignore_global"))]
+    #[arg(long, overrides_with("ignore_global"))]
     no_ignore_global: bool,
-    #[clap(long, overrides_with("no_ignore_global"), hide = true)]
+    #[arg(long, overrides_with("no_ignore_global"), hide = true)]
     ignore_global: bool,
 
     /// Don't respect ignore files in parent directories.
-    #[clap(long, overrides_with("ignore_parent"))]
+    #[arg(long, overrides_with("ignore_parent"))]
     no_ignore_parent: bool,
-    #[clap(long, overrides_with("no_ignore_parent"), hide = true)]
+    #[arg(long, overrides_with("no_ignore_parent"), hide = true)]
     ignore_parent: bool,
 
     /// Don't respect ignore files in vcs directories.
-    #[clap(long, overrides_with("ignore_vcs"))]
+    #[arg(long, overrides_with("ignore_vcs"))]
     no_ignore_vcs: bool,
-    #[clap(long, overrides_with("no_ignore_vcs"), hide = true)]
+    #[arg(long, overrides_with("no_ignore_vcs"), hide = true)]
     ignore_vcs: bool,
 }
 
