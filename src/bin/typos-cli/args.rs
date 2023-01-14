@@ -70,6 +70,10 @@ pub(crate) struct Args {
     #[arg(long, group = "mode")]
     pub(crate) files: bool,
 
+    /// Debug: Print each file's type
+    #[arg(long, group = "mode")]
+    pub(crate) file_types: bool,
+
     /// Debug: Print each identifier that would be spellchecked.
     #[arg(long, group = "mode")]
     pub(crate) identifiers: bool,

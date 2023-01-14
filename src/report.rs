@@ -13,6 +13,7 @@ pub trait Report: Send + Sync {
 pub enum Message<'m> {
     BinaryFile(BinaryFile<'m>),
     Typo(Typo<'m>),
+    FileType(FileType<'m>),
     File(File<'m>),
     Parse(Parse<'m>),
     Error(Error<'m>),
@@ -23,6 +24,7 @@ impl<'m> Message<'m> {
         match self {
             Message::BinaryFile(_) => false,
             Message::Typo(c) => c.corrections.is_correction(),
+            Message::FileType(_) => false,
             Message::File(_) => false,
             Message::Parse(_) => false,
             Message::Error(_) => false,
@@ -33,6 +35,7 @@ impl<'m> Message<'m> {
         match self {
             Message::BinaryFile(_) => false,
             Message::Typo(_) => false,
+            Message::FileType(_) => false,
             Message::File(_) => false,
             Message::Parse(_) => false,
             Message::Error(_) => true,
@@ -142,6 +145,28 @@ impl<'m> Default for PathContext<'m> {
 pub enum ParseKind {
     Identifier,
     Word,
+}
+
+#[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
+#[non_exhaustive]
+pub struct FileType<'m> {
+    pub path: &'m std::path::Path,
+    pub file_type: Option<&'m str>,
+}
+
+impl<'m> FileType<'m> {
+    pub fn new(path: &'m std::path::Path, file_type: Option<&'m str>) -> Self {
+        Self { path, file_type }
+    }
+}
+
+impl<'m> Default for FileType<'m> {
+    fn default() -> Self {
+        Self {
+            path: std::path::Path::new("-"),
+            file_type: None,
+        }
+    }
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_setters::Setters)]
