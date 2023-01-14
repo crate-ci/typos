@@ -91,10 +91,11 @@ impl<'s> ConfigEngine<'s> {
     pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {
         debug_assert!(path.is_absolute(), "{} is not absolute", path.display());
         let dir = self.get_dir(path).expect("`walk()` should be called first");
-        let file_config = dir.get_file_config(path);
+        let (file_type, file_config) = dir.get_file_config(path);
         Policy {
             check_filenames: file_config.check_filenames,
             check_files: file_config.check_files,
+            file_type,
             binary: file_config.binary,
             tokenizer: self.get_tokenizer(&file_config),
             dict: self.get_dict(&file_config),
@@ -299,21 +300,23 @@ struct DirConfig {
 }
 
 impl DirConfig {
-    fn get_file_config(&self, path: &std::path::Path) -> FileConfig {
+    fn get_file_config(&self, path: &std::path::Path) -> (Option<&str>, FileConfig) {
         let name = self.type_matcher.file_matched(path);
 
-        name.and_then(|name| {
-            log::debug!("{}: `{}` policy", path.display(), name);
-            self.types.get(name).copied()
-        })
-        .unwrap_or_else(|| {
-            log::debug!(
-                "{}: default policy for `{}` file type",
-                path.display(),
-                name.unwrap_or("<unknown>")
-            );
-            self.default
-        })
+        let config = name
+            .and_then(|name| {
+                log::debug!("{}: `{}` policy", path.display(), name);
+                self.types.get(name).copied()
+            })
+            .unwrap_or_else(|| {
+                log::debug!(
+                    "{}: default policy for `{}` file type",
+                    path.display(),
+                    name.unwrap_or("<unknown>")
+                );
+                self.default
+            });
+        (name, config)
     }
 }
 
@@ -331,6 +334,7 @@ struct FileConfig {
 pub struct Policy<'t, 'd> {
     pub check_filenames: bool,
     pub check_files: bool,
+    pub file_type: Option<&'d str>,
     pub binary: bool,
     pub tokenizer: &'t typos::tokens::Tokenizer,
     pub dict: &'d dyn typos::Dictionary,
@@ -351,6 +355,7 @@ impl<'t, 'd> Default for Policy<'t, 'd> {
         Self {
             check_filenames: true,
             check_files: true,
+            file_type: None,
             binary: false,
             tokenizer: &DEFAULT_TOKENIZER,
             dict: &DEFAULT_DICT,

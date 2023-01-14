@@ -227,6 +227,8 @@ fn run_checks(
 
         let selected_checks: &dyn typos_cli::file::FileChecker = if args.files {
             &typos_cli::file::FoundFiles
+        } else if args.file_types {
+            &typos_cli::file::FileTypes
         } else if args.identifiers {
             &typos_cli::file::Identifiers
         } else if args.words {

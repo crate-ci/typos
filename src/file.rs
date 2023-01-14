@@ -353,6 +353,36 @@ impl FileChecker for Words {
 }
 
 #[derive(Debug, Clone, Copy)]
+pub struct FileTypes;
+
+impl FileChecker for FileTypes {
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        policy: &crate::policy::Policy,
+        reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        // Check `policy.binary` first so we can easily check performance of walking vs reading
+        if policy.binary {
+            let msg = report::FileType::new(path, policy.file_type);
+            reporter.report(msg.into())?;
+        } else {
+            let (_buffer, content_type) = read_file(path, reporter)?;
+            if !explicit && content_type.is_binary() {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into())?;
+            } else {
+                let msg = report::FileType::new(path, policy.file_type);
+                reporter.report(msg.into())?;
+            }
+        }
+
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
 pub struct FoundFiles;
 
 impl FileChecker for FoundFiles {

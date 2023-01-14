@@ -89,6 +89,14 @@ impl Report for PrintBrief {
                 log::info!("{}", msg);
             }
             Message::Typo(msg) => print_brief_correction(msg, self.stdout_palette)?,
+            Message::FileType(msg) => {
+                writeln!(
+                    io::stdout(),
+                    "{}:{}",
+                    msg.path.display(),
+                    msg.file_type.unwrap_or("-")
+                )?;
+            }
             Message::File(msg) => {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
@@ -116,6 +124,14 @@ impl Report for PrintLong {
                 log::info!("{}", msg);
             }
             Message::Typo(msg) => print_long_correction(msg, self.stdout_palette)?,
+            Message::FileType(msg) => {
+                writeln!(
+                    io::stdout(),
+                    "{}:{}",
+                    msg.path.display(),
+                    msg.file_type.unwrap_or("-")
+                )?;
+            }
             Message::File(msg) => {
                 writeln!(io::stdout(), "{}", msg.path.display())?;
             }
