@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- `--file-types` debug flag to debug file type detection issues
+
 ## [1.13.6] - 2022-12-20
 
 ### Features
