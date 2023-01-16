@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct serialzie -> serialize
+
 ## [1.13.7] - 2023-01-14
 
 ### Features
