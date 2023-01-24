@@ -37,7 +37,7 @@ Format: `typo,correction[,correction...]`
 
 2. Code-gen the dictionary
 
-Run
+With `cargo` and `rustfmt` installed, run
 ```console
 $ SNAPSHOTS=overwrite cargo test --workspace
 ```
