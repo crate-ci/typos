@@ -21,7 +21,7 @@ include = [
 
 [package]
 name = "typos-cli"
-version = "1.13.8"
+version = "1.13.9"
 description = "Source Code Spelling Correction"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
