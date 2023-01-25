@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `regylar` -> `regular`
+- Do not correct substitutents
+- Do not correct substituters
+
 ## [1.13.8] - 2023-01-16
 
 ### Fixes
