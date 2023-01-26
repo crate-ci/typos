@@ -43,6 +43,11 @@ if [ "${INPUT_ISOLATED:-false}" == "true" ]; then
     ARGS+=" --isolated"
 fi
 
+# Write changes to the repository
+if [ "${INPUT_WRITE_CHANGES:-false}" == "true" ]; then
+    ARGS+=" --write-changes"
+fi
+
 # Use a custom configuration file
 if [[ -n "${INPUT_CONFIG:-}" ]]; then
     ARGS+=" --config ${INPUT_CONFIG}"
