@@ -356,7 +356,7 @@ mod tests {
 
     #[test]
     fn test_calculate_visible_column_width_simple_emojis() {
-        // First non-component emojis of each gropus in "Full Emoji List, v14.0"
+        // First non-component emojis of each groups in "Full Emoji List, v14.0"
         // https://unicode.org/Public/emoji/14.0/emoji-test.txt
         let simple_emojis = [
             "😀", /* U+1F600 */
