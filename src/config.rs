@@ -32,7 +32,7 @@ impl Config {
     }
 
     pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
-        let content = toml_edit::easy::from_str(data)?;
+        let content = toml::from_str(data)?;
         Ok(content)
     }
 
