@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `detctable` & `seaonal` & `wayferer`
+
 ## [1.13.9] - 2023-01-25
 
 ### Fixes
