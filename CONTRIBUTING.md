@@ -72,9 +72,9 @@ As a heads up, we'll be running your PR through the following gauntlet:
 - `rustfmt`
 - `clippy`
 - `rustdoc`
-- [`committed`](https://github.com/crate-ci/committed) to enforce [conventional commits](conventionalcommits.org/)
+- [`committed`](https://github.com/crate-ci/committed) to enforce [conventional commits](https://www.conventionalcommits.org)
 
-Check out our [CI][travis] for more information.
+Check out our [CI][CI] for more information.
 
 ## Releasing
 
@@ -92,4 +92,4 @@ When we're ready to release, a project owner should do the following
 [issues]: https://github.com/crate-ci/typos/issues
 [new issue]: https://github.com/crate-ci/typos/issues/new
 [all issues]: https://github.com/crate-ci/typos/issues?utf8=%E2%9C%93&q=is%3Aissue
-[travis]: https://github.com/crate-ci/typos/blob/master/.travis.yml
+[CI]: https://github.com/crate-ci/typos/tree/master/.github/workflows
