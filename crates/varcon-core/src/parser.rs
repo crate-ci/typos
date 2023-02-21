@@ -1,6 +1,6 @@
-use nom::IResult;
-use nom::InputTakeAtPosition;
-use nom::Parser;
+use winnow::stream::Stream;
+use winnow::IResult;
+use winnow::Parser;
 
 use crate::*;
 
@@ -64,31 +64,31 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
 
 impl Cluster {
     pub fn parse(input: &str) -> IResult<&str, Self> {
-        let header = nom::sequence::tuple((
-            nom::bytes::streaming::tag("#"),
-            nom::character::streaming::space0,
-            nom::character::streaming::not_line_ending,
-            nom::character::streaming::line_ending,
+        let header = winnow::sequence::tuple((
+            winnow::bytes::streaming::tag("#"),
+            winnow::character::streaming::space0,
+            winnow::character::streaming::not_line_ending,
+            winnow::character::streaming::line_ending,
         ));
-        let note = nom::sequence::preceded(
-            nom::sequence::pair(
-                nom::bytes::streaming::tag("##"),
-                nom::character::streaming::space0,
+        let note = winnow::sequence::preceded(
+            winnow::sequence::pair(
+                winnow::bytes::streaming::tag("##"),
+                winnow::character::streaming::space0,
             ),
-            nom::sequence::terminated(
-                nom::character::streaming::not_line_ending,
-                nom::character::streaming::line_ending,
+            winnow::sequence::terminated(
+                winnow::character::streaming::not_line_ending,
+                winnow::character::streaming::line_ending,
             ),
         );
-        let mut cluster = nom::sequence::tuple((
-            nom::combinator::opt(header),
-            nom::multi::many1(nom::sequence::terminated(
+        let mut cluster = winnow::sequence::tuple((
+            winnow::combinator::opt(header),
+            winnow::multi::many1(winnow::sequence::terminated(
                 Entry::parse,
-                nom::character::streaming::line_ending,
+                winnow::character::streaming::line_ending,
             )),
-            nom::multi::many0(note),
+            winnow::multi::many0(note),
         ));
-        let (input, (header, entries, notes)) = (cluster)(input)?;
+        let (input, (header, entries, notes)): (_, (_, _, Vec<_>)) = (cluster)(input)?;
 
         let header = header.map(|s| s.2.to_owned());
         let notes = notes.into_iter().map(|s| s.to_owned()).collect();
@@ -150,28 +150,30 @@ A B C: coloration's / B. Cv: colouration's
 
 impl Entry {
     pub fn parse(input: &str) -> IResult<&str, Self> {
-        let var_sep = nom::sequence::tuple((
-            nom::character::streaming::space0,
-            nom::bytes::streaming::tag("/"),
-            nom::character::streaming::space0,
+        let var_sep = winnow::sequence::tuple((
+            winnow::character::streaming::space0,
+            winnow::bytes::streaming::tag("/"),
+            winnow::character::streaming::space0,
         ));
-        let (input, variants) = nom::multi::separated_list1(var_sep, Variant::parse)(input)?;
+        let (input, variants) = winnow::multi::separated_list1(var_sep, Variant::parse)(input)?;
 
-        let desc_sep = nom::sequence::tuple((
-            nom::character::streaming::space0,
-            nom::bytes::streaming::tag("|"),
+        let desc_sep = winnow::sequence::tuple((
+            winnow::character::streaming::space0,
+            winnow::bytes::streaming::tag("|"),
         ));
-        let (input, description) =
-            nom::combinator::opt(nom::sequence::tuple((desc_sep, Self::parse_description)))(input)?;
+        let (input, description) = winnow::combinator::opt(winnow::sequence::tuple((
+            desc_sep,
+            Self::parse_description,
+        )))(input)?;
 
-        let comment_sep = nom::sequence::tuple((
-            nom::character::streaming::space0,
-            nom::bytes::streaming::tag("#"),
+        let comment_sep = winnow::sequence::tuple((
+            winnow::character::streaming::space0,
+            winnow::bytes::streaming::tag("#"),
         ));
-        let (input, comment) = nom::combinator::opt(nom::sequence::tuple((
+        let (input, comment) = winnow::combinator::opt(winnow::sequence::tuple((
             comment_sep,
-            nom::character::streaming::space1,
-            nom::character::streaming::not_line_ending,
+            winnow::character::streaming::space1,
+            winnow::character::streaming::not_line_ending,
         )))(input)?;
 
         let mut e = match description {
@@ -191,22 +193,22 @@ impl Entry {
     }
 
     fn parse_description(input: &str) -> IResult<&str, Self> {
-        let (input, (pos, archaic, note, description)) = nom::sequence::tuple((
-            nom::combinator::opt(nom::sequence::tuple((
-                nom::character::streaming::space1,
+        let (input, (pos, archaic, note, description)) = winnow::sequence::tuple((
+            winnow::combinator::opt(winnow::sequence::tuple((
+                winnow::character::streaming::space1,
                 Pos::parse,
             ))),
-            nom::combinator::opt(nom::sequence::tuple((
-                nom::character::streaming::space1,
-                nom::bytes::streaming::tag("(-)"),
+            winnow::combinator::opt(winnow::sequence::tuple((
+                winnow::character::streaming::space1,
+                winnow::bytes::streaming::tag("(-)"),
             ))),
-            nom::combinator::opt(nom::sequence::tuple((
-                nom::character::streaming::space1,
-                nom::bytes::streaming::tag("--"),
+            winnow::combinator::opt(winnow::sequence::tuple((
+                winnow::character::streaming::space1,
+                winnow::bytes::streaming::tag("--"),
             ))),
-            nom::combinator::opt(nom::sequence::tuple((
-                nom::character::streaming::space1,
-                nom::bytes::streaming::take_till(|c| c == '\n' || c == '\r' || c == '#'),
+            winnow::combinator::opt(winnow::sequence::tuple((
+                winnow::character::streaming::space1,
+                winnow::bytes::streaming::take_till(|c| c == '\n' || c == '\r' || c == '#'),
             ))),
         ))(input)?;
 
@@ -319,24 +321,22 @@ mod test_entry {
 
 impl Variant {
     pub fn parse(input: &str) -> IResult<&str, Self> {
-        let types = nom::multi::separated_list1(nom::character::streaming::space1, Type::parse);
-        let sep = nom::sequence::tuple((
-            nom::bytes::streaming::tag(":"),
-            nom::character::streaming::space0,
+        let types =
+            winnow::multi::separated_list1(winnow::character::streaming::space1, Type::parse);
+        let sep = winnow::sequence::tuple((
+            winnow::bytes::streaming::tag(":"),
+            winnow::character::streaming::space0,
         ));
-        let (input, (types, word)) = nom::sequence::separated_pair(types, sep, word)(input)?;
+        let (input, (types, word)) = winnow::sequence::separated_pair(types, sep, word)(input)?;
         let v = Self { types, word };
         Ok((input, v))
     }
 }
 
 fn word(input: &str) -> IResult<&str, String> {
-    input
-        .split_at_position1(
-            |item| item.is_ascii_whitespace(),
-            nom::error::ErrorKind::Alpha,
-        )
-        .map(|(i, s)| (i, s.to_owned().replace('_', " ")))
+    winnow::bytes::take_till1(|item: char| item.is_ascii_whitespace())
+        .map(|s: &str| s.to_owned().replace('_', " "))
+        .parse_next(input)
 }
 
 #[cfg(test)]
@@ -409,8 +409,8 @@ mod test_variant {
 impl Type {
     pub fn parse(input: &str) -> IResult<&str, Type> {
         let (input, category) = Category::parse(input)?;
-        let (input, tag) = nom::combinator::opt(Tag::parse)(input)?;
-        let (input, num) = nom::combinator::opt(nom::character::streaming::digit1)(input)?;
+        let (input, tag) = winnow::combinator::opt(Tag::parse)(input)?;
+        let (input, num) = winnow::combinator::opt(winnow::character::streaming::digit1)(input)?;
         let num = num.map(|s| s.parse().expect("parser ensured its a number"));
         let t = Type { category, tag, num };
         Ok((input, t))
@@ -465,8 +465,8 @@ mod test_type {
 
 impl Category {
     pub fn parse(input: &str) -> IResult<&str, Category> {
-        let symbols = nom::character::streaming::one_of("ABZCD_");
-        nom::combinator::map(symbols, |c| match c {
+        let symbols = winnow::character::streaming::one_of("ABZCD_");
+        winnow::combinator::map(symbols, |c| match c {
             'A' => Category::American,
             'B' => Category::BritishIse,
             'Z' => Category::BritishIze,
@@ -499,8 +499,8 @@ mod test_category {
 
 impl Tag {
     pub fn parse(input: &str) -> IResult<&str, Tag> {
-        let symbols = nom::character::streaming::one_of(".vV-x");
-        nom::combinator::map(symbols, |c| match c {
+        let symbols = winnow::character::streaming::one_of(".vV-x");
+        winnow::combinator::map(symbols, |c| match c {
             '.' => Tag::Eq,
             'v' => Tag::Variant,
             'V' => Tag::Seldom,
@@ -532,12 +532,12 @@ mod test_tag {
 
 impl Pos {
     pub fn parse(input: &str) -> IResult<&str, Pos> {
-        use nom::bytes::streaming::tag;
+        use winnow::bytes::streaming::tag;
         let noun = tag("<N>");
         let verb = tag("<V>");
         let adjective = tag("<Adj>");
         let adverb = tag("<Adv>");
-        nom::branch::alt((
+        winnow::branch::alt((
             noun.map(|_| Pos::Noun),
             verb.map(|_| Pos::Verb),
             adjective.map(|_| Pos::Adjective),

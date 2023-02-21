@@ -125,36 +125,31 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 }
 
 mod parser {
-    use nom::branch::*;
-    use nom::bytes::complete::*;
-    use nom::character::complete::*;
-    use nom::combinator::*;
-    use nom::sequence::*;
-    use nom::{AsChar, IResult};
+    use winnow::branch::*;
+    use winnow::bytes::complete::*;
+    use winnow::character::complete::*;
+    use winnow::combinator::*;
+    use winnow::prelude::*;
+    use winnow::sequence::*;
+    use winnow::stream::AsBStr;
+    use winnow::stream::AsChar;
+    use winnow::stream::SliceLen;
+    use winnow::stream::Stream;
 
-    pub(crate) fn next_identifier<T>(input: T) -> IResult<T, T>
+    pub(crate) fn next_identifier<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Offset
-            + Clone
-            + Default
-            + PartialEq
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         preceded(ignore, identifier)(input)
     }
 
-    fn identifier<T>(input: T) -> IResult<T, T>
+    fn identifier<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         // Generally a language would be `{XID_Start}{XID_Continue}*` but going with only
         // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
@@ -163,21 +158,11 @@ mod parser {
         take_while1(is_xid_continue)(input)
     }
 
-    fn ignore<T>(input: T) -> IResult<T, T>
+    fn ignore<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Offset
-            + Clone
-            + Default
-            + PartialEq
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         take_many0(alt((
             // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
@@ -198,42 +183,23 @@ mod parser {
         )))(input)
     }
 
-    fn sep1<T>(input: T) -> IResult<T, T>
+    fn sep1<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Offset
-            + Clone
-            + Default
-            + PartialEq
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         alt((
             recognize(satisfy(|c| !is_xid_continue(c))),
-            map(eof, |_| T::default()),
+            map(eof, |_| <T as Stream>::Slice::default()),
         ))(input)
     }
 
-    fn other<T>(input: T) -> IResult<T, T>
+    fn other<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Offset
-            + Clone
-            + PartialEq
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         recognize(tuple((
             satisfy(|c| !is_xid_continue(c)),
@@ -241,19 +207,11 @@ mod parser {
         )))(input)
     }
 
-    fn ordinal_literal<T>(input: T) -> IResult<T, T>
+    fn ordinal_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         fn is_sep(c: impl AsChar) -> bool {
             let c = c.as_char();
@@ -274,25 +232,20 @@ mod parser {
         )))(input)
     }
 
-    fn dec_literal<T>(input: T) -> IResult<T, T>
+    fn dec_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         take_while1(is_dec_digit_with_sep)(input)
     }
 
-    fn hex_literal<T>(input: T) -> IResult<T, T>
+    fn hex_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         preceded(
             pair(char('0'), alt((char('x'), char('X')))),
@@ -300,21 +253,11 @@ mod parser {
         )(input)
     }
 
-    fn css_color<T>(input: T) -> IResult<T, T>
+    fn css_color<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + Default
-            + PartialEq
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         preceded(
             char('#'),
@@ -325,19 +268,11 @@ mod parser {
         )(input)
     }
 
-    fn uuid_literal<T>(input: T) -> IResult<T, T>
+    fn uuid_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         recognize(alt((
             tuple((
@@ -365,19 +300,11 @@ mod parser {
         )))(input)
     }
 
-    fn hash_literal<T>(input: T) -> IResult<T, T>
+    fn hash_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         // Size considerations:
         //   - 40 characters holds for a SHA-1 hash from older Git versions.
@@ -396,19 +323,11 @@ mod parser {
         ))(input)
     }
 
-    fn base64_literal<T>(input: T) -> IResult<T, T>
+    fn base64_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         let (padding, captured) = take_while1(is_base64_digit)(input.clone())?;
 
@@ -419,37 +338,30 @@ mod parser {
             padding_len = 0;
         }
 
-        if captured.input_len() < 90
+        if captured.slice_len() < 90
             && padding_len == 0
             && captured
-                .iter_elements()
+                .as_bstr()
+                .iter()
                 .all(|c| !['/', '+'].contains(&c.as_char()))
         {
-            return Err(nom::Err::Error(nom::error::Error::new(
+            return Err(winnow::Err::Backtrack(winnow::error::Error::new(
                 input,
-                nom::error::ErrorKind::LengthValue,
+                winnow::error::ErrorKind::LengthValue,
             )));
         }
 
         let (after, _) = take_while_m_n(padding_len, padding_len, is_base64_padding)(padding)?;
 
         let after_offset = input.offset(&after);
-        Ok(input.take_split(after_offset))
+        Ok(input.next_slice(after_offset))
     }
 
-    fn email_literal<T>(input: T) -> IResult<T, T>
+    fn email_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         recognize(tuple((
             take_while1(is_localport_char),
@@ -458,19 +370,11 @@ mod parser {
         )))(input)
     }
 
-    fn url_literal<T>(input: T) -> IResult<T, T>
+    fn url_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         recognize(tuple((
             opt(terminated(
@@ -490,19 +394,11 @@ mod parser {
         )))(input)
     }
 
-    fn url_userinfo<T>(input: T) -> IResult<T, T>
+    fn url_userinfo<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         recognize(tuple((
             take_while1(is_localport_char),
@@ -510,19 +406,11 @@ mod parser {
         )))(input)
     }
 
-    fn c_escape<T>(input: T) -> IResult<T, T>
+    fn c_escape<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         // We don't know whether the string we are parsing is a literal string (no escaping) or
         // regular string that does escaping. The escaped letter might be part of a word, or it
@@ -531,53 +419,26 @@ mod parser {
         preceded(take_while1(is_escape), take_while(is_xid_continue))(input)
     }
 
-    fn printf<T>(input: T) -> IResult<T, T>
+    fn printf<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
-        T: nom::InputTakeAtPosition
-            + nom::InputTake
-            + nom::InputIter
-            + nom::InputLength
-            + nom::Offset
-            + nom::Slice<std::ops::RangeTo<usize>>
-            + nom::Slice<std::ops::RangeFrom<usize>>
-            + Clone
-            + std::fmt::Debug,
-        <T as nom::InputTakeAtPosition>::Item: AsChar + Copy,
-        <T as nom::InputIter>::Item: AsChar + Copy,
+        T: Stream + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
     {
         preceded(char('%'), take_while1(is_xid_continue))(input)
     }
 
-    fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, I, E>
+    fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, <I as Stream>::Slice, E>
     where
-        I: nom::Offset + nom::InputTake + Clone + PartialEq + std::fmt::Debug,
-        F: nom::Parser<I, I, E>,
-        E: nom::error::ParseError<I>,
+        I: Stream,
+        F: winnow::Parser<I, <I as Stream>::Slice, E>,
+        E: winnow::error::ParseError<I>,
     {
         move |i: I| {
-            let mut current = i.clone();
-            loop {
-                match f.parse(current.clone()) {
-                    Err(nom::Err::Error(_)) => {
-                        let offset = i.offset(&current);
-                        let (after, before) = i.take_split(offset);
-                        return Ok((after, before));
-                    }
-                    Err(e) => {
-                        return Err(e);
-                    }
-                    Ok((next, _)) => {
-                        if next == current {
-                            return Err(nom::Err::Error(E::from_error_kind(
-                                i,
-                                nom::error::ErrorKind::Many0,
-                            )));
-                        }
-
-                        current = next;
-                    }
-                }
-            }
+            winnow::multi::many0(f.by_ref())
+                .map(|()| ())
+                .recognize()
+                .parse_next(i)
         }
     }
 
