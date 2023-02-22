@@ -946,12 +946,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "minimal-lexical"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
-
-[[package]]
 name = "miniz_oxide"
 version = "0.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -970,16 +964,6 @@ dependencies = [
  "regex",
  "snapbox",
  "unicase",
-]
-
-[[package]]
-name = "nom"
-version = "7.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8903e5a29a317527874d0402f867152a3d21c908bb0b933e416c65e301d4c36"
-dependencies = [
- "memchr",
- "minimal-lexical",
 ]
 
 [[package]]
@@ -1622,13 +1606,13 @@ dependencies = [
  "anyhow",
  "bstr 1.1.0",
  "itertools",
- "nom",
  "once_cell",
  "serde",
  "simdutf8",
  "thiserror",
  "unicode-segmentation",
  "unicode-xid",
+ "winnow",
 ]
 
 [[package]]
@@ -1802,7 +1786,7 @@ name = "varcon-core"
 version = "2.2.7"
 dependencies = [
  "enumflags2",
- "nom",
+ "winnow",
 ]
 
 [[package]]
@@ -1999,6 +1983,15 @@ name = "windows_x86_64_msvc"
 version = "0.42.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f40009d85759725a34da6d89a94e63d7bdc50a862acf0dbc7c8e488f1edcb6f5"
+
+[[package]]
+name = "winnow"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "efdd927d1a3d5d98abcfc4cf8627371862ee6abfe52a988050621c50c66b4493"
+dependencies = [
+ "memchr",
+]
 
 [[package]]
 name = "yansi"
