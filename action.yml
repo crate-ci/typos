@@ -20,6 +20,11 @@ inputs:
     required: false
     default: false
 
+  write_changes:
+    description: "Write changes to the repository"
+    required: false
+    default: false
+
   config:
     description: "Use a custom config file."
     required: false
