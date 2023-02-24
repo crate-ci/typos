@@ -47,6 +47,11 @@ Or use [Homebrew](https://brew.sh/) to install:
 ```bash
 brew install typos-cli
 ```
+
+Or use [Conda](https://conda.io/) to install:
+```bash
+conda install typos
+```
 ## Getting Started
 
 Most commonly, you'll either want to see what typos are available with
