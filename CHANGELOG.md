@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct encrypt / decrypt related words
+
 ## [1.13.13] - 2023-02-27
 
 ### Fixes
