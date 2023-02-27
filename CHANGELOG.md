@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `grouepd` to `grouped`
+
 ## [1.13.12] - 2023-02-23
 
 ### Features
