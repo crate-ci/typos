@@ -18,6 +18,7 @@ on:
   push:
     tags:
     - "v*.*.*"
+    - "!varcon*"
 env:
   BIN_NAME: typos
 jobs:
