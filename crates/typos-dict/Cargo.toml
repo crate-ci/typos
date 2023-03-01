@@ -16,11 +16,11 @@ unicase = "2.6"
 dictgen = { version = "^0.2", path = "../dictgen" }
 
 [dev-dependencies]
-csv = "1.1"
+csv = "1.2"
 itertools = "0.10"
 edit-distance = "2.1"
 unicase = "2.6"
 codegenrs = "2.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 varcon = { version = "^0.6", path = "../varcon" }
-snapbox = { version = "0.4.4", features = ["path"] }
+snapbox = { version = "0.4.7", features = ["path"] }
