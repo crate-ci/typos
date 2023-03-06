@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Pre-built Linux binaries will now be built with Ubuntu 20.04, rather than 18.04
+
 ## [1.13.17] - 2023-03-06
 
 ### Fixes
