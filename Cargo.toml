@@ -32,6 +32,9 @@ edition.workspace = true
 rust-version.workspace = true
 include.workspace = true
 
+[package.metadata.maturin]
+name = "typos"
+
 [package.metadata.docs.rs]
 no-default-features = true
 
