@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.13.20] - 2023-03-07
+
 ### Features
 
 Publish to PyPI (second attempt)
@@ -642,7 +644,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.13.19...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.13.20...HEAD
+[1.13.20]: https://github.com/crate-ci/typos/compare/v1.13.19...v1.13.20
 [1.13.19]: https://github.com/crate-ci/typos/compare/v1.13.18...v1.13.19
 [1.13.18]: https://github.com/crate-ci/typos/compare/v1.13.17...v1.13.18
 [1.13.17]: https://github.com/crate-ci/typos/compare/v1.13.16...v1.13.17
