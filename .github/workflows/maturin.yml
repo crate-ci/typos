@@ -10,6 +10,7 @@ on:
     tags:
     - "v*.*.*"
     - "!varcon*"
+  # pull_request:  # Only enabled for testing
 
 permissions:
   contents: read
@@ -19,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        target: [x86_64, x86, aarch64, armv7, s390x, ppc64le]
+        target: [x86_64, x86, aarch64]
     steps:
       - uses: actions/checkout@v3
       - name: Build wheels
