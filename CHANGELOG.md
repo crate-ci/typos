@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+Publish to PyPI (second attempt)
+
 ## [1.13.19] - 2023-03-07
 
 ### Features
