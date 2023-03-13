@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `existend` to `existent` in addition to `existed`
+- Correct `erronerous` to `erroneous`
+
 ## [1.13.21] - 2023-03-13
 
 ### Fixes
