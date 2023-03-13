@@ -28,7 +28,7 @@ fn main() {
 }
 ";
 
-pub static CORPUS: &str = include_str!("../crates/typos-dict/assets/words.csv");
+pub static CORPUS: &str = include_str!("../../typos-dict/assets/words.csv");
 
 pub static DATA: &[(&str, &str)] = &[
     ("empty", EMPTY),
