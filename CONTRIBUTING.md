@@ -29,7 +29,13 @@ to re-work some of it and the discouragement that goes along with that.
 
 ### Updating the Dictionary
 
-`typos` dictionary is a mapping of typos to a list of possible corrections (see [Design](docs/design.md)).  To add to the dictionary:
+`typos` dictionary is a mapping of typos to a list of possible corrections (see [Design](docs/design.md)).
+
+If you aren't in a hurry, [we have a pinned
+Issue](https://github.com/crate-ci/typos/issues) to collect dictionary changes
+to be done in bulk in an attempt to lower the barrier for improving the dictionary.
+
+Otherwise, to add to the dictionary:
 
 1. Add your typo to our data file `crates/typos-dict/assets/words.csv`
 
