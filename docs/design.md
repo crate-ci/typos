@@ -11,6 +11,8 @@ Spell checks source code:
 Checking for errors in a CI:
 - No false-positives.
 - On spelling errors, sets the exit code to fail the CI.
+- Machine-independent, repo-specific configuration
+  - As compared to layered config with the users system or the command-line
 
 Quick feedback and resolution for developer:
 - Fix errors for the user.
