@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `empheral` to `ephemeral`
+- Ignore `go.mod` by default
+- Ensure pre-commit isn't slow to install
+
 ## [1.13.20] - 2023-03-07
 
 ### Features
