@@ -53,13 +53,10 @@ impl<D: std::fmt::Display> std::fmt::Display for Styled<D> {
     #[inline]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if f.alternate() {
-            write!(
-                f,
-                "{}{}{}",
-                self.style.render(),
-                self.display,
-                self.style.render_reset()
-            )
+            write!(f, "{}", self.style.render())?;
+            self.display.fmt(f)?;
+            write!(f, "{}", self.style.render_reset())?;
+            Ok(())
         } else {
             self.display.fmt(f)
         }
