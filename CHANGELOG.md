@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- `CLICOLOR=1` now works correctly
+- `NO_COLOR=` now works correctly
+- Auto-enable colors in CI
+
 ## [1.13.23] - 2023-03-14
 
 ### Performance
