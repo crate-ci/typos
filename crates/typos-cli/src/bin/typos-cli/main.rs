@@ -31,23 +31,12 @@ fn run() -> proc_exit::ExitResult {
 
     init_logging(args.verbose.log_level());
 
-    let stdout_palette = if concolor::get(concolor::Stream::Stdout).ansi_color() {
-        report::Palette::colored()
-    } else {
-        report::Palette::plain()
-    };
-    let stderr_palette = if concolor::get(concolor::Stream::Stderr).ansi_color() {
-        report::Palette::colored()
-    } else {
-        report::Palette::plain()
-    };
-
     if let Some(output_path) = args.dump_config.as_ref() {
         run_dump_config(&args, output_path)
     } else if args.type_list {
         run_type_list(&args)
     } else {
-        run_checks(&args, stdout_palette, stderr_palette)
+        run_checks(&args)
     }
 }
 
@@ -149,11 +138,7 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     Ok(())
 }
 
-fn run_checks(
-    args: &args::Args,
-    stdout_palette: report::Palette,
-    stderr_palette: report::Palette,
-) -> proc_exit::ExitResult {
+fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     let global_cwd = std::env::current_dir().to_sysexits()?;
 
     let storage = typos_cli::policy::ConfigStorage::new();
@@ -219,6 +204,8 @@ fn run_checks(
         let output_reporter = if args.diff {
             Box::new(crate::report::PrintSilent)
         } else {
+            let stdout_palette = report::Palette::colored();
+            let stderr_palette = report::Palette::colored();
             args.format.reporter(stdout_palette, stderr_palette)
         };
         let status_reporter = report::MessageStatus::new(output_reporter.as_ref());
