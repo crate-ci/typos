@@ -3,7 +3,7 @@
 use std::io::Write as _;
 use std::sync::atomic;
 
-use anstyle_stream::stdout;
+use anstream::stdout;
 use unicode_width::UnicodeWidthStr;
 
 use typos_cli::report::{Context, Message, Report, Typo};
