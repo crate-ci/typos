@@ -30,7 +30,7 @@ if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
     exit 1
 fi
 if [[ -z $(which ${CMD_NAME} 2>/dev/null) ]]; then
-    VERSION=1.14.2
+    VERSION=1.14.3
     log "Downloading 'typos' v${VERSION}"
     wget https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz
     sudo tar -xzvf typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz -C /usr/local/bin ./typos
