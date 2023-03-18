@@ -390,12 +390,14 @@ impl TokenizerConfig {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct DictConfig {
     pub locale: Option<Locale>,
+    #[serde(with = "serde_regex")]
+    pub extend_ignore_identifiers_re: Vec<regex::Regex>,
     pub extend_identifiers: HashMap<kstring::KString, kstring::KString>,
     pub extend_words: HashMap<kstring::KString, kstring::KString>,
 }
@@ -405,6 +407,7 @@ impl DictConfig {
         let empty = Self::default();
         Self {
             locale: Some(empty.locale()),
+            extend_ignore_identifiers_re: Default::default(),
             extend_identifiers: Default::default(),
             extend_words: Default::default(),
         }
@@ -414,6 +417,8 @@ impl DictConfig {
         if let Some(source) = source.locale {
             self.locale = Some(source);
         }
+        self.extend_ignore_identifiers_re
+            .extend(source.extend_ignore_identifiers_re.iter().cloned());
         self.extend_identifiers.extend(
             source
                 .extend_identifiers
@@ -430,6 +435,10 @@ impl DictConfig {
 
     pub fn locale(&self) -> Locale {
         self.locale.unwrap_or_default()
+    }
+
+    pub fn extend_ignore_identifiers_re(&self) -> Box<dyn Iterator<Item = &regex::Regex> + '_> {
+        Box::new(self.extend_ignore_identifiers_re.iter())
     }
 
     pub fn extend_identifiers(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
@@ -459,6 +468,21 @@ fn find_project_file(dir: &std::path::Path, names: &[&str]) -> Option<std::path:
     }
     None
 }
+
+impl PartialEq for DictConfig {
+    fn eq(&self, rhs: &Self) -> bool {
+        self.locale == rhs.locale
+            && self
+                .extend_ignore_identifiers_re
+                .iter()
+                .map(|r| r.as_str())
+                .eq(rhs.extend_ignore_identifiers_re.iter().map(|r| r.as_str()))
+            && self.extend_identifiers == rhs.extend_identifiers
+            && self.extend_words == rhs.extend_words
+    }
+}
+
+impl Eq for DictConfig {}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "kebab-case")]

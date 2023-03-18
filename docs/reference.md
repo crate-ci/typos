@@ -28,6 +28,7 @@ Configuration is read from the following (in precedence order)
 | default.unicode        | --unicode         | bool   | Allow unicode characters in identifiers (and not just ASCII) |
 | default.locale         | --locale          | en, en-us, en-gb, en-ca, en-au   | English dialect to correct to. |
 | default.extend-identifiers | \-            | table of strings | Corrections for [identifiers](./design.md#identifiers-and-words). When the correction is blank, the identifier is never valid. When the correction is the key, the identifier is always valid. |
+| default.extend-ignore-identifiers-re | \-            | list of [regexes](https://docs.rs/regex/latest/regex/index.html#syntax) | Pattern-match always-valid identifiers |
 | default.extend-words       | \-            | table of strings | Corrections for [words](./design.md#identifiers-and-words). When the correction is blank, the word is never valid. When the correction is the key, the word is always valid. |
 | type.\<name>.\<field>      | \<varied>     | \<varied>  | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s |
 | type.\<name>.extend_globs  | \-            | list of strings  | File globs for matching `<name>` |
