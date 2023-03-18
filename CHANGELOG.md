@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(config)* Actually support `extend-ignore-identifiers-rs`
+
 ## [1.14.0] - 2023-03-18
 
 ### Features
 
-- *(config)* `extend-ignore-identifiers-re` field for defining all classes of identifiers
+- *(config)* `extend-ignore-identifiers-rs` field for defining all classes of identifiers
 
 ## [1.13.26] - 2023-03-16
 
