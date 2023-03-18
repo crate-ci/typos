@@ -7,17 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(config)* `extend-ignores-re` for extending support for ignoring non-identifiers like email, PGP signatures, etc
+
 ## [1.14.1] - 2023-03-18
 
 ### Fixes
 
-- *(config)* Actually support `extend-ignore-identifiers-rs`
+- *(config)* Actually support `extend-ignore-identifiers-re`
 
 ## [1.14.0] - 2023-03-18
 
 ### Features
 
-- *(config)* `extend-ignore-identifiers-rs` field for defining all classes of identifiers
+- *(config)* `extend-ignore-identifiers-re` field for defining all classes of identifiers
 
 ## [1.13.26] - 2023-03-16
 
