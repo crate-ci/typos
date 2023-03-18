@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(config)* `extend-ignore-identifiers-re` field for defining all classes of identifiers
+
 ## [1.13.26] - 2023-03-16
 
 ### Internal
