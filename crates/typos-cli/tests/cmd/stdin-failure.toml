@@ -1,3 +1,15 @@
 bin.name = "typos"
 args = "-"
 status.code = 2
+stdin = '''
+Apropriate world
+'''
+stdout = """
+error: `Apropriate` should be `Appropriate`
+  --> -:1:1
+  |
+1 | Apropriate world
+  | ^^^^^^^^^^
+  |
+"""
+stderr = ""

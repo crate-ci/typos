@@ -1,2 +1,4 @@
 bin.name = "typos"
 status.code = 2
+stdin = ""
+stderr = ""
