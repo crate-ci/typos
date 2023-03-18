@@ -2,42 +2,5 @@ bin.name = "typos"
 args = "../../README.md"
 status.code = 2
 stdin = ""
-stdout = """
-error: `Supress` should be `Suppress`
-  --> ../../README.md:78:19
-   |
-78 |     \"AttributeID.*Supress.*\",
-   |                   ^^^^^^^
-   |
-error: `Supress` should be `Suppress`
-  --> ../../README.md:83:12
-   |
-83 | AttributeIDSupressMenu = \"AttributeIDSupressMenu\"
-   |            ^^^^^^^
-   |
-error: `Supress` should be `Suppress`
-  --> ../../README.md:83:38
-   |
-83 | AttributeIDSupressMenu = \"AttributeIDSupressMenu\"
-   |                                      ^^^^^^^
-   |
-error: `Teh` should be `The`
-  --> ../../README.md:86:30
-   |
-86 | # Don't correct the surname \"Teh\"
-   |                              ^^^
-   |
-error: `teh` should be `the`
-  --> ../../README.md:87:1
-   |
-87 | teh = \"teh\"
-   | ^^^
-   |
-error: `teh` should be `the`
-  --> ../../README.md:87:8
-   |
-87 | teh = \"teh\"
-   |        ^^^
-   |
-"""
+# stdout doesn't have stable order
 stderr = ""
