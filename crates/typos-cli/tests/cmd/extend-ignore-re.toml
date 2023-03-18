@@ -7,12 +7,6 @@ error: `hello` should be `goodbye`
 1 | hello `hello`
   | ^^^^^
   |
-error: `hello` should be `goodbye`
-  --> ./file.ignore:1:8
-  |
-1 | hello `hello`
-  |        ^^^^^
-  |
 """
 stderr = ""
 status.code = 2

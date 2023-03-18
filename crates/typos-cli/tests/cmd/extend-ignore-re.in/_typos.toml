@@ -1,5 +1,8 @@
 [files]
 extend-exclude = ["_typos.toml"]
 
+[default]
+extend-ignore-re = ["`.*`"]
+
 [default.extend-identifiers]
 hello = "goodbye"

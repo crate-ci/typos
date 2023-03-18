@@ -156,6 +156,7 @@ impl FileArgs {
                 locale: self.locale,
                 ..Default::default()
             }),
+            extend_ignore_re: Default::default(),
         }
     }
 

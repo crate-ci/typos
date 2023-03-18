@@ -634,6 +634,13 @@ impl<'t> Identifier<'t> {
         self.offset
     }
 
+    #[inline]
+    pub fn span(&self) -> std::ops::Range<usize> {
+        let start = self.offset;
+        let end = start + self.token.len();
+        start..end
+    }
+
     /// Split into individual Words.
     #[inline]
     pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
@@ -701,6 +708,13 @@ impl<'t> Word<'t> {
     #[inline]
     pub fn offset(&self) -> usize {
         self.offset
+    }
+
+    #[inline]
+    pub fn span(&self) -> std::ops::Range<usize> {
+        let start = self.offset;
+        let end = start + self.token.len();
+        start..end
     }
 }
 
