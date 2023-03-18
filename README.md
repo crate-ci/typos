@@ -28,6 +28,7 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 - [Reference](docs/reference.md)
 - [FAQ](#faq)
 - [Comparison with other spell checkers](docs/comparison.md)
+- [Projects using typos](https://github.com/crate-ci/typos/wiki)
 - [Benchmarks](benchsuite/runs)
 - [Design](docs/design.md)
 - [Contribute](CONTRIBUTING.md)
@@ -52,6 +53,7 @@ Or use [Conda](https://conda.io/) to install:
 ```bash
 conda install typos
 ```
+
 ## Getting Started
 
 Most commonly, you'll either want to see what typos are available with
