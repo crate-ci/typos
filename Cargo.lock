@@ -1830,7 +1830,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "2.2.9"
+version = "2.2.10"
 dependencies = [
  "enumflags2",
  "winnow 0.4.0",
