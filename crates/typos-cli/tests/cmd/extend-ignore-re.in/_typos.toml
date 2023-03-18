@@ -1,0 +1,5 @@
+[files]
+extend-exclude = ["_typos.toml"]
+
+[default.extend-identifiers]
+hello = "goodbye"
