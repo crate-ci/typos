@@ -249,7 +249,7 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
     fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Option<Status<'s>> {
         for ignored in &self.ignored_identifiers {
             if ignored.is_match(ident.token()) {
-                return None;
+                return Some(Status::Valid);
             }
         }
 

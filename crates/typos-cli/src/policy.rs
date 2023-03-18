@@ -239,6 +239,7 @@ impl<'s> ConfigEngine<'s> {
 
         let dict = crate::dict::BuiltIn::new(dict_config.locale());
         let mut dict = crate::dict::Override::new(dict);
+        dict.ignored_identifiers(dict_config.extend_ignore_identifiers_re());
         dict.identifiers(
             dict_config
                 .extend_identifiers()

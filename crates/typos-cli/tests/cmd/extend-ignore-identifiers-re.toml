@@ -8,11 +8,5 @@ error: `hello` should be `goodbye`
 1 | hello
   | ^^^^^
   |
-error: `hello` should be `goodbye`
-  --> ./file.ignore:1:1
-  |
-1 | hello
-  | ^^^^^
-  |
 """
 stderr = ""
