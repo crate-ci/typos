@@ -87,7 +87,7 @@ mod tests {
 
         // new an vec u8
 
-        let input: &[u8] = br#"{
+        let input = r#"{
             "jsonrpc": "2.0",
             "method": "initialize",
             "params": {
@@ -97,7 +97,7 @@ mod tests {
           }"#;
 
         let mut buf = BytesMut::new();
-        encode(input, &mut buf).unwrap();
+        encode(input.into(), &mut buf).unwrap();
 
         //let mut output = String::new();
         let stdout = tokio::io::stdout();
@@ -106,8 +106,8 @@ mod tests {
     }
 
     // copied from tower_lsp
-    fn encode<T: Serialize>(item: T, dst: &mut BytesMut) -> Result<(), anyhow::Error> {
-        let msg = serde_json::to_string(&item)?;
+    fn encode(item: String, dst: &mut BytesMut) -> Result<(), anyhow::Error> {
+        let msg = item; // serde_json::to_string(&item)?;
         // TODO: log to stdout
         tracing::debug!("-> {}", msg);
 
