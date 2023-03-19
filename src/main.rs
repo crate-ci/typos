@@ -1,5 +1,5 @@
-use tower_lsp::*;
 use tower_lsp::lsp_types::*;
+use tower_lsp::*;
 use tower_lsp::{Client, LanguageServer, LspService, Server};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -62,12 +62,7 @@ async fn main() {
 
 #[cfg(test)]
 mod tests {
-    use std::{error::Error, io::Write};
-
     use super::*;
-    use bytes::{Buf, BytesMut, BufMut};
-    use tracing::{trace, warn};
-    use serde::ser::Serialize;
 
     #[tokio::test]
     async fn test_initialize() {
@@ -83,15 +78,25 @@ mod tests {
 
     #[test_log::test(tokio::test)]
     async fn test_initialize_e2e() {
-        let (service, socket) = LspService::new(|client| Backend { client });
-        let req_init = r#"{"jsonrpc": "2.0","method": "initialize","params": {"capabilities": {}},"id": 1}"#;
-
-        let mut buf = BytesMut::new();
-        encode(req_init.into(), &mut buf).unwrap();
+        let req = with_headers(
+            r#"{"jsonrpc": "2.0","method": "initialize","params": {"capabilities": {}},"id": 1}"#,
+        );
 
         let mut output = Vec::new();
-        Server::new(buf.as_ref(), &mut output, socket).serve(service).await;
-        assert_eq!(body(&output).unwrap(), r#"{"jsonrpc":"2.0","result":{"capabilities":{},"serverInfo":{"name":"typos-lsp","version":"0.1.0"}},"id":1}"#)
+
+        let (service, socket) = LspService::new(|client| Backend { client });
+        Server::new(req.as_ref(), &mut output, socket)
+            .serve(service)
+            .await;
+
+        assert_eq!(
+            body(&output).unwrap(),
+            r#"{"jsonrpc":"2.0","result":{"capabilities":{},"serverInfo":{"name":"typos-lsp","version":"0.1.0"}},"id":1}"#
+        )
+    }
+
+    fn with_headers(msg: &str) -> Vec<u8> {
+        format!("Content-Length: {}\r\n\r\n{}", msg.len(), msg).into_bytes()
     }
 
     fn body(mut src: &[u8]) -> Result<&str, anyhow::Error> {
@@ -106,38 +111,9 @@ mod tests {
         // skip headers
         src = &src[headers_len..];
 
-        // convert to &str
+        // return the rest (ie: the body) as &str
         std::str::from_utf8(src).map_err(anyhow::Error::from)
     }
-
-    // copied from tower_lsp
-    fn encode(item: String, dst: &mut BytesMut) -> Result<(), anyhow::Error> {
-        let msg = item; // serde_json::to_string(&item)?;
-        // TODO: log to stdout
-        tracing::debug!("-> {}", msg);
-
-        // Reserve just enough space to hold the `Content-Length: ` and `\r\n\r\n` constants,
-        // the length of the message, and the message body.
-        dst.reserve(msg.len() + number_of_digits(msg.len()) + 20);
-        let mut writer = dst.writer();
-        write!(writer, "Content-Length: {}\r\n\r\n{}", msg.len(), msg)?;
-        writer.flush()?;
-
-        Ok(())
-    }
-
-    #[inline]
-    fn number_of_digits(mut n: usize) -> usize {
-        let mut num_digits = 0;
-
-        while n > 0 {
-            n /= 10;
-            num_digits += 1;
-        }
-
-        num_digits
-    }
-
 
     #[tokio::test]
     async fn test_did_open() {
@@ -148,18 +124,16 @@ mod tests {
                 uri: Url::parse("file:///foo.rs").unwrap(),
                 language_id: "rust".into(),
                 version: 1,
-                text: "foobar".into()
-            }
+                text: "foobar".into(),
+            },
         };
 
         service.inner().did_open(params).await;
-
 
         // let stdin = tokio::io::stdin();
         // let stdout = tokio::io::stdout();
 
         // Server::new(stdin, stdout, socket).serve(service).await;
-
 
         // let (req_stream, res_sink) = client_socket.split();
 
@@ -170,19 +144,14 @@ mod tests {
 
         // let print_output = client_requests.map(Ok).forward(framed_stdout).await.unwrap();
 
-
         // let print_output = stream::select(responses_rx, client_requests.map(Message::Request))
         //     .map(Ok)
         //     .forward(framed_stdout.sink_map_err(|e| error!("failed to encode message: {}", e)))
         //     .map(|_| ());
 
-
-
-
         // while let Some(req) = client_socket.split().0.a {
         //     println!("Received: {:?}", req);
 
         // }
-
     }
 }

@@ -853,12 +853,9 @@ name = "typos-lsp"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "bytes",
  "env_logger",
  "futures",
  "httparse",
- "serde",
- "serde_json",
  "test-log",
  "tokio",
  "tokio-util",
