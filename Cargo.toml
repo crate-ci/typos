@@ -9,6 +9,7 @@ edition = "2021"
 anyhow = "1.0.70"
 bytes = "1.4.0"
 futures = "0.3.27"
+httparse = "1.8.0"
 serde = "1.0.157"
 serde_json = "1.0.94"
 tokio = { version = "1.26.0", features = ["full"] }

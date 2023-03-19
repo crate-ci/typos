@@ -84,25 +84,30 @@ mod tests {
     #[test_log::test(tokio::test)]
     async fn test_initialize_e2e() {
         let (service, socket) = LspService::new(|client| Backend { client });
-
-        // new an vec u8
-
-        let input = r#"{
-            "jsonrpc": "2.0",
-            "method": "initialize",
-            "params": {
-              "capabilities": {}
-            },
-            "id": 1
-          }"#;
+        let req_init = r#"{"jsonrpc": "2.0","method": "initialize","params": {"capabilities": {}},"id": 1}"#;
 
         let mut buf = BytesMut::new();
-        encode(input.into(), &mut buf).unwrap();
+        encode(req_init.into(), &mut buf).unwrap();
 
-        //let mut output = String::new();
-        let stdout = tokio::io::stdout();
+        let mut output = Vec::new();
+        Server::new(buf.as_ref(), &mut output, socket).serve(service).await;
+        assert_eq!(body(&output).unwrap(), r#"{"jsonrpc":"2.0","result":{"capabilities":{},"serverInfo":{"name":"typos-lsp","version":"0.1.0"}},"id":1}"#)
+    }
 
-        Server::new(buf.as_ref(), stdout, socket).serve(service).await;
+    fn body(mut src: &[u8]) -> Result<&str, anyhow::Error> {
+        // parse headers to get headers length
+        let mut dst = [httparse::EMPTY_HEADER; 2];
+
+        let (headers_len, _) = match httparse::parse_headers(src, &mut dst)? {
+            httparse::Status::Complete(output) => output,
+            httparse::Status::Partial => return Err(anyhow::anyhow!("partial headers")),
+        };
+
+        // skip headers
+        src = &src[headers_len..];
+
+        // convert to &str
+        std::str::from_utf8(src).map_err(anyhow::Error::from)
     }
 
     // copied from tower_lsp

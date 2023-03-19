@@ -856,6 +856,7 @@ dependencies = [
  "bytes",
  "env_logger",
  "futures",
+ "httparse",
  "serde",
  "serde_json",
  "test-log",
