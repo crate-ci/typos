@@ -22,6 +22,7 @@ impl LanguageServer for Backend {
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
+        tracing::info!("did_open: {:?}", params);
         self.create_diagnostics(TextDocumentItem {
             language_id: params.text_document.language_id,
             uri: params.text_document.uri,
@@ -62,7 +63,10 @@ async fn main() {
 
 #[cfg(test)]
 mod tests {
+    use std::io::Write;
+
     use super::*;
+    use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
 
     #[tokio::test]
     async fn test_initialize() {
@@ -78,22 +82,83 @@ mod tests {
 
     #[test_log::test(tokio::test)]
     async fn test_initialize_e2e() {
-        let req = with_headers(
+        let req_init = with_headers(
             r#"{"jsonrpc": "2.0","method": "initialize","params": {"capabilities": {}},"id": 1}"#,
         );
 
         let mut output = Vec::new();
 
         let (service, socket) = LspService::new(|client| Backend { client });
-        Server::new(req.as_ref(), &mut output, socket)
+        Server::new(req_init.as_ref(), &mut output, socket)
             .serve(service)
             .await;
 
         assert_eq!(
             body(&output).unwrap(),
-            r#"{"jsonrpc":"2.0","result":{"capabilities":{},"serverInfo":{"name":"typos-lsp","version":"0.1.0"}},"id":1}"#
+            format!(
+                r#"{{"jsonrpc":"2.0","result":{{"capabilities":{{}},"serverInfo":{{"name":"typos-lsp","version":"{}"}}}},"id":1}}"#,
+                env!("CARGO_PKG_VERSION")
+            )
         )
     }
+
+    #[test_log::test(tokio::test)]
+    async fn test_did_open() {
+        // let (service, socket) = LspService::new(|client| Backend { client });
+
+        // let params = DidOpenTextDocumentParams {
+        //     text_document: TextDocumentItem {
+        //         uri: Url::parse("file:///foo.rs").unwrap(),
+        //         language_id: "rust".into(),
+        //         version: 1,
+        //         text: "foobar".into(),
+        //     },
+        // };
+
+        // service.inner().did_open(params).await;
+
+        let req_init = with_headers(
+            r#"{"jsonrpc": "2.0","method": "initialize","params": {"capabilities": {}},"id": 1}"#,
+        );
+
+
+        let req_open = with_headers(
+            r#"{
+                "jsonrpc": "2.0",
+                "method": "textDocument/didOpen",
+                "params": {
+                  "textDocument": {
+                    "uri": "file:///foo.rs",
+                    "languageId": "rust",
+                    "version": 1,
+                    "text": "foobar"
+                  }
+                },
+                "id": 2
+              }
+              "#,
+        );
+
+        let (mut req_client, req_server) = tokio::io::duplex(1024);
+        let (resp_server, mut resp_client) = tokio::io::duplex(1024);
+
+        let (service, socket) = LspService::new(|client| Backend { client });
+
+        // start server as concurrent task
+        tokio::spawn(Server::new(req_server, resp_server, socket).serve(service));
+
+        let mut buf = vec![0; 1024];
+
+        req_client.write_all(req_init.as_ref()).await.unwrap();
+        let n = resp_client.read(&mut buf).await.unwrap();
+        println!("{}", String::from_utf8_lossy(&buf[..n]));
+
+        req_client.write_all(req_open.as_ref()).await.unwrap();
+        let n = resp_client.read(&mut buf).await.unwrap();
+        println!("{}", String::from_utf8_lossy(&buf[..n]));
+
+    }
+
 
     fn with_headers(msg: &str) -> Vec<u8> {
         format!("Content-Length: {}\r\n\r\n{}", msg.len(), msg).into_bytes()
@@ -115,43 +180,5 @@ mod tests {
         std::str::from_utf8(src).map_err(anyhow::Error::from)
     }
 
-    #[tokio::test]
-    async fn test_did_open() {
-        let (service, socket) = LspService::new(|client| Backend { client });
 
-        let params = DidOpenTextDocumentParams {
-            text_document: TextDocumentItem {
-                uri: Url::parse("file:///foo.rs").unwrap(),
-                language_id: "rust".into(),
-                version: 1,
-                text: "foobar".into(),
-            },
-        };
-
-        service.inner().did_open(params).await;
-
-        // let stdin = tokio::io::stdin();
-        // let stdout = tokio::io::stdout();
-
-        // Server::new(stdin, stdout, socket).serve(service).await;
-
-        // let (req_stream, res_sink) = client_socket.split();
-
-        // let (client_requests, client_abort) = stream::abortable(req_stream);
-
-        // let stdout = tokio::io::stdout();
-        // let framed_stdout = FramedWrite::new(stdout, LanguageServerCodec::default());
-
-        // let print_output = client_requests.map(Ok).forward(framed_stdout).await.unwrap();
-
-        // let print_output = stream::select(responses_rx, client_requests.map(Message::Request))
-        //     .map(Ok)
-        //     .forward(framed_stdout.sink_map_err(|e| error!("failed to encode message: {}", e)))
-        //     .map(|_| ());
-
-        // while let Some(req) = client_socket.split().0.a {
-        //     println!("Received: {:?}", req);
-
-        // }
-    }
 }
