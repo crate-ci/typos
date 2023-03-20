@@ -2,8 +2,6 @@ use tower_lsp::lsp_types::*;
 use tower_lsp::*;
 use tower_lsp::{Client, LanguageServer, LspService, Server};
 
-const VERSION: &str = env!("CARGO_PKG_VERSION");
-
 #[derive(Debug)]
 struct Backend {
     client: Client,
@@ -13,11 +11,16 @@ struct Backend {
 impl LanguageServer for Backend {
     async fn initialize(&self, _: InitializeParams) -> jsonrpc::Result<InitializeResult> {
         Ok(InitializeResult {
+            capabilities: ServerCapabilities {
+                text_document_sync: Some(TextDocumentSyncCapability::Kind(
+                    TextDocumentSyncKind::FULL,
+                )),
+                ..ServerCapabilities::default()
+            },
             server_info: Some(ServerInfo {
-                name: "typos-lsp".to_string(),
-                version: Some(VERSION.into()),
-            }),
-            ..Default::default()
+                name: env!("CARGO_PKG_NAME").to_string(),
+                version: Some(env!("CARGO_PKG_VERSION").to_string()),
+            })
         })
     }
 
@@ -32,10 +35,11 @@ impl LanguageServer for Backend {
         .await
     }
 
+
     async fn initialized(&self, _: InitializedParams) {
         self.client
             .log_message(MessageType::INFO, "server initialized!")
-            .await;
+            .await
     }
 
     async fn shutdown(&self) -> jsonrpc::Result<()> {
@@ -54,8 +58,11 @@ impl Backend {
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt().init();
+
     let stdin = tokio::io::stdin();
     let stdout = tokio::io::stdout();
+
 
     let (service, socket) = LspService::new(|client| Backend { client });
     Server::new(stdin, stdout, socket).serve(service).await;
@@ -63,10 +70,8 @@ async fn main() {
 
 #[cfg(test)]
 mod tests {
-    use std::io::Write;
-
     use super::*;
-    use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
     #[tokio::test]
     async fn test_initialize() {
@@ -83,7 +88,7 @@ mod tests {
     #[test_log::test(tokio::test)]
     async fn test_initialize_e2e() {
         let req_init = with_headers(
-            r#"{"jsonrpc": "2.0","method": "initialize","params": {"capabilities": {}},"id": 1}"#,
+            r#"{"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{}},"id":1}"#,
         );
 
         let mut output = Vec::new();
@@ -96,7 +101,7 @@ mod tests {
         assert_eq!(
             body(&output).unwrap(),
             format!(
-                r#"{{"jsonrpc":"2.0","result":{{"capabilities":{{}},"serverInfo":{{"name":"typos-lsp","version":"{}"}}}},"id":1}}"#,
+                r#"{{"jsonrpc":"2.0","result":{{"capabilities":{{"textDocumentSync":1}},"serverInfo":{{"name":"typos-lsp","version":"{}"}}}},"id":1}}"#,
                 env!("CARGO_PKG_VERSION")
             )
         )
@@ -104,23 +109,9 @@ mod tests {
 
     #[test_log::test(tokio::test)]
     async fn test_did_open() {
-        // let (service, socket) = LspService::new(|client| Backend { client });
-
-        // let params = DidOpenTextDocumentParams {
-        //     text_document: TextDocumentItem {
-        //         uri: Url::parse("file:///foo.rs").unwrap(),
-        //         language_id: "rust".into(),
-        //         version: 1,
-        //         text: "foobar".into(),
-        //     },
-        // };
-
-        // service.inner().did_open(params).await;
-
         let req_init = with_headers(
-            r#"{"jsonrpc": "2.0","method": "initialize","params": {"capabilities": {}},"id": 1}"#,
+            r#"{"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{"textDocumentSync":1}},"id":1}"#,
         );
-
 
         let req_open = with_headers(
             r#"{
@@ -133,8 +124,7 @@ mod tests {
                     "version": 1,
                     "text": "foobar"
                   }
-                },
-                "id": 2
+                }
               }
               "#,
         );
