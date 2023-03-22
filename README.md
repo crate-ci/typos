@@ -72,6 +72,12 @@ Sometimes, what looks like a typo is intentional, like with people's names, acro
 
 To mark a word or an identifier (grouping of words) as valid, add it your [`_typos.toml`](docs/reference.md) by declaring itself as the valid spelling:
 ```toml
+[default]
+extend-ignore-identifiers-re = [
+    # *sigh* this just isn't worth the cost of fixing
+    "AttributeID.*Supress.*",
+]
+
 [default.extend-identifiers]
 # *sigh* this just isn't worth the cost of fixing
 AttributeIDSupressMenu = "AttributeIDSupressMenu"

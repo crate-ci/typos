@@ -80,6 +80,8 @@ thread_local = "1.1.7"
 globset = "0.4.10"
 anstyle = "0.3.1"
 anstream = "0.2.0"
+serde_regex = "1.1.0"
+regex = "1.7.2"
 
 [dev-dependencies]
 assert_fs = "1.0"

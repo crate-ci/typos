@@ -199,6 +199,7 @@ fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
 }
 
 pub struct Override<'i, 'w, D> {
+    ignored_identifiers: Vec<regex::Regex>,
     identifiers: HashMap<&'i str, Status<'i>, ahash::RandomState>,
     words: HashMap<unicase::UniCase<&'w str>, Status<'w>, ahash::RandomState>,
     inner: D,
@@ -207,10 +208,15 @@ pub struct Override<'i, 'w, D> {
 impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
     pub fn new(inner: D) -> Self {
         Self {
+            ignored_identifiers: Default::default(),
             identifiers: Default::default(),
             words: Default::default(),
             inner,
         }
+    }
+
+    pub fn ignored_identifiers<'r>(&mut self, ignored: impl Iterator<Item = &'r regex::Regex>) {
+        self.ignored_identifiers.extend(ignored.cloned());
     }
 
     pub fn identifiers<I: Iterator<Item = (&'i str, &'i str)>>(&mut self, identifiers: I) {
@@ -241,6 +247,12 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
 
 impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
     fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Option<Status<'s>> {
+        for ignored in &self.ignored_identifiers {
+            if ignored.is_match(ident.token()) {
+                return None;
+            }
+        }
+
         // Skip hashing if we can
         if !self.identifiers.is_empty() {
             self.identifiers
