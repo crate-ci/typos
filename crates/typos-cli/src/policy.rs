@@ -42,6 +42,7 @@ pub struct ConfigEngine<'s> {
     walk: Intern<crate::config::Walk>,
     tokenizer: Intern<typos::tokens::Tokenizer>,
     dict: Intern<crate::dict::Override<'s, 's, crate::dict::BuiltIn>>,
+    ignore: Intern<Vec<regex::Regex>>,
 }
 
 impl<'s> ConfigEngine<'s> {
@@ -54,6 +55,7 @@ impl<'s> ConfigEngine<'s> {
             walk: Default::default(),
             tokenizer: Default::default(),
             dict: Default::default(),
+            ignore: Default::default(),
         }
     }
 
@@ -88,7 +90,7 @@ impl<'s> ConfigEngine<'s> {
         dir.type_matcher.definitions()
     }
 
-    pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_> {
+    pub fn policy(&self, path: &std::path::Path) -> Policy<'_, '_, '_> {
         debug_assert!(path.is_absolute(), "{} is not absolute", path.display());
         let dir = self.get_dir(path).expect("`walk()` should be called first");
         let (file_type, file_config) = dir.get_file_config(path);
@@ -99,6 +101,7 @@ impl<'s> ConfigEngine<'s> {
             binary: file_config.binary,
             tokenizer: self.get_tokenizer(&file_config),
             dict: self.get_dict(&file_config),
+            ignore: self.get_ignore(&file_config),
         }
     }
 
@@ -112,6 +115,10 @@ impl<'s> ConfigEngine<'s> {
 
     fn get_dict(&self, file: &FileConfig) -> &dyn typos::Dictionary {
         self.dict.get(file.dict)
+    }
+
+    fn get_ignore(&self, file: &FileConfig) -> &[regex::Regex] {
+        self.ignore.get(file.ignore)
     }
 
     fn get_dir(&self, path: &std::path::Path) -> Option<&DirConfig> {
@@ -220,7 +227,10 @@ impl<'s> ConfigEngine<'s> {
         let check_filename = engine.check_filename();
         let check_file = engine.check_file();
         let crate::config::EngineConfig {
-            tokenizer, dict, ..
+            tokenizer,
+            dict,
+            extend_ignore_re,
+            ..
         } = engine;
         let tokenizer_config =
             tokenizer.unwrap_or_else(crate::config::TokenizerConfig::from_defaults);
@@ -254,12 +264,15 @@ impl<'s> ConfigEngine<'s> {
         let dict = self.dict.intern(dict);
         let tokenizer = self.tokenizer.intern(tokenizer);
 
+        let ignore = self.ignore.intern(extend_ignore_re);
+
         FileConfig {
             check_filenames: check_filename,
             check_files: check_file,
             binary,
             tokenizer,
             dict,
+            ignore,
         }
     }
 }
@@ -328,20 +341,22 @@ struct FileConfig {
     check_filenames: bool,
     check_files: bool,
     binary: bool,
+    ignore: usize,
 }
 
 #[non_exhaustive]
 #[derive(derive_setters::Setters)]
-pub struct Policy<'t, 'd> {
+pub struct Policy<'t, 'd, 'i> {
     pub check_filenames: bool,
     pub check_files: bool,
     pub file_type: Option<&'d str>,
     pub binary: bool,
     pub tokenizer: &'t typos::tokens::Tokenizer,
     pub dict: &'d dyn typos::Dictionary,
+    pub ignore: &'i [regex::Regex],
 }
 
-impl<'t, 'd> Policy<'t, 'd> {
+impl<'t, 'd, 'i> Policy<'t, 'd, 'i> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -350,8 +365,9 @@ impl<'t, 'd> Policy<'t, 'd> {
 static DEFAULT_TOKENIZER: once_cell::sync::Lazy<typos::tokens::Tokenizer> =
     once_cell::sync::Lazy::new(typos::tokens::Tokenizer::new);
 static DEFAULT_DICT: crate::dict::BuiltIn = crate::dict::BuiltIn::new(crate::config::Locale::En);
+static DEFAULT_IGNORE: &[regex::Regex] = &[];
 
-impl<'t, 'd> Default for Policy<'t, 'd> {
+impl<'t, 'd, 'i> Default for Policy<'t, 'd, 'i> {
     fn default() -> Self {
         Self {
             check_filenames: true,
@@ -360,6 +376,7 @@ impl<'t, 'd> Default for Policy<'t, 'd> {
             binary: false,
             tokenizer: &DEFAULT_TOKENIZER,
             dict: &DEFAULT_DICT,
+            ignore: DEFAULT_IGNORE,
         }
     }
 }

@@ -48,7 +48,14 @@ impl FileChecker for Typos {
                 reporter.report(msg.into())?;
             } else {
                 let mut accum_line_num = AccumulateLineNum::new();
+                let mut ignores: Option<Ignores> = None;
                 for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
+                    if ignores
+                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
+                        .is_ignored(typo.span())
+                    {
+                        continue;
+                    }
                     let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
                     let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
                     let msg = report::Typo {
@@ -86,7 +93,14 @@ impl FileChecker for FixTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
+                let mut ignores: Option<Ignores> = None;
                 for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
+                    if ignores
+                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
+                        .is_ignored(typo.span())
+                    {
+                        continue;
+                    }
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -163,7 +177,14 @@ impl FileChecker for DiffTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
+                let mut ignores: Option<Ignores> = None;
                 for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
+                    if ignores
+                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
+                        .is_ignored(typo.span())
+                    {
+                        continue;
+                    }
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -276,7 +297,14 @@ impl FileChecker for Identifiers {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
+                let mut ignores: Option<Ignores> = None;
                 for word in policy.tokenizer.parse_bytes(&buffer) {
+                    if ignores
+                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
+                        .is_ignored(word.span())
+                    {
+                        continue;
+                    }
                     // HACK: Don't look up the line_num per entry to better match the performance
                     // of Typos for comparison purposes.  We don't really get much out of it
                     // anyway.
@@ -329,11 +357,18 @@ impl FileChecker for Words {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
+                let mut ignores: Option<Ignores> = None;
                 for word in policy
                     .tokenizer
                     .parse_bytes(&buffer)
                     .flat_map(|i| i.split())
                 {
+                    if ignores
+                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
+                        .is_ignored(word.span())
+                    {
+                        continue;
+                    }
                     // HACK: Don't look up the line_num per entry to better match the performance
                     // of Typos for comparison purposes.  We don't really get much out of it
                     // anyway.
@@ -642,6 +677,33 @@ fn walk_entry(
     }
 
     Ok(())
+}
+
+#[derive(Clone, Debug)]
+struct Ignores {
+    blocks: Vec<std::ops::Range<usize>>,
+}
+
+impl Ignores {
+    fn new(content: &[u8], ignores: &[regex::Regex]) -> Self {
+        let mut blocks = Vec::new();
+        if let Ok(content) = std::str::from_utf8(content) {
+            for ignore in ignores {
+                for mat in ignore.find_iter(content) {
+                    blocks.push(mat.range());
+                }
+            }
+        }
+        Self { blocks }
+    }
+
+    fn is_ignored(&self, span: std::ops::Range<usize>) -> bool {
+        let start = span.start;
+        let end = span.end.saturating_sub(1);
+        self.blocks
+            .iter()
+            .any(|block| block.contains(&start) || block.contains(&end))
+    }
 }
 
 #[cfg(test)]

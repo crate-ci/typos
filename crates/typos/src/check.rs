@@ -86,6 +86,12 @@ impl<'m> Typo<'m> {
             corrections: self.corrections.borrow(),
         }
     }
+
+    pub fn span(&self) -> std::ops::Range<usize> {
+        let start = self.byte_offset;
+        let end = start + self.typo.len();
+        start..end
+    }
 }
 
 impl<'m> Default for Typo<'m> {

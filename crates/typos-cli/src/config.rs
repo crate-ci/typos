@@ -268,7 +268,7 @@ impl GlobEngineConfig {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 //#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -283,6 +283,8 @@ pub struct EngineConfig {
     pub tokenizer: Option<TokenizerConfig>,
     #[serde(flatten)]
     pub dict: Option<DictConfig>,
+    #[serde(with = "serde_regex")]
+    pub extend_ignore_re: Vec<regex::Regex>,
 }
 
 impl EngineConfig {
@@ -298,6 +300,7 @@ impl EngineConfig {
                     .unwrap_or_else(TokenizerConfig::from_defaults),
             ),
             dict: Some(empty.dict.unwrap_or_else(DictConfig::from_defaults)),
+            extend_ignore_re: Default::default(),
         }
     }
 
@@ -327,6 +330,8 @@ impl EngineConfig {
             let mut dict = Some(dict);
             std::mem::swap(&mut dict, &mut self.dict);
         }
+        self.extend_ignore_re
+            .extend(source.extend_ignore_re.iter().cloned());
     }
 
     pub fn binary(&self) -> bool {
@@ -340,7 +345,28 @@ impl EngineConfig {
     pub fn check_file(&self) -> bool {
         self.check_file.unwrap_or(true)
     }
+
+    pub fn extend_ignore_re(&self) -> Box<dyn Iterator<Item = &regex::Regex> + '_> {
+        Box::new(self.extend_ignore_re.iter())
+    }
 }
+
+impl PartialEq for EngineConfig {
+    fn eq(&self, rhs: &Self) -> bool {
+        self.binary == rhs.binary
+            && self.check_filename == rhs.check_filename
+            && self.check_file == rhs.check_file
+            && self.tokenizer == rhs.tokenizer
+            && self.dict == rhs.dict
+            && self
+                .extend_ignore_re
+                .iter()
+                .map(|r| r.as_str())
+                .eq(rhs.extend_ignore_re.iter().map(|r| r.as_str()))
+    }
+}
+
+impl Eq for EngineConfig {}
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
