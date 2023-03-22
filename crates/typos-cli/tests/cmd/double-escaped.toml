@@ -1,3 +1,12 @@
 bin.name = "typos"
 args = "--write-changes -"
 status.code = 0
+stdin = '''
+\n\n
+Destory
+'''
+stdout = """
+/n/n
+Destroy
+"""
+stderr = ""

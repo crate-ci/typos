@@ -1,0 +1,12 @@
+[files]
+extend-exclude = ["_typos.toml"]
+
+[default.extend-identifiers]
+hello = "goodbye"
+
+[type.fail]
+extend-glob = ["*.fail"]
+
+[type.ignore]
+extend-glob = ["*.ignore"]
+extend-ignore-identifiers-re = ["he.*"]
