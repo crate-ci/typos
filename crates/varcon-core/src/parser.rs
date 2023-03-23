@@ -146,18 +146,20 @@ A B C: coloration's / B. Cv: colouration's
 impl Entry {
     pub fn parse(input: &str) -> IResult<&str, Self> {
         let var_sep = (winnow::character::space0, '/', winnow::character::space0);
-        let (input, variants) = winnow::multi::separated1(Variant::parse, var_sep)(input)?;
+        let (input, variants) =
+            winnow::multi::separated1(Variant::parse, var_sep).parse_next(input)?;
 
         let desc_sep = (winnow::character::space0, '|');
         let (input, description) =
-            winnow::combinator::opt((desc_sep, Self::parse_description))(input)?;
+            winnow::combinator::opt((desc_sep, Self::parse_description)).parse_next(input)?;
 
         let comment_sep = (winnow::character::space0, '#');
         let (input, comment) = winnow::combinator::opt((
             comment_sep,
             winnow::character::space1,
             winnow::character::not_line_ending,
-        ))(input)?;
+        ))
+        .parse_next(input)?;
 
         let mut e = match description {
             Some((_, description)) => description,
@@ -298,7 +300,8 @@ impl Variant {
     pub fn parse(input: &str) -> IResult<&str, Self> {
         let types = winnow::multi::separated1(Type::parse, winnow::character::space1);
         let sep = (winnow::bytes::tag(":"), winnow::character::space0);
-        let (input, (types, word)) = winnow::sequence::separated_pair(types, sep, word)(input)?;
+        let (input, (types, word)) =
+            winnow::sequence::separated_pair(types, sep, word).parse_next(input)?;
         let v = Self { types, word };
         Ok((input, v))
     }
@@ -380,8 +383,8 @@ mod test_variant {
 impl Type {
     pub fn parse(input: &str) -> IResult<&str, Type> {
         let (input, category) = Category::parse(input)?;
-        let (input, tag) = winnow::combinator::opt(Tag::parse)(input)?;
-        let (input, num) = winnow::combinator::opt(winnow::character::digit1)(input)?;
+        let (input, tag) = winnow::combinator::opt(Tag::parse).parse_next(input)?;
+        let (input, num) = winnow::combinator::opt(winnow::character::digit1).parse_next(input)?;
         let num = num.map(|s| s.parse().expect("parser ensured its a number"));
         let t = Type { category, tag, num };
         Ok((input, t))
@@ -517,7 +520,8 @@ impl Pos {
             verb.value(Pos::Verb),
             adjective.value(Pos::Adjective),
             adverb.value(Pos::Adverb),
-        ))(input)
+        ))
+        .parse_next(input)
     }
 }
 
