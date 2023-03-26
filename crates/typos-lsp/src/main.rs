@@ -2,6 +2,8 @@ use tower_lsp::lsp_types::*;
 use tower_lsp::*;
 use tower_lsp::{Client, LanguageServer, LspService, Server};
 
+mod check;
+
 #[derive(Debug)]
 struct Backend {
     client: Client,
@@ -20,12 +22,20 @@ impl LanguageServer for Backend {
             server_info: Some(ServerInfo {
                 name: env!("CARGO_PKG_NAME").to_string(),
                 version: Some(env!("CARGO_PKG_VERSION").to_string()),
-            })
+            }),
         })
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         tracing::info!("did_open: {:?}", params);
+        let dict = typos_cli::dict::BuiltIn::new(Default::default());
+        let tokenizer = typos::tokens::Tokenizer::new();
+        let policy = typos_cli::policy::Policy::new()
+            .dict(&dict)
+            .tokenizer(&tokenizer);
+
+        check::check_file(std::path::Path::new("-"), true, &policy, &PrintTrace);
+
         self.create_diagnostics(TextDocumentItem {
             language_id: params.text_document.language_id,
             uri: params.text_document.uri,
@@ -35,7 +45,6 @@ impl LanguageServer for Backend {
         .await
     }
 
-
     async fn initialized(&self, _: InitializedParams) {
         self.client
             .log_message(MessageType::INFO, "server initialized!")
@@ -43,6 +52,16 @@ impl LanguageServer for Backend {
     }
 
     async fn shutdown(&self) -> jsonrpc::Result<()> {
+        Ok(())
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct PrintTrace;
+
+impl typos_cli::report::Report for PrintTrace {
+    fn report(&self, _msg: typos_cli::report::Message) -> Result<(), std::io::Error> {
+        tracing::info!("report: {:?}", _msg);
         Ok(())
     }
 }
@@ -62,7 +81,6 @@ async fn main() {
 
     let stdin = tokio::io::stdin();
     let stdout = tokio::io::stdout();
-
 
     let (service, socket) = LspService::new(|client| Backend { client });
     Server::new(stdin, stdout, socket).serve(service).await;
@@ -146,9 +164,7 @@ mod tests {
         req_client.write_all(req_open.as_ref()).await.unwrap();
         let n = resp_client.read(&mut buf).await.unwrap();
         println!("{}", String::from_utf8_lossy(&buf[..n]));
-
     }
-
 
     fn with_headers(msg: &str) -> Vec<u8> {
         format!("Content-Length: {}\r\n\r\n{}", msg.len(), msg).into_bytes()
@@ -169,6 +185,4 @@ mod tests {
         // return the rest (ie: the body) as &str
         std::str::from_utf8(src).map_err(anyhow::Error::from)
     }
-
-
 }
