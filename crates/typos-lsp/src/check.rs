@@ -7,29 +7,20 @@ use typos_cli::*;
 pub(crate) fn check_text(buffer: &str, policy: &policy::Policy) -> Vec<Diagnostic> {
     // TODO: check filenames
 
-    let mut accum_line_num = AccumulateLineNum::new();
+    let mut accum = AccumulatePosition::new();
 
-    // TODO: ignores
-
-    for typo in typos::check_str(buffer, policy.tokenizer, policy.dict) {
-        let line_num = accum_line_num.line_num(buffer.as_bytes(), typo.byte_offset);
-        let (line, line_offset) = extract_line(buffer.as_bytes(), typo.byte_offset);
-    }
+    // TODO: support ignores
 
     typos::check_str(buffer, policy.tokenizer, policy.dict)
         .map(|typo| {
             tracing::info!("typo: {:?}", typo);
 
-            let line_num = accum_line_num.line_num(buffer.as_bytes(), typo.byte_offset);
-            let (line, line_offset) = extract_line(buffer.as_bytes(), typo.byte_offset);
+            let (line_num, line_pos) = accum.pos(buffer.as_bytes(), typo.byte_offset);
 
             Diagnostic::new(
                 Range::new(
-                    Position::new((line_num - 1) as u32, line_offset as u32),
-                    Position::new(
-                        (line_num - 1) as u32,
-                        (line_offset + typo.typo.len()) as u32,
-                    ),
+                    Position::new(line_num as u32, line_pos as u32),
+                    Position::new(line_num as u32, (line_pos + typo.typo.len()) as u32),
                 ),
                 Some(DiagnosticSeverity::WARNING),
                 None,
@@ -46,34 +37,43 @@ pub(crate) fn check_text(buffer: &str, policy: &policy::Policy) -> Vec<Diagnosti
                 None,
                 None,
             )
-        }).collect()
-
+        })
+        .collect()
 }
 
-struct AccumulateLineNum {
+struct AccumulatePosition {
     line_num: usize,
-    line_offset: usize,
+    line_pos: usize,
     last_offset: usize,
 }
 
-impl AccumulateLineNum {
+impl AccumulatePosition {
     fn new() -> Self {
         Self {
-            // 1-indexed
-            line_num: 1,
-            line_offset: 1,
+            // LSP ranges are 0-indexed see https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#range
+            line_num: 0,
+            line_pos: 0,
             last_offset: 0,
         }
     }
 
-    fn line_num(&mut self, buffer: &[u8], byte_offset: usize) -> usize {
+    fn pos(&mut self, buffer: &[u8], byte_offset: usize) -> (usize, usize) {
         assert!(self.last_offset <= byte_offset);
         let slice = &buffer[self.last_offset..byte_offset];
         let newlines = slice.find_iter(b"\n").count();
         let line_num = self.line_num + newlines;
+
+        let line_start = buffer[0..byte_offset]
+            .rfind_byte(b'\n')
+            // Skip the newline
+            .map(|s| s + 1)
+            .unwrap_or(0);
+
         self.line_num = line_num;
+        self.line_pos = byte_offset - line_start;
         self.last_offset = byte_offset;
-        line_num
+
+        (self.line_num, self.line_pos)
     }
 }
 
@@ -102,18 +102,4 @@ impl Ignores {
             .iter()
             .any(|block| block.contains(&start) || block.contains(&end))
     }
-}
-
-fn extract_line(buffer: &[u8], byte_offset: usize) -> (&[u8], usize) {
-    let line_start = buffer[0..byte_offset]
-        .rfind_byte(b'\n')
-        // Skip the newline
-        .map(|s| s + 1)
-        .unwrap_or(0);
-    let line = buffer[line_start..]
-        .lines()
-        .next()
-        .expect("should always be at least a line");
-    let line_offset = byte_offset - line_start;
-    (line, line_offset)
 }

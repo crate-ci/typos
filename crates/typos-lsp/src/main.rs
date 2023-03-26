@@ -37,7 +37,11 @@ impl LanguageServer for Backend {
         let diagnostics = check::check_text(&params.text_document.text, &policy);
 
         self.client
-            .publish_diagnostics(params.text_document.uri.clone(), diagnostics, Some(params.text_document.version))
+            .publish_diagnostics(
+                params.text_document.uri.clone(),
+                diagnostics,
+                Some(params.text_document.version),
+            )
             .await;
     }
 
@@ -101,9 +105,8 @@ mod tests {
 
     #[test_log::test(tokio::test)]
     async fn test_initialize_e2e() {
-        let req_init = with_headers(
-            r#"{"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{}},"id":1}"#,
-        );
+        let req_init =
+            req(r#"{"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{}},"id":1}"#);
 
         let mut output = Vec::new();
 
@@ -123,12 +126,9 @@ mod tests {
 
     #[test_log::test(tokio::test)]
     async fn test_did_open_e2e() {
-        let req_init = with_headers(
-            r#"{"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{"textDocumentSync":1}},"id":1}"#,
-        );
+        let initialize = r#"{"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{"textDocumentSync":1}},"id":1}"#;
 
-        let req_open = with_headers(
-            r#"{
+        let did_open = r#"{
                 "jsonrpc": "2.0",
                 "method": "textDocument/didOpen",
                 "params": {
@@ -140,36 +140,44 @@ mod tests {
                   }
                 }
               }
-              "#,
-        );
+              "#;
 
-        let (mut req_client, req_server) = tokio::io::duplex(1024);
-        let (resp_server, mut resp_client) = tokio::io::duplex(1024);
+        let (mut req_client, mut resp_client) = start_server();
+        let mut buf = vec![0; 1024];
+
+        req_client
+            .write_all(req(initialize).as_bytes())
+            .await
+            .unwrap();
+        let _ = resp_client.read(&mut buf).await.unwrap();
+
+        tracing::info!("{}", did_open);
+        req_client
+            .write_all(req(did_open).as_bytes())
+            .await
+            .unwrap();
+        let n = resp_client.read(&mut buf).await.unwrap();
+
+        assert_eq!(
+            body(&buf[..n]).unwrap(),
+            r#"{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"message":"`fo` should be `of`, `for`","range":{"end":{"character":7,"line":1},"start":{"character":5,"line":1}},"severity":2,"source":"typos-lsp"}],"uri":"file:///foo.rs","version":1}}"#,
+        )
+    }
+
+    fn start_server() -> (tokio::io::DuplexStream, tokio::io::DuplexStream) {
+        let (req_client, req_server) = tokio::io::duplex(1024);
+        let (resp_server, resp_client) = tokio::io::duplex(1024);
 
         let (service, socket) = LspService::new(|client| Backend { client });
 
         // start server as concurrent task
         tokio::spawn(Server::new(req_server, resp_server, socket).serve(service));
 
-        let mut buf = vec![0; 1024];
-
-        req_client.write_all(req_init.as_ref()).await.unwrap();
-        let n = resp_client.read(&mut buf).await.unwrap();
-        tracing::info!("{}", String::from_utf8_lossy(&buf[..n]));
-
-        req_client.write_all(req_open.as_ref()).await.unwrap();
-        let n = resp_client.read(&mut buf).await.unwrap();
-        tracing::info!("{}", String::from_utf8_lossy(&buf[..n]));
-
-        assert_eq!(
-            body(&buf[..n]).unwrap(),
-            r#"{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"message":"`fo` should be `of`, `for`","range":{"end":{"character":7,"line":1},"start":{"character":5,"line":1}},"severity":2,"source":"typos-lsp"}],"uri":"file:///foo.rs","version":1}}"#,
-        )
-
+        (req_client, resp_client)
     }
 
-    fn with_headers(msg: &str) -> Vec<u8> {
-        format!("Content-Length: {}\r\n\r\n{}", msg.len(), msg).into_bytes()
+    fn req(msg: &str) -> String {
+        format!("Content-Length: {}\r\n\r\n{}", msg.len(), msg)
     }
 
     fn body(src: &[u8]) -> Result<&str, anyhow::Error> {
