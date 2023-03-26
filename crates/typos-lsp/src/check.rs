@@ -1,85 +1,58 @@
-use typos_cli::*;
 use bstr::ByteSlice;
+use tower_lsp::lsp_types::*;
+use typos_cli::*;
 
-pub(crate) fn check_file(
-    path: &std::path::Path,
-    explicit: bool,
-    policy: &policy::Policy,
-    reporter: &dyn report::Report,
-) -> Result<(), std::io::Error> {
-    if policy.check_files {
-        let (buffer, content_type) = read_file(path, reporter)?;
-        if !explicit && !policy.binary && content_type.is_binary() {
-            let msg = report::BinaryFile { path };
-            reporter.report(msg.into())?;
-        } else {
-            let mut accum_line_num = AccumulateLineNum::new();
-            let mut ignores: Option<Ignores> = None;
-            for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                if ignores
-                    .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                    .is_ignored(typo.span())
-                {
-                    continue;
-                }
-                let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
-                let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
-                let msg = report::Typo {
-                    context: Some(report::FileContext { path, line_num }.into()),
-                    buffer: std::borrow::Cow::Borrowed(line),
-                    byte_offset: line_offset,
-                    typo: typo.typo.as_ref(),
-                    corrections: typo.corrections,
-                };
-                reporter.report(msg.into())?;
-            }
-        }
+// mimics typos_cli::file::FileChecker::check_file
+
+pub(crate) fn check_text(buffer: &str, policy: &policy::Policy) -> Vec<Diagnostic> {
+    // TODO: check filenames
+
+    let mut accum_line_num = AccumulateLineNum::new();
+
+    // TODO: ignores
+
+    for typo in typos::check_str(buffer, policy.tokenizer, policy.dict) {
+        let line_num = accum_line_num.line_num(buffer.as_bytes(), typo.byte_offset);
+        let (line, line_offset) = extract_line(buffer.as_bytes(), typo.byte_offset);
     }
 
-    Ok(())
-}
+    typos::check_str(buffer, policy.tokenizer, policy.dict)
+        .map(|typo| {
+            tracing::info!("typo: {:?}", typo);
 
+            let line_num = accum_line_num.line_num(buffer.as_bytes(), typo.byte_offset);
+            let (line, line_offset) = extract_line(buffer.as_bytes(), typo.byte_offset);
 
-fn read_file(
-    path: &std::path::Path,
-    reporter: &dyn report::Report,
-) -> Result<(Vec<u8>, content_inspector::ContentType), std::io::Error> {
-    let buffer = if path == std::path::Path::new("-") {
-        let mut buffer = Vec::new();
-        report_result(std::io::stdin().read_to_end(&mut buffer), reporter)?;
-        buffer
-    } else {
-        report_result(std::fs::read(path), reporter)?
-    };
+            Diagnostic::new(
+                Range::new(
+                    Position::new((line_num - 1) as u32, line_offset as u32),
+                    Position::new(
+                        (line_num - 1) as u32,
+                        (line_offset + typo.typo.len()) as u32,
+                    ),
+                ),
+                Some(DiagnosticSeverity::WARNING),
+                None,
+                Some(env!("CARGO_PKG_NAME").to_string()),
+                match typo.corrections {
+                    typos::Status::Invalid => format!("`{}` is disallowed", typo.typo),
+                    typos::Status::Corrections(corrections) => format!(
+                        "`{}` should be {}",
+                        typo.typo,
+                        itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                    ),
+                    typos::Status::Valid => panic!("unexpected typos::Status::Valid"),
+                },
+                None,
+                None,
+            )
+        }).collect()
 
-    let content_type = content_inspector::inspect(&buffer);
-
-    let (buffer, content_type) = match content_type {
-        content_inspector::ContentType::BINARY |
-        // HACK: We don't support UTF-32 yet
-        content_inspector::ContentType::UTF_32LE |
-        content_inspector::ContentType::UTF_32BE => {
-            (buffer, content_inspector::ContentType::BINARY)
-        },
-        content_inspector::ContentType::UTF_8 |
-        content_inspector::ContentType::UTF_8_BOM => {
-            (buffer, content_type)
-        },
-        content_inspector::ContentType::UTF_16LE => {
-            let buffer = report_result(encoding::all::UTF_16LE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
-            (buffer.into_bytes(), content_type)
-        }
-        content_inspector::ContentType::UTF_16BE => {
-            let buffer = report_result(encoding::all::UTF_16BE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
-            (buffer.into_bytes(), content_type)
-        },
-    };
-
-    Ok((buffer, content_type))
 }
 
 struct AccumulateLineNum {
     line_num: usize,
+    line_offset: usize,
     last_offset: usize,
 }
 
@@ -88,6 +61,7 @@ impl AccumulateLineNum {
         Self {
             // 1-indexed
             line_num: 1,
+            line_offset: 1,
             last_offset: 0,
         }
     }

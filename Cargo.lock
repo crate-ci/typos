@@ -2255,6 +2255,7 @@ dependencies = [
  "env_logger",
  "futures",
  "httparse",
+ "itertools",
  "regex",
  "test-log",
  "tokio",

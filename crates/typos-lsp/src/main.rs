@@ -34,15 +34,11 @@ impl LanguageServer for Backend {
             .dict(&dict)
             .tokenizer(&tokenizer);
 
-        check::check_file(std::path::Path::new("-"), true, &policy, &PrintTrace);
+        let diagnostics = check::check_text(&params.text_document.text, &policy);
 
-        self.create_diagnostics(TextDocumentItem {
-            language_id: params.text_document.language_id,
-            uri: params.text_document.uri,
-            text: params.text_document.text,
-            version: params.text_document.version,
-        })
-        .await
+        self.client
+            .publish_diagnostics(params.text_document.uri.clone(), diagnostics, Some(params.text_document.version))
+            .await;
     }
 
     async fn initialized(&self, _: InitializedParams) {
@@ -126,7 +122,7 @@ mod tests {
     }
 
     #[test_log::test(tokio::test)]
-    async fn test_did_open() {
+    async fn test_did_open_e2e() {
         let req_init = with_headers(
             r#"{"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{"textDocumentSync":1}},"id":1}"#,
         );
@@ -140,7 +136,7 @@ mod tests {
                     "uri": "file:///foo.rs",
                     "languageId": "rust",
                     "version": 1,
-                    "text": "foobar"
+                    "text": "this is a\ntest fo typos\n"
                   }
                 }
               }
@@ -159,18 +155,24 @@ mod tests {
 
         req_client.write_all(req_init.as_ref()).await.unwrap();
         let n = resp_client.read(&mut buf).await.unwrap();
-        println!("{}", String::from_utf8_lossy(&buf[..n]));
+        tracing::info!("{}", String::from_utf8_lossy(&buf[..n]));
 
         req_client.write_all(req_open.as_ref()).await.unwrap();
         let n = resp_client.read(&mut buf).await.unwrap();
-        println!("{}", String::from_utf8_lossy(&buf[..n]));
+        tracing::info!("{}", String::from_utf8_lossy(&buf[..n]));
+
+        assert_eq!(
+            body(&buf[..n]).unwrap(),
+            r#"{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"message":"`fo` should be `of`, `for`","range":{"end":{"character":7,"line":1},"start":{"character":5,"line":1}},"severity":2,"source":"typos-lsp"}],"uri":"file:///foo.rs","version":1}}"#,
+        )
+
     }
 
     fn with_headers(msg: &str) -> Vec<u8> {
         format!("Content-Length: {}\r\n\r\n{}", msg.len(), msg).into_bytes()
     }
 
-    fn body(mut src: &[u8]) -> Result<&str, anyhow::Error> {
+    fn body(src: &[u8]) -> Result<&str, anyhow::Error> {
         // parse headers to get headers length
         let mut dst = [httparse::EMPTY_HEADER; 2];
 
@@ -180,9 +182,9 @@ mod tests {
         };
 
         // skip headers
-        src = &src[headers_len..];
+        let skipped = &src[headers_len..];
 
         // return the rest (ie: the body) as &str
-        std::str::from_utf8(src).map_err(anyhow::Error::from)
+        std::str::from_utf8(skipped).map_err(anyhow::Error::from)
     }
 }

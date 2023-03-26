@@ -19,6 +19,7 @@ bstr = "1.4.0"
 content_inspector = "0.2.4"
 futures = "0.3.27"
 httparse = "1.8.0"
+itertools = "0.10.5"
 regex = "1.7.3"
 tokio = { version = "1.26.0", features = ["full"] }
 tokio-util = "0.7.7"
