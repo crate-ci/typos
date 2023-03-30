@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Updated the dictionary with the [March 2023](https://github.com/crate-ci/typos/issues/677) changes
+
+### Internal
+
+- Changed the UTF-16 encoder / decoder
+
 ## [1.14.3] - 2023-03-18
 
 ### Internal
