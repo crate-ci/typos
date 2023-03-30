@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix UTF-16 support broken in 1.14.4
+
 ## [1.14.4] - 2023-03-30
 
 ### Fixes
