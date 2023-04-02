@@ -1,12 +1,12 @@
 use tower_lsp::lsp_types::*;
 use tower_lsp::*;
-use tower_lsp::{Client, LanguageServer, LspService, Server};
+use tower_lsp::{Client, LanguageServer};
 
 mod check;
 
 #[derive(Debug)]
-struct Backend {
-    client: Client,
+pub struct Backend {
+    pub client: Client,
 }
 
 #[tower_lsp::async_trait]
@@ -42,16 +42,6 @@ impl LanguageServer for Backend {
     }
 }
 
-#[derive(Debug, Default)]
-pub struct PrintTrace;
-
-impl typos_cli::report::Report for PrintTrace {
-    fn report(&self, _msg: typos_cli::report::Message) -> Result<(), std::io::Error> {
-        tracing::info!("report: {:?}", _msg);
-        Ok(())
-    }
-}
-
 impl Backend {
     async fn report_diagnostics(&self, params: TextDocumentItem) {
         let dict = typos_cli::dict::BuiltIn::new(Default::default());
@@ -70,17 +60,6 @@ impl Backend {
             )
             .await;
     }
-}
-
-#[tokio::main]
-async fn main() {
-    tracing_subscriber::fmt().init();
-
-    let stdin = tokio::io::stdin();
-    let stdout = tokio::io::stdout();
-
-    let (service, socket) = LspService::new(|client| Backend { client });
-    Server::new(stdin, stdout, socket).serve(service).await;
 }
 
 #[cfg(test)]
