@@ -28,27 +28,13 @@ impl LanguageServer for Backend {
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         tracing::info!("did_open: {:?}", params);
-        let dict = typos_cli::dict::BuiltIn::new(Default::default());
-        let tokenizer = typos::tokens::Tokenizer::new();
-        let policy = typos_cli::policy::Policy::new()
-            .dict(&dict)
-            .tokenizer(&tokenizer);
-
-        let diagnostics = check::check_text(&params.text_document.text, &policy);
-
-        self.client
-            .publish_diagnostics(
-                params.text_document.uri.clone(),
-                diagnostics,
-                Some(params.text_document.version),
-            )
-            .await;
+        self.report_diagnostics(params.text_document).await;
     }
 
     async fn initialized(&self, _: InitializedParams) {
         self.client
             .log_message(MessageType::INFO, "server initialized!")
-            .await
+            .await;
     }
 
     async fn shutdown(&self) -> jsonrpc::Result<()> {
@@ -67,10 +53,21 @@ impl typos_cli::report::Report for PrintTrace {
 }
 
 impl Backend {
-    async fn create_diagnostics(&self, params: TextDocumentItem) {
-        let diagnostics = vec![Diagnostic::default()];
+    async fn report_diagnostics(&self, params: TextDocumentItem) {
+        let dict = typos_cli::dict::BuiltIn::new(Default::default());
+        let tokenizer = typos::tokens::Tokenizer::new();
+        let policy = typos_cli::policy::Policy::new()
+            .dict(&dict)
+            .tokenizer(&tokenizer);
+
+        let diagnostics = check::check_text(&params.text, &policy);
+
         self.client
-            .publish_diagnostics(params.uri.clone(), diagnostics, Some(params.version))
+            .publish_diagnostics(
+                params.uri.clone(),
+                diagnostics,
+                Some(params.version),
+            )
             .await;
     }
 }
