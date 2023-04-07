@@ -4,13 +4,13 @@ use tower_lsp::{Client, LanguageServer};
 
 mod check;
 
-#[derive(Debug)]
-pub struct Backend {
-    pub client: Client,
+pub struct Backend<'a> {
+    client: Client,
+    policy: typos_cli::policy::Policy<'a, 'a, 'a>,
 }
 
 #[tower_lsp::async_trait]
-impl LanguageServer for Backend {
+impl LanguageServer for Backend<'static> {
     async fn initialize(&self, _: InitializeParams) -> jsonrpc::Result<InitializeResult> {
         Ok(InitializeResult {
             capabilities: ServerCapabilities {
@@ -31,6 +31,17 @@ impl LanguageServer for Backend {
         self.report_diagnostics(params.text_document).await;
     }
 
+    async fn did_change(&self, mut params: DidChangeTextDocumentParams) {
+        tracing::info!("did_change: {:?}", params);
+        self.report_diagnostics(TextDocumentItem {
+            language_id: "FOOBAR".to_string(),
+            uri: params.text_document.uri,
+            text: std::mem::take(&mut params.content_changes[0].text),
+            version: params.text_document.version,
+        })
+        .await;
+    }
+
     async fn initialized(&self, _: InitializedParams) {
         self.client
             .log_message(MessageType::INFO, "server initialized!")
@@ -42,15 +53,14 @@ impl LanguageServer for Backend {
     }
 }
 
-impl Backend {
-    async fn report_diagnostics(&self, params: TextDocumentItem) {
-        let dict = typos_cli::dict::BuiltIn::new(Default::default());
-        let tokenizer = typos::tokens::Tokenizer::new();
-        let policy = typos_cli::policy::Policy::new()
-            .dict(&dict)
-            .tokenizer(&tokenizer);
+impl Backend<'static> {
+    pub fn new(client: Client) -> Self {
+        let policy = typos_cli::policy::Policy::new();
+        Self { client, policy }
+    }
 
-        let diagnostics = check::check_text(&params.text, &policy);
+    async fn report_diagnostics(&self, params: TextDocumentItem) {
+        let diagnostics = check::check_text(&params.text, &self.policy);
 
         self.client
             .publish_diagnostics(
@@ -69,7 +79,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_initialize() {
-        let (service, _) = LspService::new(|client| Backend { client });
+        let (service, _) = LspService::new(|client| Backend::new(client));
 
         let params = InitializeParams::default();
         let result = service.inner().initialize(params).await.unwrap();
@@ -86,7 +96,7 @@ mod tests {
 
         let mut output = Vec::new();
 
-        let (service, socket) = LspService::new(|client| Backend { client });
+        let (service, socket) = LspService::new(|client| Backend::new(client));
         Server::new(req_init.as_ref(), &mut output, socket)
             .serve(service)
             .await;
@@ -144,7 +154,7 @@ mod tests {
         let (req_client, req_server) = tokio::io::duplex(1024);
         let (resp_server, resp_client) = tokio::io::duplex(1024);
 
-        let (service, socket) = LspService::new(|client| Backend { client });
+        let (service, socket) = LspService::new(|client| Backend::new(client));
 
         // start server as concurrent task
         tokio::spawn(Server::new(req_server, resp_server, socket).serve(service));
