@@ -11,10 +11,12 @@ pub struct Backend<'a> {
 
 #[tower_lsp::async_trait]
 impl LanguageServer for Backend<'static> {
-    async fn initialize(&self, _: InitializeParams) -> jsonrpc::Result<InitializeResult> {
+    async fn initialize(&self, params: InitializeParams) -> jsonrpc::Result<InitializeResult> {
+        tracing::debug!("initialize: {:?}", params);
         Ok(InitializeResult {
             capabilities: ServerCapabilities {
                 text_document_sync: Some(TextDocumentSyncCapability::Kind(
+                    // TODO: should we support incremental?
                     TextDocumentSyncKind::FULL,
                 )),
                 ..ServerCapabilities::default()
@@ -27,12 +29,12 @@ impl LanguageServer for Backend<'static> {
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
-        tracing::info!("did_open: {:?}", params);
+        tracing::debug!("did_open: {:?}", params);
         self.report_diagnostics(params.text_document).await;
     }
 
     async fn did_change(&self, mut params: DidChangeTextDocumentParams) {
-        tracing::info!("did_change: {:?}", params);
+        tracing::debug!("did_change: {:?}", params);
         self.report_diagnostics(TextDocumentItem {
             language_id: "FOOBAR".to_string(),
             uri: params.text_document.uri,
@@ -42,8 +44,13 @@ impl LanguageServer for Backend<'static> {
         .await;
     }
 
+    async fn did_save(&self, params: DidSaveTextDocumentParams) {
+        tracing::debug!("did_save: {:?}", params);
+        // noop to avoid unimplemented warning log line
+    }
+
     async fn did_close(&self, params: DidCloseTextDocumentParams) {
-        tracing::info!("did_close: {:?}", params);
+        tracing::debug!("did_close: {:?}", params);
         // clear diagnostics to avoid a stale diagnostics flash on open
         // if the file has typos fixed outside of vscode
         self.client
@@ -142,7 +149,7 @@ mod tests {
             .unwrap();
         let _ = resp_client.read(&mut buf).await.unwrap();
 
-        tracing::info!("{}", did_open);
+        tracing::debug!("{}", did_open);
         req_client
             .write_all(req(did_open).as_bytes())
             .await

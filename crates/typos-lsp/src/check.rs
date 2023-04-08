@@ -13,7 +13,7 @@ pub(crate) fn check_text(buffer: &str, policy: &policy::Policy) -> Vec<Diagnosti
 
     typos::check_str(buffer, policy.tokenizer, policy.dict)
         .map(|typo| {
-            tracing::info!("typo: {:?}", typo);
+            tracing::debug!("typo: {:?}", typo);
 
             let (line_num, line_pos) = accum.pos(buffer.as_bytes(), typo.byte_offset);
 
