@@ -42,6 +42,15 @@ impl LanguageServer for Backend<'static> {
         .await;
     }
 
+    async fn did_close(&self, params: DidCloseTextDocumentParams) {
+        tracing::info!("did_close: {:?}", params);
+        // clear diagnostics to avoid a stale diagnostics flash on open
+        // if the file has typos fixed outside of vscode
+        self.client
+            .publish_diagnostics(params.text_document.uri, Vec::new(), None)
+            .await;
+    }
+
     async fn initialized(&self, _: InitializedParams) {
         self.client
             .log_message(MessageType::INFO, "server initialized!")
@@ -63,11 +72,7 @@ impl Backend<'static> {
         let diagnostics = check::check_text(&params.text, &self.policy);
 
         self.client
-            .publish_diagnostics(
-                params.uri.clone(),
-                diagnostics,
-                Some(params.version),
-            )
+            .publish_diagnostics(params.uri, diagnostics, Some(params.version))
             .await;
     }
 }

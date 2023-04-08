@@ -1,10 +1,12 @@
-
-use tower_lsp::Server;
 use tower_lsp::LspService;
+use tower_lsp::Server;
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::fmt().with_writer(std::io::stderr).init();
+    tracing_subscriber::fmt()
+        .with_writer(std::io::stderr)
+        .with_ansi(false)
+        .init();
 
     let stdin = tokio::io::stdin();
     let stdout = tokio::io::stdout();
