@@ -82,11 +82,17 @@ anstyle = "0.3.1"
 anstream = "0.2.0"
 serde_regex = "1.1.0"
 regex = "1.7.2"
+tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
+tower-lsp = "0.19.0"
+tracing = "0.1.37"
+tokio = "1.27.0"
 
 [dev-dependencies]
 assert_fs = "1.0"
 trycmd = "0.14.13"
 criterion = "0.4"
+test-log = { version = "0.2.11", features = ["trace"] }
+httparse = "1.8.0"
 
 [[bench]]
 name = "checks"

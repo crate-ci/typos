@@ -1,6 +1,7 @@
 use bstr::ByteSlice;
 use tower_lsp::lsp_types::*;
-use typos_cli::*;
+
+use crate::policy;
 
 // mimics typos_cli::file::FileChecker::check_file
 

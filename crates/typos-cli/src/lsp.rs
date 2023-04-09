@@ -2,11 +2,11 @@ use tower_lsp::lsp_types::*;
 use tower_lsp::*;
 use tower_lsp::{Client, LanguageServer};
 
-mod check;
+use crate::{policy, check};
 
 pub struct Backend<'a> {
     client: Client,
-    policy: typos_cli::policy::Policy<'a, 'a, 'a>,
+    policy: policy::Policy<'a, 'a, 'a>,
 }
 
 #[tower_lsp::async_trait]
@@ -71,7 +71,7 @@ impl LanguageServer for Backend<'static> {
 
 impl Backend<'static> {
     pub fn new(client: Client) -> Self {
-        let policy = typos_cli::policy::Policy::new();
+        let policy = policy::Policy::new();
         Self { client, policy }
     }
 
