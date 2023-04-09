@@ -90,6 +90,10 @@ pub(crate) struct Args {
     #[arg(long, group = "mode")]
     pub(crate) type_list: bool,
 
+    /// Start the LSP server.
+    #[arg(long, group = "mode")]
+    pub(crate) lsp: bool,
+
     #[arg(long, value_enum, ignore_case = true, default_value("long"))]
     pub(crate) format: Format,
 

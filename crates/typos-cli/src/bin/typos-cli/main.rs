@@ -35,6 +35,8 @@ fn run() -> proc_exit::ExitResult {
         run_dump_config(&args, output_path)
     } else if args.type_list {
         run_type_list(&args)
+    } else if args.lsp {
+        run_lsp(&args)
     } else {
         run_checks(&args)
     }
@@ -136,6 +138,23 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     }
 
     Ok(())
+}
+
+fn run_lsp(_: &args::Args) -> proc_exit::ExitResult {
+    tracing_subscriber::fmt()
+        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
+        .with_writer(std::io::stderr)
+        .init();
+
+    let runtime = tokio::runtime::Runtime::new().with_code(proc_exit::Code::FAILURE)?;
+    runtime.block_on(async {
+        let stdin = tokio::io::stdin();
+        let stdout = tokio::io::stdout();
+
+        let (service, socket) = tower_lsp::LspService::new(typos_cli::lsp::Backend::new);
+        tower_lsp::Server::new(stdin, stdout, socket).serve(service).await;
+    });
+    proc_exit::Code::SUCCESS.ok()
 }
 
 fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
