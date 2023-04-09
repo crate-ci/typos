@@ -5,11 +5,9 @@ use typos_cli::*;
 // mimics typos_cli::file::FileChecker::check_file
 
 pub(crate) fn check_text(buffer: &str, policy: &policy::Policy) -> Vec<Diagnostic> {
-    // TODO: check filenames
-
     let mut accum = AccumulatePosition::new();
 
-    // TODO: support ignores
+    // TODO: support ignores & typos.toml
 
     typos::check_str(buffer, policy.tokenizer, policy.dict)
         .map(|typo| {
@@ -74,32 +72,5 @@ impl AccumulatePosition {
         self.last_offset = byte_offset;
 
         (self.line_num, self.line_pos)
-    }
-}
-
-#[derive(Clone, Debug)]
-struct Ignores {
-    blocks: Vec<std::ops::Range<usize>>,
-}
-
-impl Ignores {
-    fn new(content: &[u8], ignores: &[regex::Regex]) -> Self {
-        let mut blocks = Vec::new();
-        if let Ok(content) = std::str::from_utf8(content) {
-            for ignore in ignores {
-                for mat in ignore.find_iter(content) {
-                    blocks.push(mat.range());
-                }
-            }
-        }
-        Self { blocks }
-    }
-
-    fn is_ignored(&self, span: std::ops::Range<usize>) -> bool {
-        let start = span.start;
-        let end = span.end.saturating_sub(1);
-        self.blocks
-            .iter()
-            .any(|block| block.contains(&start) || block.contains(&end))
     }
 }

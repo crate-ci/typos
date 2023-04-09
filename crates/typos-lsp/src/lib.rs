@@ -91,7 +91,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_initialize() {
-        let (service, _) = LspService::new(|client| Backend::new(client));
+        let (service, _) = LspService::new(Backend::new);
 
         let params = InitializeParams::default();
         let result = service.inner().initialize(params).await.unwrap();
@@ -108,7 +108,7 @@ mod tests {
 
         let mut output = Vec::new();
 
-        let (service, socket) = LspService::new(|client| Backend::new(client));
+        let (service, socket) = LspService::new(Backend::new);
         Server::new(req_init.as_ref(), &mut output, socket)
             .serve(service)
             .await;
@@ -166,7 +166,7 @@ mod tests {
         let (req_client, req_server) = tokio::io::duplex(1024);
         let (resp_server, resp_client) = tokio::io::duplex(1024);
 
-        let (service, socket) = LspService::new(|client| Backend::new(client));
+        let (service, socket) = LspService::new(Backend::new);
 
         // start server as concurrent task
         tokio::spawn(Server::new(req_server, resp_server, socket).serve(service));
