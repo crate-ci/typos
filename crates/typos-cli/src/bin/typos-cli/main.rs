@@ -141,6 +141,8 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
 }
 
 fn run_lsp(_: &args::Args) -> proc_exit::ExitResult {
+    // TODO: support config args etc.
+    
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
         .with_writer(std::io::stderr)
