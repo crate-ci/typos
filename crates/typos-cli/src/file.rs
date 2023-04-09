@@ -1,5 +1,4 @@
 use bstr::ByteSlice;
-use encoding::Encoding;
 use std::io::Read;
 use std::io::Write;
 
@@ -473,11 +472,29 @@ fn read_file(
             (buffer, content_type)
         },
         content_inspector::ContentType::UTF_16LE => {
-            let buffer = report_result(encoding::all::UTF_16LE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
+            // Despite accepting a `String`, decode_to_string_without_replacement` doesn't allocate
+            // so to avoid `OutputFull` loops, we're going to assume any UTF-16 content can fit in
+            // a buffer twice its size
+            let mut decoded = String::with_capacity(buffer.len() * 2);
+            let (r, written) = encoding_rs::UTF_16LE.new_decoder_with_bom_removal().decode_to_string_without_replacement(&buffer, &mut decoded, true);
+            let decoded = match r {
+                encoding_rs::DecoderResult::InputEmpty => Ok(decoded),
+                _ => Err(format!("invalid UTF-16LE encoding at byte {} in {}", written, path.display())),
+            };
+            let buffer = report_result(decoded, reporter)?;
             (buffer.into_bytes(), content_type)
         }
         content_inspector::ContentType::UTF_16BE => {
-            let buffer = report_result(encoding::all::UTF_16BE.decode(&buffer, encoding::DecoderTrap::Strict), reporter)?;
+            // Despite accepting a `String`, decode_to_string_without_replacement` doesn't allocate
+            // so to avoid `OutputFull` loops, we're going to assume any UTF-16 content can fit in
+            // a buffer twice its size
+            let mut decoded = String::with_capacity(buffer.len() * 2);
+            let (r, written) = encoding_rs::UTF_16BE.new_decoder_with_bom_removal().decode_to_string_without_replacement(&buffer, &mut decoded, true);
+            let decoded = match r {
+                encoding_rs::DecoderResult::InputEmpty => Ok(decoded),
+                _ => Err(format!("invalid UTF-16BE encoding at byte {} in {}", written, path.display())),
+            };
+            let buffer = report_result(decoded, reporter)?;
             (buffer.into_bytes(), content_type)
         },
     };
@@ -505,10 +522,12 @@ fn write_file(
                 // Error occurred, don't clear out the file
                 return Ok(());
             }
-            report_result(
-                encoding::all::UTF_16LE.encode(&buffer, encoding::EncoderTrap::Strict),
-                reporter,
-            )?
+            let (encoded, _, replaced) = encoding_rs::UTF_16LE.encode(&buffer);
+            assert!(
+                !replaced,
+                "Coming from UTF-8, UTF-16LE shouldn't do replacements"
+            );
+            encoded.into_owned()
         }
         content_inspector::ContentType::UTF_16BE => {
             let buffer = report_result(String::from_utf8(buffer), reporter)?;
@@ -516,10 +535,12 @@ fn write_file(
                 // Error occurred, don't clear out the file
                 return Ok(());
             }
-            report_result(
-                encoding::all::UTF_16BE.encode(&buffer, encoding::EncoderTrap::Strict),
-                reporter,
-            )?
+            let (encoded, _, replaced) = encoding_rs::UTF_16BE.encode(&buffer);
+            assert!(
+                !replaced,
+                "Coming from UTF-8, UTF-16BE shouldn't do replacements"
+            );
+            encoded.into_owned()
         }
     };
 
