@@ -1,8 +1,9 @@
+use bstr::ByteSlice;
 use tower_lsp::lsp_types::*;
 use tower_lsp::*;
 use tower_lsp::{Client, LanguageServer};
 
-use crate::{policy, check};
+use crate::policy;
 
 pub struct Backend<'a> {
     client: Client,
@@ -22,7 +23,7 @@ impl LanguageServer for Backend<'static> {
                 ..ServerCapabilities::default()
             },
             server_info: Some(ServerInfo {
-                name: env!("CARGO_PKG_NAME").to_string(),
+                name: "typos-lsp".to_string(),
                 version: Some(env!("CARGO_PKG_VERSION").to_string()),
             }),
         })
@@ -76,14 +77,84 @@ impl Backend<'static> {
     }
 
     async fn report_diagnostics(&self, params: TextDocumentItem) {
-        let diagnostics = check::check_text(&params.text, &self.policy);
+        let diagnostics = self.check_text(&params.text);
 
         self.client
             .publish_diagnostics(params.uri, diagnostics, Some(params.version))
             .await;
     }
+
+    // mimics typos_cli::file::FileChecker::check_file
+    fn check_text(&self, buffer: &str) -> Vec<Diagnostic> {
+        let mut accum = AccumulatePosition::new();
+
+        // TODO: support ignores & typos.toml
+
+        typos::check_str(buffer, self.policy.tokenizer, self.policy.dict)
+            .map(|typo| {
+                tracing::debug!("typo: {:?}", typo);
+
+                let (line_num, line_pos) = accum.pos(buffer.as_bytes(), typo.byte_offset);
+
+                Diagnostic::new(
+                    Range::new(
+                        Position::new(line_num as u32, line_pos as u32),
+                        Position::new(line_num as u32, (line_pos + typo.typo.len()) as u32),
+                    ),
+                    Some(DiagnosticSeverity::WARNING),
+                    None,
+                    Some("typos-lsp".to_string()),
+                    match typo.corrections {
+                        typos::Status::Invalid => format!("`{}` is disallowed", typo.typo),
+                        typos::Status::Corrections(corrections) => format!(
+                            "`{}` should be {}",
+                            typo.typo,
+                            itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                        ),
+                        typos::Status::Valid => panic!("unexpected typos::Status::Valid"),
+                    },
+                    None,
+                    None,
+                )
+            })
+            .collect()
+    }
+}
+struct AccumulatePosition {
+    line_num: usize,
+    line_pos: usize,
+    last_offset: usize,
 }
 
+impl AccumulatePosition {
+    fn new() -> Self {
+        Self {
+            // LSP ranges are 0-indexed see https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#range
+            line_num: 0,
+            line_pos: 0,
+            last_offset: 0,
+        }
+    }
+
+    fn pos(&mut self, buffer: &[u8], byte_offset: usize) -> (usize, usize) {
+        assert!(self.last_offset <= byte_offset);
+        let slice = &buffer[self.last_offset..byte_offset];
+        let newlines = slice.find_iter(b"\n").count();
+        let line_num = self.line_num + newlines;
+
+        let line_start = buffer[0..byte_offset]
+            .rfind_byte(b'\n')
+            // Skip the newline
+            .map(|s| s + 1)
+            .unwrap_or(0);
+
+        self.line_num = line_num;
+        self.line_pos = byte_offset - line_start;
+        self.last_offset = byte_offset;
+
+        (self.line_num, self.line_pos)
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -10,8 +10,6 @@ pub mod file;
 #[doc(hidden)]
 pub mod lsp;
 #[doc(hidden)]
-pub mod check;
-#[doc(hidden)]
 pub mod policy;
 #[doc(hidden)]
 pub mod report;
