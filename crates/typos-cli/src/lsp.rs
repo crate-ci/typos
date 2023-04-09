@@ -23,7 +23,7 @@ impl LanguageServer for Backend<'static> {
                 ..ServerCapabilities::default()
             },
             server_info: Some(ServerInfo {
-                name: "typos-lsp".to_string(),
+                name: "typos".to_string(),
                 version: Some(env!("CARGO_PKG_VERSION").to_string()),
             }),
         })
@@ -103,7 +103,7 @@ impl Backend<'static> {
                     ),
                     Some(DiagnosticSeverity::WARNING),
                     None,
-                    Some("typos-lsp".to_string()),
+                    Some("typos".to_string()),
                     match typo.corrections {
                         typos::Status::Invalid => format!("`{}` is disallowed", typo.typo),
                         typos::Status::Corrections(corrections) => format!(
@@ -168,7 +168,7 @@ mod tests {
         let result = service.inner().initialize(params).await.unwrap();
         let server_info = result.server_info.unwrap();
 
-        assert_eq!(server_info.name, "typos-lsp".to_string());
+        assert_eq!(server_info.name, "typos".to_string());
         assert_eq!(server_info.version, Some(env!("CARGO_PKG_VERSION").into()));
     }
 
@@ -187,7 +187,7 @@ mod tests {
         assert_eq!(
             body(&output).unwrap(),
             format!(
-                r#"{{"jsonrpc":"2.0","result":{{"capabilities":{{"textDocumentSync":1}},"serverInfo":{{"name":"typos-lsp","version":"{}"}}}},"id":1}}"#,
+                r#"{{"jsonrpc":"2.0","result":{{"capabilities":{{"textDocumentSync":1}},"serverInfo":{{"name":"typos","version":"{}"}}}},"id":1}}"#,
                 env!("CARGO_PKG_VERSION")
             )
         )
@@ -229,7 +229,7 @@ mod tests {
 
         assert_eq!(
             body(&buf[..n]).unwrap(),
-            r#"{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"message":"`fo` should be `of`, `for`","range":{"end":{"character":7,"line":1},"start":{"character":5,"line":1}},"severity":2,"source":"typos-lsp"}],"uri":"file:///foo.rs","version":1}}"#,
+            r#"{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"diagnostics":[{"message":"`fo` should be `of`, `for`","range":{"end":{"character":7,"line":1},"start":{"character":5,"line":1}},"severity":2,"source":"typos"}],"uri":"file:///foo.rs","version":1}}"#,
         )
     }
 
