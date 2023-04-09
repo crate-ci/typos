@@ -29,6 +29,12 @@ impl LanguageServer for Backend<'static> {
         })
     }
 
+    async fn initialized(&self, _: InitializedParams) {
+        self.client
+            .log_message(MessageType::INFO, "server initialized!")
+            .await;
+    }
+
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         tracing::debug!("did_open: {:?}", params);
         self.report_diagnostics(params.text_document).await;
@@ -56,12 +62,6 @@ impl LanguageServer for Backend<'static> {
         // if the file has typos fixed outside of vscode
         self.client
             .publish_diagnostics(params.text_document.uri, Vec::new(), None)
-            .await;
-    }
-
-    async fn initialized(&self, _: InitializedParams) {
-        self.client
-            .log_message(MessageType::INFO, "server initialized!")
             .await;
     }
 
