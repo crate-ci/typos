@@ -60,6 +60,7 @@ impl LanguageServer for Backend<'static> {
         tracing::debug!("did_close: {:?}", params);
         // clear diagnostics to avoid a stale diagnostics flash on open
         // if the file has typos fixed outside of vscode
+        // see https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_publishDiagnostics
         self.client
             .publish_diagnostics(params.text_document.uri, Vec::new(), None)
             .await;
