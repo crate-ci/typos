@@ -1,0 +1,4 @@
+ [default]
+ extend-ignore-identifiers-re = [
+     "\\bTLS_[A-Z0-9_]+(_anon_[A-Z0-9_]+)?\\b",
+ ]

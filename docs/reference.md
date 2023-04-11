@@ -33,3 +33,6 @@ Configuration is read from the following (in precedence order)
 | default.extend-words       | \-            | table of strings | Corrections for [words](./design.md#identifiers-and-words). When the correction is blank, the word is never valid. When the correction is the key, the word is always valid. |
 | type.\<name>.\<field>      | \<varied>     | \<varied>  | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s |
 | type.\<name>.extend-glob   | \-            | list of strings  | File globs for matching `<name>` |
+
+Common `extend-ignore-identifiers-re`:
+- SSL Cipher suites: `"\\bTLS_[A-Z0-9_]+(_anon_[A-Z0-9_]+)?\\b"`
