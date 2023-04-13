@@ -18,8 +18,8 @@ pub struct Palette {
 impl Palette {
     pub fn colored() -> Self {
         Self {
-            error: anstyle::AnsiColor::Red.into(),
-            info: anstyle::AnsiColor::Blue.into(),
+            error: anstyle::AnsiColor::Red.on_default(),
+            info: anstyle::AnsiColor::Blue.on_default(),
             strong: anstyle::Effects::BOLD.into(),
         }
     }

@@ -41,9 +41,6 @@ impl Default for Format {
 #[derive(Debug, Parser)]
 #[command(rename_all = "kebab-case")]
 #[command(about, author, version)]
-#[command(
-        color = concolor_clap::color_choice(),
-    )]
 #[command(group = clap::ArgGroup::new("mode").multiple(false))]
 pub(crate) struct Args {
     /// Paths to check with `-` for stdin
@@ -101,7 +98,7 @@ pub(crate) struct Args {
     pub(crate) config: ConfigArgs,
 
     #[command(flatten)]
-    pub(crate) color: concolor_clap::Color,
+    pub(crate) color: colorchoice_clap::Color,
 
     #[command(flatten)]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
