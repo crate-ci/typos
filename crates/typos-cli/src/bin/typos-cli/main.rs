@@ -27,7 +27,7 @@ fn run() -> proc_exit::ExitResult {
         }
     };
 
-    args.color.apply();
+    args.color.write_global();
 
     init_logging(args.verbose.log_level());
 
@@ -273,11 +273,11 @@ fn init_logging(level: Option<log::Level>) {
     if let Some(level) = level {
         let mut builder = env_logger::Builder::new();
 
-        let colored = concolor::get(concolor::Stream::Stderr).ansi_color();
-        builder.write_style(if colored {
-            env_logger::WriteStyle::Always
-        } else {
+        let choice = anstream::AutoStream::choice(&std::io::stderr());
+        builder.write_style(if matches!(choice, anstream::ColorChoice::Never) {
             env_logger::WriteStyle::Never
+        } else {
+            env_logger::WriteStyle::Always
         });
 
         builder.filter(None, level.to_level_filter());
