@@ -2,6 +2,7 @@
 members = [
     "crates/*",
 ]
+default-members = ["crates/typos-cli"]
 resolver = "2"
 
 [workspace.package]
