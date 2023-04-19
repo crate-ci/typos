@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Performance
+
+- *(pre-commit)* Build musl wheels
+
 ## [1.14.7] - 2023-04-19
 
 ### Fixes
