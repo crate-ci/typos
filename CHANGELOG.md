@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(pre-commit)* Ensure there is a default target to install for `typos-src`
+
 ## [1.14.6] - 2023-04-13
 
 ### Internal
