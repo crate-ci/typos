@@ -352,9 +352,9 @@ mod tests {
     #[test]
     fn test_calculate_visible_column_width_latin_cyrillic() {
         let latin_cyrillic_chars = [
-            "À",  /* U+00C0; Latin Capital Letter A with Grave */
+            "À", /* U+00C0; Latin Capital Letter A with Grave */
             "À", /* U+0041 U+0300; Latin Capital Letter A, Combining Grave Accent */
-            "А",  /* U+0410 Cyrillic Capital Letter A */
+            "А", /* U+0410 Cyrillic Capital Letter A */
         ];
         for (i, ch) in latin_cyrillic_chars.iter().enumerate() {
             let width = calculate_visible_column_width(ch);
@@ -400,8 +400,8 @@ mod tests {
     #[test]
     fn test_calculate_visible_column_width_zwj_sequences() {
         let zwj_sequences = [
-            "😵‍💫",       /* U+1F635 U+200D U+1F4AB */
-            "👁️‍🗨️", /* U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F */
+            "😵‍💫", /* U+1F635 U+200D U+1F4AB */
+            "👁️‍🗨️",   /* U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F */
         ];
         for (i, ch) in zwj_sequences.iter().enumerate() {
             let width = calculate_visible_column_width(ch);
