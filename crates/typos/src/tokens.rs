@@ -125,16 +125,14 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 }
 
 mod parser {
-    use winnow::branch::*;
-    use winnow::bytes::*;
     use winnow::combinator::*;
     use winnow::prelude::*;
-    use winnow::sequence::*;
     use winnow::stream::AsBStr;
     use winnow::stream::AsChar;
     use winnow::stream::SliceLen;
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
+    use winnow::token::*;
 
     pub(crate) fn next_identifier<T>(input: T) -> IResult<T, <T as Stream>::Slice>
     where
@@ -257,8 +255,8 @@ mod parser {
         preceded(
             '#',
             alt((
-                terminated(take_while_m_n(3, 8, is_lower_hex_digit), peek(sep1)),
-                terminated(take_while_m_n(3, 8, is_upper_hex_digit), peek(sep1)),
+                terminated(take_while(3..=8, is_lower_hex_digit), peek(sep1)),
+                terminated(take_while(3..=8, is_upper_hex_digit), peek(sep1)),
             )),
         )
         .parse_next(input)
@@ -272,26 +270,26 @@ mod parser {
     {
         alt((
             (
-                take_while_m_n(8, 8, is_lower_hex_digit),
+                take_while(8, is_lower_hex_digit),
                 '-',
-                take_while_m_n(4, 4, is_lower_hex_digit),
+                take_while(4, is_lower_hex_digit),
                 '-',
-                take_while_m_n(4, 4, is_lower_hex_digit),
+                take_while(4, is_lower_hex_digit),
                 '-',
-                take_while_m_n(4, 4, is_lower_hex_digit),
+                take_while(4, is_lower_hex_digit),
                 '-',
-                take_while_m_n(12, 12, is_lower_hex_digit),
+                take_while(12, is_lower_hex_digit),
             ),
             (
-                take_while_m_n(8, 8, is_upper_hex_digit),
+                take_while(8, is_upper_hex_digit),
                 '-',
-                take_while_m_n(4, 4, is_upper_hex_digit),
+                take_while(4, is_upper_hex_digit),
                 '-',
-                take_while_m_n(4, 4, is_upper_hex_digit),
+                take_while(4, is_upper_hex_digit),
                 '-',
-                take_while_m_n(4, 4, is_upper_hex_digit),
+                take_while(4, is_upper_hex_digit),
                 '-',
-                take_while_m_n(12, 12, is_upper_hex_digit),
+                take_while(12, is_upper_hex_digit),
             ),
         ))
         .recognize()
@@ -314,10 +312,9 @@ mod parser {
         //     or more.
 
         const IGNORE_HEX_MIN: usize = 32;
-        const IGNORE_HEX_MAX: usize = usize::MAX;
         alt((
-            take_while_m_n(IGNORE_HEX_MIN, IGNORE_HEX_MAX, is_lower_hex_digit),
-            take_while_m_n(IGNORE_HEX_MIN, IGNORE_HEX_MAX, is_upper_hex_digit),
+            take_while(IGNORE_HEX_MIN.., is_lower_hex_digit),
+            take_while(IGNORE_HEX_MIN.., is_upper_hex_digit),
         ))
         .parse_next(input)
     }
@@ -350,7 +347,7 @@ mod parser {
         }
 
         let (after, _) =
-            take_while_m_n(padding_len, padding_len, is_base64_padding).parse_next(padding)?;
+            take_while(padding_len..=padding_len, is_base64_padding).parse_next(padding)?;
 
         let after_offset = input.offset_to(&after);
         Ok(input.next_slice(after_offset))
@@ -439,12 +436,7 @@ mod parser {
         F: winnow::Parser<I, <I as Stream>::Slice, E>,
         E: winnow::error::ParseError<I>,
     {
-        move |i: I| {
-            winnow::multi::many0(f.by_ref())
-                .map(|()| ())
-                .recognize()
-                .parse_next(i)
-        }
+        move |i: I| repeat0(f.by_ref()).map(|()| ()).recognize().parse_next(i)
     }
 
     #[inline]
