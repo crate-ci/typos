@@ -1583,7 +1583,7 @@ checksum = "6af6ae20167a9ece4bcb41af5b80f8a1f1df981f6391189ce00fd257af04126a"
 
 [[package]]
 name = "typos"
-version = "0.10.11"
+version = "0.10.12"
 dependencies = [
  "anyhow",
  "bstr",
@@ -1661,7 +1661,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.8.9"
+version = "0.8.10"
 dependencies = [
  "codegenrs",
  "dictgen",
@@ -1764,7 +1764,7 @@ dependencies = [
 
 [[package]]
 name = "varcon"
-version = "0.6.8"
+version = "0.6.9"
 dependencies = [
  "codegenrs",
  "snapbox",
@@ -1773,7 +1773,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "2.2.10"
+version = "2.2.11"
 dependencies = [
  "enumflags2",
  "winnow",
