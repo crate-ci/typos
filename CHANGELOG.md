@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `add-ons` to `add-owns`
+
 ## [1.14.9] - 2023-05-03
 
 ### Fixes
