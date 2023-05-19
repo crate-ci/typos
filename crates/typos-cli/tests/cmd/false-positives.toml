@@ -1,12 +1,4 @@
 bin.name = "typos"
 stdin = ""
-stdout = """
-error: `ons` should be `owns`
-  --> ./README.md:1:5
-  |
-1 | add-ons should not be corrected to add-owns
-  |     ^^^
-  |
-"""
+stdout = ""
 stderr = ""
-status = "failed"
