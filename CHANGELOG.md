@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(action)* Don't require `sudo`
+
 ## [1.14.10] - 2023-05-19
 
 ### Fixes
