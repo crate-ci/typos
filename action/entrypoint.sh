@@ -38,7 +38,7 @@ if [[ ! -x ${COMMAND} ]]; then
     log "Downloading 'typos' v${VERSION}"
     wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
     mkdir -p ${_INSTALL_DIR}
-    sudo tar -xzvf typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz -C ${_INSTALL_DIR} ./${CMD_NAME}
+    tar -xzvf typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz -C ${_INSTALL_DIR} ./${CMD_NAME}
     rm typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz
 fi
 log "jq: $(jq --version)"
