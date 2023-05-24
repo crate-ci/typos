@@ -107,7 +107,7 @@ impl Types {
     }
 
     pub fn file_matched(&self, path: &std::path::Path) -> Option<&str> {
-        let file_name = path.file_name()?;
+        let file_name = path.file_name()?.to_str()?.trim_end_matches(".in");
         let mut matches = self.matches.get_or_default().borrow_mut();
         self.set.matches_into(file_name, &mut *matches);
         matches
@@ -153,6 +153,8 @@ mod tests {
     matched!(multi_def_2, types(), "index.htm", "html");
     matched!(no_match, types(), "leftpad.ada", None);
     matched!(more_specific, types(), "package-lock.json", "lock");
+    matched!(trailing_in, types(), "index.html.in", "html");
+    matched!(trailing_in_in, types(), "index.html.in.in", "html");
 
     macro_rules! sort {
         ($name:ident, $actual:expr, $expected:expr) => {
