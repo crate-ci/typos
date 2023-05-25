@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::path::Path;
 
 use kstring::KString;
 
@@ -107,14 +108,23 @@ impl Types {
     }
 
     pub fn file_matched(&self, path: &std::path::Path) -> Option<&str> {
-        let mut file_name = path.file_name()?.to_str()?;
+        let mut mpath = Path::new(path);
         let mut matches = self.matches.get_or_default().borrow_mut();
         loop {
-            self.set.matches_into(file_name, &mut *matches);
-            if !matches.is_empty() || !file_name.ends_with(".in") {
+            self.set.matches_into(mpath.file_name()?, &mut *matches);
+            if !matches.is_empty() {
                 break;
             }
-            file_name = file_name.strip_suffix(".in")?;
+            match mpath.extension() {
+                None => break,
+                Some(ext) => {
+                    if ext == "in" {
+                        mpath = Path::new(mpath.file_stem()?);
+                        continue;
+                    }
+                }
+            }
+            break;
         }
         matches
             .last()
