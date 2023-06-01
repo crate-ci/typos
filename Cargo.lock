@@ -377,7 +377,7 @@ dependencies = [
  "anes",
  "cast",
  "ciborium",
- "clap 4.2.5",
+ "clap 4.3.0",
  "criterion-plot",
  "is-terminal",
  "itertools",
