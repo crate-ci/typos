@@ -43,7 +43,7 @@ doc = false
 
 [dependencies]
 typos = { version = "^0.10", path = "../typos" }
-varcon-core = { version = "^2.2.11", path = "../varcon-core" }
+varcon-core = { version = "^2.2.12", path = "../varcon-core" }
 typos-dict = { version = "^0.9", path = "../typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "../typos-vars", optional = true }
 unicase = "2.6"

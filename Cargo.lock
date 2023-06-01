@@ -1614,7 +1614,7 @@ checksum = "6af6ae20167a9ece4bcb41af5b80f8a1f1df981f6391189ce00fd257af04126a"
 
 [[package]]
 name = "typos"
-version = "0.10.12"
+version = "0.10.13"
 dependencies = [
  "anyhow",
  "bstr",
@@ -1678,7 +1678,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.9.27"
+version = "0.9.28"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1804,7 +1804,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "2.2.11"
+version = "2.2.12"
 dependencies = [
  "enumflags2",
  "winnow",
