@@ -85,7 +85,7 @@ encoding_rs = "0.8.32"
 [dev-dependencies]
 assert_fs = "1.0"
 trycmd = "0.14.16"
-criterion = "0.4"
+criterion = "0.5"
 
 [[bench]]
 name = "checks"
