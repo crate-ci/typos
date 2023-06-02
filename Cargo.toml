@@ -11,13 +11,13 @@ repository = "https://github.com/crate-ci/typos"
 edition = "2021"
 rust-version = "1.64.0"  # MSRV
 include = [
-  "src/**/*",
-  "Cargo.toml",
-  "Cargo.lock",
-  "LICENSE*",
-  "README.md",
-  "benches/**/*",
-  "examples/**/*"
+    "src/**/*",
+    "Cargo.toml",
+    "Cargo.lock",
+    "LICENSE*",
+    "README.md",
+    "benches/**/*",
+    "examples/**/*"
 ]
 
 [profile.dev]

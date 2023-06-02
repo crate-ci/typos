@@ -1,0 +1,48 @@
+# https://EditorConfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+block_comment_start = /*
+block_comment = *
+block_comment_end = */
+
+[{*.yml,*.yaml,*.json5}]
+indent_size = 2
+
+[*.sh]
+indent_size = 2
+
+[*.md]
+indent_size = 2
+trim_trailing_whitespace = false
+
+[LICENSE-APACHE]
+indent_size = unset
+
+[Cargo.lock]
+indent_size = 1
+
+[crates/typos-cli/tests/cmd/*.toml]
+indent_size = unset
+
+[crates/typos-cli/tests/cmd/utf16.in/nushell_utf16.ini]
+charset = utf-16le
+#end_of_line = crlf
+end_of_line = unset
+insert_final_newline = false
+
+[crates/misspell-dict/assets/words.go]
+indent_style = tab
+
+[crates/varcon/src/codegen.rs]
+indent_size = 2
+
+[crates/varcon/assets/README]
+indent_size = unset

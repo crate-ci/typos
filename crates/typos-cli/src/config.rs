@@ -665,8 +665,8 @@ check-file = true
     fn parse_extend_words() {
         let input = r#"[type.shaders]
 extend-glob = [
-  '*.shader',
-  '*.cginc',
+    '*.shader',
+    '*.cginc',
 ]
 
 [type.shaders.extend-words]

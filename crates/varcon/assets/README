@@ -59,7 +59,7 @@ is used when the spelling is almost generally considered a
 misspelling, and is only included for completeness.
 
 For Australian English "v" was used for variants that are widely used,
-but not preferred, and "V" for all "-or" (vs. "-our") variants and 
+but not preferred, and "V" for all "-or" (vs. "-our") variants and
 variants considered "chiefly US".
 
 If there are no tags with the 'Z' spelling category on the line then
@@ -78,7 +78,7 @@ acknowledgment is:
   A Cv: acknowledgments / Av B C: acknowledgements
   A Cv: acknowledgment's / Av B C: acknowledgement's
 The "<verified>" tag will be explained latter, and "(level 35)"
-indicate what level in SCOWL (see http://wordlist.sourceforge.net) 
+indicate what level in SCOWL (see http://wordlist.sourceforge.net)
 the headword is found in.  The levels generally mean the following:
   <= 35: Very common word
   <= 70: Can be found in the dictionary
@@ -257,7 +257,7 @@ In version 5.0 a massive effort to correct the numerous errors in
 VarCon was done.  The primary sources used for verification were:
 
   Marriam-Webster: http://www.m-w.com/
-  Free version of Oxford Dictionaries Online: 
+  Free version of Oxford Dictionaries Online:
     http://www.oxforddictionaries.com/
   Oxford dictionaries available via Oxford Reference Online
     (subscription service, http://www.oxfordreference.com/):
@@ -280,7 +280,7 @@ Spelling page available at:
 but only to perform some initial verification, in the end I rechecked
 his data using the dictionaries above.  (However, his data is, by far,
 more accurate than Tysto's)
-    
+
 In Version 2016.11.20 Benjamin Titze added support for Australian English.
 The primary sources for this addition were:
 
@@ -290,9 +290,9 @@ The primary sources for this addition were:
     http://www.gsu.uts.edu.au/publications/styleguide/spelling.html
   Style Manual, Department of Treasury and Finance, Tasmania:
     http://conference.tasa.org.au/wp-content/uploads/2015/03/Style-Manual.pdf
-  Editor Australia - Style Guide: 
+  Editor Australia - Style Guide:
     http://www.editoraustralia.com/styleguide_spelling.html
-  Webster in Australia (history of "our"/"or" spelling variants): 
+  Webster in Australia (history of "our"/"or" spelling variants):
     http://blogs.usyd.edu.au/elac/2008/01/webster_in_australia.html
 
 
@@ -372,7 +372,7 @@ From Revision 5.0 to Revision 5.1 (January 6, 2010)
 
    - Reordered the clusters in varcon.txt so that they are
      mostly in alphabetic order based on the headword.
-  
+
 From Revision 4.1 to Revision 5.0 (December 27, 2010)
 
   - Completely new format for the main table which, in addition to
@@ -420,7 +420,7 @@ From Revision 1 to Revision 2 (January 27, 2001)
     markers
   - Added some more entries by trying fixed changes (such as ize to
     ise) to words in SCOWL and hand-checking over the ones with semi-common
-    words in them. 
+    words in them.
   - Added variant-infl.tab
 
 COPYRIGHT:
