@@ -91,11 +91,20 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
         current.extend(good);
     }
 
-    let corrections: std::collections::HashSet<_> =
-        dict.values().flatten().map(ToOwned::to_owned).collect();
+    let corrections: HashMap<_, _> = dict
+        .iter()
+        .flat_map(|(bad, good)| good.iter().map(|good| (good.to_owned(), bad.to_owned())))
+        .collect();
     let rows: Vec<_> = dict
         .into_iter()
-        .filter(|(typo, _)| !corrections.contains(typo.as_str()))
+        .filter(|(typo, _)| {
+            if let Some(correction) = corrections.get(typo.as_str()) {
+                eprintln!("{typo} <-> {correction} cycle detected");
+                false
+            } else {
+                true
+            }
+        })
         .collect();
 
     let mut wtr = csv::WriterBuilder::new().flexible(true).from_writer(file);
