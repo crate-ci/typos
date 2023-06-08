@@ -25,3 +25,4 @@ itertools = "0.10"
 codegenrs = "2.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 snapbox = { version = "0.4.11", features = ["path"] }
+typos = { path = "../typos" }

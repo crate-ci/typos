@@ -334,6 +334,7 @@ dependencies = [
  "dictgen",
  "itertools",
  "snapbox",
+ "typos",
  "unicase",
 ]
 
