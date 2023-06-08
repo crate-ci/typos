@@ -140,7 +140,6 @@ admissability->admissibility
 admissable->admissible
 admited->admitted
 admitedly->admittedly
-adn->and
 adolecent->adolescent
 adquire->acquire
 adquired->acquired
@@ -176,6 +175,7 @@ aggaravates->aggravates
 aggreed->agreed
 aggreement->agreement
 aggregious->egregious
+aggregrator->aggregator
 aggresive->aggressive
 agian->again
 agianst->against
@@ -206,11 +206,9 @@ aiport->airport
 airbourne->airborne
 aircaft->aircraft
 aircrafts->aircraft
-aircrafts'->aircraft's
 airporta->airports
 airrcraft->aircraft
 aisian->asian
-aka->a.k.a.
 albiet->albeit
 alchohol->alcohol
 alchoholic->alcoholic
@@ -245,7 +243,6 @@ allopone->allophone
 allopones->allophones
 allready->already
 allthough->although
-alltime->all-time
 alltogether->altogether
 almsot->almost
 alochol->alcohol
@@ -316,7 +313,6 @@ antartic->antarctic
 anthromorphization->anthropomorphization
 anthropolgist->anthropologist
 anthropolgy->anthropology
-antiapartheid->anti-apartheid
 anual->annual
 anulled->annulled
 anwsered->answered
@@ -527,6 +523,7 @@ averageed->averaged
 avilable->available
 awared->awarded
 awya->away
+bacame->became
 baceause->because
 backgorund->background
 backrounds->backgrounds
@@ -757,6 +754,7 @@ cerimonies->ceremonies
 cerimonious->ceremonious
 cerimony->ceremony
 ceromony->ceremony
+certaintly->certainly
 certainity->certainty
 certian->certain
 cervial->cervical, servile, serval
@@ -811,8 +809,6 @@ clincial->clinical
 clinicaly->clinically
 cmo->com
 cmoputer->computer
-co-incided->coincided
-Coca Cola->Coca-Cola
 coctail->cocktail
 coform->conform
 cognizent->cognizant
@@ -1080,7 +1076,6 @@ councellors->councillors, counselors, councilors
 counries->countries
 countains->contains
 countires->countries
-countrie's->countries, countries', country's
 coururier->courier, couturier
 coverted->converted, covered, coveted
 cpoy->coy, copy
@@ -1240,7 +1235,6 @@ dicovers->discovers
 dicovery->discovery
 dictionarys->dictionaries
 dicussed->discussed
-didnt->didn't
 diea->idea, die
 dieing->dying, dyeing
 dieties->deities
@@ -1339,13 +1333,11 @@ docrines->doctrines
 doctines->doctrines
 documenatry->documentary
 doens->does
-doesnt->doesn't
 doign->doing
 dominaton->domination
 dominent->dominant
 dominiant->dominant
 donig->doing
-dosen't->doesn't
 doub->doubt, daub
 doulbe->double
 dowloads->downloads
@@ -1371,6 +1363,8 @@ eceonomy->economy
 ecidious->deciduous
 eclispe->eclipse
 ecomonic->economic
+econoımic->economic
+econoimic->economic
 ect->etc
 eearly->early
 efel->evil
@@ -1834,7 +1828,6 @@ Habsbourg->Habsburg
 haemorrage->haemorrhage
 haev->have, heave
 halarious->hilarious
-Hallowean->Hallowe'en, Halloween
 halp->help
 hapen->happen
 hapened->happened
@@ -1858,7 +1851,6 @@ harrasses->harassed
 harrassing->harassing
 harrassment->harassment
 harrassments->harassments
-hasnt->hasn't
 Hatian->Haitian
 haviest->heaviest
 headquarer->headquarter
@@ -2127,7 +2119,7 @@ institue->institute
 instuction->instruction
 instuments->instruments
 instutionalized->institutionalized
-instutions->intuitions
+instutions->institutions, intuitions
 insurence->insurance
 intelectual->intellectual
 inteligence->intelligence
@@ -2188,7 +2180,6 @@ irrelevent->irrelevant
 irreplacable->irreplaceable
 irresistable->irresistible
 irresistably->irresistibly
-isnt->isn't
 Israelies->Israelis
 issueing->issuing
 itnroduced->introduced
@@ -2198,7 +2189,6 @@ iwth->with
 Janurary->January
 Januray->January
 Japanes->Japanese
-jaques->jacques
 jeapardy->jeopardy
 jewllery->jewellery
 Johanine->Johannine
@@ -2232,6 +2222,7 @@ labled->labelled, labeled
 labratory->laboratory
 laguage->language
 laguages->languages
+laparascopic->laparoscopic
 larg->large
 largst->largest
 larrry->larry
@@ -2370,6 +2361,7 @@ mathmatician->mathematician
 mathmaticians->mathematicians
 mccarthyst->mccarthyist
 mchanics->mechanics
+meaing->meaning
 meaninng->meaning
 mear->wear, mere, mare
 mechandise->merchandise
@@ -2785,6 +2777,7 @@ perade->parade
 percepted->perceived
 percieve->perceive
 percieved->perceived
+pereguine->peregrine
 perenially->perennially
 peretrator->perpetrator
 perfomance->performance
@@ -3047,6 +3040,9 @@ proffesed->professed
 proffesion->profession
 proffesional->professional
 proffesor->professor
+proffession->profession
+proffessional->professional
+proffessor->professor
 profilic->prolific
 progessed->progressed
 progidy->prodigy
@@ -3524,7 +3520,6 @@ shopkeeepers->shopkeepers
 shorly->shortly
 shortwhile->short while
 shoudl->should
-shoudln->should, shouldn't
 shouldnt->should not
 shreak->shriek
 shrinked->shrunk
@@ -3881,7 +3876,6 @@ terroist->terrorist
 testiclular->testicular
 testomony->testimony
 tghe->the
-thast->that, that's
 theather->theater
 theese->these
 theif->thief
@@ -3892,7 +3886,6 @@ ther->there, their, the
 therafter->thereafter
 therby->thereby
 theri->their
-theyre->they're
 thgat->that
 thge->the
 thier->their
@@ -3937,7 +3930,6 @@ tkaes->takes
 tkaing->taking
 tlaking->talking
 tobbaco->tobacco
-todays->today's
 todya->today
 toghether->together
 toke->took
@@ -4193,7 +4185,6 @@ warantee->warranty
 wardobe->wardrobe
 warrent->warrant
 warrriors->warriors
-wasnt->wasn't
 wass->was
 watn->want
 wayword->wayward
@@ -4280,3 +4271,21 @@ youself->yourself
 ytou->you
 yuo->you
 zeebra->zebra
+adn->and
+alltime->all-time
+antiapartheid->anti-apartheid
+Coca Cola->Coca-Cola
+co-incided->coincided
+aircrafts'->aircraft's
+countrie's->countries, countries', country's
+didnt->didn't
+doesnt->doesn't
+dosen't->doesn't
+Hallowean->Hallowe'en, Halloween
+hasnt->hasn't
+isnt->isn't
+shoudln->should, shouldn't
+thast->that, that's
+theyre->they're
+todays->today's
+wasnt->wasn't
