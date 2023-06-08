@@ -1,9 +1,10 @@
 use std::collections::BTreeMap;
+use std::collections::BTreeSet;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use unicase::UniCase;
 
-type Dict = BTreeMap<UniCase<String>, Vec<String>>;
+type Dict = BTreeMap<UniCase<String>, BTreeSet<String>>;
 
 #[test]
 fn verify() {
@@ -30,18 +31,20 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
             let mut typo = i.next().expect("typo").to_owned();
             typo.make_ascii_lowercase();
             let typo = UniCase::new(typo);
-            rows.entry(typo).or_insert_with(Vec::new).extend(i.map(|c| {
-                let mut c = c.to_owned();
-                c.make_ascii_lowercase();
-                c
-            }));
+            rows.entry(typo)
+                .or_insert_with(BTreeSet::new)
+                .extend(i.map(|c| {
+                    let mut c = c.to_owned();
+                    c.make_ascii_lowercase();
+                    c
+                }));
         });
 
     let rows: Dict = rows
         .into_iter()
         .filter(|(t, _)| is_word(t))
         .filter_map(|(t, c)| {
-            let new_c: Vec<_> = c.into_iter().filter(|c| is_word(c)).collect();
+            let new_c: BTreeSet<_> = c.into_iter().filter(|c| is_word(c)).collect();
             if new_c.is_empty() {
                 None
             } else {
@@ -53,7 +56,7 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
     let varcon_words = varcon_words();
     let allowed_words = allowed_words();
     let word_variants = proper_word_variants();
-    let rows: Dict = rows
+    let rows: Vec<_> = rows
         .into_iter()
         .filter(|(typo, _)| {
             let is_disallowed = varcon_words.contains(&unicase::UniCase::new(typo));
@@ -71,29 +74,43 @@ fn generate<W: std::io::Write>(file: &mut W, dict: &[u8]) {
             }
         })
         .map(|(typo, corrections)| {
-            let mut new_corrections = vec![];
+            let mut new_corrections = BTreeSet::new();
             for correction in corrections {
                 let correction = word_variants
                     .get(correction.as_str())
                     .and_then(|words| find_best_match(&typo, correction.as_str(), words))
                     .unwrap_or(&correction);
-                new_corrections.push(correction.to_owned());
+                new_corrections.insert(correction.to_owned());
             }
             (typo, new_corrections)
         })
         .collect();
+    let mut dict = Dict::new();
+    for (bad, good) in rows {
+        let current = dict.entry(bad).or_default();
+        current.extend(good);
+    }
 
-    let corrections: std::collections::HashSet<_> =
-        rows.values().flatten().map(ToOwned::to_owned).collect();
-    let rows: Vec<_> = rows
+    let corrections: HashMap<_, _> = dict
+        .iter()
+        .flat_map(|(bad, good)| good.iter().map(|good| (good.to_owned(), bad.to_owned())))
+        .collect();
+    let rows: Vec<_> = dict
         .into_iter()
-        .filter(|(typo, _)| !corrections.contains(typo.as_str()))
+        .filter(|(typo, _)| {
+            if let Some(correction) = corrections.get(typo.as_str()) {
+                eprintln!("{typo} <-> {correction} cycle detected");
+                false
+            } else {
+                true
+            }
+        })
         .collect();
 
     let mut wtr = csv::WriterBuilder::new().flexible(true).from_writer(file);
     for (typo, corrections) in rows {
-        let mut row = corrections;
-        row.insert(0, typo.as_str().to_owned());
+        let mut row = vec![typo.as_str().to_owned()];
+        row.extend(corrections);
         wtr.write_record(&row).unwrap();
     }
     wtr.flush().unwrap();

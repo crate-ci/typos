@@ -10,6 +10,36 @@ fn codegen() {
     snapbox::assert_eq_path("./src/dict_codegen.rs", &content);
 }
 
+#[test]
+fn compat() {
+    use std::fmt::Write as _;
+
+    let mut content = String::new();
+    for (bad, good) in parse_dict(DICT) {
+        if !is_word(bad) {
+            continue;
+        }
+        if !good.iter().copied().all(is_word) {
+            continue;
+        }
+        let bad = bad.to_lowercase();
+        write!(content, "{bad}").unwrap();
+        for good in good {
+            let good = good.to_lowercase();
+            write!(content, ",{good}").unwrap();
+        }
+        writeln!(content).unwrap();
+    }
+
+    snapbox::assert_eq_path("./assets/compatible.csv", &content);
+}
+
+fn is_word(word: &str) -> bool {
+    let tokenizer = typos::tokens::Tokenizer::new();
+
+    tokenizer.parse_str(word).flat_map(|t| t.split()).count() == 1 && !word.contains('_')
+}
+
 fn generate<W: std::io::Write>(file: &mut W) {
     writeln!(
         file,
