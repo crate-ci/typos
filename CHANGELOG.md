@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Ensure atomic output is locked
+
 ## [1.15.1] - 2023-06-19
 
 ### Fixes
