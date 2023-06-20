@@ -122,17 +122,17 @@ impl Report for PrintBrief {
             Message::Typo(msg) => print_brief_correction(msg, self.stdout_palette)?,
             Message::FileType(msg) => {
                 writeln!(
-                    stdout(),
+                    stdout().lock(),
                     "{}:{}",
                     msg.path.display(),
                     msg.file_type.unwrap_or("-")
                 )?;
             }
             Message::File(msg) => {
-                writeln!(stdout(), "{}", msg.path.display())?;
+                writeln!(stdout().lock(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                writeln!(stdout(), "{}", msg.data)?;
+                writeln!(stdout().lock(), "{}", msg.data)?;
             }
             Message::Error(msg) => {
                 log::error!("{}: {}", context_display(&msg.context), msg.msg);
@@ -157,17 +157,17 @@ impl Report for PrintLong {
             Message::Typo(msg) => print_long_correction(msg, self.stdout_palette)?,
             Message::FileType(msg) => {
                 writeln!(
-                    stdout(),
+                    stdout().lock(),
                     "{}:{}",
                     msg.path.display(),
                     msg.file_type.unwrap_or("-")
                 )?;
             }
             Message::File(msg) => {
-                writeln!(stdout(), "{}", msg.path.display())?;
+                writeln!(stdout().lock(), "{}", msg.path.display())?;
             }
             Message::Parse(msg) => {
-                writeln!(stdout(), "{}", msg.data)?;
+                writeln!(stdout().lock(), "{}", msg.data)?;
             }
             Message::Error(msg) => {
                 log::error!("{}: {}", context_display(&msg.context), msg.msg);
@@ -187,7 +187,7 @@ fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::E
         typos::Status::Invalid => {
             let divider = ":";
             writeln!(
-                stdout(),
+                stdout().lock(),
                 "{:#}{:#}{:#}: {:#}",
                 palette.info(context_display(&msg.context)),
                 palette.info(divider),
@@ -198,7 +198,7 @@ fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::E
         typos::Status::Corrections(corrections) => {
             let divider = ":";
             writeln!(
-                stdout(),
+                stdout().lock(),
                 "{:#}{:#}{:#}: {:#}",
                 palette.info(context_display(&msg.context)),
                 palette.info(divider),
@@ -328,7 +328,7 @@ pub struct PrintJson;
 
 impl Report for PrintJson {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
-        writeln!(stdout(), "{}", serde_json::to_string(&msg).unwrap())?;
+        writeln!(stdout().lock(), "{}", serde_json::to_string(&msg).unwrap())?;
         Ok(())
     }
 }
