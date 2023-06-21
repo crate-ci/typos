@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- User config overrides default glob definitions
+
 ## [1.15.2] - 2023-06-20
 
 ### Fixes
