@@ -1,0 +1,11 @@
+[type.asc]  # GPG keys
+extend-glob = ["*.asc"]
+check-file = false
+
+[default.extend-words]
+foo = "bar"
+
+[files]
+extend-exclude = [
+  "_typos.toml"
+]
