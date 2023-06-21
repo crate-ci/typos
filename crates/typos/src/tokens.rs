@@ -153,7 +153,7 @@ mod parser {
         // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
         // or unexpected cases than strip off start characters to a word since we aren't doing a
         // proper word boundary parse
-        take_while1(is_xid_continue).parse_next(input)
+        take_while(1.., is_xid_continue).parse_next(input)
     }
 
     fn ignore<T>(input: T) -> IResult<T, <T as Stream>::Slice>
@@ -201,7 +201,10 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        (one_of(|c| !is_xid_continue(c)), take_while0(is_ignore_char))
+        (
+            one_of(|c| !is_xid_continue(c)),
+            take_while(0.., is_ignore_char),
+        )
             .recognize()
             .parse_next(input)
     }
@@ -219,10 +222,10 @@ mod parser {
         }
 
         (
-            take_while0(is_sep),
-            take_while1(is_dec_digit),
+            take_while(0.., is_sep),
+            take_while(1.., is_dec_digit),
             alt((('s', 't'), ('n', 'd'), ('r', 'd'), ('t', 'h'))),
-            take_while0(is_sep),
+            take_while(0.., is_sep),
         )
             .recognize()
             .parse_next(input)
@@ -234,7 +237,7 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        take_while1(is_dec_digit_with_sep).parse_next(input)
+        take_while(1.., is_dec_digit_with_sep).parse_next(input)
     }
 
     fn hex_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
@@ -243,7 +246,11 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        preceded(('0', alt(('x', 'X'))), take_while1(is_hex_digit_with_sep)).parse_next(input)
+        preceded(
+            ('0', alt(('x', 'X'))),
+            take_while(1.., is_hex_digit_with_sep),
+        )
+        .parse_next(input)
     }
 
     fn css_color<T>(input: T) -> IResult<T, <T as Stream>::Slice>
@@ -325,7 +332,7 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        let (padding, captured) = take_while1(is_base64_digit).parse_next(input.clone())?;
+        let (padding, captured) = take_while(1.., is_base64_digit).parse_next(input.clone())?;
 
         const CHUNK: usize = 4;
         let padding_offset = input.offset_to(&padding);
@@ -360,9 +367,9 @@ mod parser {
         <T as Stream>::Token: AsChar + Copy,
     {
         (
-            take_while1(is_localport_char),
+            take_while(1.., is_localport_char),
             '@',
-            take_while1(is_domain_char),
+            take_while(1.., is_domain_char),
         )
             .recognize()
             .parse_next(input)
@@ -376,19 +383,19 @@ mod parser {
     {
         (
             opt(terminated(
-                take_while1(is_scheme_char),
+                take_while(1.., is_scheme_char),
                 // HACK: Technically you can skip `//` if you don't have a domain but that would
                 // get messy to support.
                 (':', '/', '/'),
             )),
             (
                 opt(terminated(url_userinfo, '@')),
-                take_while1(is_domain_char),
-                opt(preceded(':', take_while1(AsChar::is_dec_digit))),
+                take_while(1.., is_domain_char),
+                opt(preceded(':', take_while(1.., AsChar::is_dec_digit))),
             ),
             '/',
             // HACK: Too lazy to enumerate
-            take_while0(is_path_query_fragment),
+            take_while(0.., is_path_query_fragment),
         )
             .recognize()
             .parse_next(input)
@@ -401,8 +408,8 @@ mod parser {
         <T as Stream>::Token: AsChar + Copy,
     {
         (
-            take_while1(is_localport_char),
-            opt(preceded(':', take_while0(is_localport_char))),
+            take_while(1.., is_localport_char),
+            opt(preceded(':', take_while(0.., is_localport_char))),
         )
             .recognize()
             .parse_next(input)
@@ -418,7 +425,7 @@ mod parser {
         // regular string that does escaping. The escaped letter might be part of a word, or it
         // might not be. Rather than guess and be wrong part of the time and correct people's words
         // incorrectly, we opt for just not evaluating it at all.
-        preceded(take_while1(is_escape), take_while0(is_xid_continue)).parse_next(input)
+        preceded(take_while(1.., is_escape), take_while(0.., is_xid_continue)).parse_next(input)
     }
 
     fn printf<T>(input: T) -> IResult<T, <T as Stream>::Slice>
@@ -427,7 +434,7 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        preceded('%', take_while1(is_xid_continue)).parse_next(input)
+        preceded('%', take_while(1.., is_xid_continue)).parse_next(input)
     }
 
     fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, <I as Stream>::Slice, E>
@@ -436,7 +443,12 @@ mod parser {
         F: winnow::Parser<I, <I as Stream>::Slice, E>,
         E: winnow::error::ParseError<I>,
     {
-        move |i: I| repeat0(f.by_ref()).map(|()| ()).recognize().parse_next(i)
+        move |i: I| {
+            repeat(0.., f.by_ref())
+                .map(|()| ())
+                .recognize()
+                .parse_next(i)
+        }
     }
 
     #[inline]
