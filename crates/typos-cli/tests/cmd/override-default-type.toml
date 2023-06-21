@@ -6,6 +6,6 @@ stdin = '''
 Destory
 '''
 stdout = """
-./key.asc:asciidoc
+./key.asc:asc
 """
 stderr = ""

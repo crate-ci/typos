@@ -4,7 +4,7 @@ use kstring::KString;
 
 #[derive(Default, Clone, Debug)]
 pub struct TypesBuilder {
-    definitions: BTreeMap<KString, Vec<KString>>,
+    definitions: BTreeMap<KString, Vec<(KString, usize)>>,
 }
 
 impl TypesBuilder {
@@ -18,7 +18,7 @@ impl TypesBuilder {
                 .iter()
                 .map(|(name, glob)| {
                     let name = KString::from(*name);
-                    let globs = glob.iter().map(|s| KString::from(*s)).collect();
+                    let globs = glob.iter().map(|s| (KString::from(*s), 0)).collect();
                     (name, globs)
                 }),
         );
@@ -31,7 +31,11 @@ impl TypesBuilder {
     pub fn add(&mut self, name: impl Into<KString>, glob: impl Into<KString>) {
         let name = name.into();
         let glob = glob.into();
-        self.definitions.entry(name).or_default().push(glob);
+        let weight = self.definitions.len();
+        self.definitions
+            .entry(name)
+            .or_default()
+            .push((glob, weight));
     }
 
     pub fn build(self) -> Result<Types, anyhow::Error> {
@@ -39,17 +43,29 @@ impl TypesBuilder {
             .definitions
             .iter()
             .flat_map(|(name, globs)| {
-                globs.iter().map(move |glob| {
+                globs.iter().map(move |(glob, weight)| {
                     let sort = sort_key(glob);
-                    (sort, name, glob)
+                    (sort, weight, name, glob)
                 })
             })
             .collect::<Vec<_>>();
         definitions.sort();
 
+        let rev_definitions = definitions
+            .iter()
+            .map(|(_, _, name, glob)| (*glob, *name))
+            .collect::<BTreeMap<_, _>>();
+        let mut unique_definitions = BTreeMap::<KString, Vec<KString>>::new();
+        for (glob, name) in rev_definitions {
+            unique_definitions
+                .entry(name.clone())
+                .or_default()
+                .push(glob.clone());
+        }
+
         let mut glob_to_name = Vec::new();
         let mut build_set = globset::GlobSetBuilder::new();
-        for (_, name, glob) in definitions {
+        for (_, _, name, glob) in definitions {
             glob_to_name.push(name.clone());
             build_set.add(
                 globset::GlobBuilder::new(glob)
@@ -60,7 +76,7 @@ impl TypesBuilder {
         let set = build_set.build()?;
 
         Ok(Types {
-            definitions: self.definitions,
+            definitions: unique_definitions,
             glob_to_name,
             set,
             matches: std::sync::Arc::new(thread_local::ThreadLocal::default()),
