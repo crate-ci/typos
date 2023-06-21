@@ -1,0 +1,11 @@
+bin.name = "typos"
+args = "--file-types"
+status.code = 0
+stdin = '''
+\n\n
+Destory
+'''
+stdout = """
+./key.asc:asciidoc
+"""
+stderr = ""
