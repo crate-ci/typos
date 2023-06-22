@@ -14,7 +14,7 @@
 | Ignore UUID    | Yes                   | ?                               | No          | No          | No         |
 | Ignore base64  | Yes                   | ?                               | No          | No          | No         |
 | Ignore SHAs    | Yes                   | ?                               | No          | No          | No         |
-| C-Escapes      | No ([#20][def-3])     | ?                               | No          | Yes         | No         |
+| C-Escapes      | Yes ([#20][def-3])    | ?                               | No          | Yes         | No         |
 | Encodings      | UTF-8 / UTF-16        | ?                               | Auto        | Auto        | UTF-8      |
 | Whole-project  | Yes                   | Yes                             | Yes         | No          | Yes        |
 | Ignores hidden | Yes                   | ?                               | Yes         | No          | Yes        |
