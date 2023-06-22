@@ -684,6 +684,12 @@ fn walk_entry(
             return Ok(());
         }
     };
+    if crate::config::SUPPORTED_FILE_NAMES
+        .iter()
+        .any(|n| *n == entry.file_name())
+    {
+        return Ok(());
+    }
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
         let explicit = entry.depth() == 0;
         let (path, lookup_path) = if entry.is_stdin() {

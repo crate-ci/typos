@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use kstring::KString;
 
+pub const SUPPORTED_FILE_NAMES: &[&str] = &["typos.toml", "_typos.toml", ".typos.toml"];
+
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
@@ -17,9 +19,7 @@ pub struct Config {
 
 impl Config {
     pub fn from_dir(cwd: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
-        let config = if let Some(path) =
-            find_project_file(cwd, &["typos.toml", "_typos.toml", ".typos.toml"])
-        {
+        let config = if let Some(path) = find_project_file(cwd, SUPPORTED_FILE_NAMES) {
             log::debug!("Loading {}", path.display());
             Some(Self::from_file(&path)?)
         } else {

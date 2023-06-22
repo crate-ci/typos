@@ -4,8 +4,3 @@ check-file = false
 
 [default.extend-words]
 foo = "bar"
-
-[files]
-extend-exclude = [
-  "_typos.toml"
-]
