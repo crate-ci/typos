@@ -1,0 +1,16 @@
+bin.name = "typos"
+args = ""
+status.code = 2
+stdin = '''
+\n\n
+Destory
+'''
+stdout = """
+error: `flate` should be `flat`
+  --> ./foo.rs:1:1
+  |
+1 | flate2
+  | ^^^^^
+  |
+"""
+stderr = ""
