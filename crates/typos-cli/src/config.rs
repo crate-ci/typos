@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use kstring::KString;
+
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
@@ -148,15 +150,99 @@ impl Walk {
 #[serde(default)]
 #[serde(transparent)]
 pub struct TypeEngineConfig {
-    pub patterns: std::collections::HashMap<kstring::KString, GlobEngineConfig>,
+    pub patterns: std::collections::HashMap<KString, GlobEngineConfig>,
 }
 
 impl TypeEngineConfig {
     pub fn from_defaults() -> Self {
-        let empty = Self::default();
-        Self {
-            patterns: empty.patterns().collect(),
-        }
+        let patterns = [
+            (
+                KString::from("lock"),
+                GlobEngineConfig {
+                    extend_glob: Vec::new(),
+                    engine: EngineConfig {
+                        check_file: Some(false),
+                        ..Default::default()
+                    },
+                },
+            ),
+            (
+                KString::from("vim"),
+                GlobEngineConfig {
+                    extend_glob: Vec::new(),
+                    engine: EngineConfig {
+                        dict: Some(DictConfig {
+                            extend_identifiers: maplit::hashmap! {
+                                "windo".into() => "windo".into(),
+                            },
+                            ..Default::default()
+                        }),
+                        ..Default::default()
+                    },
+                },
+            ),
+            (
+                KString::from("vimscript"),
+                GlobEngineConfig {
+                    extend_glob: Vec::new(),
+                    engine: EngineConfig {
+                        dict: Some(DictConfig {
+                            extend_identifiers: maplit::hashmap! {
+                                "windo".into() => "windo".into(),
+                            },
+                            ..Default::default()
+                        }),
+                        ..Default::default()
+                    },
+                },
+            ),
+            (
+                KString::from("rust"),
+                GlobEngineConfig {
+                    extend_glob: Vec::new(),
+                    engine: EngineConfig {
+                        dict: Some(DictConfig {
+                            extend_identifiers: maplit::hashmap! {
+                                "flate2".into() => "flate2".into(),
+                            },
+                            extend_words: maplit::hashmap! {
+                                "ser".into() => "ser".into(),
+                            },
+                            ..Default::default()
+                        }),
+                        ..Default::default()
+                    },
+                },
+            ),
+            (
+                KString::from("py"),
+                GlobEngineConfig {
+                    extend_glob: Vec::new(),
+                    engine: EngineConfig {
+                        dict: Some(DictConfig {
+                            extend_identifiers: maplit::hashmap! {
+                                "NDArray".into() => "NDArray".into(),
+                            },
+                            ..Default::default()
+                        }),
+                        ..Default::default()
+                    },
+                },
+            ),
+            (
+                KString::from("cert"),
+                GlobEngineConfig {
+                    extend_glob: Vec::new(),
+                    engine: EngineConfig {
+                        check_file: Some(false),
+                        ..Default::default()
+                    },
+                },
+            ),
+        ]
+        .into_iter()
+        .collect();
+        Self { patterns }
     }
 
     pub fn update(&mut self, source: &Self) {
@@ -169,85 +255,9 @@ impl TypeEngineConfig {
     }
 
     pub fn patterns(&self) -> impl Iterator<Item = (kstring::KString, GlobEngineConfig)> {
-        let mut patterns = self.patterns.clone();
-        patterns
-            .entry("lock".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    check_file: Some(false),
-                    ..Default::default()
-                },
-            });
-        patterns
-            .entry("vim".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    dict: Some(DictConfig {
-                        extend_identifiers: maplit::hashmap! {
-                            "windo".into() => "windo".into(),
-                        },
-                        ..Default::default()
-                    }),
-                    ..Default::default()
-                },
-            });
-        patterns
-            .entry("vimscript".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    dict: Some(DictConfig {
-                        extend_identifiers: maplit::hashmap! {
-                            "windo".into() => "windo".into(),
-                        },
-                        ..Default::default()
-                    }),
-                    ..Default::default()
-                },
-            });
-        patterns
-            .entry("rust".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    dict: Some(DictConfig {
-                        extend_identifiers: maplit::hashmap! {
-                            "flate2".into() => "flate2".into(),
-                        },
-                        extend_words: maplit::hashmap! {
-                            "ser".into() => "ser".into(),
-                        },
-                        ..Default::default()
-                    }),
-                    ..Default::default()
-                },
-            });
-        patterns
-            .entry("py".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    dict: Some(DictConfig {
-                        extend_identifiers: maplit::hashmap! {
-                            "NDArray".into() => "NDArray".into(),
-                        },
-                        ..Default::default()
-                    }),
-                    ..Default::default()
-                },
-            });
-        patterns
-            .entry("cert".into())
-            .or_insert_with(|| GlobEngineConfig {
-                extend_glob: Vec::new(),
-                engine: EngineConfig {
-                    check_file: Some(false),
-                    ..Default::default()
-                },
-            });
-        patterns.into_iter()
+        let mut engine = Self::from_defaults();
+        engine.update(self);
+        engine.patterns.into_iter()
     }
 }
 

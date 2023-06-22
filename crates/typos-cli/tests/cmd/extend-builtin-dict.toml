@@ -1,0 +1,8 @@
+bin.name = "typos"
+args = ""
+stdin = '''
+\n\n
+Destory
+'''
+stdout = ""
+stderr = ""
