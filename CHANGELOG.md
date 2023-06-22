@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.15.4] - 2023-06-22
+
 ### Fixes
 
 - Correctly merge default setting for a file type with a user's file type settings
@@ -795,7 +797,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.15.3...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.15.4...HEAD
+[1.15.4]: https://github.com/crate-ci/typos/compare/v1.15.3...v1.15.4
 [1.15.3]: https://github.com/crate-ci/typos/compare/v1.15.2...v1.15.3
 [1.15.2]: https://github.com/crate-ci/typos/compare/v1.15.1...v1.15.2
 [1.15.1]: https://github.com/crate-ci/typos/compare/v1.15.0...v1.15.1
