@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correctly merge default setting for a file type with a user's file type settings
+
 ## [1.15.3] - 2023-06-21
 
 ### Fixes
