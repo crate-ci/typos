@@ -145,6 +145,44 @@ fn process<S: Into<String>>(
         .collect()
 }
 
+#[test]
+fn test_merge_duplicates() {
+    assert_eq!(
+        process([("foo", ["bar"]), ("foo", ["baz"])]),
+        dict_from_iter([("foo", ["bar", "baz"])])
+    );
+}
+
+#[test]
+fn test_duplicate_correction_removal() {
+    let dict = process([("foo", ["bar", "bar"])]);
+    assert_eq!(dict, dict_from_iter([("foo", ["bar"])]));
+}
+
+#[test]
+fn test_cycle_removal() {
+    assert!(process([("foo", ["bar"]), ("bar", ["foo"])]).is_empty());
+}
+
+#[test]
+fn test_varcon_removal() {
+    assert!(process([("colour", ["color"])]).is_empty());
+}
+
+#[test]
+fn test_varcon_best_match() {
+    assert_eq!(
+        process([(
+            "neighourhood", // note the missing 'b'
+            ["neighborhood"],
+        )]),
+        dict_from_iter([(
+            "neighourhood",
+            ["neighbourhood"] // note that 'bor' has become 'bour' to match the typo
+        )])
+    );
+}
+
 fn is_word(word: &str) -> bool {
     word.chars().all(|c| c.is_alphabetic())
 }
