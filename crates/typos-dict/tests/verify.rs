@@ -1,10 +1,10 @@
+use indexmap::IndexSet;
 use std::collections::BTreeMap;
-use std::collections::BTreeSet;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use unicase::UniCase;
 
-type Dict = BTreeMap<UniCase<String>, BTreeSet<String>>;
+type Dict = BTreeMap<UniCase<String>, IndexSet<String>>;
 
 #[test]
 fn verify() {
@@ -62,7 +62,7 @@ fn dict_from_iter<S: Into<String>>(
 
         // duplicate entries are merged
         dict.entry(typo)
-            .or_insert_with(BTreeSet::new)
+            .or_default()
             .extend(corrections.into_iter().map(|c| {
                 let mut c = c.into();
                 c.make_ascii_lowercase();
@@ -82,7 +82,7 @@ fn process<S: Into<String>>(
         .into_iter()
         .filter(|(t, _)| is_word(t))
         .filter_map(|(t, c)| {
-            let new_c: BTreeSet<_> = c.into_iter().filter(|c| is_word(c)).collect();
+            let new_c: IndexSet<_> = c.into_iter().filter(|c| is_word(c)).collect();
             if new_c.is_empty() {
                 None
             } else {
@@ -112,7 +112,7 @@ fn process<S: Into<String>>(
             }
         })
         .map(|(typo, corrections)| {
-            let mut new_corrections = BTreeSet::new();
+            let mut new_corrections = IndexSet::new();
             for correction in corrections {
                 let correction = word_variants
                     .get(correction.as_str())
@@ -143,6 +143,14 @@ fn process<S: Into<String>>(
             }
         })
         .collect()
+}
+
+#[test]
+fn test_preserve_correction_order() {
+    let dict = process([("foo", ["xyz", "abc"])]);
+    let mut corrections = dict.get(&UniCase::new("foo".into())).unwrap().iter();
+    assert_eq!(corrections.next().unwrap(), "xyz");
+    assert_eq!(corrections.next().unwrap(), "abc");
 }
 
 #[test]
