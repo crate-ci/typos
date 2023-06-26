@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct currency code "zar"
+
 ## [1.15.5] - 2023-06-22
 
 ### Fixes
