@@ -36,7 +36,12 @@ fi
 if [[ ! -x ${COMMAND} ]]; then
     VERSION=1.15.7
     log "Downloading 'typos' v${VERSION}"
-    wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
+    if [ -f /etc/alpine-release ]; then
+        wget "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
+    else
+        wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
+    fi
+
     mkdir -p ${_INSTALL_DIR}
     tar -xzvf typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz -C ${_INSTALL_DIR} ./${CMD_NAME}
     rm typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz
