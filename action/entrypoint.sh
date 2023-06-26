@@ -34,7 +34,7 @@ if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
     exit 1
 fi
 if [[ ! -x ${COMMAND} ]]; then
-    VERSION=1.15.6
+    VERSION=1.15.7
     log "Downloading 'typos' v${VERSION}"
     wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
     mkdir -p ${_INSTALL_DIR}
