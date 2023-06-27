@@ -36,7 +36,14 @@ fi
 if [[ ! -x ${COMMAND} ]]; then
     VERSION=1.15.7
     log "Downloading 'typos' v${VERSION}"
-    wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
+
+    # The BusyBox version of wget doesn't support --progress,
+    # so we only set it, if we don't detect busybox.
+    if [ "$(readlink "$(which wget)")" != /bin/busybox ]; then
+        WGET_OPTS=--progress=dot:mega
+    fi
+
+    wget $WGET_OPTS "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
     mkdir -p ${_INSTALL_DIR}
     tar -xzvf typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz -C ${_INSTALL_DIR} ./${CMD_NAME}
     rm typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(action)* Support BusyBox version of wget (broken in v1.14.9)
+
 ## [1.15.7] - 2023-06-26
 
 ### Fixes
