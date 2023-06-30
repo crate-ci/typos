@@ -1653,7 +1653,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.15.8"
+version = "1.15.9"
 dependencies = [
  "ahash",
  "anstream",
@@ -1701,7 +1701,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.10.4"
+version = "0.10.5"
 dependencies = [
  "codegenrs",
  "csv",
