@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::path::Path;
 
 use kstring::KString;
 
@@ -123,9 +124,24 @@ impl Types {
     }
 
     pub fn file_matched(&self, path: &std::path::Path) -> Option<&str> {
-        let file_name = path.file_name()?;
+        let mut mpath = Path::new(path);
         let mut matches = self.matches.get_or_default().borrow_mut();
-        self.set.matches_into(file_name, &mut *matches);
+        loop {
+            self.set.matches_into(mpath.file_name()?, &mut *matches);
+            if !matches.is_empty() {
+                break;
+            }
+            match mpath.extension() {
+                None => break,
+                Some(ext) => {
+                    if ext == "in" {
+                        mpath = Path::new(mpath.file_stem()?);
+                        continue;
+                    }
+                }
+            }
+            break;
+        }
         matches
             .last()
             .copied()
@@ -161,7 +177,11 @@ mod tests {
             ("js", &["*.js"]),
             ("json", &["*.json"]),
             ("lock", &["package-lock.json", "*.lock"]),
+            ("js-in", &["*.js.in"]),
         ]
+    }
+    fn in_types() -> &'static [(&'static str, &'static [&'static str])] {
+        &[("html", &["*.html", "*.htm"]), ("in-canary", &["*.in"])]
     }
 
     matched!(basic_match, types(), "leftpad.js", "js");
@@ -169,6 +189,10 @@ mod tests {
     matched!(multi_def_2, types(), "index.htm", "html");
     matched!(no_match, types(), "leftpad.ada", None);
     matched!(more_specific, types(), "package-lock.json", "lock");
+    matched!(basic_in, types(), "index.html.in", "html");
+    matched!(basic_in_in, types(), "index.html.in.in", "html");
+    matched!(ext_plus_in, types(), "foo.js.in", "js-in");
+    matched!(toplevel_in, in_types(), "index.html.in", "in-canary");
 
     macro_rules! sort {
         ($name:ident, $actual:expr, $expected:expr) => {
