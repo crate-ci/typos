@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.16.0] - 2023-07-10
+
 ### Features
 
 - If a file type doesn't exist for `*.in`, then try matching `*`
@@ -837,7 +839,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.15.10...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.0...HEAD
+[1.16.0]: https://github.com/crate-ci/typos/compare/v1.15.10...v1.16.0
 [1.15.10]: https://github.com/crate-ci/typos/compare/v1.15.9...v1.15.10
 [1.15.9]: https://github.com/crate-ci/typos/compare/v1.15.8...v1.15.9
 [1.15.8]: https://github.com/crate-ci/typos/compare/v1.15.7...v1.15.8
