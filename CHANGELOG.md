@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- If a file type doesn't exist for `*.in`, then try matching `*`
+
 ## [1.15.10] - 2023-07-03
 
 ### Fixes
