@@ -22,6 +22,6 @@ edit-distance = "2.1"
 unicase = "2.6"
 codegenrs = "2.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
-varcon = { version = "^0.6", path = "../varcon" }
+varcon = { version = "^0.7", path = "../varcon" }
 snapbox = { version = "0.4.11", features = ["path"] }
 indexmap = "2.0.0"
