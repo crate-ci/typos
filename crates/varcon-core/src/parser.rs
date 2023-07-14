@@ -1,4 +1,5 @@
 use winnow::prelude::*;
+use winnow::trace::trace;
 
 use crate::*;
 
@@ -62,37 +63,41 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
 
 impl Cluster {
     pub fn parse(input: &str) -> IResult<&str, Self> {
-        let header = (
-            "#",
-            winnow::ascii::space0,
-            winnow::ascii::not_line_ending,
-            winnow::ascii::line_ending,
-        );
-        let note = winnow::combinator::preceded(
-            ("##", winnow::ascii::space0),
-            winnow::combinator::terminated(
+        trace("cluster", move |input| {
+            let header = (
+                "#",
+                winnow::ascii::space0,
                 winnow::ascii::not_line_ending,
                 winnow::ascii::line_ending,
-            ),
-        );
-        let mut cluster = (
-            winnow::combinator::opt(header),
-            winnow::combinator::repeat(
-                1..,
-                winnow::combinator::terminated(Entry::parse, winnow::ascii::line_ending),
-            ),
-            winnow::combinator::repeat(0.., note),
-        );
-        let (input, (header, entries, notes)): (_, (_, _, Vec<_>)) = cluster.parse_next(input)?;
+            );
+            let note = winnow::combinator::preceded(
+                ("##", winnow::ascii::space0),
+                winnow::combinator::terminated(
+                    winnow::ascii::not_line_ending,
+                    winnow::ascii::line_ending,
+                ),
+            );
+            let mut cluster = (
+                winnow::combinator::opt(header),
+                winnow::combinator::repeat(
+                    1..,
+                    winnow::combinator::terminated(Entry::parse, winnow::ascii::line_ending),
+                ),
+                winnow::combinator::repeat(0.., note),
+            );
+            let (input, (header, entries, notes)): (_, (_, _, Vec<_>)) =
+                cluster.parse_next(input)?;
 
-        let header = header.map(|s| s.2.to_owned());
-        let notes = notes.into_iter().map(|s| s.to_owned()).collect();
-        let c = Self {
-            header,
-            entries,
-            notes,
-        };
-        Ok((input, c))
+            let header = header.map(|s| s.2.to_owned());
+            let notes = notes.into_iter().map(|s| s.to_owned()).collect();
+            let c = Self {
+                header,
+                entries,
+                notes,
+            };
+            Ok((input, c))
+        })
+        .parse_next(input)
     }
 }
 
@@ -145,64 +150,70 @@ A B C: coloration's / B. Cv: colouration's
 
 impl Entry {
     pub fn parse(input: &str) -> IResult<&str, Self> {
-        let var_sep = (winnow::ascii::space0, '/', winnow::ascii::space0);
-        let (input, variants) =
-            winnow::combinator::separated1(Variant::parse, var_sep).parse_next(input)?;
+        trace("entry", move |input| {
+            let var_sep = (winnow::ascii::space0, '/', winnow::ascii::space0);
+            let (input, variants) =
+                winnow::combinator::separated1(Variant::parse, var_sep).parse_next(input)?;
 
-        let desc_sep = (winnow::ascii::space0, '|');
-        let (input, description) =
-            winnow::combinator::opt((desc_sep, Self::parse_description)).parse_next(input)?;
+            let desc_sep = (winnow::ascii::space0, '|');
+            let (input, description) =
+                winnow::combinator::opt((desc_sep, Self::parse_description)).parse_next(input)?;
 
-        let comment_sep = (winnow::ascii::space0, '#');
-        let (input, comment) = winnow::combinator::opt((
-            comment_sep,
-            winnow::ascii::space1,
-            winnow::ascii::not_line_ending,
-        ))
-        .parse_next(input)?;
+            let comment_sep = (winnow::ascii::space0, '#');
+            let (input, comment) = winnow::combinator::opt((
+                comment_sep,
+                winnow::ascii::space1,
+                winnow::ascii::not_line_ending,
+            ))
+            .parse_next(input)?;
 
-        let mut e = match description {
-            Some((_, description)) => description,
-            None => Self {
-                variants: Vec::new(),
-                pos: None,
-                archaic: false,
-                note: false,
-                description: None,
-                comment: None,
-            },
-        };
-        e.variants = variants;
-        e.comment = comment.map(|c| c.2.to_owned());
-        Ok((input, e))
+            let mut e = match description {
+                Some((_, description)) => description,
+                None => Self {
+                    variants: Vec::new(),
+                    pos: None,
+                    archaic: false,
+                    note: false,
+                    description: None,
+                    comment: None,
+                },
+            };
+            e.variants = variants;
+            e.comment = comment.map(|c| c.2.to_owned());
+            Ok((input, e))
+        })
+        .parse_next(input)
     }
 
     fn parse_description(input: &str) -> IResult<&str, Self> {
-        let (input, (pos, archaic, note, description)) = (
-            winnow::combinator::opt((winnow::ascii::space1, Pos::parse)),
-            winnow::combinator::opt((winnow::ascii::space1, "(-)")),
-            winnow::combinator::opt((winnow::ascii::space1, "--")),
-            winnow::combinator::opt((
-                winnow::ascii::space1,
-                winnow::token::take_till0(('\n', '\r', '#')),
-            )),
-        )
-            .parse_next(input)?;
+        trace("description", move |input| {
+            let (input, (pos, archaic, note, description)) = (
+                winnow::combinator::opt((winnow::ascii::space1, Pos::parse)),
+                winnow::combinator::opt((winnow::ascii::space1, "(-)")),
+                winnow::combinator::opt((winnow::ascii::space1, "--")),
+                winnow::combinator::opt((
+                    winnow::ascii::space1,
+                    winnow::token::take_till0(('\n', '\r', '#')),
+                )),
+            )
+                .parse_next(input)?;
 
-        let variants = Vec::new();
-        let pos = pos.map(|(_, p)| p);
-        let archaic = archaic.is_some();
-        let note = note.is_some();
-        let description = description.map(|(_, d)| d.to_owned());
-        let e = Self {
-            variants,
-            pos,
-            archaic,
-            note,
-            description,
-            comment: None,
-        };
-        Ok((input, e))
+            let variants = Vec::new();
+            let pos = pos.map(|(_, p)| p);
+            let archaic = archaic.is_some();
+            let note = note.is_some();
+            let description = description.map(|(_, d)| d.to_owned());
+            let e = Self {
+                variants,
+                pos,
+                archaic,
+                note,
+                description,
+                comment: None,
+            };
+            Ok((input, e))
+        })
+        .parse_next(input)
     }
 }
 
@@ -298,19 +309,25 @@ mod test_entry {
 
 impl Variant {
     pub fn parse(input: &str) -> IResult<&str, Self> {
-        let types = winnow::combinator::separated1(Type::parse, winnow::ascii::space1);
-        let sep = (":", winnow::ascii::space0);
-        let (input, (types, word)) =
-            winnow::combinator::separated_pair(types, sep, word).parse_next(input)?;
-        let v = Self { types, word };
-        Ok((input, v))
+        trace("variant", move |input| {
+            let types = winnow::combinator::separated1(Type::parse, winnow::ascii::space1);
+            let sep = (":", winnow::ascii::space0);
+            let (input, (types, word)) =
+                winnow::combinator::separated_pair(types, sep, word).parse_next(input)?;
+            let v = Self { types, word };
+            Ok((input, v))
+        })
+        .parse_next(input)
     }
 }
 
 fn word(input: &str) -> IResult<&str, String> {
-    winnow::token::take_till1(|item: char| item.is_ascii_whitespace())
-        .map(|s: &str| s.to_owned().replace('_', " "))
-        .parse_next(input)
+    trace("word", move |input| {
+        winnow::token::take_till1(|item: char| item.is_ascii_whitespace())
+            .map(|s: &str| s.to_owned().replace('_', " "))
+            .parse_next(input)
+    })
+    .parse_next(input)
 }
 
 #[cfg(test)]
@@ -382,12 +399,15 @@ mod test_variant {
 
 impl Type {
     pub fn parse(input: &str) -> IResult<&str, Type> {
-        let (input, category) = Category::parse(input)?;
-        let (input, tag) = winnow::combinator::opt(Tag::parse).parse_next(input)?;
-        let (input, num) = winnow::combinator::opt(winnow::ascii::digit1).parse_next(input)?;
-        let num = num.map(|s| s.parse().expect("parser ensured its a number"));
-        let t = Type { category, tag, num };
-        Ok((input, t))
+        trace("type", move |input| {
+            let (input, category) = Category::parse(input)?;
+            let (input, tag) = winnow::combinator::opt(Tag::parse).parse_next(input)?;
+            let (input, num) = winnow::combinator::opt(winnow::ascii::digit1).parse_next(input)?;
+            let num = num.map(|s| s.parse().expect("parser ensured its a number"));
+            let t = Type { category, tag, num };
+            Ok((input, t))
+        })
+        .parse_next(input)
     }
 }
 
@@ -439,18 +459,21 @@ mod test_type {
 
 impl Category {
     pub fn parse(input: &str) -> IResult<&str, Category> {
-        let symbols = winnow::token::one_of(['A', 'B', 'Z', 'C', 'D', '_']);
-        symbols
-            .map(|c| match c {
-                'A' => Category::American,
-                'B' => Category::BritishIse,
-                'Z' => Category::BritishIze,
-                'C' => Category::Canadian,
-                'D' => Category::Australian,
-                '_' => Category::Other,
-                _ => unreachable!("parser won't select this option"),
-            })
-            .parse_next(input)
+        trace("category", move |input| {
+            let symbols = winnow::token::one_of(['A', 'B', 'Z', 'C', 'D', '_']);
+            symbols
+                .map(|c| match c {
+                    'A' => Category::American,
+                    'B' => Category::BritishIse,
+                    'Z' => Category::BritishIze,
+                    'C' => Category::Canadian,
+                    'D' => Category::Australian,
+                    '_' => Category::Other,
+                    _ => unreachable!("parser won't select this option"),
+                })
+                .parse_next(input)
+        })
+        .parse_next(input)
     }
 }
 
@@ -475,17 +498,20 @@ mod test_category {
 
 impl Tag {
     pub fn parse(input: &str) -> IResult<&str, Tag> {
-        let symbols = winnow::token::one_of(['.', 'v', 'V', '-', 'x']);
-        symbols
-            .map(|c| match c {
-                '.' => Tag::Eq,
-                'v' => Tag::Variant,
-                'V' => Tag::Seldom,
-                '-' => Tag::Possible,
-                'x' => Tag::Improper,
-                _ => unreachable!("parser won't select this option"),
-            })
-            .parse_next(input)
+        trace("tag", move |input| {
+            let symbols = winnow::token::one_of(['.', 'v', 'V', '-', 'x']);
+            symbols
+                .map(|c| match c {
+                    '.' => Tag::Eq,
+                    'v' => Tag::Variant,
+                    'V' => Tag::Seldom,
+                    '-' => Tag::Possible,
+                    'x' => Tag::Improper,
+                    _ => unreachable!("parser won't select this option"),
+                })
+                .parse_next(input)
+        })
+        .parse_next(input)
     }
 }
 
@@ -510,12 +536,15 @@ mod test_tag {
 
 impl Pos {
     pub fn parse(input: &str) -> IResult<&str, Pos> {
-        winnow::branch::alt((
-            "<N>".value(Pos::Noun),
-            "<V>".value(Pos::Verb),
-            "<Adj>".value(Pos::Adjective),
-            "<Adv>".value(Pos::Adverb),
-        ))
+        trace("pos", move |input| {
+            winnow::branch::alt((
+                "<N>".value(Pos::Noun),
+                "<V>".value(Pos::Verb),
+                "<Adj>".value(Pos::Adjective),
+                "<Adv>".value(Pos::Adverb),
+            ))
+            .parse_next(input)
+        })
         .parse_next(input)
     }
 }
