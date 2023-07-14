@@ -32,8 +32,8 @@ pre-release-replacements = [
 
 [features]
 default = ["dict", "vars"]
-dict = ["typos-dict"]
-vars = ["typos-vars"]
+dict = ["dep:typos-dict"]
+vars = ["dep:typos-vars"]
 
 
 [[bin]]

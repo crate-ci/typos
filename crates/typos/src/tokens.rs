@@ -1,4 +1,5 @@
 use bstr::ByteSlice;
+use winnow::BStr;
 
 /// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -48,7 +49,9 @@ impl Tokenizer {
         let iter = if self.unicode && !ByteSlice::is_ascii(content.as_bytes()) {
             itertools::Either::Left(unicode_parser::iter_identifiers(content))
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(content.as_bytes()))
+            itertools::Either::Right(ascii_parser::iter_identifiers(BStr::new(
+                content.as_bytes(),
+            )))
         };
         iter.map(move |identifier| self.transform(identifier, content.as_bytes()))
     }
@@ -58,7 +61,7 @@ impl Tokenizer {
             let iter = Utf8Chunks::new(content).flat_map(unicode_parser::iter_identifiers);
             itertools::Either::Left(iter)
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(content))
+            itertools::Either::Right(ascii_parser::iter_identifiers(BStr::new(content)))
         };
         iter.map(move |identifier| self.transform(identifier, content))
     }
@@ -126,6 +129,7 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 
 mod parser {
     use winnow::combinator::*;
+    use winnow::error::ParserError;
     use winnow::prelude::*;
     use winnow::stream::AsBStr;
     use winnow::stream::AsChar;
@@ -133,8 +137,9 @@ mod parser {
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
     use winnow::token::*;
+    use winnow::trace::trace;
 
-    pub(crate) fn next_identifier<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    pub(crate) fn next_identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -143,7 +148,7 @@ mod parser {
         preceded(ignore, identifier).parse_next(input)
     }
 
-    fn identifier<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -153,36 +158,39 @@ mod parser {
         // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
         // or unexpected cases than strip off start characters to a word since we aren't doing a
         // proper word boundary parse
-        take_while(1.., is_xid_continue).parse_next(input)
+        trace("identifier", take_while(1.., is_xid_continue)).parse_next(input)
     }
 
-    fn ignore<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn ignore<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        take_many0(alt((
-            // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
-            // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
-            // - Make sure you always consume it
-            terminated(uuid_literal, peek(sep1)),
-            terminated(hash_literal, peek(sep1)),
-            terminated(base64_literal, peek(sep1)), // base64 should be quoted or something
-            terminated(ordinal_literal, peek(sep1)),
-            terminated(hex_literal, peek(sep1)),
-            terminated(dec_literal, peek(sep1)), // Allow digit-prefixed words
-            terminated(email_literal, peek(sep1)),
-            terminated(url_literal, peek(sep1)),
-            terminated(css_color, peek(sep1)),
-            c_escape,
-            printf,
-            other,
-        )))
+        trace(
+            "ignore",
+            take_many0(alt((
+                // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
+                // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
+                // - Make sure you always consume it
+                terminated(uuid_literal, peek(sep1)),
+                terminated(hash_literal, peek(sep1)),
+                terminated(base64_literal, peek(sep1)), // base64 should be quoted or something
+                terminated(ordinal_literal, peek(sep1)),
+                terminated(hex_literal, peek(sep1)),
+                terminated(dec_literal, peek(sep1)), // Allow digit-prefixed words
+                terminated(email_literal, peek(sep1)),
+                terminated(url_literal, peek(sep1)),
+                terminated(css_color, peek(sep1)),
+                c_escape,
+                printf,
+                other,
+            ))),
+        )
         .parse_next(input)
     }
 
-    fn sep1<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn sep1<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -195,21 +203,24 @@ mod parser {
         .parse_next(input)
     }
 
-    fn other<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn other<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        (
-            one_of(|c| !is_xid_continue(c)),
-            take_while(0.., is_ignore_char),
+        trace(
+            "other",
+            (
+                one_of(|c| !is_xid_continue(c)),
+                take_while(0.., is_ignore_char),
+            )
+                .recognize(),
         )
-            .recognize()
-            .parse_next(input)
+        .parse_next(input)
     }
 
-    fn ordinal_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn ordinal_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -221,26 +232,29 @@ mod parser {
             ['_'].contains(&c)
         }
 
-        (
-            take_while(0.., is_sep),
-            take_while(1.., is_dec_digit),
-            alt((('s', 't'), ('n', 'd'), ('r', 'd'), ('t', 'h'))),
-            take_while(0.., is_sep),
+        trace(
+            "ordinal_literal",
+            (
+                take_while(0.., is_sep),
+                take_while(1.., is_dec_digit),
+                alt((('s', 't'), ('n', 'd'), ('r', 'd'), ('t', 'h'))),
+                take_while(0.., is_sep),
+            )
+                .recognize(),
         )
-            .recognize()
-            .parse_next(input)
+        .parse_next(input)
     }
 
-    fn dec_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn dec_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        take_while(1.., is_dec_digit_with_sep).parse_next(input)
+        trace("dec_literal", take_while(1.., is_dec_digit_with_sep)).parse_next(input)
     }
 
-    fn hex_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn hex_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -253,57 +267,63 @@ mod parser {
         .parse_next(input)
     }
 
-    fn css_color<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn css_color<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        preceded(
-            '#',
-            alt((
-                terminated(take_while(3..=8, is_lower_hex_digit), peek(sep1)),
-                terminated(take_while(3..=8, is_upper_hex_digit), peek(sep1)),
-            )),
+        trace(
+            "color",
+            preceded(
+                '#',
+                alt((
+                    terminated(take_while(3..=8, is_lower_hex_digit), peek(sep1)),
+                    terminated(take_while(3..=8, is_upper_hex_digit), peek(sep1)),
+                )),
+            ),
         )
         .parse_next(input)
     }
 
-    fn uuid_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn uuid_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        alt((
-            (
-                take_while(8, is_lower_hex_digit),
-                '-',
-                take_while(4, is_lower_hex_digit),
-                '-',
-                take_while(4, is_lower_hex_digit),
-                '-',
-                take_while(4, is_lower_hex_digit),
-                '-',
-                take_while(12, is_lower_hex_digit),
-            ),
-            (
-                take_while(8, is_upper_hex_digit),
-                '-',
-                take_while(4, is_upper_hex_digit),
-                '-',
-                take_while(4, is_upper_hex_digit),
-                '-',
-                take_while(4, is_upper_hex_digit),
-                '-',
-                take_while(12, is_upper_hex_digit),
-            ),
-        ))
-        .recognize()
+        trace(
+            "uuid",
+            alt((
+                (
+                    take_while(8, is_lower_hex_digit),
+                    '-',
+                    take_while(4, is_lower_hex_digit),
+                    '-',
+                    take_while(4, is_lower_hex_digit),
+                    '-',
+                    take_while(4, is_lower_hex_digit),
+                    '-',
+                    take_while(12, is_lower_hex_digit),
+                ),
+                (
+                    take_while(8, is_upper_hex_digit),
+                    '-',
+                    take_while(4, is_upper_hex_digit),
+                    '-',
+                    take_while(4, is_upper_hex_digit),
+                    '-',
+                    take_while(4, is_upper_hex_digit),
+                    '-',
+                    take_while(12, is_upper_hex_digit),
+                ),
+            ))
+            .recognize(),
+        )
         .parse_next(input)
     }
 
-    fn hash_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn hash_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -319,103 +339,120 @@ mod parser {
         //     or more.
 
         const IGNORE_HEX_MIN: usize = 32;
-        alt((
-            take_while(IGNORE_HEX_MIN.., is_lower_hex_digit),
-            take_while(IGNORE_HEX_MIN.., is_upper_hex_digit),
-        ))
+        trace(
+            "hash",
+            alt((
+                take_while(IGNORE_HEX_MIN.., is_lower_hex_digit),
+                take_while(IGNORE_HEX_MIN.., is_upper_hex_digit),
+            )),
+        )
         .parse_next(input)
     }
 
-    fn base64_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn base64_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        let (padding, captured) = take_while(1.., is_base64_digit).parse_next(input.clone())?;
+        trace("base64", move |input: &mut T| {
+            let start = input.checkpoint();
+            let captured = take_while(1.., is_base64_digit).parse_next(input)?;
 
-        const CHUNK: usize = 4;
-        let padding_offset = input.offset_to(&padding);
-        let mut padding_len = CHUNK - padding_offset % CHUNK;
-        if padding_len == CHUNK {
-            padding_len = 0;
-        }
+            const CHUNK: usize = 4;
+            let padding_offset = input.offset_from(&start);
+            let mut padding_len = CHUNK - padding_offset % CHUNK;
+            if padding_len == CHUNK {
+                padding_len = 0;
+            }
 
-        if captured.slice_len() < 90
-            && padding_len == 0
-            && captured
-                .as_bstr()
-                .iter()
-                .all(|c| !['/', '+'].contains(&c.as_char()))
-        {
-            return Err(winnow::error::ErrMode::Backtrack(
-                winnow::error::Error::new(input, winnow::error::ErrorKind::Slice),
-            ));
-        }
+            if captured.slice_len() < 90
+                && padding_len == 0
+                && captured
+                    .as_bstr()
+                    .iter()
+                    .all(|c| !['/', '+'].contains(&c.as_char()))
+            {
+                return Err(winnow::error::ErrMode::from_error_kind(
+                    input,
+                    winnow::error::ErrorKind::Slice,
+                ));
+            }
 
-        let (after, _) =
-            take_while(padding_len..=padding_len, is_base64_padding).parse_next(padding)?;
+            take_while(padding_len..=padding_len, is_base64_padding).parse_next(input)?;
 
-        let after_offset = input.offset_to(&after);
-        Ok(input.next_slice(after_offset))
+            let after_offset = input.offset_from(&start);
+            input.reset(start);
+            Ok(input.next_slice(after_offset))
+        })
+        .parse_next(input)
     }
 
-    fn email_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn email_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        (
-            take_while(1.., is_localport_char),
-            '@',
-            take_while(1.., is_domain_char),
-        )
-            .recognize()
-            .parse_next(input)
-    }
-
-    fn url_literal<T>(input: T) -> IResult<T, <T as Stream>::Slice>
-    where
-        T: Stream + StreamIsPartial + PartialEq,
-        <T as Stream>::Slice: AsBStr + SliceLen + Default,
-        <T as Stream>::Token: AsChar + Copy,
-    {
-        (
-            opt(terminated(
-                take_while(1.., is_scheme_char),
-                // HACK: Technically you can skip `//` if you don't have a domain but that would
-                // get messy to support.
-                (':', '/', '/'),
-            )),
+        trace(
+            "email",
             (
-                opt(terminated(url_userinfo, '@')),
+                take_while(1.., is_localport_char),
+                '@',
                 take_while(1.., is_domain_char),
-                opt(preceded(':', take_while(1.., AsChar::is_dec_digit))),
-            ),
-            '/',
-            // HACK: Too lazy to enumerate
-            take_while(0.., is_path_query_fragment),
+            )
+                .recognize(),
         )
-            .recognize()
-            .parse_next(input)
+        .parse_next(input)
     }
 
-    fn url_userinfo<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn url_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        (
-            take_while(1.., is_localport_char),
-            opt(preceded(':', take_while(0.., is_localport_char))),
+        trace(
+            "url",
+            (
+                opt(terminated(
+                    take_while(1.., is_scheme_char),
+                    // HACK: Technically you can skip `//` if you don't have a domain but that would
+                    // get messy to support.
+                    (':', '/', '/'),
+                )),
+                (
+                    opt(terminated(url_userinfo, '@')),
+                    take_while(1.., is_domain_char),
+                    opt(preceded(':', take_while(1.., AsChar::is_dec_digit))),
+                ),
+                '/',
+                // HACK: Too lazy to enumerate
+                take_while(0.., is_path_query_fragment),
+            )
+                .recognize(),
         )
-            .recognize()
-            .parse_next(input)
+        .parse_next(input)
     }
 
-    fn c_escape<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn url_userinfo<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    where
+        T: Stream + StreamIsPartial + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
+    {
+        trace(
+            "userinfo",
+            (
+                take_while(1.., is_localport_char),
+                opt(preceded(':', take_while(0.., is_localport_char))),
+            )
+                .recognize(),
+        )
+        .parse_next(input)
+    }
+
+    fn c_escape<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -425,25 +462,29 @@ mod parser {
         // regular string that does escaping. The escaped letter might be part of a word, or it
         // might not be. Rather than guess and be wrong part of the time and correct people's words
         // incorrectly, we opt for just not evaluating it at all.
-        preceded(take_while(1.., is_escape), take_while(0.., is_xid_continue)).parse_next(input)
+        trace(
+            "escape",
+            preceded(take_while(1.., is_escape), take_while(0.., is_xid_continue)),
+        )
+        .parse_next(input)
     }
 
-    fn printf<T>(input: T) -> IResult<T, <T as Stream>::Slice>
+    fn printf<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        preceded('%', take_while(1.., is_xid_continue)).parse_next(input)
+        trace("printf", preceded('%', take_while(1.., is_xid_continue))).parse_next(input)
     }
 
-    fn take_many0<I, E, F>(mut f: F) -> impl FnMut(I) -> IResult<I, <I as Stream>::Slice, E>
+    fn take_many0<I, E, F>(mut f: F) -> impl Parser<I, <I as Stream>::Slice, E>
     where
         I: Stream,
-        F: winnow::Parser<I, <I as Stream>::Slice, E>,
-        E: winnow::error::ParseError<I>,
+        F: Parser<I, <I as Stream>::Slice, E>,
+        E: ParserError<I>,
     {
-        move |i: I| {
+        move |i: &mut I| {
             repeat(0.., f.by_ref())
                 .map(|()| ())
                 .recognize()
@@ -581,9 +622,8 @@ mod unicode_parser {
     use super::parser::next_identifier;
 
     pub(crate) fn iter_identifiers(mut input: &str) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_identifier(input) {
-            Ok((i, o)) => {
-                input = i;
+        std::iter::from_fn(move || match next_identifier(&mut input) {
+            Ok(o) => {
                 debug_assert_ne!(o, "");
                 Some(o)
             }
@@ -595,10 +635,11 @@ mod unicode_parser {
 mod ascii_parser {
     use super::parser::next_identifier;
 
-    pub(crate) fn iter_identifiers(mut input: &[u8]) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_identifier(input) {
-            Ok((i, o)) => {
-                input = i;
+    use winnow::BStr;
+
+    pub(crate) fn iter_identifiers(mut input: &BStr) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_identifier(&mut input) {
+            Ok(o) => {
                 debug_assert_ne!(o, b"");
                 // This is safe because we've checked that the strings are a subset of ASCII
                 // characters.
