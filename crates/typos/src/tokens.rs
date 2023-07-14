@@ -1,4 +1,5 @@
 use bstr::ByteSlice;
+use winnow::BStr;
 
 /// Define rules for tokenizaing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -48,7 +49,9 @@ impl Tokenizer {
         let iter = if self.unicode && !ByteSlice::is_ascii(content.as_bytes()) {
             itertools::Either::Left(unicode_parser::iter_identifiers(content))
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(content.as_bytes()))
+            itertools::Either::Right(ascii_parser::iter_identifiers(BStr::new(
+                content.as_bytes(),
+            )))
         };
         iter.map(move |identifier| self.transform(identifier, content.as_bytes()))
     }
@@ -58,7 +61,7 @@ impl Tokenizer {
             let iter = Utf8Chunks::new(content).flat_map(unicode_parser::iter_identifiers);
             itertools::Either::Left(iter)
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(content))
+            itertools::Either::Right(ascii_parser::iter_identifiers(BStr::new(content)))
         };
         iter.map(move |identifier| self.transform(identifier, content))
     }
@@ -630,7 +633,9 @@ mod unicode_parser {
 mod ascii_parser {
     use super::parser::next_identifier;
 
-    pub(crate) fn iter_identifiers(mut input: &[u8]) -> impl Iterator<Item = &str> {
+    use winnow::BStr;
+
+    pub(crate) fn iter_identifiers(mut input: &BStr) -> impl Iterator<Item = &str> {
         std::iter::from_fn(move || match next_identifier(input) {
             Ok((i, o)) => {
                 input = i;
