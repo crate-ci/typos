@@ -14,11 +14,11 @@ include.workspace = true
 [dependencies]
 unicase = "2.6"
 dictgen = { version = "^0.2", path = "../dictgen" }
-varcon-core = { version = "^3.0", path = "../varcon-core", features = ["flags"] }
+varcon-core = { version = "^4.0", path = "../varcon-core", features = ["flags"] }
 
 [dev-dependencies]
 varcon = { version = "^0.6", path = "../varcon", features = ["flags"] }
-varcon-core = { version = "^3.0", path = "../varcon-core", features = ["flags"] }
+varcon-core = { version = "^4.0", path = "../varcon-core", features = ["flags"] }
 typos = { version = "^0.10", path = "../typos" }
 unicase = "2.6"
 codegenrs = "2.0"
