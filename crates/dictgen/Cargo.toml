@@ -13,8 +13,8 @@ include.workspace = true
 [features]
 default = ["std"]
 std = []
-codegen = ["std", "phf_codegen"]
-map = ["phf", "phf_shared"]
+codegen = ["std", "dep:phf_codegen"]
+map = ["dep:phf", "dep:phf_shared"]
 
 [dependencies]
 unicase = "2.6"
