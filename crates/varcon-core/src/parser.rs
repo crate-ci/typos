@@ -19,7 +19,7 @@ impl<'i> Iterator for ClusterIter<'i> {
 
     fn next(&mut self) -> Option<Cluster> {
         self.input = self.input.trim_start();
-        Cluster::parse.parse_next(&mut self.input).ok()
+        Cluster::parse_.parse_next(&mut self.input).ok()
     }
 }
 
@@ -60,7 +60,11 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
 }
 
 impl Cluster {
-    pub fn parse(input: &mut &str) -> PResult<Self, ()> {
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        Self::parse_.parse(input).map_err(|_err| ParseError)
+    }
+
+    fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("cluster", move |input: &mut &str| {
             let header = (
                 "#",
@@ -79,7 +83,7 @@ impl Cluster {
                 winnow::combinator::opt(header),
                 winnow::combinator::repeat(
                     1..,
-                    winnow::combinator::terminated(Entry::parse, winnow::ascii::line_ending),
+                    winnow::combinator::terminated(Entry::parse_, winnow::ascii::line_ending),
                 ),
                 winnow::combinator::repeat(0.., note),
             );
@@ -104,7 +108,7 @@ mod test_cluster {
 
     #[test]
     fn test_basic() {
-        let (input, actual) = Cluster::parse
+        let (input, actual) = Cluster::parse_
             .parse_peek(
                 "# acknowledgment <verified> (level 35)
 A Cv: acknowledgment / Av B C: acknowledgement
@@ -125,7 +129,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
 
     #[test]
     fn test_notes() {
-        let (input, actual) = Cluster::parse
+        let (input, actual) = Cluster::parse_
             .parse_peek(
                 "# coloration <verified> (level 50)
 A B C: coloration / B. Cv: colouration
@@ -148,11 +152,15 @@ A B C: coloration's / B. Cv: colouration's
 }
 
 impl Entry {
-    pub fn parse(input: &mut &str) -> PResult<Self, ()> {
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        Self::parse_.parse(input).map_err(|_err| ParseError)
+    }
+
+    fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("entry", move |input: &mut &str| {
             let var_sep = (winnow::ascii::space0, '/', winnow::ascii::space0);
             let variants =
-                winnow::combinator::separated1(Variant::parse, var_sep).parse_next(input)?;
+                winnow::combinator::separated1(Variant::parse_, var_sep).parse_next(input)?;
 
             let desc_sep = (winnow::ascii::space0, '|');
             let description =
@@ -187,7 +195,7 @@ impl Entry {
     fn parse_description(input: &mut &str) -> PResult<Self, ()> {
         trace("description", move |input: &mut &str| {
             let (pos, archaic, note, description) = (
-                winnow::combinator::opt((winnow::ascii::space1, Pos::parse)),
+                winnow::combinator::opt((winnow::ascii::space1, Pos::parse_)),
                 winnow::combinator::opt((winnow::ascii::space1, "(-)")),
                 winnow::combinator::opt((winnow::ascii::space1, "--")),
                 winnow::combinator::opt((
@@ -225,7 +233,7 @@ mod test_entry {
     fn test_variant_only() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Entry::parse
+        let (input, actual) = Entry::parse_
             .parse_peek("A Cv: acknowledgment's / Av B C: acknowledgement's\n")
             .unwrap();
         assert_eq!(input, "\n");
@@ -240,7 +248,7 @@ mod test_entry {
     fn test_description() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Entry::parse
+        let (input, actual) = Entry::parse_
             .parse_peek("A C: prize / B: prise | otherwise\n")
             .unwrap();
         assert_eq!(input, "\n");
@@ -255,7 +263,7 @@ mod test_entry {
     fn test_pos() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Entry::parse
+        let (input, actual) = Entry::parse_
             .parse_peek("A B C: practice / AV Cv: practise | <N>\n")
             .unwrap();
         assert_eq!(input, "\n");
@@ -270,7 +278,7 @@ mod test_entry {
     fn test_archaic() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Entry::parse
+        let (input, actual) = Entry::parse_
             .parse_peek("A: bark / Av B: barque | (-) ship\n")
             .unwrap();
         assert_eq!(input, "\n");
@@ -285,7 +293,9 @@ mod test_entry {
     fn test_note() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Entry::parse.parse_peek("_: cabbies | -- plural\n").unwrap();
+        let (input, actual) = Entry::parse_
+            .parse_peek("_: cabbies | -- plural\n")
+            .unwrap();
         assert_eq!(input, "\n");
         assert_eq!(actual.variants.len(), 1);
         assert_eq!(actual.pos, None);
@@ -296,7 +306,7 @@ mod test_entry {
 
     #[test]
     fn test_trailing_comment() {
-        let (input, actual) = Entry::parse.parse_peek(
+        let (input, actual) = Entry::parse_.parse_peek(
             "A B: accursed / AV B-: accurst # ODE: archaic, M-W: 'or' but can find little evidence of use\n",
         )
         .unwrap();
@@ -314,9 +324,13 @@ mod test_entry {
 }
 
 impl Variant {
-    pub fn parse(input: &mut &str) -> PResult<Self, ()> {
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        Self::parse_.parse(input).map_err(|_err| ParseError)
+    }
+
+    fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("variant", move |input: &mut &str| {
-            let types = winnow::combinator::separated1(Type::parse, winnow::ascii::space1);
+            let types = winnow::combinator::separated1(Type::parse_, winnow::ascii::space1);
             let sep = (":", winnow::ascii::space0);
             let (types, word) =
                 winnow::combinator::separated_pair(types, sep, word).parse_next(input)?;
@@ -344,7 +358,7 @@ mod test_variant {
     fn test_valid() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Variant::parse.parse_peek("A Cv: acknowledgment ").unwrap();
+        let (input, actual) = Variant::parse_.parse_peek("A Cv: acknowledgment ").unwrap();
         assert_eq!(input, " ");
         assert_eq!(
             actual.types,
@@ -366,7 +380,7 @@ mod test_variant {
 
     #[test]
     fn test_extra() {
-        let (input, actual) = Variant::parse
+        let (input, actual) = Variant::parse_
             .parse_peek("A Cv: acknowledgment's / Av B C: acknowledgement's")
             .unwrap();
         assert_eq!(input, " / Av B C: acknowledgement's");
@@ -390,7 +404,7 @@ mod test_variant {
 
     #[test]
     fn test_underscore() {
-        let (input, actual) = Variant::parse.parse_peek("_: air_gun\n").unwrap();
+        let (input, actual) = Variant::parse_.parse_peek("_: air_gun\n").unwrap();
         assert_eq!(input, "\n");
         assert_eq!(
             actual.types,
@@ -405,10 +419,14 @@ mod test_variant {
 }
 
 impl Type {
-    pub fn parse(input: &mut &str) -> PResult<Type, ()> {
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        Self::parse_.parse(input).map_err(|_err| ParseError)
+    }
+
+    fn parse_(input: &mut &str) -> PResult<Type, ()> {
         trace("type", move |input: &mut &str| {
-            let category = Category::parse(input)?;
-            let tag = winnow::combinator::opt(Tag::parse).parse_next(input)?;
+            let category = Category::parse_(input)?;
+            let tag = winnow::combinator::opt(Tag::parse_).parse_next(input)?;
             let num = winnow::combinator::opt(winnow::ascii::digit1).parse_next(input)?;
             let num = num.map(|s| s.parse().expect("parser ensured its a number"));
             let t = Type { category, tag, num };
@@ -426,13 +444,13 @@ mod test_type {
     fn test_valid() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Type::parse.parse_peek("A ").unwrap();
+        let (input, actual) = Type::parse_.parse_peek("A ").unwrap();
         assert_eq!(input, " ");
         assert_eq!(actual.category, Category::American);
         assert_eq!(actual.tag, None);
         assert_eq!(actual.num, None);
 
-        let (input, actual) = Type::parse.parse_peek("Bv ").unwrap();
+        let (input, actual) = Type::parse_.parse_peek("Bv ").unwrap();
         assert_eq!(input, " ");
         assert_eq!(actual.category, Category::BritishIse);
         assert_eq!(actual.tag, Some(Tag::Variant));
@@ -441,13 +459,13 @@ mod test_type {
 
     #[test]
     fn test_extra() {
-        let (input, actual) = Type::parse.parse_peek("Z foobar").unwrap();
+        let (input, actual) = Type::parse_.parse_peek("Z foobar").unwrap();
         assert_eq!(input, " foobar");
         assert_eq!(actual.category, Category::BritishIze);
         assert_eq!(actual.tag, None);
         assert_eq!(actual.num, None);
 
-        let (input, actual) = Type::parse.parse_peek("C- foobar").unwrap();
+        let (input, actual) = Type::parse_.parse_peek("C- foobar").unwrap();
         assert_eq!(input, " foobar");
         assert_eq!(actual.category, Category::Canadian);
         assert_eq!(actual.tag, Some(Tag::Possible));
@@ -456,7 +474,7 @@ mod test_type {
 
     #[test]
     fn test_num() {
-        let (input, actual) = Type::parse.parse_peek("Av1 ").unwrap();
+        let (input, actual) = Type::parse_.parse_peek("Av1 ").unwrap();
         assert_eq!(input, " ");
         assert_eq!(actual.category, Category::American);
         assert_eq!(actual.tag, Some(Tag::Variant));
@@ -465,7 +483,11 @@ mod test_type {
 }
 
 impl Category {
-    pub fn parse(input: &mut &str) -> PResult<Self, ()> {
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        Self::parse_.parse(input).map_err(|_err| ParseError)
+    }
+
+    fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("category", move |input: &mut &str| {
             let symbols = winnow::token::one_of(['A', 'B', 'Z', 'C', 'D', '_']);
             symbols
@@ -490,21 +512,25 @@ mod test_category {
 
     #[test]
     fn test_valid() {
-        let (input, actual) = Category::parse.parse_peek("A").unwrap();
+        let (input, actual) = Category::parse_.parse_peek("A").unwrap();
         assert_eq!(input, "");
         assert_eq!(actual, Category::American);
     }
 
     #[test]
     fn test_extra() {
-        let (input, actual) = Category::parse.parse_peek("_ foobar").unwrap();
+        let (input, actual) = Category::parse_.parse_peek("_ foobar").unwrap();
         assert_eq!(input, " foobar");
         assert_eq!(actual, Category::Other);
     }
 }
 
 impl Tag {
-    pub fn parse(input: &mut &str) -> PResult<Self, ()> {
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        Self::parse_.parse(input).map_err(|_err| ParseError)
+    }
+
+    fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("tag", move |input: &mut &str| {
             let symbols = winnow::token::one_of(['.', 'v', 'V', '-', 'x']);
             symbols
@@ -528,21 +554,25 @@ mod test_tag {
 
     #[test]
     fn test_valid() {
-        let (input, actual) = Tag::parse.parse_peek(".").unwrap();
+        let (input, actual) = Tag::parse_.parse_peek(".").unwrap();
         assert_eq!(input, "");
         assert_eq!(actual, Tag::Eq);
     }
 
     #[test]
     fn test_extra() {
-        let (input, actual) = Tag::parse.parse_peek("x foobar").unwrap();
+        let (input, actual) = Tag::parse_.parse_peek("x foobar").unwrap();
         assert_eq!(input, " foobar");
         assert_eq!(actual, Tag::Improper);
     }
 }
 
 impl Pos {
-    pub fn parse(input: &mut &str) -> PResult<Self, ()> {
+    pub fn parse(input: &str) -> Result<Self, ParseError> {
+        Self::parse_.parse(input).map_err(|_err| ParseError)
+    }
+
+    fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("pos", move |input: &mut &str| {
             winnow::combinator::alt((
                 "<N>".value(Pos::Noun),
@@ -562,15 +592,26 @@ mod test_pos {
 
     #[test]
     fn test_valid() {
-        let (input, actual) = Pos::parse.parse_peek("<N>").unwrap();
+        let (input, actual) = Pos::parse_.parse_peek("<N>").unwrap();
         assert_eq!(input, "");
         assert_eq!(actual, Pos::Noun);
     }
 
     #[test]
     fn test_extra() {
-        let (input, actual) = Pos::parse.parse_peek("<Adj> foobar").unwrap();
+        let (input, actual) = Pos::parse_.parse_peek("<Adj> foobar").unwrap();
         assert_eq!(input, " foobar");
         assert_eq!(actual, Pos::Adjective);
     }
 }
+
+#[derive(Debug)]
+pub struct ParseError;
+
+impl std::fmt::Display for ParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "invalid")
+    }
+}
+
+impl std::error::Error for ParseError {}
