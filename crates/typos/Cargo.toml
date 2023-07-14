@@ -14,7 +14,7 @@ include.workspace = true
 [dependencies]
 anyhow = "1.0"
 thiserror = "1.0"
-winnow = "0.4.9"
+winnow = "0.5.0"
 unicode-xid = "0.2.4"
 once_cell = "1.17.2"
 serde = { version = "1.0", features = ["derive"] }

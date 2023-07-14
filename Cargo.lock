@@ -1648,7 +1648,7 @@ dependencies = [
  "thiserror",
  "unicode-segmentation",
  "unicode-xid",
- "winnow 0.4.9",
+ "winnow 0.5.0",
 ]
 
 [[package]]
