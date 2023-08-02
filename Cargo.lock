@@ -808,6 +808,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "iai-callgrind"
+version = "0.4.0"
+source = "git+https://github.com/Joining7943/iai-callgrind.git?branch=2-ability-to-benchmark-a-top-level-binary#78bef67d7a3103d658edb008cb4061992b8f956f"
+
+[[package]]
 name = "ident_case"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1674,6 +1679,7 @@ dependencies = [
  "env_logger",
  "globset",
  "human-panic",
+ "iai-callgrind",
  "ignore",
  "itertools",
  "kstring",
