@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use kstring::KString;
 
-pub const SUPPORTED_FILE_NAMES: &[&str] = &["typos.toml", "_typos.toml", ".typos.toml"];
+pub const SUPPORTED_FILE_NAMES: &[&str] =
+    &["typos.toml", "_typos.toml", ".typos.toml", "pyproject.toml"];
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -15,6 +16,20 @@ pub struct Config {
     pub type_: TypeEngineConfig,
     #[serde(skip)]
     pub overrides: EngineConfig,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[serde(rename_all = "kebab-case")]
+pub struct PyprojectTomlConfig {
+    pub tool: PyprojectTomlTool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[serde(rename_all = "kebab-case")]
+pub struct PyprojectTomlTool {
+    pub typos: Config,
 }
 
 impl Config {
@@ -30,6 +45,11 @@ impl Config {
 
     pub fn from_file(path: &std::path::Path) -> Result<Self, anyhow::Error> {
         let s = std::fs::read_to_string(path)?;
+
+        if path.file_name().unwrap() == "pyproject.toml" {
+            return Ok(toml::from_str::<PyprojectTomlConfig>(&s)?.tool.typos);
+        }
+
         Self::from_toml(&s)
     }
 
