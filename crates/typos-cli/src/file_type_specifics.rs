@@ -8,6 +8,15 @@ pub const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
 
 pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
+        "man",
+        StaticDictConfig {
+            ignore_idents: &[
+                "Nd", // .Nd macro of mdoc (see https://man.openbsd.org/mdoc.7#Nd)
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "py",
         StaticDictConfig {
             ignore_idents: &[
