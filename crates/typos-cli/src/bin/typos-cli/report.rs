@@ -231,7 +231,7 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
                 handle,
                 "{:#}: {:#}",
                 palette.error("error"),
-                palette.strong(format_args!("`{}` is disallowed`", msg.typo))
+                palette.strong(format_args!("`{}` is disallowed", msg.typo))
             )?;
         }
         typos::Status::Corrections(corrections) => {
