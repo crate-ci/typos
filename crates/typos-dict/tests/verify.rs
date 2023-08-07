@@ -90,6 +90,7 @@ fn process<S: Into<String>>(
     let varcon_words = varcon_words();
     let allowed_words = allowed_words();
     let word_variants = proper_word_variants();
+    let top_1000_most_frequent_english_words = top_1000_most_frequent_english_words();
     let rows: Vec<_> = rows
         .into_iter()
         .filter(|(typo, _)| {
@@ -108,15 +109,27 @@ fn process<S: Into<String>>(
             }
         })
         .map(|(typo, corrections)| {
-            let mut new_corrections = IndexSet::new();
+            let mut new_corrections = Vec::new();
             for correction in corrections {
                 let correction = word_variants
                     .get(correction.as_str())
                     .and_then(|words| find_best_match(&typo, correction.as_str(), words))
                     .unwrap_or(&correction);
-                new_corrections.insert(correction.to_owned());
+                new_corrections.push(correction.to_owned());
             }
-            (typo, new_corrections)
+            if let [only_correction] = &new_corrections[..] {
+                if correction_should_contain_space(
+                    &typo,
+                    only_correction,
+                    &top_1000_most_frequent_english_words,
+                ) {
+                    // We cannot provide corrections since we don't yet support corrections
+                    // containing spaces (see https://github.com/crate-ci/typos/issues/795),
+                    // so we just clear the corrections (which still disallows the typo).
+                    new_corrections.clear();
+                }
+            }
+            (typo, new_corrections.into_iter().collect::<IndexSet<_>>())
         })
         .collect();
     let mut dict = Dict::new();
@@ -187,6 +200,29 @@ fn test_varcon_best_match() {
     );
 }
 
+#[test]
+fn test_remove_only_correction_that_should_contain_space() {
+    assert_eq!(
+        process([("includea", ["include"],)]),
+        dict_from_iter([("includea", [],)])
+    );
+
+    assert_eq!(
+        process([("ainclude", ["include"],)]),
+        dict_from_iter([("ainclude", [],)])
+    );
+
+    assert_eq!(
+        process([("extrememe", ["extreme"],)]),
+        dict_from_iter([("extrememe", ["extreme"],)])
+    );
+
+    assert_eq!(
+        process([("mememory", ["memory"],)]),
+        dict_from_iter([("mememory", ["memory"],)])
+    );
+}
+
 fn is_word(word: &str) -> bool {
     word.chars().all(|c| c.is_alphabetic())
 }
@@ -252,4 +288,47 @@ fn allowed_words() -> std::collections::HashMap<String, String> {
             (typo, reason)
         })
         .collect()
+}
+
+fn top_1000_most_frequent_english_words() -> HashSet<String> {
+    std::fs::read_to_string("assets/top-1000-most-frequent-words.csv")
+        .unwrap()
+        .lines()
+        .map(str::to_string)
+        .collect()
+}
+
+/// Returns true if the typo equals the only correction immediately preceded or
+/// followed by a common English word.  (Unless the only correction also
+/// starts/ends in the common English word.)
+///
+/// The reasoning behind this is that we don't want to correct e.g. `includea`
+/// to `include` since it might just be missing a space (`include a`).
+/// On the other hand we still want to correct e.g. `extrememe` to `extreme`.
+fn correction_should_contain_space(
+    typo: &str,
+    only_correction: &str,
+    most_frequent_english_words: &HashSet<String>,
+) -> bool {
+    if let Some(prefix) = typo.strip_suffix(only_correction) {
+        if most_frequent_english_words.contains(prefix) {
+            if only_correction.starts_with(prefix) {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    if let Some(suffix) = typo.strip_prefix(only_correction) {
+        if most_frequent_english_words.contains(suffix) {
+            if only_correction.ends_with(suffix) {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    false
 }
