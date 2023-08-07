@@ -10,28 +10,38 @@ pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
         "py",
         StaticDictConfig {
-            ignore_idents: &["NDArray"],
+            ignore_idents: &[
+                "NDArray", // numpy.typing.NDArray
+            ],
             ignore_words: &[],
         },
     ),
     (
         "rust",
         StaticDictConfig {
-            ignore_idents: &["flate2"],
-            ignore_words: &["ser"],
+            ignore_idents: &[
+                "flate2", // https://crates.io/crates/flate2
+            ],
+            ignore_words: &[
+                "ser", // serde::ser, serde_json::ser, etc.
+            ],
         },
     ),
     (
         "vim",
         StaticDictConfig {
-            ignore_idents: &["windo"],
+            ignore_idents: &[
+                "windo", // https://vimdoc.sourceforge.net/htmldoc/windows.html#:windo
+            ],
             ignore_words: &[],
         },
     ),
     (
         "vimscript",
         StaticDictConfig {
-            ignore_idents: &["windo"],
+            ignore_idents: &[
+                "windo", // https://vimdoc.sourceforge.net/htmldoc/windows.html#:windo
+            ],
             ignore_words: &[],
         },
     ),
