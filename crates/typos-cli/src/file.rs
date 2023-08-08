@@ -83,8 +83,8 @@ impl FileChecker for FixTypos {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
                 for typo in find_typos_in_file(&buffer, policy) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                    if let Some(fix) = get_fix(&typo) {
+                        fixes.push(fix);
                     } else {
                         reporter.report_typo_in_file(typo, path, &buffer, &mut accum_line_num)?;
                     }
@@ -101,8 +101,8 @@ impl FileChecker for FixTypos {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
                 for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                    if let Some(fix) = get_fix(&typo) {
+                        fixes.push(fix);
                     } else {
                         reporter.report_typo_in_filename(typo, path, file_name)?;
                     }
@@ -144,8 +144,8 @@ impl FileChecker for DiffTypos {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
                 for typo in find_typos_in_file(&buffer, policy) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                    if let Some(fix) = get_fix(&typo) {
+                        fixes.push(fix);
                     } else {
                         reporter.report_typo_in_file(typo, path, &buffer, &mut accum_line_num)?;
                     }
@@ -163,8 +163,8 @@ impl FileChecker for DiffTypos {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
                 for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
-                    if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                    if let Some(fix) = get_fix(&typo) {
+                        fixes.push(fix);
                     } else {
                         reporter.report_typo_in_filename(typo, path, file_name)?;
                     }
@@ -556,27 +556,30 @@ pub(crate) fn extract_line(buffer: &[u8], byte_offset: usize) -> (&[u8], usize) 
     (line, line_offset)
 }
 
-fn extract_fix<'t>(typo: &'t typos::Typo<'t>) -> Option<&'t str> {
+struct Fix {
+    typo: typos::Typo<'static>,
+    correction: String,
+}
+
+fn get_fix(typo: &typos::Typo) -> Option<Fix> {
     match &typo.corrections {
-        typos::Status::Corrections(c) if c.len() == 1 => Some(c[0].as_ref()),
+        typos::Status::Corrections(c) if c.len() == 1 => Some(Fix {
+            correction: c[0].to_string(),
+            typo: typo.clone().into_owned(),
+        }),
         _ => None,
     }
 }
 
-fn is_fixable(typo: &typos::Typo<'_>) -> bool {
-    extract_fix(typo).is_some()
-}
-
-fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'static>>) -> Vec<u8> {
+fn fix_buffer(mut buffer: Vec<u8>, fixes: impl Iterator<Item = Fix>) -> Vec<u8> {
     let mut offset = 0isize;
-    for typo in typos {
-        let fix = extract_fix(&typo).expect("Caller only provides fixable typos");
-        let start = ((typo.byte_offset as isize) + offset) as usize;
-        let end = start + typo.typo.len();
+    for fix in fixes {
+        let start = ((fix.typo.byte_offset as isize) + offset) as usize;
+        let end = start + fix.typo.typo.len();
 
-        buffer.splice(start..end, fix.as_bytes().iter().copied());
+        buffer.splice(start..end, fix.correction.as_bytes().iter().copied());
 
-        offset += (fix.len() as isize) - (typo.typo.len() as isize);
+        offset += (fix.correction.len() as isize) - (fix.typo.typo.len() as isize);
     }
     buffer
 }
@@ -685,10 +688,13 @@ mod test {
         let line = line.as_bytes().to_vec();
         let corrections = corrections
             .into_iter()
-            .map(|(byte_offset, typo, correction)| typos::Typo {
-                byte_offset,
-                typo: typo.into(),
-                corrections: typos::Status::Corrections(vec![correction.into()]),
+            .map(|(byte_offset, typo, correction)| {
+                get_fix(&typos::Typo {
+                    byte_offset,
+                    typo: typo.into(),
+                    corrections: typos::Status::Corrections(vec![correction.into()]),
+                })
+                .unwrap()
             });
         let actual = fix_buffer(line, corrections);
         String::from_utf8(actual).unwrap()
