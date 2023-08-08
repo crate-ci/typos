@@ -90,7 +90,7 @@ impl FileChecker for FixTypos {
                     }
                 }
                 if !fixes.is_empty() || path == std::path::Path::new("-") {
-                    let buffer = fix_buffer(buffer, fixes.into_iter());
+                    let buffer = fix_buffer(buffer, fixes);
                     write_file(path, content_type, buffer, reporter)?;
                 }
             }
@@ -109,7 +109,7 @@ impl FileChecker for FixTypos {
                 }
                 if !fixes.is_empty() {
                     let file_name = file_name.to_owned().into_bytes();
-                    let new_name = fix_buffer(file_name, fixes.into_iter());
+                    let new_name = fix_buffer(file_name, fixes);
                     let new_name =
                         String::from_utf8(new_name).expect("corrections are valid utf-8");
                     let new_path = path.with_file_name(new_name);
@@ -151,7 +151,7 @@ impl FileChecker for DiffTypos {
                     }
                 }
                 if !fixes.is_empty() {
-                    new_content = fix_buffer(buffer.clone(), fixes.into_iter());
+                    new_content = fix_buffer(buffer.clone(), fixes);
                     content = buffer
                 }
             }
@@ -171,7 +171,7 @@ impl FileChecker for DiffTypos {
                 }
                 if !fixes.is_empty() {
                     let file_name = file_name.to_owned().into_bytes();
-                    let new_name = fix_buffer(file_name, fixes.into_iter());
+                    let new_name = fix_buffer(file_name, fixes);
                     let new_name =
                         String::from_utf8(new_name).expect("corrections are valid utf-8");
                     new_path = Some(path.with_file_name(new_name));
@@ -571,7 +571,7 @@ fn get_fix(typo: &typos::Typo) -> Option<Fix> {
     }
 }
 
-fn fix_buffer(mut buffer: Vec<u8>, fixes: impl Iterator<Item = Fix>) -> Vec<u8> {
+fn fix_buffer(mut buffer: Vec<u8>, fixes: impl IntoIterator<Item = Fix>) -> Vec<u8> {
     let mut offset = 0isize;
     for fix in fixes {
         let start = ((fix.typo.byte_offset as isize) + offset) as usize;
