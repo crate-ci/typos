@@ -1,9 +1,51 @@
 #![allow(clippy::needless_update)]
 
-use std::borrow::Cow;
+use std::{borrow::Cow, path::Path};
+
+use crate::file::{extract_line, AccumulateLineNum};
 
 pub trait Report: Send + Sync {
     fn report(&self, msg: Message) -> Result<(), std::io::Error>;
+
+    fn report_typo_in_filename(
+        &self,
+        typo: typos::Typo,
+        path: &Path,
+        file_name: &str,
+    ) -> Result<(), std::io::Error> {
+        self.report(
+            Typo {
+                context: Some(PathContext { path }.into()),
+                buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                byte_offset: typo.byte_offset,
+                typo: typo.typo.as_ref(),
+                corrections: typo.corrections,
+            }
+            .into(),
+        )
+    }
+
+    fn report_typo_in_file(
+        &self,
+        typo: typos::Typo,
+        path: &Path,
+        buffer: &[u8],
+        accum_line_num: &mut AccumulateLineNum,
+    ) -> Result<(), std::io::Error> {
+        let line_num = accum_line_num.line_num(buffer, typo.byte_offset);
+        let (line, line_offset) = extract_line(buffer, typo.byte_offset);
+
+        self.report(
+            Typo {
+                context: Some(FileContext { path, line_num }.into()),
+                buffer: std::borrow::Cow::Borrowed(line),
+                byte_offset: line_offset,
+                typo: typo.typo.as_ref(),
+                corrections: typo.corrections,
+            }
+            .into(),
+        )
+    }
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]

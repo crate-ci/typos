@@ -28,14 +28,7 @@ impl FileChecker for Typos {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
-                    let msg = report::Typo {
-                        context: Some(report::PathContext { path }.into()),
-                        buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
-                        byte_offset: typo.byte_offset,
-                        typo: typo.typo.as_ref(),
-                        corrections: typo.corrections,
-                    };
-                    reporter.report(msg.into())?;
+                    reporter.report_typo_in_filename(typo, path, file_name)?;
                 }
             }
         }
@@ -55,16 +48,7 @@ impl FileChecker for Typos {
                     {
                         continue;
                     }
-                    let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
-                    let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
-                    let msg = report::Typo {
-                        context: Some(report::FileContext { path, line_num }.into()),
-                        buffer: std::borrow::Cow::Borrowed(line),
-                        byte_offset: line_offset,
-                        typo: typo.typo.as_ref(),
-                        corrections: typo.corrections,
-                    };
-                    reporter.report(msg.into())?;
+                    reporter.report_typo_in_file(typo, path, &buffer, &mut accum_line_num)?;
                 }
             }
         }
@@ -103,16 +87,7 @@ impl FileChecker for FixTypos {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
-                        let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
-                        let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
-                        let msg = report::Typo {
-                            context: Some(report::FileContext { path, line_num }.into()),
-                            buffer: std::borrow::Cow::Borrowed(line),
-                            byte_offset: line_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
+                        reporter.report_typo_in_file(typo, path, &buffer, &mut accum_line_num)?;
                     }
                 }
                 if !fixes.is_empty() || path == std::path::Path::new("-") {
@@ -130,14 +105,7 @@ impl FileChecker for FixTypos {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
-                        let msg = report::Typo {
-                            context: Some(report::PathContext { path }.into()),
-                            buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
-                            byte_offset: typo.byte_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
+                        reporter.report_typo_in_filename(typo, path, file_name)?;
                     }
                 }
                 if !fixes.is_empty() {
@@ -187,16 +155,7 @@ impl FileChecker for DiffTypos {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
-                        let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
-                        let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
-                        let msg = report::Typo {
-                            context: Some(report::FileContext { path, line_num }.into()),
-                            buffer: std::borrow::Cow::Borrowed(line),
-                            byte_offset: line_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
+                        reporter.report_typo_in_file(typo, path, &buffer, &mut accum_line_num)?;
                     }
                 }
                 if !fixes.is_empty() {
@@ -215,14 +174,7 @@ impl FileChecker for DiffTypos {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
-                        let msg = report::Typo {
-                            context: Some(report::PathContext { path }.into()),
-                            buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
-                            byte_offset: typo.byte_offset,
-                            typo: typo.typo.as_ref(),
-                            corrections: typo.corrections,
-                        };
-                        reporter.report(msg.into())?;
+                        reporter.report_typo_in_filename(typo, path, file_name)?;
                     }
                 }
                 if !fixes.is_empty() {
@@ -573,7 +525,7 @@ fn report_error<E: ToString>(err: E, reporter: &dyn report::Report) -> Result<()
     Ok(())
 }
 
-struct AccumulateLineNum {
+pub struct AccumulateLineNum {
     line_num: usize,
     last_offset: usize,
 }
@@ -587,7 +539,7 @@ impl AccumulateLineNum {
         }
     }
 
-    fn line_num(&mut self, buffer: &[u8], byte_offset: usize) -> usize {
+    pub(crate) fn line_num(&mut self, buffer: &[u8], byte_offset: usize) -> usize {
         assert!(self.last_offset <= byte_offset);
         let slice = &buffer[self.last_offset..byte_offset];
         let newlines = slice.find_iter(b"\n").count();
@@ -598,7 +550,7 @@ impl AccumulateLineNum {
     }
 }
 
-fn extract_line(buffer: &[u8], byte_offset: usize) -> (&[u8], usize) {
+pub(crate) fn extract_line(buffer: &[u8], byte_offset: usize) -> (&[u8], usize) {
     let line_start = buffer[0..byte_offset]
         .rfind_byte(b'\n')
         // Skip the newline
