@@ -1,4 +1,5 @@
 use indexmap::IndexSet;
+use itertools::Itertools;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -252,4 +253,19 @@ fn allowed_words() -> std::collections::HashMap<String, String> {
             (typo, reason)
         })
         .collect()
+}
+
+#[test]
+fn allowed_csv_entries_are_sorted_and_unique() {
+    // The order in the csv file does not affect runtime behavior, but we
+    // still want them to be sorted to make the file more human-readable.
+    snapbox::assert_eq_path(
+        "assets/allowed.csv",
+        allowed_words()
+            .iter()
+            .sorted()
+            .unique()
+            .map(|(word, reason)| format!("{word},{reason}\n"))
+            .join(""),
+    );
 }
