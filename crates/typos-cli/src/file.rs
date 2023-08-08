@@ -47,14 +47,7 @@ impl FileChecker for Typos {
                 reporter.report(msg.into())?;
             } else {
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in check_bytes(&buffer, policy) {
                     let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
                     let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
                     let msg = report::Typo {
@@ -92,14 +85,7 @@ impl FileChecker for FixTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in check_bytes(&buffer, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -176,14 +162,7 @@ impl FileChecker for DiffTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in check_bytes(&buffer, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -551,6 +530,19 @@ fn write_file(
     }
 
     Ok(())
+}
+
+fn check_bytes<'a>(
+    buffer: &'a [u8],
+    policy: &'a crate::policy::Policy<'a, 'a, 'a>,
+) -> impl Iterator<Item = typos::Typo<'a>> {
+    let mut ignores: Option<Ignores> = None;
+
+    typos::check_bytes(buffer, policy.tokenizer, policy.dict).filter(move |typo| {
+        !ignores
+            .get_or_insert_with(|| Ignores::new(buffer, policy.ignore))
+            .is_ignored(typo.span())
+    })
 }
 
 fn report_result<T: Default, E: ToString>(
