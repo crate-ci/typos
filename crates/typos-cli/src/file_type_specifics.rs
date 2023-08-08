@@ -8,6 +8,24 @@ pub const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
 
 pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
+        "css",
+        StaticDictConfig {
+            ignore_idents: &[
+                "nd", // CSS class used by pygments (see https://github.com/pygments/pygments/blob/2.16.1/pygments/token.py#L146)
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
+        "man",
+        StaticDictConfig {
+            ignore_idents: &[
+                "Nd", // .Nd macro of mdoc (see https://man.openbsd.org/mdoc.7#Nd)
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "py",
         StaticDictConfig {
             ignore_idents: &[
@@ -25,6 +43,16 @@ pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
             ignore_words: &[
                 "ser", // serde::ser, serde_json::ser, etc.
             ],
+        },
+    ),
+    (
+        "sh",
+        StaticDictConfig {
+            ignore_idents: &[
+                "ot", // the test command from GNU coreutils supports an -ot argument (see https://www.gnu.org/software/coreutils/manual/html_node/File-characteristic-tests.html)
+                "stap", // command from SystemTap (see https://sourceware.org/systemtap/man/stap.1.html)
+            ],
+            ignore_words: &[],
         },
     ),
     (
