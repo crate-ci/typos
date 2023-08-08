@@ -14,6 +14,19 @@ pub trait FileChecker: Send + Sync {
     ) -> Result<(), std::io::Error>;
 }
 
+fn find_typos_in_file<'a>(
+    buffer: &'a [u8],
+    policy: &'a crate::policy::Policy<'a, 'a, 'a>,
+) -> impl Iterator<Item = typos::Typo<'a>> {
+    let mut ignores: Option<Ignores> = None;
+
+    typos::check_bytes(buffer, policy.tokenizer, policy.dict).filter(move |typo| {
+        !ignores
+            .get_or_insert_with(|| Ignores::new(buffer, policy.ignore))
+            .is_ignored(typo.span())
+    })
+}
+
 #[derive(Debug, Clone, Copy)]
 pub struct Typos;
 
@@ -40,14 +53,7 @@ impl FileChecker for Typos {
                 reporter.report(msg.into())?;
             } else {
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in find_typos_in_file(&buffer, policy) {
                     reporter.report_typo_in_file(typo, path, &buffer, &mut accum_line_num)?;
                 }
             }
@@ -76,14 +82,7 @@ impl FileChecker for FixTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in find_typos_in_file(&buffer, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -144,14 +143,7 @@ impl FileChecker for DiffTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in find_typos_in_file(&buffer, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
