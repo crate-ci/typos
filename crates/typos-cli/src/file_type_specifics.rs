@@ -8,6 +8,15 @@ pub const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
 
 pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
+        "css",
+        StaticDictConfig {
+            ignore_idents: &[
+                "nd", // CSS class used by pygments (see https://github.com/pygments/pygments/blob/2.16.1/pygments/token.py#L146)
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "man",
         StaticDictConfig {
             ignore_idents: &[
