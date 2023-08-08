@@ -46,6 +46,16 @@ pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         },
     ),
     (
+        "sh",
+        StaticDictConfig {
+            ignore_idents: &[
+                "ot", // the test command from GNU coreutils supports an -ot argument (see https://www.gnu.org/software/coreutils/manual/html_node/File-characteristic-tests.html)
+                "stap", // command from SystemTap (see https://sourceware.org/systemtap/man/stap.1.html)
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "vim",
         StaticDictConfig {
             ignore_idents: &[
