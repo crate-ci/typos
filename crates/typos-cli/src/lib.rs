@@ -14,3 +14,4 @@ pub mod report;
 
 mod default_types;
 mod file_type;
+mod file_type_specifics;

@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use kstring::KString;
 
+use crate::file_type_specifics;
+
 pub const SUPPORTED_FILE_NAMES: &[&str] = &["typos.toml", "_typos.toml", ".typos.toml"];
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -155,9 +157,11 @@ pub struct TypeEngineConfig {
 
 impl TypeEngineConfig {
     pub fn from_defaults() -> Self {
-        let patterns = [
-            (
-                KString::from("lock"),
+        let mut patterns = HashMap::new();
+
+        for no_check_type in file_type_specifics::NO_CHECK_TYPES {
+            patterns.insert(
+                KString::from(*no_check_type),
                 GlobEngineConfig {
                     extend_glob: Vec::new(),
                     engine: EngineConfig {
@@ -165,83 +169,34 @@ impl TypeEngineConfig {
                         ..Default::default()
                     },
                 },
-            ),
-            (
-                KString::from("vim"),
+            );
+        }
+
+        for (typ, dict_config) in file_type_specifics::TYPE_SPECIFIC_DICTS {
+            patterns.insert(
+                KString::from(*typ),
                 GlobEngineConfig {
                     extend_glob: Vec::new(),
                     engine: EngineConfig {
                         dict: Some(DictConfig {
-                            extend_identifiers: maplit::hashmap! {
-                                "windo".into() => "windo".into(),
-                            },
+                            extend_identifiers: dict_config
+                                .ignore_idents
+                                .iter()
+                                .map(|key| ((*key).into(), (*key).into()))
+                                .collect(),
+                            extend_words: dict_config
+                                .ignore_words
+                                .iter()
+                                .map(|key| ((*key).into(), (*key).into()))
+                                .collect(),
                             ..Default::default()
                         }),
                         ..Default::default()
                     },
                 },
-            ),
-            (
-                KString::from("vimscript"),
-                GlobEngineConfig {
-                    extend_glob: Vec::new(),
-                    engine: EngineConfig {
-                        dict: Some(DictConfig {
-                            extend_identifiers: maplit::hashmap! {
-                                "windo".into() => "windo".into(),
-                            },
-                            ..Default::default()
-                        }),
-                        ..Default::default()
-                    },
-                },
-            ),
-            (
-                KString::from("rust"),
-                GlobEngineConfig {
-                    extend_glob: Vec::new(),
-                    engine: EngineConfig {
-                        dict: Some(DictConfig {
-                            extend_identifiers: maplit::hashmap! {
-                                "flate2".into() => "flate2".into(),
-                            },
-                            extend_words: maplit::hashmap! {
-                                "ser".into() => "ser".into(),
-                            },
-                            ..Default::default()
-                        }),
-                        ..Default::default()
-                    },
-                },
-            ),
-            (
-                KString::from("py"),
-                GlobEngineConfig {
-                    extend_glob: Vec::new(),
-                    engine: EngineConfig {
-                        dict: Some(DictConfig {
-                            extend_identifiers: maplit::hashmap! {
-                                "NDArray".into() => "NDArray".into(),
-                            },
-                            ..Default::default()
-                        }),
-                        ..Default::default()
-                    },
-                },
-            ),
-            (
-                KString::from("cert"),
-                GlobEngineConfig {
-                    extend_glob: Vec::new(),
-                    engine: EngineConfig {
-                        check_file: Some(false),
-                        ..Default::default()
-                    },
-                },
-            ),
-        ]
-        .into_iter()
-        .collect();
+            );
+        }
+
         Self { patterns }
     }
 

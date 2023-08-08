@@ -86,6 +86,7 @@ encoding_rs = "0.8.32"
 assert_fs = "1.0"
 trycmd = "0.14.16"
 criterion = "0.5"
+snapbox = "0.4.11"
 
 [[bench]]
 name = "checks"
