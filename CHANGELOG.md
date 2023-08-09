@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.16.3] - 2023-08-09
+
 ### Fixes
 
 - Set bad exit code on disallowed words
@@ -858,7 +860,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.2...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.3...HEAD
+[1.16.3]: https://github.com/crate-ci/typos/compare/v1.16.2...v1.16.3
 [1.16.2]: https://github.com/crate-ci/typos/compare/v1.16.1...v1.16.2
 [1.16.1]: https://github.com/crate-ci/typos/compare/v1.16.0...v1.16.1
 [1.16.0]: https://github.com/crate-ci/typos/compare/v1.15.10...v1.16.0
