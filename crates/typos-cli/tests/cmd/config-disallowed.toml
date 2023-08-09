@@ -1,0 +1,17 @@
+bin.name = "typos"
+stdin = ""
+stdout = """
+error: `hello` is disallowed
+  --> ./file:1:1
+  |
+1 | hello `hello`
+  | ^^^^^
+  |
+error: `hello` is disallowed
+  --> ./file:1:8
+  |
+1 | hello `hello`
+  |        ^^^^^
+  |
+"""
+stderr = ""
