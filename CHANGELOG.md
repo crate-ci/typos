@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Set bad exit code on disallowed words
+- Allow `Nd` in man pages
+- Allow `nd` in CSS
+- Allow `ot` and `stap` in sh
+
 ## [1.16.2] - 2023-08-01
 
 ### Fixes
