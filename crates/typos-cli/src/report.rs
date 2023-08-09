@@ -20,10 +20,10 @@ pub enum Message<'m> {
 }
 
 impl<'m> Message<'m> {
-    pub fn is_correction(&self) -> bool {
+    pub fn is_typo(&self) -> bool {
         match self {
             Message::BinaryFile(_) => false,
-            Message::Typo(c) => c.corrections.is_correction(),
+            Message::Typo(c) => !c.corrections.is_valid(),
             Message::FileType(_) => false,
             Message::File(_) => false,
             Message::Parse(_) => false,
