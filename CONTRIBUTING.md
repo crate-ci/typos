@@ -41,11 +41,11 @@ Otherwise, to add to the dictionary:
 
    Format: `typo,correction[,correction...]`
 
-2. Code-gen the dictionary
+2. Verify (and postprocess) the dictionary
 
    With `cargo` and `rustfmt` installed, run
    ```console
-   $ SNAPSHOTS=overwrite cargo test -p typos-dict
+   $ SNAPSHOTS=overwrite cargo test -p typos-dict verify
    ```
    (we do development-time code-gen to speed up builds)
    
@@ -54,11 +54,11 @@ Otherwise, to add to the dictionary:
    - Mixing up corrections and typos
    - etc
 
-3. Verify your change
+3. Code-gen the dictionary
 
    Run
    ```console
-   $ cargo test -p typos-dict
+   $ SNAPSHOTS=overwrite cargo test -p typos-dict codegen
    ```
 
 ### Process
