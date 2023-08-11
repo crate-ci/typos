@@ -37,7 +37,7 @@ to be done in bulk in an attempt to lower the barrier for improving the dictiona
 
 Otherwise, to add to the dictionary:
 
-1. Add your typo to our data file `crates/typos-dict/assets/words.csv`
+1. Add your typo to our data file [crates/typos-dict/assets/words.csv](crates/typos-dict/assets/words.csv)
 
    Format: `typo,correction[,correction...]`
 
@@ -99,4 +99,4 @@ When we're ready to release, a project owner should do the following
 [issues]: https://github.com/crate-ci/typos/issues
 [new issue]: https://github.com/crate-ci/typos/issues/new
 [all issues]: https://github.com/crate-ci/typos/issues?utf8=%E2%9C%93&q=is%3Aissue
-[CI]: https://github.com/crate-ci/typos/tree/master/.github/workflows
+[CI]: ./.github/workflows/
