@@ -45,7 +45,7 @@ Otherwise, to add to the dictionary:
 
    With `cargo` and `rustfmt` installed, run
    ```console
-   $ SNAPSHOTS=overwrite cargo test --workspace
+   $ SNAPSHOTS=overwrite cargo test -p typos-dict
    ```
    (we do development-time code-gen to speed up builds)
    
@@ -58,7 +58,7 @@ Otherwise, to add to the dictionary:
 
    Run
    ```console
-   $ cargo test --workspace
+   $ cargo test -p typos-dict
    ```
 
 ### Process
