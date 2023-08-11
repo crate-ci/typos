@@ -39,27 +39,27 @@ Otherwise, to add to the dictionary:
 
 1. Add your typo to our data file `crates/typos-dict/assets/words.csv`
 
-Format: `typo,correction[,correction...]`
+   Format: `typo,correction[,correction...]`
 
 2. Code-gen the dictionary
 
-With `cargo` and `rustfmt` installed, run
-```console
-$ SNAPSHOTS=overwrite cargo test --workspace
-```
-(we do development-time code-gen to speed up builds)
-
-Auto-cleans up your change according to some rules we have like:
-- Don't prefer specific dialects in the dictionary, leaving those to [`varcon`](http://wordlist.aspell.net/varcon-readme/).
-- Mixing up corrections and typos
-- etc
+   With `cargo` and `rustfmt` installed, run
+   ```console
+   $ SNAPSHOTS=overwrite cargo test --workspace
+   ```
+   (we do development-time code-gen to speed up builds)
+   
+   Auto-cleans up your change according to some rules we have like:
+   - Don't prefer specific dialects in the dictionary, leaving those to [`varcon`](http://wordlist.aspell.net/varcon-readme/).
+   - Mixing up corrections and typos
+   - etc
 
 3. Verify your change
 
-Run
-```console
-$ cargo test --workspace
-```
+   Run
+   ```console
+   $ cargo test --workspace
+   ```
 
 ### Process
 
