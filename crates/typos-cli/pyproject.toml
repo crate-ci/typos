@@ -15,5 +15,5 @@ classifiers = [
 
 
 [tool.maturin]
-name = "typos"
+module-name = "typos"
 bindings = "bin"
