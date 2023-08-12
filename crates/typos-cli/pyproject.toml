@@ -15,4 +15,5 @@ classifiers = [
 
 
 [tool.maturin]
+name = "typos"
 bindings = "bin"
