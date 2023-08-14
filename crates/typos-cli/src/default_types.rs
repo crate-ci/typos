@@ -146,7 +146,7 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ]),
     ("lilypond", &["*.ly", "*.ily"]),
     ("lisp", &["*.el", "*.jl", "*.lisp", "*.lsp", "*.sc", "*.scm"]),
-    ("lock", &["*.lock", "package-lock.json", "requirements.txt", "go.sum"]),
+    ("lock", &["*.lock", "package-lock.json", "requirements.txt", "go.sum", "pnpm-lock.yaml"]),
     ("log", &["*.log"]),
     ("lua", &["*.lua"]),
     ("lz4", &["*.lz4"]),
