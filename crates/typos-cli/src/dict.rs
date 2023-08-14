@@ -44,9 +44,9 @@ impl BuiltIn {
         } else {
             self.correct_with_vars(word_case)?
         };
-        corrections
-            .corrections_mut()
-            .for_each(|s| case_correct(s, word_token.case()));
+        for s in corrections.corrections_mut() {
+            case_correct(s, word_token.case())
+        }
         Some(corrections)
     }
 }
@@ -290,7 +290,7 @@ mod test {
     fn test_dict_correct() {
         let dict = BuiltIn::new(crate::config::Locale::default());
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
-            "finallizes",
+            "finalizes",
             typos::tokens::Case::Lower,
             0,
         ));
@@ -344,7 +344,7 @@ mod test {
     fn test_dict_to_varcon() {
         let dict = BuiltIn::new(crate::config::Locale::EnGb);
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
-            "finallizes",
+            "finalizes",
             typos::tokens::Case::Lower,
             0,
         ));
