@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Categorize `pnpm-lock.yaml` as a `lock` file
+
 ## [1.16.4] - 2023-08-12
 
 ## [1.16.3] - 2023-08-09
