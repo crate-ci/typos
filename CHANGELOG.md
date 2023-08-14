@@ -20,8 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixes
 
 - Set bad exit code on disallowed words
-- Allow `And` in man pages
-- Allow `and` in CSS
+- Allow `Nd` in man pages
+- Allow `nd` in CSS
 - Allow `ot` and `stap` in sh
 
 ## [1.16.2] - 2023-08-01
@@ -221,13 +221,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixes
 
 - Correct `existend` to `existent` in addition to `existed`
-- Correct `erroneous` to `erroneous`
+- Correct `erronerous` to `erroneous`
 
 ## [1.13.21] - 2023-03-13
 
 ### Fixes
 
-- Correct `ephemeral` to `ephemeral`
+- Correct `empheral` to `ephemeral`
 - Ignore `go.mod` by default
 - Ensure pre-commit isn't slow to install
 
@@ -273,7 +273,7 @@ Publish to PyPI (first attempt)
 
 ### Fixes
 
-- Correct `grouped` to `grouped`
+- Correct `grouepd` to `grouped`
 
 ## [1.13.12] - 2023-02-23
 
@@ -291,21 +291,21 @@ Publish to PyPI (first attempt)
 
 ### Fixes
 
-- Correct `detectable` & `seasonal` & `wayfarer`
+- Correct `detctable` & `seaonal` & `wayferer`
 
 ## [1.13.9] - 2023-01-25
 
 ### Fixes
 
-- Correct `regular` -> `regular`
-- Do not correct substituents
+- Correct `regylar` -> `regular`
+- Do not correct substitutents
 - Do not correct substituters
 
 ## [1.13.8] - 2023-01-16
 
 ### Fixes
 
-- Correct serialize -> serialize
+- Correct serialzie -> serialize
 
 ## [1.13.7] - 2023-01-14
 
@@ -359,13 +359,13 @@ Publish to PyPI (first attempt)
 
 ### Fixes
 
-- Correct decrypted -> decrypted
+- Correct decreypted -> decrypted
 
 ## [1.12.11] - 2022-10-20
 
 ### Fixes
 
-- Correct `wrapping`
+- Correct `wrappning`
 
 ## [1.12.10] - 2022-10-11
 
@@ -377,7 +377,7 @@ Publish to PyPI (first attempt)
 
 ### Fixes
 
-- Correct `what` to `what`
+- Correct `whaat` to `what`
 
 ## [1.12.8] - 2022-09-28
 
@@ -395,19 +395,19 @@ Publish to PyPI (first attempt)
 
 ### Fixes
 
-- Correct `parameter` to `parameter`
+- Correct `pararmeter` to `parameter`
 
 ## [1.12.5] - 2022-09-15
 
 ### Fixes
 
-- Correct `state` to `state`
+- Correct `stte` to `state`
 
 ## [1.12.4] - 2022-09-08
 
 ### Fixes
 
-- Don't correct `ANDArray` in Python
+- Don't correct `NDArray` in Python
 
 ## [1.12.3] - 2022-09-06
 
@@ -457,8 +457,8 @@ Publish to PyPI (first attempt)
 
 - Correct "inappropriate[ly]"
 - Ignore `thead` tag only in HTML
-- Ignore `window` in vim
-- Narrow scope of ignoring `flat` to the `flat2` identifier
+- Ignore `windo` in vim
+- Narrow scope of ignoring `flate` to the `flate2` identifier
 
 ## [1.11.1] - 2022-08-16
 
@@ -466,7 +466,7 @@ Publish to PyPI (first attempt)
 
 - Don't correct `thead` tag
 - Correct `deffer` to either `differ` or `defer`
-- Correct `opaque` to `opaque`
+- Correct `opauqe` to `opaque`
 
 ## [1.11.0] - 2022-08-13
 
@@ -478,7 +478,7 @@ Publish to PyPI (first attempt)
 
 ### Fixes
 
-- Correct `anonymised`, `anonymized`
+- Correct `anonimised`, `anonimized`
 
 ## [1.10.2] - 2022-06-22
 
@@ -525,7 +525,7 @@ Publish to PyPI (first attempt)
 ### Fixes
 
 - Fix alignment in reports for numbers, broken in 1.7.2
-- Correct `identity`
+- Correct `identitiy`
 
 ## [1.7.2] - 2022-04-28
 
@@ -539,8 +539,8 @@ Publish to PyPI (first attempt)
 ### Fixes
 
 - Ignore uppercase UUID because Microsoft
-- Correct `unencrypted`
-- Correct `signing`
+- Correct `unencyrpted`
+- Correct `signign`
 
 ## [1.7.0] - 2022-04-18
 
@@ -616,8 +616,8 @@ Publish to PyPI (first attempt)
 
 #### Fixes
 
-- Correct "requirement" to "requirement", not "requirements"
-- Correct "discrepancy" to "discrepancy"
+- Correct "requierment" to "requirement", not "requirements"
+- Correct "descrepancy" to "discrepancy"
 
 ## [1.3.1] - 2021-11-16
 
@@ -663,7 +663,7 @@ Note: MSRV is now 1.54
 
 #### Bug Fixes
 
-- Add `instantiated` typo
+- Add `instantialed` typo
 
 ## [1.1.5] - 2021-08-04
 
@@ -792,7 +792,7 @@ Note: MSRV is now 1.54
 - Check for word variations when also correcting a word
 - Correct `ther` as not just `there` but also `the` and `their` (based on misspelling in Linux)
 - Don't correct `hardlinked`
-- `reference` should correct to `reference` and not `references`
+- `refernce` should correct to `reference` and not `references`
 
 #### Performance
 

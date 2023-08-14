@@ -290,7 +290,7 @@ mod test {
     fn test_dict_correct() {
         let dict = BuiltIn::new(crate::config::Locale::default());
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
-            "finalizes",
+            "finallizes",
             typos::tokens::Case::Lower,
             0,
         ));
@@ -344,7 +344,7 @@ mod test {
     fn test_dict_to_varcon() {
         let dict = BuiltIn::new(crate::config::Locale::EnGb);
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
-            "finalizes",
+            "finallizes",
             typos::tokens::Case::Lower,
             0,
         ));

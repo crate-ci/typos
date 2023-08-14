@@ -77,16 +77,16 @@ To mark a word or an identifier (grouping of words) as valid, add it your [`_typ
 [default]
 extend-ignore-identifiers-re = [
     # *sigh* this just isn't worth the cost of fixing
-    "AttributeID.*Suppress.*",
+    "AttributeID.*Supress.*",
 ]
 
 [default.extend-identifiers]
 # *sigh* this just isn't worth the cost of fixing
-AttributeIDSuppressMenu = "AttributeIDSuppressMenu"
+AttributeIDSupressMenu = "AttributeIDSupressMenu"
 
 [default.extend-words]
-# Don't correct the surname "The"
-the = "the"
+# Don't correct the surname "Teh"
+teh = "teh"
 ```
 
 For cases like localized content, you can disable spell checking of file contents while still checking the file name:
