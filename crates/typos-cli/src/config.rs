@@ -31,7 +31,13 @@ impl Config {
     }
 
     pub fn from_file(path: &std::path::Path) -> Result<Self, anyhow::Error> {
-        let s = std::fs::read_to_string(path)?;
+        let s = std::fs::read_to_string(path).map_err(|err| {
+            let kind = err.kind();
+            std::io::Error::new(
+                kind,
+                format!("could not read config at `{}`", path.display()),
+            )
+        })?;
         Self::from_toml(&s)
     }
 
