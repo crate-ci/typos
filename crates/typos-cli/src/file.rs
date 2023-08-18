@@ -696,10 +696,15 @@ fn walk_entry(
         let explicit = entry.depth() == 0;
         let (path, lookup_path) = if entry.is_stdin() {
             let path = std::path::Path::new("-");
-            (path, std::env::current_dir()?)
+            let cwd = std::env::current_dir().map_err(|err| {
+                let kind = err.kind();
+                std::io::Error::new(kind, "no current working directory".to_owned())
+            })?;
+            (path, cwd)
         } else {
             let path = entry.path();
-            (path, path.canonicalize()?)
+            let abs_path = report_result(path.canonicalize(), Some(path), reporter)?;
+            (path, abs_path)
         };
         let policy = engine.policy(&lookup_path);
         checks.check_file(path, explicit, &policy, reporter)?;
