@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Provide more context for IO error messages
+
 ## [1.16.5] - 2023-08-14
 
 ### Fixes
