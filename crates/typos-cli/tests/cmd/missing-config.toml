@@ -4,5 +4,5 @@ status.code = 78
 stdin = ""
 # stdout doesn't have stable order
 stderr = """
-No such file or directory (os error 2)
+could not read config at `foo.toml`
 """
