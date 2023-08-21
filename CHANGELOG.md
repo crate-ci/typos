@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(action)* With `fetch-depth:0`, don't ignore excludes and fail with spaces in file names
+
 ## [1.16.7] - 2023-08-21
 
 ### Fixes
