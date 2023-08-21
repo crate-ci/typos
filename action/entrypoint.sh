@@ -14,25 +14,11 @@ CMD_NAME="typos"
 COMMAND="${_INSTALL_DIR}/${CMD_NAME}"
 
 TARGET=${INPUT_FILES:-"."}
-if [[ -n "${GITHUB_BASE_REF:-}" ]]; then
-    BASE_REF=HEAD~  # HACK: GITHUB_BASE_REF is failing the `--verify` but `HEAD~ should be the same for pull requests
-    git config --global --add safe.directory "$PWD"
-    if git rev-parse --verify ${BASE_REF} 2>/dev/null ; then
-        log "Limiting checks to ${GITHUB_BASE_REF}...HEAD"
-        TARGET=$(git diff ${BASE_REF}...HEAD --name-only --diff-filter=AM -- ${TARGET})
-        if [[ -z "${TARGET:-}" ]]; then
-                log "INPUT_FILES are unchanged"
-                exit 0
-        fi
-    else
-        log "WARN: Not limiting checks to ${BASE_REF}...HEAD, ${GITHUB_BASE_REF} is not available"
-    fi
-fi
-
 if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
     log "ERROR: Input files (${TARGET}) not found"
     exit 1
 fi
+
 if [[ ! -x ${COMMAND} ]]; then
     VERSION=1.16.7
     log "Downloading 'typos' v${VERSION}"
