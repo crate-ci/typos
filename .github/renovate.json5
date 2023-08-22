@@ -7,6 +7,7 @@
   dependencyDashboard: true,
   regexManagers: [
     {
+      customType: 'regex',
       fileMatch: [
         '^rust-toolchain\\.toml$',
         'Cargo.toml$',
@@ -33,8 +34,8 @@
       matchPackageNames: [
         'rust',
       ],
-      minimumReleaseAge: "126 days",  // 3 releases * 6 weeks per release * 7 days per week
-      internalChecksFilter: "strict",
+      minimumReleaseAge: '126 days',  // 3 releases * 6 weeks per release * 7 days per week
+      internalChecksFilter: 'strict',
     },
     // Goals:
     // - Rollup safe upgrades to reduce CI runner load
