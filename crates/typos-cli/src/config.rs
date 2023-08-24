@@ -36,13 +36,14 @@ pub struct PyprojectTomlTool {
 
 impl Config {
     pub fn from_dir(cwd: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
-        let config = if let Some(path) = find_project_file(cwd, SUPPORTED_FILE_NAMES) {
-            log::debug!("Loading {}", path.display());
-            Self::from_file(&path)?
-        } else {
-            None
-        };
-        Ok(config)
+        for file in find_project_files(cwd, SUPPORTED_FILE_NAMES) {
+            log::debug!("Loading {}", file.display());
+            if let Some(config) = Self::from_file(&file)? {
+                return Ok(Some(config))
+            }
+        }
+
+        Ok(None)
     }
 
     pub fn from_file(path: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
@@ -55,7 +56,13 @@ impl Config {
         })?;
 
         if path.file_name().unwrap() == "pyproject.toml" {
-            return Ok(toml::from_str::<PyprojectTomlConfig>(&s)?.tool.typos);
+            return match toml::from_str::<PyprojectTomlConfig>(&s) {
+                Err(_) => {
+                    log::debug!("No `tool.typos` section found in `pyproject.toml`, skipping");
+                    Ok(None)
+                },
+                Ok(config) => Ok(config.tool.typos)
+            }
         }
 
         match Self::from_toml(&s) {
@@ -478,15 +485,16 @@ impl DictConfig {
     }
 }
 
-fn find_project_file(dir: &std::path::Path, names: &[&str]) -> Option<std::path::PathBuf> {
+fn find_project_files(dir: &std::path::Path, names: &[&str]) -> Vec<std::path::PathBuf> {
     let mut file_path = dir.join("placeholder");
+    let mut found_files = vec![];
     for name in names {
         file_path.set_file_name(name);
         if file_path.exists() {
-            return Some(file_path);
+            found_files.push(file_path.clone());
         }
     }
-    None
+    found_files
 }
 
 impl PartialEq for DictConfig {
