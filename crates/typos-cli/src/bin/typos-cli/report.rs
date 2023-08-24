@@ -89,7 +89,7 @@ impl<'r> MessageStatus<'r> {
 
 impl<'r> Report for MessageStatus<'r> {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
-        if msg.is_correction() {
+        if msg.is_typo() {
             self.typos_found.store(true, atomic::Ordering::Relaxed);
         }
         if msg.is_error() {
@@ -231,7 +231,7 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
                 handle,
                 "{:#}: {:#}",
                 palette.error("error"),
-                palette.strong(format_args!("`{}` is disallowed`", msg.typo))
+                palette.strong(format_args!("`{}` is disallowed", msg.typo))
             )?;
         }
         typos::Status::Corrections(corrections) => {

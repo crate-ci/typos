@@ -1,23 +1,23 @@
-name: ci
+name: CI
+
+permissions:
+  contents: read
+
 on:
   pull_request:
-    paths:
-    - '**'
-    - '!/*.md'
-    - '!/docs/**'
-    - "!/LICENSE-*"
   push:
     branches:
     - master
-    paths:
-    - '**'
-    - '!/*.md'
-    - '!/docs/**'
-    - "!/LICENSE-*"
-  schedule:
-  - cron: '3 3 3 * *'
+
+env:
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+  CLICOLOR: 1
+
 jobs:
   ci:
+    permissions:
+      contents: none
     name: CI
     needs: [test, msrv, docs, rustfmt, clippy]
     runs-on: ubuntu-latest
@@ -36,11 +36,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: ${{ matrix.rust }}
-        profile: minimal
-        override: true
     - uses: Swatinem/rust-cache@v2
     - name: Build
       run: cargo test --no-run --workspace --all-features
@@ -51,17 +49,15 @@ jobs:
     - name: No-default features
       run: cargo test --workspace --no-default-features
   msrv:
-    name: "Check MSRV: 1.64.0"
+    name: "Check MSRV: 1.65.0"
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: 1.64.0  # MSRV
-        profile: minimal
-        override: true
+        toolchain: 1.65.0  # MSRV
     - uses: Swatinem/rust-cache@v2
     - name: Default features
       run: cargo check --workspace --all-targets
@@ -69,6 +65,18 @@ jobs:
       run: cargo check --workspace --all-targets --all-features
     - name: No-default features
       run: cargo check --workspace --all-targets --no-default-features
+  lockfile:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: stable
+    - uses: Swatinem/rust-cache@v2
+    - name: "Is lockfile updated?"
+      run: cargo fetch --locked
   docs:
     name: Docs
     runs-on: ubuntu-latest
@@ -76,11 +84,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        profile: minimal
-        override: true
     - uses: Swatinem/rust-cache@v2
     - name: Check documentation
       env:
@@ -93,13 +99,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@stable
       with:
         # Not MSRV because its harder to jump between versions and people are
         # more likely to have stable
         toolchain: stable
-        profile: minimal
-        override: true
         components: rustfmt
     - uses: Swatinem/rust-cache@v2
     - name: Check formatting
@@ -107,18 +111,32 @@ jobs:
   clippy:
     name: clippy
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write # to upload sarif results
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: 1.64.0  # MSRV
-        profile: minimal
-        override: true
+        toolchain: 1.65.0  # MSRV
         components: clippy
     - uses: Swatinem/rust-cache@v2
-    - uses: actions-rs/clippy-check@v1
+    - name: Install SARIF tools
+      run: cargo install clippy-sarif --version 0.3.4 --locked  # Held back due to msrv
+    - name: Install SARIF tools
+      run: cargo install sarif-fmt --version 0.3.4 --locked # Held back due to msrv
+    - name: Check
+      run: >
+        cargo clippy --workspace --all-features --all-targets --message-format=json -- -D warnings --allow deprecated
+        | clippy-sarif
+        | tee clippy-results.sarif
+        | sarif-fmt
+      continue-on-error: true
+    - name: Upload
+      uses: github/codeql-action/upload-sarif@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        args: --workspace --all-features --all-targets -- -D warnings --allow deprecated
+        sarif_file: clippy-results.sarif
+        wait-for-processing: true
+    - name: Report status
+      run: cargo clippy --workspace --all-features --all-targets -- -D warnings --allow deprecated

@@ -127,7 +127,7 @@ impl Types {
         let mut mpath = Path::new(path);
         let mut matches = self.matches.get_or_default().borrow_mut();
         loop {
-            self.set.matches_into(mpath.file_name()?, &mut *matches);
+            self.set.matches_into(mpath.file_name()?, &mut matches);
             if !matches.is_empty() {
                 break;
             }

@@ -47,14 +47,7 @@ impl FileChecker for Typos {
                 reporter.report(msg.into())?;
             } else {
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in check_bytes(&buffer, policy) {
                     let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
                     let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
                     let msg = report::Typo {
@@ -92,14 +85,7 @@ impl FileChecker for FixTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in check_bytes(&buffer, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -176,14 +162,7 @@ impl FileChecker for DiffTypos {
             } else {
                 let mut fixes = Vec::new();
                 let mut accum_line_num = AccumulateLineNum::new();
-                let mut ignores: Option<Ignores> = None;
-                for typo in typos::check_bytes(&buffer, policy.tokenizer, policy.dict) {
-                    if ignores
-                        .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
-                        .is_ignored(typo.span())
-                    {
-                        continue;
-                    }
+                for typo in check_bytes(&buffer, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -452,10 +431,14 @@ fn read_file(
 ) -> Result<(Vec<u8>, content_inspector::ContentType), std::io::Error> {
     let buffer = if path == std::path::Path::new("-") {
         let mut buffer = Vec::new();
-        report_result(std::io::stdin().read_to_end(&mut buffer), reporter)?;
+        report_result(
+            std::io::stdin().read_to_end(&mut buffer),
+            Some(path),
+            reporter,
+        )?;
         buffer
     } else {
-        report_result(std::fs::read(path), reporter)?
+        report_result(std::fs::read(path), Some(path), reporter)?
     };
 
     let content_type = content_inspector::inspect(&buffer);
@@ -481,7 +464,7 @@ fn read_file(
                 encoding_rs::DecoderResult::InputEmpty => Ok(decoded),
                 _ => Err(format!("invalid UTF-16LE encoding at byte {} in {}", written, path.display())),
             };
-            let buffer = report_result(decoded, reporter)?;
+            let buffer = report_result(decoded, Some(path), reporter)?;
             (buffer.into_bytes(), content_type)
         }
         content_inspector::ContentType::UTF_16BE => {
@@ -494,7 +477,7 @@ fn read_file(
                 encoding_rs::DecoderResult::InputEmpty => Ok(decoded),
                 _ => Err(format!("invalid UTF-16BE encoding at byte {} in {}", written, path.display())),
             };
-            let buffer = report_result(decoded, reporter)?;
+            let buffer = report_result(decoded, Some(path), reporter)?;
             (buffer.into_bytes(), content_type)
         },
     };
@@ -517,7 +500,7 @@ fn write_file(
         | content_inspector::ContentType::UTF_8
         | content_inspector::ContentType::UTF_8_BOM => buffer,
         content_inspector::ContentType::UTF_16LE => {
-            let buffer = report_result(String::from_utf8(buffer), reporter)?;
+            let buffer = report_result(String::from_utf8(buffer), Some(path), reporter)?;
             if buffer.is_empty() {
                 // Error occurred, don't clear out the file
                 return Ok(());
@@ -530,7 +513,7 @@ fn write_file(
             encoded.into_owned()
         }
         content_inspector::ContentType::UTF_16BE => {
-            let buffer = report_result(String::from_utf8(buffer), reporter)?;
+            let buffer = report_result(String::from_utf8(buffer), Some(path), reporter)?;
             if buffer.is_empty() {
                 // Error occurred, don't clear out the file
                 return Ok(());
@@ -545,30 +528,49 @@ fn write_file(
     };
 
     if path == std::path::Path::new("-") {
-        report_result(std::io::stdout().write_all(&buffer), reporter)?;
+        report_result(std::io::stdout().write_all(&buffer), Some(path), reporter)?;
     } else {
-        report_result(std::fs::write(path, buffer), reporter)?;
+        report_result(std::fs::write(path, buffer), Some(path), reporter)?;
     }
 
     Ok(())
 }
 
+fn check_bytes<'a>(
+    buffer: &'a [u8],
+    policy: &'a crate::policy::Policy<'a, 'a, 'a>,
+) -> impl Iterator<Item = typos::Typo<'a>> {
+    let mut ignores: Option<Ignores> = None;
+
+    typos::check_bytes(buffer, policy.tokenizer, policy.dict).filter(move |typo| {
+        !ignores
+            .get_or_insert_with(|| Ignores::new(buffer, policy.ignore))
+            .is_ignored(typo.span())
+    })
+}
+
 fn report_result<T: Default, E: ToString>(
     value: Result<T, E>,
+    path: Option<&std::path::Path>,
     reporter: &dyn report::Report,
 ) -> Result<T, std::io::Error> {
     let buffer = match value {
         Ok(value) => value,
         Err(err) => {
-            report_error(err, reporter)?;
+            report_error(err, path, reporter)?;
             Default::default()
         }
     };
     Ok(buffer)
 }
 
-fn report_error<E: ToString>(err: E, reporter: &dyn report::Report) -> Result<(), std::io::Error> {
-    let msg = report::Error::new(err.to_string());
+fn report_error<E: ToString>(
+    err: E,
+    path: Option<&std::path::Path>,
+    reporter: &dyn report::Report,
+) -> Result<(), std::io::Error> {
+    let mut msg = report::Error::new(err.to_string());
+    msg.context = path.map(|path| report::Context::Path(report::PathContext { path }));
     reporter.report(msg.into())?;
     Ok(())
 }
@@ -680,7 +682,7 @@ fn walk_entry(
     let entry = match entry {
         Ok(entry) => entry,
         Err(err) => {
-            report_error(err, reporter)?;
+            report_error(err, None, reporter)?;
             return Ok(());
         }
     };
@@ -694,10 +696,15 @@ fn walk_entry(
         let explicit = entry.depth() == 0;
         let (path, lookup_path) = if entry.is_stdin() {
             let path = std::path::Path::new("-");
-            (path, std::env::current_dir()?)
+            let cwd = std::env::current_dir().map_err(|err| {
+                let kind = err.kind();
+                std::io::Error::new(kind, "no current working directory".to_owned())
+            })?;
+            (path, cwd)
         } else {
             let path = entry.path();
-            (path, path.canonicalize()?)
+            let abs_path = report_result(path.canonicalize(), Some(path), reporter)?;
+            (path, abs_path)
         };
         let policy = engine.policy(&lookup_path);
         checks.check_file(path, explicit, &policy, reporter)?;

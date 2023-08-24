@@ -81,13 +81,9 @@ fn process<S: Into<String>>(
     let rows: Dict = dict
         .into_iter()
         .filter(|(t, _)| is_word(t))
-        .filter_map(|(t, c)| {
+        .map(|(t, c)| {
             let new_c: IndexSet<_> = c.into_iter().filter(|c| is_word(c)).collect();
-            if new_c.is_empty() {
-                None
-            } else {
-                Some((t, new_c))
-            }
+            (t, new_c)
         })
         .collect();
 

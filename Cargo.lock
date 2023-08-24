@@ -1653,7 +1653,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.16.2"
+version = "1.16.8"
 dependencies = [
  "ahash",
  "anstream",
@@ -1685,6 +1685,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_regex",
+ "snapbox",
  "thread_local",
  "toml",
  "trycmd",

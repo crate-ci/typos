@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.16.8] - 2023-08-21
+
+### Fixes
+
+- *(action)* With `fetch-depth:0`, don't ignore excludes and fail with spaces in file names
+
+## [1.16.7] - 2023-08-21
+
+### Fixes
+
+- Provide more context for IO error messages
+
+## [1.16.6] - 2023-08-18
+
+### Fixes
+
+- Provide more context for IO error messages
+
+## [1.16.5] - 2023-08-14
+
+### Fixes
+
+- Categorize `pnpm-lock.yaml` as a `lock` file
+
+## [1.16.4] - 2023-08-12
+
+## [1.16.3] - 2023-08-09
+
+### Fixes
+
+- Set bad exit code on disallowed words
+- Allow `Nd` in man pages
+- Allow `nd` in CSS
+- Allow `ot` and `stap` in sh
+
 ## [1.16.2] - 2023-08-01
 
 ### Fixes
@@ -851,7 +886,13 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.2...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.8...HEAD
+[1.16.8]: https://github.com/crate-ci/typos/compare/v1.16.7...v1.16.8
+[1.16.7]: https://github.com/crate-ci/typos/compare/v1.16.6...v1.16.7
+[1.16.6]: https://github.com/crate-ci/typos/compare/v1.16.5...v1.16.6
+[1.16.5]: https://github.com/crate-ci/typos/compare/v1.16.4...v1.16.5
+[1.16.4]: https://github.com/crate-ci/typos/compare/v1.16.3...v1.16.4
+[1.16.3]: https://github.com/crate-ci/typos/compare/v1.16.2...v1.16.3
 [1.16.2]: https://github.com/crate-ci/typos/compare/v1.16.1...v1.16.2
 [1.16.1]: https://github.com/crate-ci/typos/compare/v1.16.0...v1.16.1
 [1.16.0]: https://github.com/crate-ci/typos/compare/v1.15.10...v1.16.0

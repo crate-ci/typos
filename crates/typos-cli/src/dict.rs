@@ -44,9 +44,9 @@ impl BuiltIn {
         } else {
             self.correct_with_vars(word_case)?
         };
-        corrections
-            .corrections_mut()
-            .for_each(|s| case_correct(s, word_token.case()));
+        for s in corrections.corrections_mut() {
+            case_correct(s, word_token.case())
+        }
         Some(corrections)
     }
 }
