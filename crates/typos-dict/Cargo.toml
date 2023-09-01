@@ -12,16 +12,16 @@ rust-version.workspace = true
 include.workspace = true
 
 [dependencies]
-unicase = "2.6"
+unicase = "2.7"
 dictgen = { version = "^0.2", path = "../dictgen" }
 
 [dev-dependencies]
 csv = "1.2"
 itertools = "0.10"
 edit-distance = "2.1"
-unicase = "2.6"
+unicase = "2.7"
 codegenrs = "2.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 varcon = { version = "^0.7", path = "../varcon" }
-snapbox = { version = "0.4.11", features = ["path"] }
+snapbox = { version = "0.4.12", features = ["path"] }
 indexmap = "2.0.0"

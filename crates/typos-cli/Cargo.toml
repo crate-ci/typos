@@ -43,22 +43,22 @@ typos = { version = "^0.10", path = "../typos" }
 varcon-core = { version = "^4.0.0", path = "../varcon-core" }
 typos-dict = { version = "^0.10", path = "../typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "../typos-vars", optional = true }
-unicase = "2.6"
+unicase = "2.7"
 anyhow = "1.0"
-clap = { version = "4.3.0", features = ["derive"] }
+clap = { version = "4.4.2", features = ["derive"] }
 clap-verbosity-flag = "2.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.7.4"
+toml = "0.7.6"
 log = "0.4"
 env_logger = { version = "0.10", default-features = false, features = ["auto-color"] }
 atty = "0.2.14"
-bstr = "1.5"
-once_cell = "1.17.2"
+bstr = "1.6"
+once_cell = "1.18.0"
 ahash = "0.8"
 difflib = "0.4"
 proc-exit = "2.0"
-human-panic = "1.1.4"
+human-panic = "1.2.0"
 content_inspector = "0.2.4"
 unicode-segmentation = "1.10.1"
 derive_more = "0.99.17"
@@ -71,19 +71,19 @@ maplit = "1.0"
 unicode-width = "0.1.10"
 unic-emoji-char = "0.9.0"
 thread_local = "1.1.7"
-globset = "0.4.10"
-anstyle = "1.0.0"
+globset = "0.4.13"
+anstyle = "1.0.2"
 anstream = "0.3.2"
-colorchoice-clap = "1.0.0"
+colorchoice-clap = "1.0.2"
 serde_regex = "1.1.0"
-regex = "1.8.3"
-encoding_rs = "0.8.32"
+regex = "1.9.4"
+encoding_rs = "0.8.33"
 
 [dev-dependencies]
 assert_fs = "1.0"
-trycmd = "0.14.16"
+trycmd = "0.14.17"
 criterion = "0.5"
-snapbox = "0.4.11"
+snapbox = "0.4.12"
 
 [[bench]]
 name = "checks"
