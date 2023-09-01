@@ -17,7 +17,7 @@ dictgen = { version = "^0.2", path = "../dictgen" }
 
 [dev-dependencies]
 csv = "1.2"
-itertools = "0.10"
+itertools = "0.11"
 edit-distance = "2.1"
 unicase = "2.7"
 codegenrs = "2.0"
