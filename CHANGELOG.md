@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Bump MSRV to 1.70.0
+
+### Fixes
+
+- Updated the dictionary with the [August 2023](https://github.com/crate-ci/typos/issues/784) changes
+
 ## [1.16.9] - 2023-08-30
 
 ### Fixes
