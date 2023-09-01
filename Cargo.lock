@@ -319,7 +319,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools",
+ "itertools 0.11.0",
  "snapbox",
  "typos",
  "unicase",
@@ -368,7 +368,7 @@ dependencies = [
  "clap 4.4.2",
  "criterion-plot",
  "is-terminal",
- "itertools",
+ "itertools 0.10.5",
  "num-traits",
  "once_cell",
  "oorandom",
@@ -389,7 +389,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6b50826342786a51a89e2da3a28f1c32b06e387201bc2d19791f622c673706b1"
 dependencies = [
  "cast",
- "itertools",
+ "itertools 0.10.5",
 ]
 
 [[package]]
@@ -879,6 +879,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b1c173a5686ce8bfa551b3563d0c2170bf24ca44da99c7ca4bfdab5418c3fe57"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -972,7 +981,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools",
+ "itertools 0.11.0",
  "regex",
  "snapbox",
  "unicase",
@@ -1140,7 +1149,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a5aab5be6e4732b473071984b3164dbbfb7a3674d30ea5ff44410b6bcd960c3c"
 dependencies = [
  "difflib",
- "itertools",
+ "itertools 0.10.5",
  "predicates-core",
 ]
 
@@ -1634,7 +1643,7 @@ version = "0.10.15"
 dependencies = [
  "anyhow",
  "bstr",
- "itertools",
+ "itertools 0.11.0",
  "once_cell",
  "serde",
  "simdutf8",
@@ -1668,7 +1677,7 @@ dependencies = [
  "globset",
  "human-panic",
  "ignore",
- "itertools",
+ "itertools 0.11.0",
  "kstring",
  "log",
  "maplit",
@@ -1702,7 +1711,7 @@ dependencies = [
  "dictgen",
  "edit-distance",
  "indexmap 2.0.0",
- "itertools",
+ "itertools 0.11.0",
  "snapbox",
  "unicase",
  "varcon",
@@ -1714,7 +1723,7 @@ version = "0.8.11"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools",
+ "itertools 0.11.0",
  "snapbox",
  "typos",
  "unicase",
@@ -1930,7 +1939,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools",
+ "itertools 0.11.0",
  "snapbox",
  "unicase",
 ]
