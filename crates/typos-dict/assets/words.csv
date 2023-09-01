@@ -4965,6 +4965,7 @@ assosiations,associations
 assosiative,associative
 assosication,assassination
 assotiated,associated
+assotiation,association
 assotiations,associations
 assoziated,associated
 assoziation,association
@@ -5794,6 +5795,7 @@ autohorized,authorized
 autoincrememnt,autoincrement
 autoincrementive,autoincrement
 autokorrect,autocorrect
+autolaod,autoload
 automaatically,automatically
 automagicaly,automagically
 automaitc,automatic
@@ -7773,6 +7775,7 @@ buffring,buffering
 bufufer,buffer
 bugdets,budgets
 buggest,biggest
+bugix,bugfix
 buglaria,bulgaria
 bugous,bogus
 buguous,bogus
@@ -10259,6 +10262,7 @@ cjanged,changed
 cjanges,changes
 cjoice,choice
 cjoices,choices
+ckeck,check
 ckecksum,checksum
 claaes,classes
 clacium,calcium
@@ -10505,6 +10509,7 @@ closesly,closely
 closests,closest,closets
 closig,closing
 closley,closely
+closly,closely
 clossed,closed
 clossing,closing
 clossion,collision
@@ -10772,6 +10777,7 @@ cointerpoint,counterpoint
 cokies,cookies
 colaboration,collaboration
 colaborations,collaborations
+colapsed,collapsed
 colateral,collateral
 coldplg,coldplug
 colectable,collectable
@@ -16278,6 +16284,7 @@ decroative,decorative
 decrpt,decrypt
 decrpted,decrypted
 decrption,decryption
+decryp,decrypt
 decryped,decrypted
 decryptation,decryption
 decrytion,decryption
@@ -18011,6 +18018,7 @@ detial,detail
 detialed,detailed
 detialing,detailing
 detials,details
+detils,details
 detination,destination
 detinations,destinations
 detmatologist,dermatologist
@@ -19942,6 +19950,7 @@ documenatation,documentation
 documenation,documentation
 documenatries,documentaries
 documenatry,documentary
+documened,documented
 documenet,document
 documenetation,documentation
 documeneted,documented
@@ -20781,6 +20790,7 @@ effedts,effects
 effeect,effect
 effeects,effects
 effekt,effect
+effetct,effect
 effexts,effects
 efficcient,efficient
 efficeincy,efficiency
@@ -21496,6 +21506,7 @@ encrpyt,encrypt
 encrpyted,encrypted
 encrpytion,encryption
 encrupted,encrypted
+encryp,encrypt
 encryped,encrypted
 encrypiton,encryption
 encryptation,encryption
@@ -21777,6 +21788,7 @@ enpoint,endpoint
 enpoints,endpoints
 enque,enqueue
 enqueing,enqueuing
+enries,entries
 enrolement,enrollment
 enrollemnt,enrollment
 enrties,entries
@@ -22077,6 +22089,7 @@ ephememeris,ephemeris
 ephemereal,ephemeral
 ephemereally,ephemerally
 ephermeral,ephemeral
+ephimeral,ephemeral
 ephipany,epiphany
 epidsodes,episodes
 epigramic,epigrammatic
@@ -26152,6 +26165,7 @@ fromidable,formidable
 fromm,from
 froms,forms
 fromt,from,front
+fromtier,frontier
 fron,from,front
 fronat,format,front
 fronend,frontend
@@ -27195,6 +27209,7 @@ granuality,granularity
 granualtiry,granularity
 granularty,granularity
 granulatiry,granularity
+graoh,graph
 grapefriut,grapefruit
 grapefrukt,grapefruit
 grapgics,graphics
@@ -30759,6 +30774,8 @@ inheratance,inheritance
 inheret,inherit
 inheretance,inheritance
 inherets,inherits
+inheriable,inheritable
+inherid,inherit
 inheriet,inherit
 inherint,inherit
 inherintly,inherently
@@ -36128,6 +36145,8 @@ methons,methods
 methos,methods,method
 methot,method
 methots,methods
+methpd,method
+methpds,methods
 metics,metrics
 metifor,metaphor
 metifors,metaphors
@@ -36280,6 +36299,7 @@ microwavers,microwaves
 micrpohone,microphones
 micrsft,microsoft
 micrsoft,microsoft
+middel,middle
 middlware,middleware
 midevil,medieval
 midfeild,midfield
@@ -37935,6 +37955,7 @@ nationas,nationals
 nationella,national
 nationsl,nationals
 natique,antique
+nativ,native
 nativelly,natively
 nativelyx,natively
 nativey,natively
@@ -39068,6 +39089,7 @@ notifiying,notifying
 notifycation,notification
 notigication,notification
 notigications,notifications
+notirications,notifications
 notity,notify
 notmalize,normalize
 notmalized,normalized
@@ -39232,6 +39254,7 @@ nutrutious,nutritious
 nuturing,nurturing
 nwe,new
 nwo,now
+nymber,number
 oaker,baker,faker,laker,maker,oaken,oakier,ocher,taker
 oakereous,ocherous
 oakereously,ocherously
@@ -40327,6 +40350,7 @@ oribtal,orbital
 oricle,oracle
 oricles,oracles
 oridinal,ordinal,original
+oridinals,ordinals
 oridinarily,ordinarily
 oridnary,ordinary
 orieation,orientation
@@ -42158,7 +42182,7 @@ perford,performed
 perforemd,performed
 performace,performance
 performaces,performances
-performacne,performances
+performacne,performance
 performaed,performed
 performamce,performance
 performancepcs,performances
@@ -43220,6 +43244,7 @@ plugable,pluggable
 pluged,plugged
 pluggin,plugin
 pluging,plugging,plugin
+pluginss,plugins
 pluign,plugin
 pluigns,plugins
 pluse,pulse
@@ -43686,6 +43711,7 @@ possesssion,possessions
 possestions,possessions
 possiable,possible
 possibbe,possible
+possibble,possible
 possibe,possible
 possibile,possible
 possibilies,possibilities
@@ -45289,6 +45315,7 @@ projctors,projectors
 projcts,projects
 projec,project
 projecitle,projectiles
+projeciton,projection
 projecs,projects
 projectd,projected
 projecte,projectile
@@ -46137,6 +46164,7 @@ puchasing,purchasing
 pucini,puccini
 puhsups,pushups
 puinsher,punisher
+pulic,public
 pulisher,publisher
 puls,pulse,plus
 pumkin,pumpkin
@@ -46389,6 +46417,7 @@ queiried,queried
 queisce,quiesce
 queitly,quietly
 quention,quentin
+quered,queried
 quereis,queries
 queriable,queryable
 quering,querying
@@ -48840,6 +48869,7 @@ replubic,republic
 replusive,repulsive
 replys,replies
 repoistory,repository
+repond,respond
 reponding,responding
 reponse,response
 reponses,responses
@@ -53025,6 +53055,7 @@ smartre,smarter
 smaurai,samurai
 smealting,smelting
 smeesters,semesters
+smehow,somehow
 smething,something
 smll,small,smell
 smller,smaller
@@ -53486,6 +53517,7 @@ spanisch,spanish
 spansih,spanish
 spanwed,spawned
 sparate,separate
+sparated,separated
 sparately,separately
 sparkel,sparkle
 sparklie,sparkle
@@ -53753,6 +53785,7 @@ specularite,speculative
 speculatie,speculative
 speculaties,speculative
 speculatin,speculation
+specyfing,specifying
 spedific,specific
 spedified,specified
 spedify,specify
@@ -55098,6 +55131,7 @@ subcriptions,subscriptions
 subcsription,subscriptions
 subculter,subculture
 subcultuur,subculture
+subdirectiories,subdirectories
 subdirectoires,subdirectories
 subdirectorys,subdirectories
 subdirecty,subdirectory
@@ -55374,6 +55408,7 @@ substatial,substantial
 substences,substances
 substential,substantial
 substentially,substantially
+substibute,substitute
 substite,substitute
 substition,substitution
 substitions,substitutions
@@ -57526,7 +57561,7 @@ theromstat,thermostat
 therough,through,thorough
 therstat,thermostat
 therwise,otherwise
-thes,this,these
+thes,this,these,the
 theshold,threshold
 thesholds,thresholds
 thesitic,theistic
@@ -59274,11 +59309,14 @@ ubunut,ubuntu
 ubunutu,ubuntu
 ubutu,ubuntu
 ubutunu,ubuntu
+udate,update
 udated,updated,dated
 udateed,updated
 udater,updater,dater
+udates,updates
 udating,updating,dating
 udid,uuid
+udloaded,unloaded
 udnercut,undercut
 udnerdog,underdog
 udnerestimate,underestimated
@@ -60834,6 +60872,7 @@ updateing,updating
 updatess,updates
 updatig,updating
 updats,updates
+upddate,update
 updgrade,upgrade
 updgraded,upgraded
 updgrades,upgrades
@@ -61196,6 +61235,7 @@ validata,validate
 validataion,validation
 validaterelase,validaterelease
 validationt,validation
+validattion,validation
 validaty,validity
 validd,valid
 valide,valid
@@ -62542,7 +62582,7 @@ whitchever,whichever
 whitelsit,whitelist
 whitepsace,whitespace
 whitepsaces,whitespaces
-whith,with
+whith,with,which
 whithe,with,white
 whithin,within
 whitholding,withholding
