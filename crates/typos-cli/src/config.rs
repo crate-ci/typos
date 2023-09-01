@@ -483,7 +483,9 @@ impl Eq for DictConfig {}
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "kebab-case")]
+#[derive(Default)]
 pub enum Locale {
+    #[default]
     En,
     EnUs,
     EnGb,
@@ -504,12 +506,6 @@ impl Locale {
 
     pub const fn variants() -> [&'static str; 5] {
         ["en", "en-us", "en-gb", "en-ca", "en-au"]
-    }
-}
-
-impl Default for Locale {
-    fn default() -> Self {
-        Locale::En
     }
 }
 

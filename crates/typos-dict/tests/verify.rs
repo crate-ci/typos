@@ -39,7 +39,6 @@ fn parse_dict(path: &str) -> Vec<(String, Vec<String>)> {
 
     reader
         .records()
-        .into_iter()
         .map(Result::unwrap)
         .map(|record| {
             let mut iter = record.into_iter();

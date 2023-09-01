@@ -3,10 +3,11 @@ use clap::Parser;
 
 use typos_cli::config;
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, clap::ValueEnum)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, clap::ValueEnum, Default)]
 pub enum Format {
     Silent,
     Brief,
+    #[default]
     Long,
     Json,
 }
@@ -29,12 +30,6 @@ impl Format {
             }),
             Format::Json => Box::new(crate::report::PrintJson),
         }
-    }
-}
-
-impl Default for Format {
-    fn default() -> Self {
-        Format::Long
     }
 }
 

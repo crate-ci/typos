@@ -510,21 +510,21 @@ mod parser {
     #[inline]
     fn is_lower_hex_digit(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        ('a'..='f').contains(&c) || ('0'..='9').contains(&c)
+        ('a'..='f').contains(&c) || c.is_ascii_digit()
     }
 
     #[inline]
     fn is_upper_hex_digit(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        ('A'..='F').contains(&c) || ('0'..='9').contains(&c)
+        ('A'..='F').contains(&c) || c.is_ascii_digit()
     }
 
     #[inline]
     fn is_base64_digit(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        ('a'..='z').contains(&c)
-            || ('A'..='Z').contains(&c)
-            || ('0'..='9').contains(&c)
+        c.is_ascii_lowercase()
+            || c.is_ascii_uppercase()
+            || c.is_ascii_digit()
             || c == '+'
             || c == '/'
     }
@@ -538,18 +538,18 @@ mod parser {
     #[inline]
     fn is_localport_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        ('a'..='z').contains(&c)
-            || ('A'..='Z').contains(&c)
-            || ('0'..='9').contains(&c)
+        c.is_ascii_lowercase()
+            || c.is_ascii_uppercase()
+            || c.is_ascii_digit()
             || "!#$%&'*+-/=?^_`{|}~().".find(c).is_some()
     }
 
     #[inline]
     fn is_domain_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        ('a'..='z').contains(&c)
-            || ('A'..='Z').contains(&c)
-            || ('0'..='9').contains(&c)
+        c.is_ascii_lowercase()
+            || c.is_ascii_uppercase()
+            || c.is_ascii_digit()
             || "-().".find(c).is_some()
     }
 
@@ -568,9 +568,9 @@ mod parser {
     #[inline]
     fn is_uri_unreserved(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        ('a'..='z').contains(&c)
-            || ('A'..='Z').contains(&c)
-            || ('0'..='9').contains(&c)
+        c.is_ascii_lowercase()
+            || c.is_ascii_uppercase()
+            || c.is_ascii_digit()
             || "-._~".find(c).is_some()
     }
 
@@ -583,7 +583,7 @@ mod parser {
     #[inline]
     fn is_scheme_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        ('a'..='z').contains(&c) || ('0'..='9').contains(&c) || "+.-".find(c).is_some()
+        c.is_ascii_lowercase() || c.is_ascii_digit() || "+.-".find(c).is_some()
     }
 
     #[inline]

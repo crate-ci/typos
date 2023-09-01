@@ -18,17 +18,14 @@ impl BuiltIn {
         }
     }
 
-    pub fn correct_ident<'s, 'w>(
+    pub fn correct_ident<'s>(
         &'s self,
-        _ident: typos::tokens::Identifier<'w>,
+        _ident: typos::tokens::Identifier<'_>,
     ) -> Option<Status<'s>> {
         None
     }
 
-    pub fn correct_word<'s, 'w>(
-        &'s self,
-        word_token: typos::tokens::Word<'w>,
-    ) -> Option<Status<'s>> {
+    pub fn correct_word<'s>(&'s self, word_token: typos::tokens::Word<'_>) -> Option<Status<'s>> {
         if word_token.case() == typos::tokens::Case::None {
             return None;
         }
@@ -162,11 +159,11 @@ impl BuiltIn {
 }
 
 impl typos::Dictionary for BuiltIn {
-    fn correct_ident<'s, 'w>(&'s self, ident: typos::tokens::Identifier<'w>) -> Option<Status<'s>> {
+    fn correct_ident<'s>(&'s self, ident: typos::tokens::Identifier<'_>) -> Option<Status<'s>> {
         BuiltIn::correct_ident(self, ident)
     }
 
-    fn correct_word<'s, 'w>(&'s self, word: typos::tokens::Word<'w>) -> Option<Status<'s>> {
+    fn correct_word<'s>(&'s self, word: typos::tokens::Word<'_>) -> Option<Status<'s>> {
         BuiltIn::correct_word(self, word)
     }
 }
@@ -246,7 +243,7 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
 }
 
 impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
-    fn correct_ident<'s, 't>(&'s self, ident: typos::tokens::Identifier<'t>) -> Option<Status<'s>> {
+    fn correct_ident<'s>(&'s self, ident: typos::tokens::Identifier<'_>) -> Option<Status<'s>> {
         for ignored in &self.ignored_identifiers {
             if ignored.is_match(ident.token()) {
                 return Some(Status::Valid);
@@ -264,7 +261,7 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
         }
     }
 
-    fn correct_word<'s, 't>(&'s self, word: typos::tokens::Word<'t>) -> Option<Status<'s>> {
+    fn correct_word<'s>(&'s self, word: typos::tokens::Word<'_>) -> Option<Status<'s>> {
         if word.case() == typos::tokens::Case::None {
             return None;
         }

@@ -5,12 +5,12 @@ pub trait Dictionary: Send + Sync {
     /// Look up the validity of an Identifier.
     ///
     /// `None` if the status is unknown.
-    fn correct_ident<'s, 'w>(&'s self, ident: crate::tokens::Identifier<'w>) -> Option<Status<'s>>;
+    fn correct_ident<'s>(&'s self, ident: crate::tokens::Identifier<'_>) -> Option<Status<'s>>;
 
     /// Look up the validity of a Word.
     ///
     /// `None` if the status is unknown.
-    fn correct_word<'s, 'w>(&'s self, word: crate::tokens::Word<'w>) -> Option<Status<'s>>;
+    fn correct_word<'s>(&'s self, word: crate::tokens::Word<'_>) -> Option<Status<'s>>;
 }
 
 /// Validity of a term in a Dictionary.
