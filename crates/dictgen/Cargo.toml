@@ -1,6 +1,6 @@
 [package]
 name = "dictgen"
-version = "0.2.6"
+version = "0.2.7"
 description = "Compile-time case-insensitive map"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling", "no_std"]
