@@ -7,7 +7,7 @@ fn codegen() {
 
     let content = String::from_utf8(content).unwrap();
     let content = codegenrs::rustfmt(&content, None).unwrap();
-    snapbox::assert_eq_path("./src/dict_codegen.rs", &content);
+    snapbox::assert_eq_path("./src/dict_codegen.rs", content);
 }
 
 #[test]

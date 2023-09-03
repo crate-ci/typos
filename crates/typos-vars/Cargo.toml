@@ -1,6 +1,6 @@
 [package]
 name = "typos-vars"
-version = "0.8.11"
+version = "0.8.12"
 description = "Source Code Spelling Correction"
 readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
@@ -12,7 +12,7 @@ rust-version.workspace = true
 include.workspace = true
 
 [dependencies]
-unicase = "2.6"
+unicase = "2.7"
 dictgen = { version = "^0.2", path = "../dictgen" }
 varcon-core = { version = "^4.0", path = "../varcon-core", features = ["flags"] }
 
@@ -20,8 +20,8 @@ varcon-core = { version = "^4.0", path = "../varcon-core", features = ["flags"] 
 varcon = { version = "^0.7", path = "../varcon", features = ["flags"] }
 varcon-core = { version = "^4.0", path = "../varcon-core", features = ["flags"] }
 typos = { version = "^0.10", path = "../typos" }
-unicase = "2.6"
+unicase = "2.7"
 codegenrs = "2.0"
-itertools = "0.10"
+itertools = "0.11"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
-snapbox = { version = "0.4.11", features = ["path"] }
+snapbox = { version = "0.4.12", features = ["path"] }

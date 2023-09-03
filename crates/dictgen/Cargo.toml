@@ -1,6 +1,6 @@
 [package]
 name = "dictgen"
-version = "0.2.6"
+version = "0.2.7"
 description = "Compile-time case-insensitive map"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling", "no_std"]
@@ -17,7 +17,7 @@ codegen = ["std", "dep:phf_codegen"]
 map = ["dep:phf", "dep:phf_shared"]
 
 [dependencies]
-unicase = "2.6"
+unicase = "2.7"
 phf = { version = "0.11", features = ["unicase"], optional = true }
 phf_codegen = { version = "0.11", optional = true }
 phf_shared = { version = "0.11", optional = true }

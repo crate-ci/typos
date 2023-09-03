@@ -28,9 +28,9 @@ impl<V> DictTrie<V> {
                 match child.children {
                     DictTrieChild::Nested(n) => {
                         let byte = bytes[i];
-                        let index = if (b'a'..=b'z').contains(&byte) {
+                        let index = if byte.is_ascii_lowercase() {
                             byte - b'a'
-                        } else if (b'A'..=b'Z').contains(&byte) {
+                        } else if byte.is_ascii_uppercase() {
                             byte - b'A'
                         } else {
                             return self.unicode.find(word);

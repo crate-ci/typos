@@ -16,13 +16,13 @@ include.workspace = true
 release = false
 
 [dependencies]
-unicase = "2.6"
+unicase = "2.7"
 dictgen = { version = "^0.2", path = "../dictgen" }
 
 [dev-dependencies]
-unicase = "2.6"
-itertools = "0.10"
+unicase = "2.7"
+itertools = "0.11"
 codegenrs = "2.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
-snapbox = { version = "0.4.11", features = ["path"] }
+snapbox = { version = "0.4.12", features = ["path"] }
 typos = { path = "../typos" }
