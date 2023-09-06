@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Support configuration in `pyproject.toml` files
+
 ## [1.16.10] - 2023-09-01
 
 ### Compatibility
