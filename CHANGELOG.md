@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.16.11] - 2023-09-06
+
 ### Features
 
 - Support configuration in `pyproject.toml` files
@@ -906,7 +908,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.10...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.11...HEAD
+[1.16.11]: https://github.com/crate-ci/typos/compare/v1.16.10...v1.16.11
 [1.16.10]: https://github.com/crate-ci/typos/compare/v1.16.9...v1.16.10
 [1.16.9]: https://github.com/crate-ci/typos/compare/v1.16.8...v1.16.9
 [1.16.8]: https://github.com/crate-ci/typos/compare/v1.16.7...v1.16.8
