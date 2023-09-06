@@ -4,7 +4,8 @@ use kstring::KString;
 
 use crate::file_type_specifics;
 
-pub const SUPPORTED_FILE_NAMES: &[&str] = &["typos.toml", "_typos.toml", ".typos.toml"];
+pub const SUPPORTED_FILE_NAMES: &[&str] =
+    &["typos.toml", "_typos.toml", ".typos.toml", "pyproject.toml"];
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -19,18 +20,33 @@ pub struct Config {
     pub overrides: EngineConfig,
 }
 
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[serde(rename_all = "kebab-case")]
+pub struct PyprojectTomlConfig {
+    pub tool: PyprojectTomlTool,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[serde(rename_all = "kebab-case")]
+pub struct PyprojectTomlTool {
+    pub typos: Option<Config>,
+}
+
 impl Config {
     pub fn from_dir(cwd: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
-        let config = if let Some(path) = find_project_file(cwd, SUPPORTED_FILE_NAMES) {
-            log::debug!("Loading {}", path.display());
-            Some(Self::from_file(&path)?)
-        } else {
-            None
-        };
-        Ok(config)
+        for file in find_project_files(cwd, SUPPORTED_FILE_NAMES) {
+            log::debug!("Loading {}", file.display());
+            if let Some(config) = Self::from_file(&file)? {
+                return Ok(Some(config));
+            }
+        }
+
+        Ok(None)
     }
 
-    pub fn from_file(path: &std::path::Path) -> Result<Self, anyhow::Error> {
+    pub fn from_file(path: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
         let s = std::fs::read_to_string(path).map_err(|err| {
             let kind = err.kind();
             std::io::Error::new(
@@ -38,7 +54,20 @@ impl Config {
                 format!("could not read config at `{}`", path.display()),
             )
         })?;
-        Self::from_toml(&s)
+
+        if path.file_name().unwrap() == "pyproject.toml" {
+            let config = toml::from_str::<PyprojectTomlConfig>(&s)?;
+
+            if config.tool.typos.is_none() {
+                log::debug!("No `tool.typos` section found in `pyproject.toml`, skipping");
+
+                Ok(None)
+            } else {
+                Ok(config.tool.typos)
+            }
+        } else {
+            Self::from_toml(&s).map(Some)
+        }
     }
 
     pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
@@ -455,15 +484,14 @@ impl DictConfig {
     }
 }
 
-fn find_project_file(dir: &std::path::Path, names: &[&str]) -> Option<std::path::PathBuf> {
-    let mut file_path = dir.join("placeholder");
-    for name in names {
-        file_path.set_file_name(name);
-        if file_path.exists() {
-            return Some(file_path);
-        }
-    }
-    None
+fn find_project_files<'a>(
+    dir: &'a std::path::Path,
+    names: &'a [&'a str],
+) -> impl Iterator<Item = std::path::PathBuf> + 'a {
+    names
+        .iter()
+        .map(|name| dir.join(name))
+        .filter(|path| path.exists())
 }
 
 impl PartialEq for DictConfig {

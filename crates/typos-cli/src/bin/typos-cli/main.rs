@@ -68,7 +68,9 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     if let Some(path) = args.custom_config.as_ref() {
         let custom = typos_cli::config::Config::from_file(path)
             .with_code(proc_exit::sysexits::CONFIG_ERR)?;
-        overrides.update(&custom);
+        if let Some(custom) = custom {
+            overrides.update(&custom);
+        }
     }
     overrides.update(&args.config.to_config());
     engine.set_overrides(overrides);
@@ -119,7 +121,9 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     if let Some(path) = args.custom_config.as_ref() {
         let custom = typos_cli::config::Config::from_file(path)
             .with_code(proc_exit::sysexits::CONFIG_ERR)?;
-        overrides.update(&custom);
+        if let Some(custom) = custom {
+            overrides.update(&custom);
+        }
     }
     overrides.update(&args.config.to_config());
     engine.set_overrides(overrides);
@@ -154,7 +158,9 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     if let Some(path) = args.custom_config.as_ref() {
         let custom = typos_cli::config::Config::from_file(path)
             .with_code(proc_exit::sysexits::CONFIG_ERR)?;
-        overrides.update(&custom);
+        if let Some(custom) = custom {
+            overrides.update(&custom);
+        }
     }
     overrides.update(&args.config.to_config());
     engine.set_overrides(overrides);
