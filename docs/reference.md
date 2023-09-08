@@ -8,7 +8,9 @@ Configuration is read from the following (in precedence order)
 
 - Command line arguments
 - File specified via `--config PATH`
-- Search parents of specified file / directory for one of `typos.toml`, `_typos.toml`, or `.typos.toml`
+- Search parents of specified file / directory for one of `typos.toml`, `_typos.toml`, `.typos.toml`, or `pyproject.toml`.
+  - In the case of `pyproject.toml`, the below fields must be under the `[tool.typos]` section. If this section does not
+    exist, the config file will be skipped.
 
 ### Config Fields
 
