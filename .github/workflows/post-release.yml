@@ -87,6 +87,7 @@ jobs:
           target: x86_64-pc-windows-msvc
           cross: false
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.cross }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
