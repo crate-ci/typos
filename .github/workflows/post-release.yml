@@ -87,6 +87,9 @@ jobs:
           target: x86_64-pc-windows-msvc
           cross: false
     runs-on: ${{ matrix.os }}
+    env:
+      CARGO: cargo
+      CROSS_VERSION: "0.2.5"
     continue-on-error: ${{ matrix.cross }}
     steps:
     - name: Checkout repository
@@ -99,18 +102,25 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends xz-utils liblz4-tool musl-tools
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@v1
       with:
         toolchain: ${{ matrix.rust }}
         profile: minimal
         override: true
         target: ${{ matrix.target }}
+    # Taken from https://github.com/rust-lang/regex project
+    - name: Install and configure Cross
+      if: matrix.cross
+      run: |
+        dir="$RUNNER_TEMP/cross-download"
+        mkdir "$dir"
+        echo "$dir" >> $GITHUB_PATH
+        cd "$dir"
+        curl -LO "https://github.com/cross-rs/cross/releases/download/v${CROSS_VERSION}/cross-x86_64-unknown-linux-musl.tar.gz"
+        tar xf cross-x86_64-unknown-linux-musl.tar.gz
+        echo "CARGO=cross" >> $GITHUB_ENV
     - name: Build release binary
-      uses: actions-rs/cargo@v1
-      with:
-        command: build
-        args: --target ${{ matrix.target }} --verbose --release
-        use-cross: ${{ matrix.cross }}
+      run: ${{ env.CARGO }} build --target ${{ matrix.target }} --verbose --release
     - name: Build archive
       shell: bash
       run: |
