@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Performance
+
+- Drop check times by about 20% with codegen-units
+
 ## [1.16.11] - 2023-09-06
 
 ### Features
