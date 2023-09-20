@@ -36,6 +36,10 @@
       ],
       minimumReleaseAge: '126 days',  // 3 releases * 6 weeks per release * 7 days per week
       internalChecksFilter: 'strict',
+      "extractVersion": "^(?<version>\\d+\\.\\d+)",  // Drop the patch version
+      schedule: [
+        '* * * * *',
+      ],
     },
     // Goals:
     // - Rollup safe upgrades to reduce CI runner load
