@@ -6,7 +6,7 @@ config at this repository:
 ```yaml
 repos:
   - repo: https://github.com/crate-ci/typos
-    rev: v1.16.12
+    rev: v1.16.13
     hooks:
       - id: typos
 ```
