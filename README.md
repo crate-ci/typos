@@ -109,6 +109,7 @@ extend-exclude = ["localized/*.po"]
 - [pre-commit](docs/pre-commit.md)
 - [🐊Putout Processor](https://github.com/putoutjs/putout-processor-typos)
 - [Visual Studio Code](https://github.com/tekumara/typos-vscode)
+- [typos-lsp (Language Server Protocol server)](https://github.com/tekumara/typos-vscode)
 
 #### Custom
 
