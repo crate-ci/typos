@@ -20,9 +20,10 @@ impl BuiltIn {
 
     pub fn correct_ident<'s>(
         &'s self,
-        _ident: typos::tokens::Identifier<'_>,
+        ident_token: typos::tokens::Identifier<'_>,
     ) -> Option<Status<'s>> {
-        None
+        let ident = ident_token.token();
+        self.correct_ident_with_dict(ident)
     }
 
     pub fn correct_word<'s>(&'s self, word_token: typos::tokens::Word<'_>) -> Option<Status<'s>> {
@@ -50,6 +51,10 @@ impl BuiltIn {
 
 #[cfg(feature = "dict")]
 impl BuiltIn {
+    fn correct_ident_with_dict<'s>(&self, _ident: &str) -> Option<Status<'s>> {
+        None
+    }
+
     // Not using `Status` to avoid the allocations
     fn correct_word_with_dict(
         &self,
@@ -61,6 +66,10 @@ impl BuiltIn {
 
 #[cfg(not(feature = "dict"))]
 impl BuiltIn {
+    fn correct_ident_with_dict<'s>(&self, _ident: &str) -> Option<Status<'s>> {
+        None
+    }
+
     fn correct_word_with_dict(
         &self,
         _word: unicase::UniCase<&str>,
