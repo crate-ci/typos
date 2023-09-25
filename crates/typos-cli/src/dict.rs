@@ -20,9 +20,10 @@ impl BuiltIn {
 
     pub fn correct_ident<'s>(
         &'s self,
-        _ident: typos::tokens::Identifier<'_>,
+        ident_token: typos::tokens::Identifier<'_>,
     ) -> Option<Status<'s>> {
-        None
+        let ident = ident_token.token();
+        self.correct_ident_with_dict(ident)
     }
 
     pub fn correct_word<'s>(&'s self, word_token: typos::tokens::Word<'_>) -> Option<Status<'s>> {
@@ -32,7 +33,7 @@ impl BuiltIn {
 
         let word = word_token.token();
         let word_case = unicase::UniCase::new(word);
-        let mut corrections = if let Some(corrections) = self.correct_with_dict(word_case) {
+        let mut corrections = if let Some(corrections) = self.correct_word_with_dict(word_case) {
             if corrections.is_empty() {
                 Status::Invalid
             } else {
@@ -50,15 +51,32 @@ impl BuiltIn {
 
 #[cfg(feature = "dict")]
 impl BuiltIn {
+    fn correct_ident_with_dict<'s>(&self, ident: &str) -> Option<Status<'s>> {
+        match ident {
+            "O_WRONLY" => Some(Status::Valid),
+            _ => None,
+        }
+    }
+
     // Not using `Status` to avoid the allocations
-    fn correct_with_dict(&self, word: unicase::UniCase<&str>) -> Option<&'static [&'static str]> {
+    fn correct_word_with_dict(
+        &self,
+        word: unicase::UniCase<&str>,
+    ) -> Option<&'static [&'static str]> {
         typos_dict::WORD_TRIE.find(&word).copied()
     }
 }
 
 #[cfg(not(feature = "dict"))]
 impl BuiltIn {
-    fn correct_with_dict(&self, _word: unicase::UniCase<&str>) -> Option<&'static [&'static str]> {
+    fn correct_ident_with_dict<'s>(&self, _ident: &str) -> Option<Status<'s>> {
+        None
+    }
+
+    fn correct_word_with_dict(
+        &self,
+        _word: unicase::UniCase<&str>,
+    ) -> Option<&'static [&'static str]> {
         None
     }
 }
