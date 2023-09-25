@@ -32,7 +32,7 @@ impl BuiltIn {
 
         let word = word_token.token();
         let word_case = unicase::UniCase::new(word);
-        let mut corrections = if let Some(corrections) = self.correct_with_dict(word_case) {
+        let mut corrections = if let Some(corrections) = self.correct_word_with_dict(word_case) {
             if corrections.is_empty() {
                 Status::Invalid
             } else {
@@ -51,14 +51,20 @@ impl BuiltIn {
 #[cfg(feature = "dict")]
 impl BuiltIn {
     // Not using `Status` to avoid the allocations
-    fn correct_with_dict(&self, word: unicase::UniCase<&str>) -> Option<&'static [&'static str]> {
+    fn correct_word_with_dict(
+        &self,
+        word: unicase::UniCase<&str>,
+    ) -> Option<&'static [&'static str]> {
         typos_dict::WORD_TRIE.find(&word).copied()
     }
 }
 
 #[cfg(not(feature = "dict"))]
 impl BuiltIn {
-    fn correct_with_dict(&self, _word: unicase::UniCase<&str>) -> Option<&'static [&'static str]> {
+    fn correct_word_with_dict(
+        &self,
+        _word: unicase::UniCase<&str>,
+    ) -> Option<&'static [&'static str]> {
         None
     }
 }
