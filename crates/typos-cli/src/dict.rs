@@ -51,8 +51,11 @@ impl BuiltIn {
 
 #[cfg(feature = "dict")]
 impl BuiltIn {
-    fn correct_ident_with_dict<'s>(&self, _ident: &str) -> Option<Status<'s>> {
-        None
+    fn correct_ident_with_dict<'s>(&self, ident: &str) -> Option<Status<'s>> {
+        match ident {
+            "O_WRONLY" => Some(Status::Valid),
+            _ => None,
+        }
     }
 
     // Not using `Status` to avoid the allocations
