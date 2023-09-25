@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `O_WRONLY`
+
 ## [1.16.13] - 2023-09-23
 
 ## [1.16.12] - 2023-09-18
