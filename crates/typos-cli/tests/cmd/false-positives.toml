@@ -1,4 +1,12 @@
 bin.name = "typos"
 stdin = ""
-stdout = ""
+stdout = """
+error: `WRONLY` should be `WRONGLY`
+  --> ./sample.py:5:12
+  |
+5 | print(os.O_WRONLY)  # should work
+  |            ^^^^^^
+  |
+"""
 stderr = ""
+status.code = 2
