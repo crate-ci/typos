@@ -103,6 +103,22 @@ If you need some more flexibility, you can completely exclude some files from co
 extend-exclude = ["localized/*.po"]
 ```
 
+### Supported config files
+
+The default option is setting the configuration in `typos.toml`, `_typos.toml` or `.typos.toml`. 
+
+In addition, you can set the same configuration with standard python's config file `pyproject.toml` by adding `[tool.typos.xyz]` where the `xyz` is the same as in default `_typos.toml` so the sample configuration above will be:
+```toml
+[tool.typos.default]
+extend-ignore-identifiers-re = ["AttributeID.*Supress.*"]
+
+[tool.typos.default.extend-identifiers]
+AttributeIDSupressMenu = "AttributeIDSupressMenu"
+
+[tool.typos.default.extend-words]
+teh = "teh"
+```
+
 ### Integrations
 
 - [GitHub Actions](docs/github-action.md)
