@@ -1,0 +1,5 @@
+[default]
+extend-ignore-re = ["(?Rm)^.*# spellchecker:disable-line$"]
+
+[default.extend-identifiers]
+hello = "goodbye"
