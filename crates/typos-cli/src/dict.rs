@@ -270,13 +270,12 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
 
         // Skip hashing if we can
         if !self.identifiers.is_empty() {
-            self.identifiers
-                .get(ident.token())
-                .map(|c| c.borrow())
-                .or_else(|| self.inner.correct_ident(ident))
-        } else {
-            None
+            if let Some(status) = self.identifiers.get(ident.token()).map(|c| c.borrow()) {
+                return Some(status);
+            }
         }
+
+        self.inner.correct_ident(ident)
     }
 
     fn correct_word<'s>(&'s self, word: typos::tokens::Word<'_>) -> Option<Status<'s>> {
