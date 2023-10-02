@@ -224,6 +224,14 @@ fn find_best_match<'c>(
     word_variants: &HashSet<&'static str>,
 ) -> Option<&'c str> {
     assert!(!word_variants.contains(correction));
+    #[allow(clippy::single_match)]
+    match (typo, correction) {
+        // Picking the worst option due to a letter swap being an edit distance of two
+        ("alinging", "aligning") => {
+            return None;
+        }
+        _ => {}
+    }
     let current = edit_distance::edit_distance(typo, correction);
     let mut matches: Vec<_> = word_variants
         .iter()
