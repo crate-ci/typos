@@ -1,0 +1,48 @@
+bin.name = "typos"
+args = "--help"
+stdout = """
+Source Code Spelling Correction
+
+Usage: typos[EXE] [OPTIONS] [PATH]...
+
+Arguments:
+  [PATH]...  Paths to check with `-` for stdin [default: .]
+
+Options:
+  -j, --threads <THREADS>  The approximate number of threads to use [default: 0]
+  -h, --help               Print help
+  -V, --version            Print version
+
+Config:
+  -c, --config <CUSTOM_CONFIG>  Custom config file
+      --isolated                Ignore implicit configuration files
+      --exclude <GLOB>          Ignore files & directories matching the glob
+      --hidden                  Search hidden files and directories
+      --no-ignore               Don't respect ignore files
+      --no-ignore-dot           Don't respect .ignore files
+      --no-ignore-global        Don't respect global ignore files
+      --no-ignore-parent        Don't respect ignore files in parent directories
+      --no-ignore-vcs           Don't respect ignore files in vcs directories
+      --binary                  Search binary files
+      --no-check-filenames      Skip verifying spelling in file names
+      --no-check-files          Skip verifying spelling in files
+      --no-unicode              Only allow ASCII characters in identifiers
+      --locale <LOCALE>         Language locale to suggest corrections for [possible values: en, en-us, en-gb, en-ca, en-au]
+
+Mode:
+      --diff                       Print a diff of what would change
+  -w, --write-changes              Write fixes out
+      --files                      Debug: Print each file that would be spellchecked
+      --file-types                 Debug: Print each file's type
+      --identifiers                Debug: Print each identifier that would be spellchecked
+      --words                      Debug: Print each word that would be spellchecked
+      --dump-config <DUMP_CONFIG>  Write the current configuration to file with `-` for stdout
+      --type-list                  Show all supported file types
+
+Output:
+      --format <FORMAT>  Render style for messages [default: long] [possible values: silent, brief, long, json]
+      --color <WHEN>     Controls when to use color [default: auto] [possible values: auto, always, never]
+  -v, --verbose...       More output per occurrence
+  -q, --quiet...         Less output per occurrence
+"""
+stderr = ""
