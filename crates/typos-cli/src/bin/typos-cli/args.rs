@@ -42,60 +42,67 @@ pub(crate) struct Args {
     #[arg(default_value = ".")]
     pub(crate) path: Vec<std::path::PathBuf>,
 
-    /// Custom config file
-    #[arg(short = 'c', long = "config")]
-    pub(crate) custom_config: Option<std::path::PathBuf>,
-
-    /// Ignore implicit configuration files.
-    #[arg(long)]
-    pub(crate) isolated: bool,
-
-    /// Print a diff of what would change
-    #[arg(long, group = "mode")]
-    pub(crate) diff: bool,
-
-    /// Write fixes out
-    #[arg(long, short = 'w', group = "mode")]
-    pub(crate) write_changes: bool,
-
-    /// Debug: Print each file that would be spellchecked.
-    #[arg(long, group = "mode")]
-    pub(crate) files: bool,
-
-    /// Debug: Print each file's type
-    #[arg(long, group = "mode")]
-    pub(crate) file_types: bool,
-
-    /// Debug: Print each identifier that would be spellchecked.
-    #[arg(long, group = "mode")]
-    pub(crate) identifiers: bool,
-
-    /// Debug: Print each word that would be spellchecked.
-    #[arg(long, group = "mode")]
-    pub(crate) words: bool,
-
-    /// Write the current configuration to file with `-` for stdout
-    #[arg(long, group = "mode")]
-    pub(crate) dump_config: Option<std::path::PathBuf>,
-
-    /// Show all supported file types.
-    #[arg(long, group = "mode")]
-    pub(crate) type_list: bool,
-
-    #[arg(long, value_enum, ignore_case = true, default_value("long"))]
-    pub(crate) format: Format,
-
     /// The approximate number of threads to use.
     #[arg(short = 'j', long = "threads", default_value = "0")]
     pub(crate) threads: usize,
 
-    #[command(flatten)]
+    /// Custom config file
+    #[arg(short = 'c', long = "config", help_heading = "Config")]
+    pub(crate) custom_config: Option<std::path::PathBuf>,
+
+    /// Ignore implicit configuration files.
+    #[arg(long, help_heading = "Config")]
+    pub(crate) isolated: bool,
+
+    #[command(flatten, next_help_heading = "Config")]
     pub(crate) config: ConfigArgs,
 
-    #[command(flatten)]
+    /// Print a diff of what would change
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) diff: bool,
+
+    /// Write fixes out
+    #[arg(long, short = 'w', group = "mode", help_heading = "Mode")]
+    pub(crate) write_changes: bool,
+
+    /// Debug: Print each file that would be spellchecked.
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) files: bool,
+
+    /// Debug: Print each file's type
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) file_types: bool,
+
+    /// Debug: Print each identifier that would be spellchecked.
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) identifiers: bool,
+
+    /// Debug: Print each word that would be spellchecked.
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) words: bool,
+
+    /// Write the current configuration to file with `-` for stdout
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) dump_config: Option<std::path::PathBuf>,
+
+    /// Show all supported file types.
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) type_list: bool,
+
+    /// Render style for messages
+    #[arg(
+        long,
+        value_enum,
+        ignore_case = true,
+        default_value("long"),
+        help_heading = "Output"
+    )]
+    pub(crate) format: Format,
+
+    #[command(flatten, next_help_heading = "Output")]
     pub(crate) color: colorchoice_clap::Color,
 
-    #[command(flatten)]
+    #[command(flatten, next_help_heading = "Output")]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
 }
 
@@ -126,6 +133,7 @@ pub(crate) struct FileArgs {
     #[arg(long, overrides_with("unicode"))]
     no_unicode: bool,
 
+    /// Language locale to suggest corrections for
     #[arg(long)]
     #[arg(
         value_parser = clap::builder::PossibleValuesParser::new(config::Locale::variants())
