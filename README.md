@@ -11,7 +11,7 @@ Finds and corrects spelling mistakes among source code:
 [![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
 ![License](https://img.shields.io/crates/l/typos.svg)
-[![Crates Status](https://img.shields.io/crates/v/typos.svg)](https://crates.io/crates/typos)
+[![Crates Status](https://img.shields.io/crates/v/typos.svg)][Crates.io]
 
 Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 
