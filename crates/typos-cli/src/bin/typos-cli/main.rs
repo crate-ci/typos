@@ -216,6 +216,11 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             let overrides = overrides
                 .build()
                 .with_code(proc_exit::sysexits::CONFIG_ERR)?;
+            if args.force_exclude {
+                if let ignore::Match::Ignore(_) = overrides.matched(path, path.is_dir()) {
+                    continue;
+                }
+            }
             walk.overrides(overrides);
         }
 

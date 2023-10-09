@@ -46,6 +46,10 @@ pub(crate) struct Args {
     #[arg(short = 'j', long = "threads", default_value = "0")]
     pub(crate) threads: usize,
 
+    /// Respect excluded files even for paths passed explicitly.
+    #[arg(long, help_heading = None)]
+    pub(crate) force_exclude: bool,
+
     /// Custom config file
     #[arg(short = 'c', long = "config", help_heading = "Config")]
     pub(crate) custom_config: Option<std::path::PathBuf>,

@@ -1,0 +1,6 @@
+bin.name = "typos"
+args = "file.ignore --force-exclude"
+stdin = ""
+stdout = ""
+stderr = ""
+status.code = 0

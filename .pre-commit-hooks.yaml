@@ -3,7 +3,7 @@
   description: Source code spell checker, binary install
   language: python
   entry: typos
-  args: [--write-changes]
+  args: [--write-changes, --force-exclude]
   types: [text]
   stages: [commit, merge-commit, push, manual]
 
@@ -12,7 +12,7 @@
   description: Source code spell checker, Docker image
   language: docker
   entry: typos
-  args: [--write-changes]
+  args: [--write-changes, --force-exclude]
   types: [text]
   stages: [commit, merge-commit, push, manual]
 
@@ -21,6 +21,6 @@
   description: Source code spell checker, source install
   language: rust
   entry: typos
-  args: [--write-changes]
+  args: [--write-changes, --force-exclude]
   types: [text]
   stages: [commit, merge-commit, push, manual]

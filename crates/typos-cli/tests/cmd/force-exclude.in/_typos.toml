@@ -1,0 +1,5 @@
+[files]
+extend-exclude = ["file.ignore"]
+
+[default.extend-identifiers]
+hello = "goodbye"
