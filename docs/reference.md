@@ -18,7 +18,7 @@ Configuration is read from the following (in precedence order)
 |------------------------|-------------------|--------|-------------|
 | files.binary           | --binary          | bool   | Check binary files as text |
 | files.extend-exclude   | --exclude         | list of strings | Typos-specific ignore globs (gitignore syntax) |
-| file.force-excude      | --force-exclude   | bool   | Respect excluded files even for paths passed explicitly. |
+| \-                     | --force-exclude   | bool   | Respect excluded files even for paths passed explicitly. |
 | files.ignore-hidden    | --hidden          | bool   | Skip hidden files and directories. |
 | files.ignore-files     | --ignore          | bool   | Respect ignore files. |
 | files.ignore-dot       | --ignore-dot      | bool   | Respect .ignore files. |
