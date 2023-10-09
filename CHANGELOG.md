@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Add `--force-exclude` to exclude is always respected, even if explicitly passed in
+
 ## [1.16.17] - 2023-10-02
 
 ### Fixes
