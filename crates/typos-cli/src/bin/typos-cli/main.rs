@@ -1,4 +1,5 @@
-use std::io::Write;
+use std::io::{BufRead as _, BufReader, Write as _};
+use std::path::PathBuf;
 
 use clap::Parser;
 
@@ -167,8 +168,34 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
 
     let mut typos_found = false;
     let mut errors_found = false;
-    for path in args.path.iter() {
+
+    let file_list = match args.file_list.as_deref() {
+        Some(dash) if dash == PathBuf::from("-") => Some(
+            std::io::stdin()
+                .lines()
+                .map(|res| res.map(PathBuf::from))
+                .collect::<Result<_, _>>()
+                .with_code(proc_exit::sysexits::IO_ERR)?,
+        ),
+        Some(path) => Some(
+            BufReader::new(std::fs::File::open(path).with_code(proc_exit::sysexits::IO_ERR)?)
+                .lines()
+                .map(|res| res.map(PathBuf::from))
+                .collect::<Result<_, _>>()
+                .with_code(proc_exit::sysexits::IO_ERR)?,
+        ),
+        None => None,
+    };
+
+    // Note: file_list and args.path are mutually exclusive, enforced by clap
+    for path in file_list.as_ref().unwrap_or(&args.path) {
+        // Note paths are passed through stdin, `-` is treated like a normal path
         let cwd = if path == std::path::Path::new("-") {
+            if args.file_list.is_some() {
+                return Err(proc_exit::sysexits::USAGE_ERR.with_message(
+                    "Can't use `-` (stdin) while using `--file_list` provided paths",
+                ));
+            };
             global_cwd.clone()
         } else if path.is_file() {
             let mut cwd = path

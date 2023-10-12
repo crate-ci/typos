@@ -39,8 +39,12 @@ impl Format {
 #[command(group = clap::ArgGroup::new("mode").multiple(false))]
 pub(crate) struct Args {
     /// Paths to check with `-` for stdin
-    #[arg(default_value = ".")]
+    #[arg(default_value = ".", group = "source")]
     pub(crate) path: Vec<std::path::PathBuf>,
+
+    /// Read the list of newline separated paths from file or stdin (if `-`)
+    #[arg(long, group = "source")]
+    pub(crate) file_list: Option<std::path::PathBuf>,
 
     /// The approximate number of threads to use.
     #[arg(short = 'j', long = "threads", default_value = "0")]

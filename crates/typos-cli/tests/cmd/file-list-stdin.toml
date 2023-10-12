@@ -1,0 +1,22 @@
+bin.name = "typos"
+args = "--file-list -"
+stdin = """
+b.fail
+d.fail
+"""
+stdout = """
+error: `hello` should be `goodbye`
+  --> b.fail:1:1
+  |
+1 | hello
+  | ^^^^^
+  |
+error: `hello` should be `goodbye`
+  --> d.fail:1:1
+  |
+1 | hello
+  | ^^^^^
+  |
+"""
+stderr = ""
+status.code = 2

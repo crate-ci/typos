@@ -9,10 +9,11 @@ Arguments:
   [PATH]...  Paths to check with `-` for stdin [default: .]
 
 Options:
-  -j, --threads <THREADS>  The approximate number of threads to use [default: 0]
-      --force-exclude      Respect excluded files even for paths passed explicitly
-  -h, --help               Print help
-  -V, --version            Print version
+      --file-list <FILE_LIST>  Read the list of newline separated paths from file or stdin (if `-`)
+  -j, --threads <THREADS>      The approximate number of threads to use [default: 0]
+      --force-exclude          Respect excluded files even for paths passed explicitly
+  -h, --help                   Print help
+  -V, --version                Print version
 
 Config:
   -c, --config <CUSTOM_CONFIG>  Custom config file
