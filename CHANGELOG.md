@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- `--file-list <PATH>` for accepting files to check from a file or stdin (`-`)
+
 ## [1.16.18] - 2023-10-09
 
 ### Features
