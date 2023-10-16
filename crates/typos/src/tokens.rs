@@ -9,8 +9,8 @@ pub struct TokenizerBuilder {
 
 impl TokenizerBuilder {
     #[inline]
-    pub fn new() -> Self {
-        Default::default()
+    pub const fn new() -> Self {
+        Self { unicode: true }
     }
 
     /// Specify that unicode Identifiers are allowed.
@@ -21,15 +21,16 @@ impl TokenizerBuilder {
     }
 
     #[inline]
-    pub fn build(&self) -> Tokenizer {
-        let TokenizerBuilder { unicode } = self.clone();
-        Tokenizer { unicode }
+    pub const fn build(&self) -> Tokenizer {
+        Tokenizer {
+            unicode: self.unicode,
+        }
     }
 }
 
 impl Default for TokenizerBuilder {
     fn default() -> Self {
-        Self { unicode: true }
+        Self::new()
     }
 }
 
@@ -41,8 +42,8 @@ pub struct Tokenizer {
 
 impl Tokenizer {
     #[inline]
-    pub fn new() -> Self {
-        TokenizerBuilder::default().build()
+    pub const fn new() -> Self {
+        TokenizerBuilder::new().build()
     }
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
