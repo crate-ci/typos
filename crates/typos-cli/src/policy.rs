@@ -363,8 +363,7 @@ impl<'t, 'd, 'i> Policy<'t, 'd, 'i> {
     }
 }
 
-static DEFAULT_TOKENIZER: once_cell::sync::Lazy<typos::tokens::Tokenizer> =
-    once_cell::sync::Lazy::new(typos::tokens::Tokenizer::new);
+static DEFAULT_TOKENIZER: typos::tokens::Tokenizer = typos::tokens::Tokenizer::new();
 static DEFAULT_DICT: crate::dict::BuiltIn = crate::dict::BuiltIn::new(crate::config::Locale::En);
 static DEFAULT_IGNORE: &[regex::Regex] = &[];
 

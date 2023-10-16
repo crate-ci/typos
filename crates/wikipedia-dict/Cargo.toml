@@ -22,6 +22,6 @@ dictgen = { version = "^0.2", path = "../dictgen" }
 [dev-dependencies]
 unicase = "2.7"
 itertools = "0.11"
-codegenrs = "2.0"
+codegenrs = "3.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
-snapbox = { version = "0.4.13", features = ["path"] }
+snapbox = { version = "0.4.14", features = ["path"] }
