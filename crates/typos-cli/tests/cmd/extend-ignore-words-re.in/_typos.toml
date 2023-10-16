@@ -1,0 +1,9 @@
+[default.extend-words]
+hello = "goodbye"
+
+[type.fail]
+extend-glob = ["*.fail"]
+
+[type.ignore]
+extend-glob = ["*.ignore"]
+extend-ignore-words-re = ["he.*"]

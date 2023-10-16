@@ -255,6 +255,7 @@ impl<'s> ConfigEngine<'s> {
                 .extend_identifiers()
                 .map(|(k, v)| (self.storage.get(k), self.storage.get(v))),
         );
+        dict.ignored_words(dict_config.extend_ignore_words_re());
         dict.words(
             dict_config
                 .extend_words()

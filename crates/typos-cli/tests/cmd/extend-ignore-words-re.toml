@@ -1,0 +1,12 @@
+bin.name = "typos"
+status.code = 2
+stdin = ""
+stdout = """
+error: `hello` should be `goodbye`
+  --> ./file.fail:1:1
+  |
+1 | hello
+  | ^^^^^
+  |
+"""
+stderr = ""

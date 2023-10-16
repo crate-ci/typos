@@ -425,6 +425,8 @@ pub struct DictConfig {
     #[serde(with = "serde_regex")]
     pub extend_ignore_identifiers_re: Vec<regex::Regex>,
     pub extend_identifiers: HashMap<kstring::KString, kstring::KString>,
+    #[serde(with = "serde_regex")]
+    pub extend_ignore_words_re: Vec<regex::Regex>,
     pub extend_words: HashMap<kstring::KString, kstring::KString>,
 }
 
@@ -435,6 +437,7 @@ impl DictConfig {
             locale: Some(empty.locale()),
             extend_ignore_identifiers_re: Default::default(),
             extend_identifiers: Default::default(),
+            extend_ignore_words_re: Default::default(),
             extend_words: Default::default(),
         }
     }
@@ -451,6 +454,8 @@ impl DictConfig {
                 .iter()
                 .map(|(key, value)| (key.clone(), value.clone())),
         );
+        self.extend_ignore_words_re
+            .extend(source.extend_ignore_words_re.iter().cloned());
         self.extend_words.extend(
             source
                 .extend_words
@@ -473,6 +478,10 @@ impl DictConfig {
                 .iter()
                 .map(|(k, v)| (k.as_str(), v.as_str())),
         )
+    }
+
+    pub fn extend_ignore_words_re(&self) -> Box<dyn Iterator<Item = &regex::Regex> + '_> {
+        Box::new(self.extend_ignore_words_re.iter())
     }
 
     pub fn extend_words(&self) -> Box<dyn Iterator<Item = (&str, &str)> + '_> {
@@ -503,6 +512,11 @@ impl PartialEq for DictConfig {
                 .map(|r| r.as_str())
                 .eq(rhs.extend_ignore_identifiers_re.iter().map(|r| r.as_str()))
             && self.extend_identifiers == rhs.extend_identifiers
+            && self
+                .extend_ignore_words_re
+                .iter()
+                .map(|r| r.as_str())
+                .eq(rhs.extend_ignore_words_re.iter().map(|r| r.as_str()))
             && self.extend_words == rhs.extend_words
     }
 }
