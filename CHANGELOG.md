@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(config)* `extend-ignore-words-re` field for defining all classes of words
+
 ## [1.16.19] - 2023-10-12
 
 ### Features
