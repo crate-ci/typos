@@ -216,6 +216,7 @@ fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
 pub struct Override<'i, 'w, D> {
     ignored_identifiers: Vec<regex::Regex>,
     identifiers: HashMap<&'i str, Status<'i>, ahash::RandomState>,
+    ignored_words: Vec<regex::Regex>,
     words: HashMap<unicase::UniCase<&'w str>, Status<'w>, ahash::RandomState>,
     inner: D,
 }
@@ -225,6 +226,7 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
         Self {
             ignored_identifiers: Default::default(),
             identifiers: Default::default(),
+            ignored_words: Default::default(),
             words: Default::default(),
             inner,
         }
@@ -236,6 +238,10 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
 
     pub fn identifiers<I: Iterator<Item = (&'i str, &'i str)>>(&mut self, identifiers: I) {
         self.identifiers = Self::interpret(identifiers).collect();
+    }
+
+    pub fn ignored_words<'r>(&mut self, ignored: impl Iterator<Item = &'r regex::Regex>) {
+        self.ignored_words.extend(ignored.cloned());
     }
 
     pub fn words<I: Iterator<Item = (&'w str, &'w str)>>(&mut self, words: I) {
@@ -283,15 +289,22 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
             return None;
         }
 
+        for ignored in &self.ignored_words {
+            if ignored.is_match(word.token()) {
+                return Some(Status::Valid);
+            }
+        }
+
         // Skip hashing if we can
-        let custom = if !self.words.is_empty() {
+        if !self.words.is_empty() {
             let w = UniCase::new(word.token());
             // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
-            self.words.get(&w).cloned()
-        } else {
-            None
-        };
-        custom.or_else(|| self.inner.correct_word(word))
+            if let Some(status) = self.words.get(&w).cloned() {
+                return Some(status);
+            }
+        }
+
+        self.inner.correct_word(word)
     }
 }
 
