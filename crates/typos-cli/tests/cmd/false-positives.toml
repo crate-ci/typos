@@ -1,4 +1,12 @@
 bin.name = "typos"
 stdin = ""
-stdout = ""
+stdout = """
+error: `SHTTP` should be `HTTPS`
+  --> ./README.md:9:1
+  |
+9 | SHTTP is a protocol
+  | ^^^^^
+  |
+"""
 stderr = ""
+status.code = 2
