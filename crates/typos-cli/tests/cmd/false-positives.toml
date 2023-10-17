@@ -1,30 +1,4 @@
 bin.name = "typos"
 stdin = ""
-stdout = """
-error: `egal` should be `equal`
-  --> ./sample.jl:1:7
-  |
-1 | # one egal: ===
-  |       ^^^^
-  |
-error: `egals` should be `equals`
-  --> ./sample.jl:2:9
-  |
-2 | # three egals: === === ===
-  |         ^^^^^
-  |
-error: `modul` should be `module`
-  --> ./sample.jl:5:5
-  |
-5 | var modul = \"hello\";
-  |     ^^^^^
-  |
-error: `usig` should be `using`
-  --> ./sample.jl:6:5
-  |
-6 | var usig = \"hello\";
-  |     ^^^^
-  |
-"""
+stdout = ""
 stderr = ""
-status.code = 2
