@@ -17,6 +17,18 @@ pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         },
     ),
     (
+        "jl",
+        StaticDictConfig {
+            ignore_idents: &[],
+            ignore_words: &[
+                "egal",  // name for `===` operator
+                "egals", // name for `===` operator
+                "modul", // stand-in for `module` when needing to avoid the keyword
+                "usig",  // stand-in for `using` when needing to avoid the keyword
+            ],
+        },
+    ),
+    (
         "man",
         StaticDictConfig {
             ignore_idents: &[
