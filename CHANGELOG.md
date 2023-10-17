@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `SHTTP` to `HTTPS`
+- Associate `.jl` with the `jl` language type, rather than `lisp`
+- Add Julia-specific allowed words
+
 ## [1.16.20] - 2023-10-16
 
 ### Features
