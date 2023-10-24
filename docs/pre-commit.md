@@ -15,12 +15,17 @@ The `typos` id installs a prebuilt executable from GitHub releases. If
 one does not exist for the target platform, or if one built from
 sources is preferred, use `typos-docker` (requires Docker), or `typos-src`
 (requires Rust) as the hook id instead.
+This hook can also lint the commit message.
+To do so it must be installed
+with `pre-commit install --hook-type commit-msg`.
 
 Be sure to change `rev` to use the desired `typos` git tag or
 revision.
 
 The hook configuration defaults to writing fixes, which triggers a
-`pre-commit` failure if any files are modified. To make it report its
-findings only instead, override the hook's `args` with something that
+`pre-commit` failure if any files are modified. An exception to that
+is the `commit-msg` stage. Typos in the commit message are silently
+fixed. To make it report its findings only instead,
+override the hook's `args` with something that
 does not contain `-w`/`--write-changes`, for example `[]` (meaning
 pass no options).
