@@ -8,60 +8,9 @@ use unicode_width::UnicodeWidthStr;
 
 use typos_cli::report::{Context, Message, Report, Typo};
 
-#[derive(Copy, Clone, Debug, Default)]
-pub struct Palette {
-    error: anstyle::Style,
-    info: anstyle::Style,
-    strong: anstyle::Style,
-}
-
-impl Palette {
-    pub fn colored() -> Self {
-        Self {
-            error: anstyle::AnsiColor::Red.on_default(),
-            info: anstyle::AnsiColor::Blue.on_default(),
-            strong: anstyle::Effects::BOLD.into(),
-        }
-    }
-
-    pub(crate) fn error<D: std::fmt::Display>(self, display: D) -> Styled<D> {
-        Styled::new(display, self.error)
-    }
-
-    pub(crate) fn info<D: std::fmt::Display>(self, display: D) -> Styled<D> {
-        Styled::new(display, self.info)
-    }
-
-    pub(crate) fn strong<D: std::fmt::Display>(self, display: D) -> Styled<D> {
-        Styled::new(display, self.strong)
-    }
-}
-
-#[derive(Debug)]
-pub(crate) struct Styled<D> {
-    display: D,
-    style: anstyle::Style,
-}
-
-impl<D: std::fmt::Display> Styled<D> {
-    pub(crate) fn new(display: D, style: anstyle::Style) -> Self {
-        Self { display, style }
-    }
-}
-
-impl<D: std::fmt::Display> std::fmt::Display for Styled<D> {
-    #[inline]
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if f.alternate() {
-            write!(f, "{}", self.style.render())?;
-            self.display.fmt(f)?;
-            write!(f, "{}", self.style.render_reset())?;
-            Ok(())
-        } else {
-            self.display.fmt(f)
-        }
-    }
-}
+const ERROR: anstyle::Style = anstyle::AnsiColor::BrightRed.on_default();
+const INFO: anstyle::Style = anstyle::AnsiColor::BrightBlue.on_default();
+const GOOD: anstyle::Style = anstyle::AnsiColor::BrightGreen.on_default();
 
 pub struct MessageStatus<'r> {
     typos_found: atomic::AtomicBool,
@@ -108,10 +57,7 @@ impl Report for PrintSilent {
     }
 }
 
-pub struct PrintBrief {
-    pub stdout_palette: Palette,
-    pub stderr_palette: Palette,
-}
+pub struct PrintBrief;
 
 impl Report for PrintBrief {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
@@ -119,11 +65,13 @@ impl Report for PrintBrief {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Typo(msg) => print_brief_correction(msg, self.stdout_palette)?,
+            Message::Typo(msg) => print_brief_correction(msg)?,
             Message::FileType(msg) => {
+                let info = INFO.render();
+                let reset = anstyle::Reset.render();
                 writeln!(
                     stdout().lock(),
-                    "{}:{}",
+                    "{info}{}{reset}: {}",
                     msg.path.display(),
                     msg.file_type.unwrap_or("-")
                 )?;
@@ -143,10 +91,7 @@ impl Report for PrintBrief {
     }
 }
 
-pub struct PrintLong {
-    pub stdout_palette: Palette,
-    pub stderr_palette: Palette,
-}
+pub struct PrintLong;
 
 impl Report for PrintLong {
     fn report(&self, msg: Message) -> Result<(), std::io::Error> {
@@ -154,11 +99,13 @@ impl Report for PrintLong {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
             }
-            Message::Typo(msg) => print_long_correction(msg, self.stdout_palette)?,
+            Message::Typo(msg) => print_long_correction(msg)?,
             Message::FileType(msg) => {
+                let info = INFO.render();
+                let reset = anstyle::Reset.render();
                 writeln!(
                     stdout().lock(),
-                    "{}:{}",
+                    "{info}{}{reset}: {}",
                     msg.path.display(),
                     msg.file_type.unwrap_or("-")
                 )?;
@@ -178,7 +125,12 @@ impl Report for PrintLong {
     }
 }
 
-fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Error> {
+fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
+    let error = ERROR.render();
+    let good = GOOD.render();
+    let info = INFO.render();
+    let reset = anstyle::Reset.render();
+
     let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
     let column_number =
         unicode_segmentation::UnicodeSegmentation::graphemes(start.as_ref(), true).count() + 1;
@@ -188,26 +140,22 @@ fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::E
             let divider = ":";
             writeln!(
                 stdout().lock(),
-                "{:#}{:#}{:#}: {:#}",
-                palette.info(context_display(&msg.context)),
-                palette.info(divider),
-                palette.info(column_number),
-                palette.strong(format_args!("`{}` is disallowed:", msg.typo)),
+                "{info}{}{divider}{column_number}{reset}: `{error}{}{reset}` is disallowed",
+                context_display(&msg.context),
+                msg.typo,
             )?;
         }
         typos::Status::Corrections(corrections) => {
             let divider = ":";
             writeln!(
                 stdout().lock(),
-                "{:#}{:#}{:#}: {:#}",
-                palette.info(context_display(&msg.context)),
-                palette.info(divider),
-                palette.info(column_number),
-                palette.strong(format_args!(
-                    "`{}` -> {}",
-                    msg.typo,
-                    itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
-                )),
+                "{info}{}{divider}{column_number}{reset}: `{error}{}{reset}` -> {}",
+                context_display(&msg.context),
+                msg.typo,
+                itertools::join(
+                    corrections.iter().map(|s| format!("`{good}{}{reset}`", s)),
+                    ", "
+                )
             )?;
         }
     }
@@ -215,7 +163,12 @@ fn print_brief_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::E
     Ok(())
 }
 
-fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Error> {
+fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
+    let error = ERROR.render();
+    let good = GOOD.render();
+    let info = INFO.render();
+    let reset = anstyle::Reset.render();
+
     let stdout = stdout();
     let mut handle = stdout.lock();
 
@@ -229,36 +182,33 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
         typos::Status::Invalid => {
             writeln!(
                 handle,
-                "{:#}: {:#}",
-                palette.error("error"),
-                palette.strong(format_args!("`{}` is disallowed", msg.typo))
+                "{error}error{reset}: `{error}{}{reset}` is disallowed",
+                msg.typo,
             )?;
         }
         typos::Status::Corrections(corrections) => {
             writeln!(
                 handle,
-                "{:#}: {:#}",
-                palette.error("error"),
-                palette.strong(format_args!(
-                    "`{}` should be {}",
-                    msg.typo,
-                    itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
-                ))
+                "{error}error{reset}: `{error}{}{reset}` should be {}",
+                msg.typo,
+                itertools::join(
+                    corrections.iter().map(|s| format!("`{good}{}{reset}`", s)),
+                    ", "
+                )
             )?;
         }
     }
     let divider = ":";
     writeln!(
         handle,
-        "  --> {:#}{:#}{:#}",
-        palette.info(context_display(&msg.context)),
-        palette.info(divider),
-        palette.info(column_number)
+        "{info}  --> {reset}{}{divider}{column_number}",
+        context_display(&msg.context),
     )?;
 
     if let Some(Context::File(context)) = &msg.context {
         let line_num = context.line_num.to_string();
         let line_indent: String = itertools::repeat_n(" ", line_num.len()).collect();
+        let line = line.trim_end();
 
         let visible_column = calculate_visible_column_width(start.as_ref());
         let visible_len = calculate_visible_column_width(msg.typo);
@@ -266,16 +216,13 @@ fn print_long_correction(msg: &Typo, palette: Palette) -> Result<(), std::io::Er
         let hl_indent: String = itertools::repeat_n(" ", visible_column).collect();
         let hl: String = itertools::repeat_n("^", visible_len).collect();
 
-        writeln!(handle, "{} |", line_indent)?;
-        writeln!(handle, "{:#} | {}", palette.info(line_num), line.trim_end())?;
+        writeln!(handle, "{info}{line_indent} |{reset}")?;
+        writeln!(handle, "{info}{line_num} |{reset} {line}")?;
         writeln!(
             handle,
-            "{} | {}{:#}",
-            line_indent,
-            hl_indent,
-            palette.error(hl)
+            "{info}{line_indent} |{reset} {hl_indent}{error}{hl}{reset}",
         )?;
-        writeln!(handle, "{} |", line_indent)?;
+        writeln!(handle, "{info}{line_indent} |{reset}")?;
     }
 
     Ok(())

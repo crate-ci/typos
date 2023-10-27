@@ -255,9 +255,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         let output_reporter = if args.diff {
             Box::new(crate::report::PrintSilent)
         } else {
-            let stdout_palette = report::Palette::colored();
-            let stderr_palette = report::Palette::colored();
-            args.format.reporter(stdout_palette, stderr_palette)
+            args.format.reporter()
         };
         let status_reporter = report::MessageStatus::new(output_reporter.as_ref());
         let reporter: &dyn typos_cli::report::Report = &status_reporter;

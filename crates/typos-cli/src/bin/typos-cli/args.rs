@@ -13,21 +13,11 @@ pub enum Format {
 }
 
 impl Format {
-    pub(crate) fn reporter(
-        self,
-        stdout_palette: crate::report::Palette,
-        stderr_palette: crate::report::Palette,
-    ) -> Box<dyn typos_cli::report::Report> {
+    pub(crate) fn reporter(self) -> Box<dyn typos_cli::report::Report> {
         match self {
             Format::Silent => Box::new(crate::report::PrintSilent),
-            Format::Brief => Box::new(crate::report::PrintBrief {
-                stdout_palette,
-                stderr_palette,
-            }),
-            Format::Long => Box::new(crate::report::PrintLong {
-                stdout_palette,
-                stderr_palette,
-            }),
+            Format::Brief => Box::new(crate::report::PrintBrief),
+            Format::Long => Box::new(crate::report::PrintLong),
             Format::Json => Box::new(crate::report::PrintJson),
         }
     }
