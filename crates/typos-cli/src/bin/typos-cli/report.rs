@@ -67,9 +67,11 @@ impl Report for PrintBrief {
             }
             Message::Typo(msg) => print_brief_correction(msg)?,
             Message::FileType(msg) => {
+                let info = INFO.render();
+                let reset = anstyle::Reset.render();
                 writeln!(
                     stdout().lock(),
-                    "{}:{}",
+                    "{info}{}{reset}: {}",
                     msg.path.display(),
                     msg.file_type.unwrap_or("-")
                 )?;
@@ -99,9 +101,11 @@ impl Report for PrintLong {
             }
             Message::Typo(msg) => print_long_correction(msg)?,
             Message::FileType(msg) => {
+                let info = INFO.render();
+                let reset = anstyle::Reset.render();
                 writeln!(
                     stdout().lock(),
-                    "{}:{}",
+                    "{info}{}{reset}: {}",
                     msg.path.display(),
                     msg.file_type.unwrap_or("-")
                 )?;
