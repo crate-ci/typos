@@ -10,7 +10,7 @@ use typos_cli::report::{Context, Message, Report, Typo};
 
 const ERROR: anstyle::Style = anstyle::AnsiColor::BrightRed.on_default();
 const INFO: anstyle::Style = anstyle::AnsiColor::BrightBlue.on_default();
-const STRONG: anstyle::Style = anstyle::Style::new().effects(anstyle::Effects::BOLD);
+const GOOD: anstyle::Style = anstyle::AnsiColor::BrightGreen.on_default();
 
 pub struct MessageStatus<'r> {
     typos_found: atomic::AtomicBool,
@@ -126,8 +126,9 @@ impl Report for PrintLong {
 }
 
 fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
+    let error = ERROR.render();
+    let good = GOOD.render();
     let info = INFO.render();
-    let strong = STRONG.render();
     let reset = anstyle::Reset.render();
 
     let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
@@ -139,7 +140,7 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
             let divider = ":";
             writeln!(
                 stdout().lock(),
-                "{info}{}{divider}{column_number}{reset}: {strong}`{}` is disallowed{reset}",
+                "{info}{}{divider}{column_number}{reset}: `{error}{}{reset}` is disallowed",
                 context_display(&msg.context),
                 msg.typo,
             )?;
@@ -148,10 +149,13 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
             let divider = ":";
             writeln!(
                 stdout().lock(),
-                "{info}{}{divider}{column_number}{reset}: {strong}`{}` -> {}{reset}",
+                "{info}{}{divider}{column_number}{reset}: `{error}{}{reset}` -> {}",
                 context_display(&msg.context),
                 msg.typo,
-                itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                itertools::join(
+                    corrections.iter().map(|s| format!("`{good}{}{reset}`", s)),
+                    ", "
+                )
             )?;
         }
     }
@@ -161,8 +165,8 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
 
 fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
     let error = ERROR.render();
+    let good = GOOD.render();
     let info = INFO.render();
-    let strong = STRONG.render();
     let reset = anstyle::Reset.render();
 
     let stdout = stdout();
@@ -178,16 +182,19 @@ fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
         typos::Status::Invalid => {
             writeln!(
                 handle,
-                "{error}error{reset}: {strong}`{}` is disallowed{reset}",
+                "{error}error{reset}: `{error}{}{reset}` is disallowed",
                 msg.typo,
             )?;
         }
         typos::Status::Corrections(corrections) => {
             writeln!(
                 handle,
-                "{error}error{reset}: {strong}`{}` should be {}{reset}",
+                "{error}error{reset}: `{error}{}{reset}` should be {}",
                 msg.typo,
-                itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                itertools::join(
+                    corrections.iter().map(|s| format!("`{good}{}{reset}`", s)),
+                    ", "
+                )
             )?;
         }
     }
