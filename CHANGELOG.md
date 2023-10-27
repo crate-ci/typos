@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixes
 
+- Improve colored output
 - Don't correct `SHTTP` to `HTTPS`
 - Associate `.jl` with the `jl` language type, rather than `lisp`
 - Add Julia-specific allowed words
