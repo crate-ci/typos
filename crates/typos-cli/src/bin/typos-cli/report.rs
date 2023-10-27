@@ -8,8 +8,8 @@ use unicode_width::UnicodeWidthStr;
 
 use typos_cli::report::{Context, Message, Report, Typo};
 
-const ERROR: anstyle::Style = anstyle::AnsiColor::Red.on_default();
-const INFO: anstyle::Style = anstyle::AnsiColor::Blue.on_default();
+const ERROR: anstyle::Style = anstyle::AnsiColor::BrightRed.on_default();
+const INFO: anstyle::Style = anstyle::AnsiColor::BrightBlue.on_default();
 const STRONG: anstyle::Style = anstyle::Style::new().effects(anstyle::Effects::BOLD);
 
 pub struct MessageStatus<'r> {
