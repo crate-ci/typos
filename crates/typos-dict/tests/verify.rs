@@ -164,7 +164,7 @@ fn test_duplicate_correction_removal() {
 
 #[test]
 fn test_cycle_removal() {
-    assert!(process([("foo", ["bar"]), ("bar", ["foo"])]).is_empty());
+    assert!(process([("foo", ["foobar"]), ("foobar", ["foo"])]).is_empty());
 }
 
 #[test]
@@ -243,20 +243,32 @@ fn find_best_match<'c>(
 }
 
 fn allowed_words() -> std::collections::HashMap<String, String> {
-    let allowed_path = "assets/allowed.csv";
-    let data = std::fs::read(allowed_path).unwrap();
-    csv::ReaderBuilder::new()
+    let allowed_path = "assets/english.csv";
+    let english_data = std::fs::read(allowed_path).unwrap();
+    let mut allowed_english = csv::ReaderBuilder::new()
         .has_headers(false)
         .flexible(true)
-        .from_reader(data.as_slice())
-        .records()
-        .map(Result::unwrap)
-        .map(|r| {
-            let mut i = r.iter();
-            let mut typo = i.next().expect("typo").to_owned();
-            typo.make_ascii_lowercase();
-            let reason = i.next().expect("reason").to_owned();
-            (typo, reason)
-        })
-        .collect()
+        .from_reader(english_data.as_slice());
+    let allowed_english = allowed_english.records().map(Result::unwrap).map(|r| {
+        let mut i = r.iter();
+        let mut typo = i.next().expect("typo").to_owned();
+        typo.make_ascii_lowercase();
+        (typo, String::from("english word"))
+    });
+
+    let allowed_path = "assets/allowed.csv";
+    let local_data = std::fs::read(allowed_path).unwrap();
+    let mut allowed_local = csv::ReaderBuilder::new()
+        .has_headers(false)
+        .flexible(true)
+        .from_reader(local_data.as_slice());
+    let allowed_local = allowed_local.records().map(Result::unwrap).map(|r| {
+        let mut i = r.iter();
+        let mut typo = i.next().expect("typo").to_owned();
+        typo.make_ascii_lowercase();
+        let reason = i.next().expect("reason").to_owned();
+        (typo, reason)
+    });
+
+    allowed_english.chain(allowed_local).collect()
 }
