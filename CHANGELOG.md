@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Ensure `--force-exclude` handles simple patterns like `some-dir`
+
 ## [1.16.22] - 2023-11-01
 
 ### Fixes
