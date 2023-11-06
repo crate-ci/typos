@@ -188,7 +188,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     };
 
     // Note: file_list and args.path are mutually exclusive, enforced by clap
-    for path in file_list.as_ref().unwrap_or(&args.path) {
+    'path: for path in file_list.as_ref().unwrap_or(&args.path) {
         // Note paths are passed through stdin, `-` is treated like a normal path
         let cwd = if path == std::path::Path::new("-") {
             if args.file_list.is_some() {
@@ -244,8 +244,14 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
                 .build()
                 .with_code(proc_exit::sysexits::CONFIG_ERR)?;
             if args.force_exclude {
-                if let ignore::Match::Ignore(_) = overrides.matched(path, path.is_dir()) {
-                    continue;
+                let mut ancestors = path.ancestors().collect::<Vec<_>>();
+                ancestors.reverse();
+                for path in ancestors {
+                    match overrides.matched(path, path.is_dir()) {
+                        ignore::Match::None => {}
+                        ignore::Match::Ignore(_) => continue 'path,
+                        ignore::Match::Whitelist(_) => break,
+                    }
                 }
             }
             walk.overrides(overrides);
