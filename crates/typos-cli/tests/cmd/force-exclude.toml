@@ -1,6 +1,19 @@
 bin.name = "typos"
-args = "file.ignore --force-exclude"
+args = "file.ignore ignore/file parent/ignore/file --force-exclude"
 stdin = ""
-stdout = ""
+stdout = """
+error: `hello` should be `goodbye`
+  --> ignore/file:1:1
+  |
+1 | hello
+  | ^^^^^
+  |
+error: `hello` should be `goodbye`
+  --> parent/ignore/file:1:1
+  |
+1 | hello
+  | ^^^^^
+  |
+"""
 stderr = ""
-status.code = 0
+status.code = 2
