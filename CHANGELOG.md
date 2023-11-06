@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.16.23] - 2023-11-06
+
 ### Fixes
 
 - Ensure `--force-exclude` handles simple patterns like `some-dir`
@@ -978,7 +980,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.22...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.16.23...HEAD
+[1.16.23]: https://github.com/crate-ci/typos/compare/v1.16.22...v1.16.23
 [1.16.22]: https://github.com/crate-ci/typos/compare/v1.16.21...v1.16.22
 [1.16.21]: https://github.com/crate-ci/typos/compare/v1.16.20...v1.16.21
 [1.16.20]: https://github.com/crate-ci/typos/compare/v1.16.19...v1.16.20
