@@ -5,7 +5,7 @@ repository:
   topics: "rust cli code-quality spell-checker"
   has_issues: true
   has_projects: false
-  has_wiki: false
+  has_wiki: true
   has_downloads: true
   default_branch: master
 
