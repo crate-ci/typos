@@ -16,7 +16,7 @@ parser = ["dep:winnow"]
 flags = ["dep:enumflags2"]
 
 [dependencies]
-winnow = { version = "0.5.17", optional = true }
+winnow = { version = "0.5.19", optional = true }
 enumflags2 = { version = "0.7", optional = true }
 
 [package.metadata.docs.rs]
