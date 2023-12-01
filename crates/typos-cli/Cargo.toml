@@ -45,18 +45,18 @@ typos-dict = { version = "^0.11", path = "../typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "../typos-vars", optional = true }
 unicase = "2.7"
 anyhow = "1.0"
-clap = { version = "4.4.6", features = ["derive"] }
-clap-verbosity-flag = "2.0"
+clap = { version = "4.4.10", features = ["derive"] }
+clap-verbosity-flag = "2.1"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.8.2"
+toml = "0.8.8"
 log = "0.4"
 env_logger = { version = "0.10", default-features = false, features = ["auto-color"] }
-bstr = "1.7"
+bstr = "1.8"
 ahash = "0.8"
 difflib = "0.4"
 proc-exit = "2.0"
-human-panic = "1.2.1"
+human-panic = "1.2.2"
 content_inspector = "0.2.4"
 unicode-segmentation = "1.10.1"
 derive_more = "0.99.17"
@@ -69,7 +69,7 @@ maplit = "1.0"
 unicode-width = "0.1.11"
 unic-emoji-char = "0.9.0"
 thread_local = "1.1.7"
-globset = "0.4.13"
+globset = "0.4.14"
 anstyle = "1.0.4"
 anstream = "0.6.4"
 colorchoice-clap = "1.0.3"
