@@ -22,6 +22,6 @@ varcon-core = { version = "^4.0", path = "../varcon-core", features = ["flags"] 
 typos = { version = "^0.10", path = "../typos" }
 unicase = "2.7"
 codegenrs = "3.0"
-itertools = "0.11"
+itertools = "0.12"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 snapbox = { version = "0.4.14", features = ["path"] }

@@ -279,7 +279,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.11.0",
+ "itertools 0.12.0",
  "snapbox",
  "typos",
  "unicase",
@@ -758,6 +758,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25db6b064527c5d482d0423354fcd07a89a2dfe07b67892e62411946db7f07b0"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -842,7 +851,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.11.0",
+ "itertools 0.12.0",
  "regex",
  "snapbox",
  "unicase",
@@ -1461,7 +1470,7 @@ version = "0.10.17"
 dependencies = [
  "anyhow",
  "bstr",
- "itertools 0.11.0",
+ "itertools 0.12.0",
  "once_cell",
  "serde",
  "simdutf8",
@@ -1494,7 +1503,7 @@ dependencies = [
  "globset",
  "human-panic",
  "ignore",
- "itertools 0.11.0",
+ "itertools 0.12.0",
  "kstring",
  "log",
  "maplit",
@@ -1527,7 +1536,7 @@ dependencies = [
  "dictgen",
  "edit-distance",
  "indexmap",
- "itertools 0.11.0",
+ "itertools 0.12.0",
  "snapbox",
  "unicase",
  "varcon",
@@ -1539,7 +1548,7 @@ version = "0.8.13"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.11.0",
+ "itertools 0.12.0",
  "snapbox",
  "typos",
  "unicase",
@@ -1754,7 +1763,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.11.0",
+ "itertools 0.12.0",
  "snapbox",
  "unicase",
 ]
