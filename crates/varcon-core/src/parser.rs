@@ -160,7 +160,7 @@ impl Entry {
         trace("entry", move |input: &mut &str| {
             let var_sep = (winnow::ascii::space0, '/', winnow::ascii::space0);
             let variants =
-                winnow::combinator::separated1(Variant::parse_, var_sep).parse_next(input)?;
+                winnow::combinator::separated(1.., Variant::parse_, var_sep).parse_next(input)?;
 
             let desc_sep = (winnow::ascii::space0, '|');
             let description =
@@ -330,7 +330,7 @@ impl Variant {
 
     fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("variant", move |input: &mut &str| {
-            let types = winnow::combinator::separated1(Type::parse_, winnow::ascii::space1);
+            let types = winnow::combinator::separated(1.., Type::parse_, winnow::ascii::space1);
             let sep = (":", winnow::ascii::space0);
             let (types, word) =
                 winnow::combinator::separated_pair(types, sep, word).parse_next(input)?;
