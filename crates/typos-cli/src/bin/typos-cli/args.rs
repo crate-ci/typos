@@ -146,14 +146,14 @@ impl FileArgs {
             binary: self.binary(),
             check_filename: self.check_filename(),
             check_file: self.check_file(),
-            tokenizer: Some(config::TokenizerConfig {
+            tokenizer: config::TokenizerConfig {
                 unicode: self.unicode(),
                 ..Default::default()
-            }),
-            dict: Some(config::DictConfig {
+            },
+            dict: config::DictConfig {
                 locale: self.locale,
                 ..Default::default()
-            }),
+            },
             extend_ignore_re: Default::default(),
         }
     }

@@ -213,7 +213,7 @@ impl TypeEngineConfig {
                 GlobEngineConfig {
                     extend_glob: Vec::new(),
                     engine: EngineConfig {
-                        dict: Some(DictConfig {
+                        dict: DictConfig {
                             extend_identifiers: dict_config
                                 .ignore_idents
                                 .iter()
@@ -225,7 +225,7 @@ impl TypeEngineConfig {
                                 .map(|key| ((*key).into(), (*key).into()))
                                 .collect(),
                             ..Default::default()
-                        }),
+                        },
                         ..Default::default()
                     },
                 },
@@ -280,9 +280,9 @@ pub struct EngineConfig {
     /// Verifying spelling in files.
     pub check_file: Option<bool>,
     #[serde(flatten)]
-    pub tokenizer: Option<TokenizerConfig>,
+    pub tokenizer: TokenizerConfig,
     #[serde(flatten)]
-    pub dict: Option<DictConfig>,
+    pub dict: DictConfig,
     #[serde(with = "serde_regex")]
     pub extend_ignore_re: Vec<regex::Regex>,
 }
@@ -294,12 +294,8 @@ impl EngineConfig {
             binary: Some(empty.binary()),
             check_filename: Some(empty.check_filename()),
             check_file: Some(empty.check_file()),
-            tokenizer: Some(
-                empty
-                    .tokenizer
-                    .unwrap_or_else(TokenizerConfig::from_defaults),
-            ),
-            dict: Some(empty.dict.unwrap_or_else(DictConfig::from_defaults)),
+            tokenizer: TokenizerConfig::from_defaults(),
+            dict: DictConfig::from_defaults(),
             extend_ignore_re: Default::default(),
         }
     }
@@ -314,22 +310,8 @@ impl EngineConfig {
         if let Some(source) = source.check_file {
             self.check_file = Some(source);
         }
-        if let Some(source) = source.tokenizer.as_ref() {
-            let mut tokenizer = None;
-            std::mem::swap(&mut tokenizer, &mut self.tokenizer);
-            let mut tokenizer = tokenizer.unwrap_or_default();
-            tokenizer.update(source);
-            let mut tokenizer = Some(tokenizer);
-            std::mem::swap(&mut tokenizer, &mut self.tokenizer);
-        }
-        if let Some(source) = source.dict.as_ref() {
-            let mut dict = None;
-            std::mem::swap(&mut dict, &mut self.dict);
-            let mut dict = dict.unwrap_or_default();
-            dict.update(source);
-            let mut dict = Some(dict);
-            std::mem::swap(&mut dict, &mut self.dict);
-        }
+        self.tokenizer.update(&source.tokenizer);
+        self.dict.update(&source.dict);
         self.extend_ignore_re
             .extend(source.extend_ignore_re.iter().cloned());
     }
@@ -659,8 +641,8 @@ check-file = true
             GlobEngineConfig {
                 extend_glob: vec!["*.po".into()],
                 engine: EngineConfig {
-                    tokenizer: Some(TokenizerConfig::default()),
-                    dict: Some(DictConfig::default()),
+                    tokenizer: TokenizerConfig::default(),
+                    dict: DictConfig::default(),
                     check_file: Some(true),
                     ..Default::default()
                 },
@@ -687,13 +669,13 @@ inout = "inout"
             GlobEngineConfig {
                 extend_glob: vec!["*.shader".into(), "*.cginc".into()],
                 engine: EngineConfig {
-                    tokenizer: Some(TokenizerConfig::default()),
-                    dict: Some(DictConfig {
+                    tokenizer: TokenizerConfig::default(),
+                    dict: DictConfig {
                         extend_words: maplit::hashmap! {
                             "inout".into() => "inout".into(),
                         },
                         ..Default::default()
-                    }),
+                    },
                     ..Default::default()
                 },
             },
