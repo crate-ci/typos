@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't silently ignore config when there is an error in a field
+
 ## [1.16.23] - 2023-11-06
 
 ### Fixes
