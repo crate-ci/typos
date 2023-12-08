@@ -1,18 +1,15 @@
 bin.name = "typos"
-status.code = 2
+status.code = 78
 stdin = ""
-stdout = """
-error: `hello` should be `goodbye`
-  --> ./file.ignore:1:1
+stdout = ""
+stderr = """
+TOML parse error at line 7, column 1
   |
-1 | hello
-  | ^^^^^
-  |
-error: `hello` should be `goodbye`
-  --> ./file.fail:1:1
-  |
-1 | hello
-  | ^^^^^
-  |
+7 | [type.ignore]
+  | ^[..]
+regex parse error:
+    (he.*
+    ^
+error: unclosed group
+
 """
-stderr = ""
