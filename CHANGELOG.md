@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Have correction in `extend-words` match the original word's case
+
 ## [1.16.24] - 2023-12-08
 
 ### Fixes
