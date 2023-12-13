@@ -284,27 +284,30 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
         self.inner.correct_ident(ident)
     }
 
-    fn correct_word<'s>(&'s self, word: typos::tokens::Word<'_>) -> Option<Status<'s>> {
-        if word.case() == typos::tokens::Case::None {
+    fn correct_word<'s>(&'s self, word_token: typos::tokens::Word<'_>) -> Option<Status<'s>> {
+        if word_token.case() == typos::tokens::Case::None {
             return None;
         }
 
         for ignored in &self.ignored_words {
-            if ignored.is_match(word.token()) {
+            if ignored.is_match(word_token.token()) {
                 return Some(Status::Valid);
             }
         }
 
         // Skip hashing if we can
         if !self.words.is_empty() {
-            let w = UniCase::new(word.token());
+            let w = UniCase::new(word_token.token());
             // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
-            if let Some(status) = self.words.get(&w).cloned() {
-                return Some(status);
+            if let Some(mut corrections) = self.words.get(&w).cloned() {
+                for s in corrections.corrections_mut() {
+                    case_correct(s, word_token.case())
+                }
+                return Some(corrections);
             }
         }
 
-        self.inner.correct_word(word)
+        self.inner.correct_word(word_token)
     }
 }
 
