@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Apply `extend-ignore-re` to file names in addition to file content
+
 ## [1.16.25] - 2023-12-13
 
 ### Fixes
