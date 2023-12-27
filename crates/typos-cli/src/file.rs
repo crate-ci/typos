@@ -27,7 +27,7 @@ impl FileChecker for Typos {
     ) -> Result<(), std::io::Error> {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
+                for typo in check_str(file_name, policy) {
                     let msg = report::Typo {
                         context: Some(report::PathContext { path }.into()),
                         buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
@@ -112,7 +112,7 @@ impl FileChecker for FixTypos {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
+                for typo in check_str(file_name, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -190,7 +190,7 @@ impl FileChecker for DiffTypos {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 let mut fixes = Vec::new();
-                for typo in typos::check_str(file_name, policy.tokenizer, policy.dict) {
+                for typo in check_str(file_name, policy) {
                     if is_fixable(&typo) {
                         fixes.push(typo.into_owned());
                     } else {
@@ -256,9 +256,16 @@ impl FileChecker for Identifiers {
         policy: &crate::policy::Policy,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
+        let mut ignores: Option<Ignores> = None;
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for word in policy.tokenizer.parse_str(file_name) {
+                    if ignores
+                        .get_or_insert_with(|| Ignores::new(file_name.as_bytes(), policy.ignore))
+                        .is_ignored(word.span())
+                    {
+                        continue;
+                    }
                     let msg = report::Parse {
                         context: Some(report::PathContext { path }.into()),
                         kind: report::ParseKind::Identifier,
@@ -275,7 +282,6 @@ impl FileChecker for Identifiers {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
-                let mut ignores: Option<Ignores> = None;
                 for word in policy.tokenizer.parse_bytes(&buffer) {
                     if ignores
                         .get_or_insert_with(|| Ignores::new(&buffer, policy.ignore))
@@ -312,6 +318,7 @@ impl FileChecker for Words {
         policy: &crate::policy::Policy,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
+        let mut ignores: Option<Ignores> = None;
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
                 for word in policy
@@ -319,6 +326,12 @@ impl FileChecker for Words {
                     .parse_str(file_name)
                     .flat_map(|i| i.split())
                 {
+                    if ignores
+                        .get_or_insert_with(|| Ignores::new(file_name.as_bytes(), policy.ignore))
+                        .is_ignored(word.span())
+                    {
+                        continue;
+                    }
                     let msg = report::Parse {
                         context: Some(report::PathContext { path }.into()),
                         kind: report::ParseKind::Word,
@@ -335,7 +348,6 @@ impl FileChecker for Words {
                 let msg = report::BinaryFile { path };
                 reporter.report(msg.into())?;
             } else {
-                let mut ignores: Option<Ignores> = None;
                 for word in policy
                     .tokenizer
                     .parse_bytes(&buffer)
@@ -534,6 +546,19 @@ fn write_file(
     }
 
     Ok(())
+}
+
+fn check_str<'a>(
+    buffer: &'a str,
+    policy: &'a crate::policy::Policy<'a, 'a, 'a>,
+) -> impl Iterator<Item = typos::Typo<'a>> {
+    let mut ignores: Option<Ignores> = None;
+
+    typos::check_str(buffer, policy.tokenizer, policy.dict).filter(move |typo| {
+        !ignores
+            .get_or_insert_with(|| Ignores::new(buffer.as_bytes(), policy.ignore))
+            .is_ignored(typo.span())
+    })
 }
 
 fn check_bytes<'a>(

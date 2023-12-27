@@ -9,8 +9,6 @@ error: `hello` should be `goodbye`
   | ^^^^^
   |
 error: `olt` should be `old`
-  --> ./olt-manager.php:1
-error: `olt` should be `old`
   --> ./olt-manager.php:1:5
   |
 1 | One olt two
