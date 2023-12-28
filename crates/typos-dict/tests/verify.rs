@@ -211,7 +211,7 @@ fn proper_word_variants() -> HashMap<&'static str, HashSet<&'static str>> {
             .map(|v| v.word)
             .collect();
         for variant in variants.iter() {
-            let set = words.entry(variant).or_insert_with(HashSet::new);
+            let set = words.entry(variant).or_default();
             set.extend(variants.iter().filter(|v| *v != variant));
         }
     }
