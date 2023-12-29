@@ -239,7 +239,7 @@ impl TypeEngineConfig {
         for (type_name, engine) in source.patterns.iter() {
             self.patterns
                 .entry(type_name.to_owned())
-                .or_insert_with(GlobEngineConfig::default)
+                .or_default()
                 .update(engine);
         }
     }
