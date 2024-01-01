@@ -45,14 +45,14 @@ typos-dict = { version = "^0.11", path = "../typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "../typos-vars", optional = true }
 unicase = "2.7"
 anyhow = "1.0"
-clap = { version = "4.4.10", features = ["derive"] }
+clap = { version = "4.4.12", features = ["derive"] }
 clap-verbosity-flag = "2.1"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.8.8"
 log = "0.4"
 env_logger = { version = "0.10", default-features = false, features = ["auto-color"] }
-bstr = "1.8"
+bstr = "1.9"
 ahash = "0.8"
 difflib = "0.4"
 proc-exit = "2.0"
@@ -71,17 +71,17 @@ unic-emoji-char = "0.9.0"
 thread_local = "1.1.7"
 globset = "0.4.14"
 anstyle = "1.0.4"
-anstream = "0.6.4"
+anstream = "0.6.5"
 colorchoice-clap = "1.0.3"
 serde_regex = "1.1.0"
 regex = "1.10.2"
 encoding_rs = "0.8.33"
 
 [dev-dependencies]
-assert_fs = "1.0"
+assert_fs = "1.1"
 trycmd = "0.14.19"
 criterion = "0.5"
-snapbox = "0.4.14"
+snapbox = "0.4.15"
 
 [[bench]]
 name = "checks"
