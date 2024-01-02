@@ -23,6 +23,10 @@ jobs:
         target: [x86_64, x86, aarch64]
     steps:
       - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -43,6 +47,10 @@ jobs:
         target: [x86_64, aarch64]
     steps:
       - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -63,6 +71,10 @@ jobs:
         target: [x64, x86]
     steps:
       - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -82,6 +94,10 @@ jobs:
         target: [x86_64, aarch64]
     steps:
       - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
