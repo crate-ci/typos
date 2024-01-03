@@ -31,6 +31,7 @@ jobs:
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: ${{ matrix.rust }}
+        components: rustfmt
     - uses: Swatinem/rust-cache@v2
     - name: Default features
       run: cargo test --workspace
@@ -48,6 +49,7 @@ jobs:
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
+        components: rustfmt
     - uses: Swatinem/rust-cache@v2
     - name: Update dependencues
       run: cargo update
