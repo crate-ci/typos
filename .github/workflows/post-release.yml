@@ -69,6 +69,10 @@ jobs:
           os: macos-latest
           rust: stable
           target: x86_64-apple-darwin
+        - build: macos
+          os: macos-latest
+          rust: stable
+          target: aarch64-apple-darwin
         - build: win-msvc
           os: windows-2019
           rust: stable
@@ -89,6 +93,13 @@ jobs:
       with:
         toolchain: ${{ matrix.rust }}
         targets: ${{ matrix.target }}
+    - name: Set up Apple silicon support
+      if: matrix.target == 'aarch64-apple-darwin'
+      shell: bash
+      run: |
+        rustup target add aarch64-apple-darwin
+        echo "SDKROOT=$(xcrun -sdk macosx11.1 --show-sdk-path)" >> "${GITHUB_ENV}"
+        echo "MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx11.1 --show-sdk-platform-version)" >> "${GITHUB_ENV}"
     - name: Build release binary
       run: cargo build --target ${{ matrix.target }} --verbose --release
     - name: Build archive
