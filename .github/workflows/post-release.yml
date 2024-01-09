@@ -98,8 +98,8 @@ jobs:
       shell: bash
       run: |
         rustup target add aarch64-apple-darwin
-        echo "SDKROOT=$(xcrun -sdk macosx11.1 --show-sdk-path)" >> "${GITHUB_ENV}"
-        echo "MACOSX_DEPLOYMENT_TARGET=$(xcrun -sdk macosx11.1 --show-sdk-platform-version)" >> "${GITHUB_ENV}"
+        echo "SDKROOT=$(xcrun --sdk macosx14.2 --show-sdk-path)" >> "${GITHUB_ENV}"
+        echo "MACOSX_DEPLOYMENT_TARGET=$(xcrun --sdk macosx14.2 --show-sdk-platform-version)" >> "${GITHUB_ENV}"
     - name: Build release binary
       run: cargo build --target ${{ matrix.target }} --verbose --release
     - name: Build archive
