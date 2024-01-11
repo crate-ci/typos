@@ -55,7 +55,6 @@ jobs:
         body_path: notes-${{ env.RELEASE_VERSION }}.md
   build-release:
     name: build-release
-    needs: create-release
     strategy:
       fail-fast: false
       matrix:
