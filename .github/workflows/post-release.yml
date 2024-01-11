@@ -58,7 +58,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: [linux, macos, win-msvc]
         include:
         - build: linux
           os: ubuntu-20.04
@@ -68,7 +67,7 @@ jobs:
           os: macos-latest
           rust: stable
           target: x86_64-apple-darwin
-        - build: macos
+        - build: macos-aarch64
           os: macos-latest
           rust: stable
           target: aarch64-apple-darwin
