@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- First attempt at aarch64 for Mac
+
 ## [1.17.0] - 2024-01-03
 
 ### Fixes
