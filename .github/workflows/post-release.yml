@@ -69,6 +69,10 @@ jobs:
           os: macos-latest
           rust: stable
           target: x86_64-apple-darwin
+        - build: macos-aarch64
+          os: macos-latest
+          rust: stable
+          target: aarch64-apple-darwin
         - build: win-msvc
           os: windows-2019
           rust: stable
@@ -94,18 +98,20 @@ jobs:
     - name: Build archive
       shell: bash
       run: |
-        outdir="./target/${{ env.TARGET_DIR }}/release"
+        outdir="./target/${{ matrix.target }}/release"
         staging="${{ env.BIN_NAME }}-${{ needs.create-release.outputs.release_version }}-${{ matrix.target }}"
         mkdir -p "$staging"/{complete,doc}
         cp {README.md,LICENSE-*} "$staging/"
         cp {CHANGELOG.md,docs/*} "$staging/doc/"
         if [ "${{ matrix.os }}" = "windows-2019" ]; then
           cp "target/${{ matrix.target }}/release/${{ env.BIN_NAME }}.exe" "$staging/"
+          ls -l "$staging"
           cd "$staging"
           7z a "../$staging.zip" .
           echo "ASSET=$staging.zip" >> $GITHUB_ENV
         else
           cp "target/${{ matrix.target }}/release/${{ env.BIN_NAME }}" "$staging/"
+          ls -l "$staging"
           tar czf "$staging.tar.gz" -C "$staging" .
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
         fi
