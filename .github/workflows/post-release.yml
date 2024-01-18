@@ -100,7 +100,7 @@ jobs:
       run: |
         outdir="./target/${{ matrix.target }}/release"
         staging="${{ env.BIN_NAME }}-${{ needs.create-release.outputs.release_version }}-${{ matrix.target }}"
-        mkdir -p "$staging"/{complete,doc}
+        mkdir -p "$staging"/doc
         cp {README.md,LICENSE-*} "$staging/"
         cp {CHANGELOG.md,docs/*} "$staging/doc/"
         if [ "${{ matrix.os }}" = "windows-2019" ]; then
