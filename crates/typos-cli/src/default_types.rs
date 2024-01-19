@@ -39,7 +39,6 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
         "*.p7b",
         "*.p7c",
         "*.p7s",
-        "*.pem",
         // Keystore Files:
         "*.key",
         "*.keystore",
@@ -61,7 +60,6 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ]),
     ("creole", &["*.creole"]),
     ("crystal", &["Projectfile", "*.cr", "*.ecr", "shard.yml"]),
-    ("cs", &["*.cs"]),
     ("csharp", &["*.cs"]),
     ("cshtml", &["*.cshtml"]),
     ("css", &["*.css", "*.scss"]),
@@ -99,7 +97,6 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("gzip", &["*.gz", "*.tgz"]),
     ("h", &["*.h", "*.hpp"]),
     ("haml", &["*.haml"]),
-    ("haskell", &["*.hs", "*.lhs", "*.cpphs", "*.c2hs", "*.hsc"]),
     ("hbs", &["*.hbs"]),
     ("hs", &["*.hs", "*.lhs"]),
     ("html", &["*.htm", "*.html", "*.ejs"]),
@@ -159,7 +156,6 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ]),
     ("mako", &["*.mako", "*.mao"]),
     ("man", &["*.[0-9lnpx]", "*.[0-9][cEFMmpSx]"]),
-    ("markdown", &["*.markdown", "*.md", "*.mdown", "*.mkdn"]),
     ("matlab", &["*.m"]),
     ("md", &["*.markdown", "*.md", "*.mdown", "*.mkdn"]),
     ("meson", &["meson.build", "meson_options.txt"]),
@@ -271,9 +267,6 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("vcl", &["*.vcl"]),
     ("verilog", &["*.v", "*.vh", "*.sv", "*.svh"]),
     ("vhdl", &["*.vhd", "*.vhdl"]),
-    ("vim", &[
-        "*.vim", ".vimrc", ".gvimrc", "vimrc", "gvimrc", "_vimrc", "_gvimrc",
-    ]),
     ("vimscript", &[
         "*.vim", ".vimrc", ".gvimrc", "vimrc", "gvimrc", "_vimrc", "_gvimrc",
     ]),

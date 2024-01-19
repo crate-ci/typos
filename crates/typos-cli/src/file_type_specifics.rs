@@ -68,15 +68,6 @@ pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         },
     ),
     (
-        "vim",
-        StaticDictConfig {
-            ignore_idents: &[
-                "windo", // https://vimdoc.sourceforge.net/htmldoc/windows.html#:windo
-            ],
-            ignore_words: &[],
-        },
-    ),
-    (
         "vimscript",
         StaticDictConfig {
             ignore_idents: &[
