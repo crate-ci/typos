@@ -261,7 +261,7 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("ts", &["*.ts", "*.tsx"]),
     ("twig", &["*.twig"]),
     ("txt", &["*.txt"]),
-    ("typoscript", &["*.typoscript", "*.ts"]),
+    ("typoscript", &["*.typoscript"]),
     ("vala", &["*.vala"]),
     ("vb", &["*.vb"]),
     ("vcl", &["*.vcl"]),
@@ -292,3 +292,20 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ]),
     ("zstd", &["*.zst", "*.zstd"]),
 ];
+
+// See `cargo test --lib -- --nocapture default_types::check_duplicates`
+#[test]
+fn check_duplicates() {
+    let mut reverse = std::collections::BTreeMap::new();
+    for (name, exts) in DEFAULT_TYPES {
+        for ext in *exts {
+            reverse.entry(ext).or_insert(Vec::new()).push(name);
+        }
+    }
+
+    for (ext, names) in reverse {
+        if 1 < names.len() {
+            println!("{ext} is under multiple names: {names:?}");
+        }
+    }
+}
