@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Treat `*.ts` as typescript, not typoscript
+- Remove file type definitions that aren't used
+
 ## [1.17.1] - 2024-01-12
 
 ### Features
