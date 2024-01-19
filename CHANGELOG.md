@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.17.2] - 2024-01-19
+
 ### Fixes
 
 - Treat `*.ts` as typescript, not typoscript
@@ -1015,7 +1017,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.17.1...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.17.2...HEAD
+[1.17.2]: https://github.com/crate-ci/typos/compare/v1.17.1...v1.17.2
 [1.17.1]: https://github.com/crate-ci/typos/compare/v1.17.0...v1.17.1
 [1.17.0]: https://github.com/crate-ci/typos/compare/v1.16.26...v1.17.0
 [1.16.26]: https://github.com/crate-ci/typos/compare/v1.16.25...v1.16.26
