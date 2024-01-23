@@ -148,7 +148,21 @@ If you need to dig in more, you can enable debug logging with `-v`
 
 ### Why was ... not corrected?
 
-tl;dr `typos` doesn't know about it yet
+**Does the file show up in `typos --files`?**
+If not, check your config with `typos --dump-config -`.
+The `[files]` table controls how we walk files.
+If you are using `files.extend-exclude`,
+are you running into [#593](https://github.com/crate-ci/typos/issues/593)?
+If you are using `files.ignore-vcs = true`,
+is the file in your `.gitignore` but git tracks it anyways?
+Prefer allowing the file explicitly (see [#909](https://github.com/crate-ci/typos/issues/909)).
+
+**Does the identifier show up in `typos --identifers` or the word show up in `typos --words`?**
+If not, it might be subject to one of typos' heuristics for
+detecting non-words (like hashes) or
+unambiguous words (like words after a `\` escape).
+
+If it is showing up, likely `typos` doesn't know about it yet.
 
 `typos` maintains a list of known typo corrections to keep the false positive
 count low so it can safely run unassisted.
