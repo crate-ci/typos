@@ -30,11 +30,30 @@ fn main() {
 
 pub static CORPUS: &str = include_str!("../../typos-dict/assets/words.csv");
 
-pub static DATA: &[(&str, &str)] = &[
-    ("empty", EMPTY),
-    ("no_tokens", NO_TOKENS),
-    ("single_token", SINGLE_TOKEN),
-    ("sherlock", SHERLOCK),
-    ("code", CODE),
-    ("corpus", CORPUS),
+#[derive(Debug)]
+pub struct Data(&'static str, &'static str);
+
+impl Data {
+    pub const fn name(&self) -> &'static str {
+        self.0
+    }
+
+    pub const fn content(&self) -> &'static str {
+        self.1
+    }
+}
+
+impl std::fmt::Display for Data {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.name().fmt(f)
+    }
+}
+
+pub static DATA: &[Data] = &[
+    Data("empty", EMPTY),
+    Data("no_tokens", NO_TOKENS),
+    Data("single_token", SINGLE_TOKEN),
+    Data("sherlock", SHERLOCK),
+    Data("code", CODE),
+    Data("corpus", CORPUS),
 ];

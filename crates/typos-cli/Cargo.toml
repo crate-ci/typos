@@ -79,16 +79,16 @@ encoding_rs = "0.8.33"
 
 [dev-dependencies]
 assert_fs = "1.1"
-trycmd = "0.14.20"
-criterion = "0.5"
+divan = "0.1.11"
 snapbox = "0.4.16"
+trycmd = "0.14.20"
 
 [[bench]]
-name = "checks"
+name = "check_file"
 harness = false
 
 [[bench]]
-name = "corrections"
+name = "correct_word"
 harness = false
 
 [[bench]]
