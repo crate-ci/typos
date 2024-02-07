@@ -221,7 +221,11 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             .with_code(proc_exit::sysexits::CONFIG_ERR)?;
         let walk_policy = engine.walk(&cwd);
 
-        let threads = if path.is_file() { 1 } else { args.threads };
+        let threads = if path.is_file() || args.sort {
+            1
+        } else {
+            args.threads
+        };
         let single_threaded = threads == 1;
 
         let mut walk = ignore::WalkBuilder::new(path);
@@ -233,6 +237,9 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             .git_ignore(walk_policy.ignore_vcs())
             .git_exclude(walk_policy.ignore_vcs())
             .parents(walk_policy.ignore_parent());
+        if args.sort {
+            walk.sort_by_file_name(|a, b| a.cmp(b));
+        }
         if !walk_policy.extend_exclude.is_empty() {
             let mut overrides = ignore::overrides::OverrideBuilder::new(".");
             for pattern in walk_policy.extend_exclude.iter() {

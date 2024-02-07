@@ -11,6 +11,7 @@ Arguments:
 Options:
       --file-list <FILE_LIST>  Read the list of newline separated paths from file or stdin (if `-`)
   -j, --threads <THREADS>      The approximate number of threads to use [default: 0]
+      --sort                   Sort results
       --force-exclude          Respect excluded files even for paths passed explicitly
   -h, --help                   Print help
   -V, --version                Print version

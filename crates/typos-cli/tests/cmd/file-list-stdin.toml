@@ -1,5 +1,5 @@
 bin.name = "typos"
-args = "--file-list -"
+args = "--sort --file-list -"
 stdin = """
 b.fail
 d.fail
