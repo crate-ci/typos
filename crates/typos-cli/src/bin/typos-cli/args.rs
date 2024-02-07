@@ -10,6 +10,7 @@ pub enum Format {
     #[default]
     Long,
     Json,
+    CodeClimate,
 }
 
 impl Format {
@@ -19,6 +20,7 @@ impl Format {
             Format::Brief => Box::new(crate::report::PrintBrief),
             Format::Long => Box::new(crate::report::PrintLong),
             Format::Json => Box::new(crate::report::PrintJson),
+            Format::CodeClimate => Box::new(crate::report::PrintCodeClimate),
         }
     }
 }

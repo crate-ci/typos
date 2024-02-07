@@ -280,6 +280,98 @@ impl Report for PrintJson {
     }
 }
 
+pub struct PrintCodeClimate;
+
+impl Report for PrintCodeClimate {
+    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+        let mut climate: CodeClimate = Default::default();
+        climate.r#type = "issue";
+        climate.check_name = "typos";
+        match msg {
+            Message::BinaryFile(_msg) => {
+                climate.severity = "info";
+            }
+            Message::Typo(msg) => {
+                match msg.corrections {
+                    typos::Status::Valid => {}
+                    typos::Status::Invalid => {
+                        climate.description = format!("`{}` is disallowed", msg.typo,);
+                    }
+                    typos::Status::Corrections(corrections) => {
+                        climate.description = format!(
+                            "`{}` should be {}",
+                            msg.typo,
+                            itertools::join(corrections.iter().map(|s| format!("`{}`", s)), ", ")
+                        );
+                    }
+                }
+                climate.categories = "Clarity";
+                climate.severity = "minor";
+                climate.location = Location::from(msg.context.unwrap());
+            }
+            Message::Error(msg) => {
+                climate.severity = "error";
+                climate.description = context_display(&msg.context).to_string();
+            }
+            _ => {
+                climate.severity = "minor";
+            }
+        }
+        writeln!(
+            stdout().lock(),
+            "{}",
+            serde_json::to_string(&climate).unwrap()
+        )?;
+        Ok(())
+    }
+}
+
+#[derive(Default, serde::Serialize)]
+struct CodeClimate<'l> {
+    check_name: &'l str,
+    description: String,
+    categories: &'l str,
+    location: Location<'l>,
+    severity: &'l str,
+    r#type: &'l str,
+}
+
+#[derive(serde::Serialize)]
+struct Location<'l> {
+    path: &'l std::path::Path,
+    lines: Lines,
+}
+
+impl<'l> Default for Location<'l> {
+    fn default() -> Self {
+        Self {
+            path: std::path::Path::new("-"),
+            lines: Lines { begin: 0 },
+        }
+    }
+}
+
+impl<'l> From<Context<'l>> for Location<'l> {
+    fn from(context: Context<'l>) -> Self {
+        match context {
+            Context::File(c) => Self {
+                path: c.path,
+                lines: Lines { begin: c.line_num },
+            },
+            Context::Path(c) => Self {
+                path: c.path,
+                ..Default::default()
+            },
+            _ => Default::default(),
+        }
+    }
+}
+
+#[derive(Default, serde::Serialize)]
+struct Lines {
+    begin: usize,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
