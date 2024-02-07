@@ -225,7 +225,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         let single_threaded = threads == 1;
 
         let mut walk = ignore::WalkBuilder::new(path);
-        walk.threads(args.threads)
+        walk.threads(threads)
             .skip_stdout(true)
             .hidden(walk_policy.ignore_hidden())
             .ignore(walk_policy.ignore_dot())
