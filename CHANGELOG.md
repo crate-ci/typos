@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Add `--sort` flag
+
+### Fixes
+
+- Protect against crash on multi-byte UTF-8 characters when parsed as ASCII
+
 ## [1.18.1] - 2024-02-05
 
 ### Fixes
