@@ -159,7 +159,12 @@ mod parser {
         // `{XID_Continue}+` because XID_Continue is a superset of XID_Start and rather catch odd
         // or unexpected cases than strip off start characters to a word since we aren't doing a
         // proper word boundary parse
-        trace("identifier", take_while(1.., is_xid_continue)).parse_next(input)
+        trace(
+            "identifier",
+            take_while(1.., is_xid_continue)
+                .verify(|s: &<T as Stream>::Slice| std::str::from_utf8(s.as_bstr()).is_ok()),
+        )
+        .parse_next(input)
     }
 
     fn ignore<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
@@ -1311,6 +1316,18 @@ mod test {
     }
 
     #[test]
+    fn tokenize_unicode_without_unicode() {
+        let parser = TokenizerBuilder::new().unicode(false).build();
+
+        let input = "appliqués";
+        let expected: Vec<Identifier> = vec![];
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_eq!(expected, actual);
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_eq!(expected, actual);
+    }
+
+    #[test]
     fn split_ident() {
         let cases = [
             (
@@ -1365,6 +1382,7 @@ mod test {
                 "BFG9000",
                 &[("BFG", Case::Upper, 0), ("9000", Case::None, 3)],
             ),
+            ("appliqués", &[("appliqués", Case::Lower, 0)]),
         ];
         for (input, expected) in cases.iter() {
             let ident = Identifier::new_unchecked(input, Case::None, 0);
