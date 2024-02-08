@@ -1,4 +1,5 @@
 bin.name = "typos"
+args = "--sort"
 status.code = 2
 stdin = ""
 stdout = """

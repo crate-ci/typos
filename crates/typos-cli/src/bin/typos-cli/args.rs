@@ -40,6 +40,10 @@ pub(crate) struct Args {
     #[arg(short = 'j', long = "threads", default_value = "0")]
     pub(crate) threads: usize,
 
+    /// Sort results
+    #[arg(long)]
+    pub(crate) sort: bool,
+
     /// Respect excluded files even for paths passed explicitly.
     #[arg(long, help_heading = None)]
     pub(crate) force_exclude: bool,
