@@ -395,7 +395,7 @@ mod parser {
             take_while(padding_len..=padding_len, is_base64_padding).parse_next(input)?;
 
             let after_offset = input.offset_from(&start);
-            input.reset(start);
+            input.reset(&start);
             Ok(input.next_slice(after_offset))
         })
         .parse_next(input)

@@ -1289,7 +1289,7 @@ dependencies = [
  "serde",
  "serde_spanned",
  "toml_datetime",
- "winnow",
+ "winnow 0.5.40",
 ]
 
 [[package]]
@@ -1327,7 +1327,7 @@ dependencies = [
  "thiserror",
  "unicode-segmentation",
  "unicode-xid",
- "winnow",
+ "winnow 0.6.0",
 ]
 
 [[package]]
@@ -1509,7 +1509,7 @@ name = "varcon-core"
 version = "4.0.4"
 dependencies = [
  "enumflags2",
- "winnow",
+ "winnow 0.6.0",
 ]
 
 [[package]]
@@ -1722,6 +1722,15 @@ name = "winnow"
 version = "0.5.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f593a95398737aeed53e489c785df13f3618e41dbcd6718c6addbf1395aa6876"
+dependencies = [
+ "memchr",
+]
+
+[[package]]
+name = "winnow"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6b1dbce9e90e5404c5a52ed82b1d13fc8cfbdad85033b6f57546ffd1265f8451"
 dependencies = [
  "memchr",
 ]
