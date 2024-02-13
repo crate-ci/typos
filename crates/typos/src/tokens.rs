@@ -129,19 +129,21 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 }
 
 mod parser {
+    use winnow::combinator::trace;
     use winnow::combinator::*;
     use winnow::error::ParserError;
     use winnow::prelude::*;
     use winnow::stream::AsBStr;
     use winnow::stream::AsChar;
+    use winnow::stream::Compare;
     use winnow::stream::SliceLen;
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
     use winnow::token::*;
-    use winnow::trace::trace;
 
     pub(crate) fn next_identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -169,6 +171,7 @@ mod parser {
 
     fn ignore<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -228,6 +231,7 @@ mod parser {
 
     fn ordinal_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -262,6 +266,7 @@ mod parser {
 
     fn hex_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -275,6 +280,7 @@ mod parser {
 
     fn css_color<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -294,6 +300,7 @@ mod parser {
 
     fn uuid_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -396,6 +403,7 @@ mod parser {
 
     fn email_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -414,6 +422,7 @@ mod parser {
 
     fn url_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -443,6 +452,7 @@ mod parser {
 
     fn url_userinfo<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -477,6 +487,7 @@ mod parser {
 
     fn printf<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
+        T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,

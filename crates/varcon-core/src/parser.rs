@@ -1,5 +1,5 @@
+use winnow::combinator::trace;
 use winnow::prelude::*;
-use winnow::trace::trace;
 
 use crate::*;
 
@@ -69,13 +69,13 @@ impl Cluster {
             let header = (
                 "#",
                 winnow::ascii::space0,
-                winnow::ascii::not_line_ending,
+                winnow::ascii::till_line_ending,
                 winnow::ascii::line_ending,
             );
             let note = winnow::combinator::preceded(
                 ("##", winnow::ascii::space0),
                 winnow::combinator::terminated(
-                    winnow::ascii::not_line_ending,
+                    winnow::ascii::till_line_ending,
                     winnow::ascii::line_ending,
                 ),
             );
@@ -170,7 +170,7 @@ impl Entry {
             let comment = winnow::combinator::opt((
                 comment_sep,
                 winnow::ascii::space1,
-                winnow::ascii::not_line_ending,
+                winnow::ascii::till_line_ending,
             ))
             .parse_next(input)?;
 
@@ -200,7 +200,7 @@ impl Entry {
                 winnow::combinator::opt((winnow::ascii::space1, "--")),
                 winnow::combinator::opt((
                     winnow::ascii::space1,
-                    winnow::token::take_till0(('\n', '\r', '#')),
+                    winnow::token::take_till(0.., ('\n', '\r', '#')),
                 )),
             )
                 .parse_next(input)?;
@@ -343,7 +343,7 @@ impl Variant {
 
 fn word(input: &mut &str) -> PResult<String, ()> {
     trace("word", move |input: &mut &str| {
-        winnow::token::take_till1(|item: char| item.is_ascii_whitespace())
+        winnow::token::take_till(1.., |item: char| item.is_ascii_whitespace())
             .map(|s: &str| s.to_owned().replace('_', " "))
             .parse_next(input)
     })
