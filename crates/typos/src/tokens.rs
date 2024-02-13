@@ -129,6 +129,7 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 }
 
 mod parser {
+    use winnow::combinator::trace;
     use winnow::combinator::*;
     use winnow::error::ParserError;
     use winnow::prelude::*;
@@ -138,7 +139,6 @@ mod parser {
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
     use winnow::token::*;
-    use winnow::trace::trace;
 
     pub(crate) fn next_identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
