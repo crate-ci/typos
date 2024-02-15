@@ -6,7 +6,7 @@ fn codegen() {
 
     let content = String::from_utf8(content).unwrap();
     let content = codegenrs::rustfmt(&content, None).unwrap();
-    snapbox::assert_eq_path("./src/word_codegen.rs", content);
+    snapbox::assert_eq(snapbox::file!["../src/word_codegen.rs"], content);
 }
 
 fn generate<W: std::io::Write>(file: &mut W, prefix: &str, dict: &[u8]) {
