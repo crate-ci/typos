@@ -23,5 +23,5 @@ unicase = "2.7"
 codegenrs = "3.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 varcon = { version = "^0.7", path = "../varcon" }
-snapbox = { version = "0.4.16", features = ["path"] }
+snapbox = { version = "0.5.0", features = ["path"] }
 indexmap = "2.2.2"

@@ -8,8 +8,7 @@ type Dict = BTreeMap<UniCase<String>, IndexSet<String>>;
 
 #[test]
 fn verify() {
-    let asset_path = "assets/words.csv";
-    let typos_dict = parse_dict(asset_path);
+    let typos_dict = parse_dict("assets/words.csv");
     let new_dict = process(typos_dict);
 
     let mut content = vec![];
@@ -26,7 +25,7 @@ fn verify() {
     drop(wtr);
 
     let content = String::from_utf8(content).unwrap();
-    snapbox::assert_eq_path(asset_path, content);
+    snapbox::assert_eq(snapbox::file!["../assets/words.csv"], content);
 }
 
 fn parse_dict(path: &str) -> Vec<(String, Vec<String>)> {

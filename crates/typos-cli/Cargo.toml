@@ -80,8 +80,8 @@ encoding_rs = "0.8.33"
 [dev-dependencies]
 assert_fs = "1.1"
 divan = "0.1.11"
-snapbox = "0.4.16"
-trycmd = "0.14.20"
+snapbox = "0.5.0"
+trycmd = "0.15.0"
 
 [[bench]]
 name = "check_file"
