@@ -54,6 +54,11 @@ Or use [Conda](https://conda.io/) to install:
 conda install typos
 ```
 
+Or use [Pacman](https://wiki.archlinux.org/title/pacman) to install:
+```
+sudo pacman -S typos
+```
+
 ## Getting Started
 
 Most commonly, you'll either want to see what typos are available with
