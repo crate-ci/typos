@@ -30,7 +30,8 @@ Config:
       --no-check-filenames      Skip verifying spelling in file names
       --no-check-files          Skip verifying spelling in files
       --no-unicode              Only allow ASCII characters in identifiers
-      --locale <LOCALE>         Language locale to suggest corrections for [possible values: en, en-us, en-gb, en-ca, en-au]
+      --locale <LOCALE>         Language locale to suggest corrections for [possible values: en,
+                                en-us, en-gb, en-ca, en-au]
 
 Mode:
       --diff                       Print a diff of what would change
@@ -43,9 +44,11 @@ Mode:
       --type-list                  Show all supported file types
 
 Output:
-      --format <FORMAT>  Render style for messages [default: long] [possible values: silent, brief, long, json]
-      --color <WHEN>     Controls when to use color [default: auto] [possible values: auto, always, never]
-  -v, --verbose...       More output per occurrence
-  -q, --quiet...         Less output per occurrence
+      --format <FORMAT>  Render style for messages [default: long] [possible values: silent, brief,
+                         long, json]
+      --color <WHEN>     Controls when to use color [default: auto] [possible values: auto, always,
+                         never]
+  -v, --verbose...       Increase logging verbosity
+  -q, --quiet...         Decrease logging verbosity
 """
 stderr = ""
