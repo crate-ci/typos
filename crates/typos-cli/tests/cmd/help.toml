@@ -52,3 +52,6 @@ Output:
   -q, --quiet...         Decrease logging verbosity
 """
 stderr = ""
+
+[env.add]
+COLUMNS = "100"
