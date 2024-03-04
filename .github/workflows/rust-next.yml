@@ -55,8 +55,8 @@ jobs:
     - name: Update dependencues
       run: cargo update
     - name: Default features
-      run: cargo test --workspace --all-targets
+      run: cargo test --workspace
     - name: All features
-      run: cargo test --workspace --all-targets --all-features
+      run: cargo test --workspace --all-features
     - name: No-default features
-      run: cargo test --workspace --all-targets --no-default-features
+      run: cargo test --workspace --no-default-features
