@@ -162,7 +162,7 @@ If you are using `files.ignore-vcs = true`,
 is the file in your `.gitignore` but git tracks it anyways?
 Prefer allowing the file explicitly (see [#909](https://github.com/crate-ci/typos/issues/909)).
 
-**Does the identifier show up in `typos --identifers` or the word show up in `typos --words`?**
+**Does the identifier show up in `typos --identifiers` or the word show up in `typos --words`?**
 If not, it might be subject to one of typos' heuristics for
 detecting non-words (like hashes) or
 unambiguous words (like words after a `\` escape).
