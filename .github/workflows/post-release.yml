@@ -65,6 +65,10 @@ jobs:
           os: ubuntu-20.04
           rust: stable
           target: x86_64-unknown-linux-musl
+        - build: linux
+          os: ubuntu-20.04
+          rust: stable
+          target: arm64-unknown-linux-musl
         - build: macos
           os: macos-latest
           rust: stable
