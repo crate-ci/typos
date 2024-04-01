@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `eof`, a regression from 1.20.0
+
 ## [1.20.0] - 2024-04-01
 
 ### Fixes
