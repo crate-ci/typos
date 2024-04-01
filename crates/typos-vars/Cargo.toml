@@ -24,4 +24,4 @@ unicase = "2.7"
 codegenrs = "3.0"
 itertools = "0.12"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
-snapbox = { version = "0.5.7", features = ["path"] }
+snapbox = { version = "0.5.9", features = ["path"] }

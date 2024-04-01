@@ -45,11 +45,11 @@ typos-dict = { version = "^0.11", path = "../typos-dict", optional = true }
 typos-vars = { version = "^0.8", path = "../typos-vars", optional = true }
 unicase = "2.7"
 anyhow = "1.0"
-clap = { version = "4.5.1", features = ["derive"] }
+clap = { version = "4.5.4", features = ["derive"] }
 clap-verbosity-flag = "2.2"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.8.10"
+toml = "0.8.12"
 log = "0.4"
 env_logger = { version = "0.11", default-features = false, features = ["auto-color"] }
 bstr = "1.9"
@@ -74,13 +74,13 @@ anstyle = "1.0.6"
 anstream = "0.6.13"
 colorchoice-clap = "1.0.3"
 serde_regex = "1.1.0"
-regex = "1.10.3"
+regex = "1.10.4"
 encoding_rs = "0.8.33"
 
 [dev-dependencies]
 assert_fs = "1.1"
 divan = "0.1.14"
-snapbox = "0.5.7"
+snapbox = "0.5.9"
 trycmd = "0.15.0"
 
 [[bench]]
