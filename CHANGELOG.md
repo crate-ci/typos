@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixes
 
-- Don't correct `of` (OpenGraph's namespace), a regression from 1.20.0
+- Don't correct `og` (OpenGraph's namespace), a regression from 1.20.0
 
 ### Fixes
 
