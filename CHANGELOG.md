@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `ang` ('angle' abbreviation)
+- Don't correct `dur` ('duration' abbreviation)
+- Don't correct `lst` (used in place of 'list' when its a built-in)
+- Don't correct `GUID` acronym
+- Don't correct `IIS` acronym
+- Don't correct `IME` acronym
+- Don't correct `IOT` acronym
+- Don't correct `ro` acronym
+- Don't correct `ws` abbreviation
+- Don't correct `JST` timezone
+- Also correct `donw` to `done`
+
 ## [1.20.1] - 2024-04-01
 
 ### Fixes
