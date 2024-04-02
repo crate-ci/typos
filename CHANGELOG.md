@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.20.3] - 2024-04-02
+
 - Don't correct `arange` in Python
 - Don't correct `EOFError` in Python
 
@@ -1082,7 +1084,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.20.2...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.20.3...HEAD
+[1.20.3]: https://github.com/crate-ci/typos/compare/v1.20.2...v1.20.3
 [1.20.2]: https://github.com/crate-ci/typos/compare/v1.20.1...v1.20.2
 [1.20.1]: https://github.com/crate-ci/typos/compare/v1.20.0...v1.20.1
 [1.20.0]: https://github.com/crate-ci/typos/compare/v1.19.0...v1.20.0
