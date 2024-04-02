@@ -41,7 +41,9 @@ pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         "py",
         StaticDictConfig {
             ignore_idents: &[
-                "NDArray", // numpy.typing.NDArray
+                "NDArray",  // numpy.typing.NDArray
+                "EOFError", // std
+                "arange",   // torch.arange, numpy.arange
             ],
             ignore_words: &[],
         },
