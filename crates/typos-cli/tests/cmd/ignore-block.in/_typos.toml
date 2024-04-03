@@ -1,0 +1,5 @@
+[default]
+extend-ignore-re = ["#\\s*spellchecker:off\\s*\\n.*\\n\\s*#\\s*spellchecker:on"]
+
+[default.extend-identifiers]
+hello = "goodbye"
