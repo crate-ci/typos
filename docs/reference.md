@@ -38,5 +38,9 @@ Configuration is read from the following (in precedence order)
 | type.\<name>.\<field>      | \<varied>     | \<varied>  | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s |
 | type.\<name>.extend-glob   | \-            | list of strings  | File globs for matching `<name>` |
 
+Common `extend-ignore-re`:
+- Line ignore with trailing `# spellchecker:disable-line`: `"(?Rm)^.*#\\s*spellchecker:disable-line$"`
+- Line block with `# spellchecker:<on|off>`: `"#\\s*spellchecker:off\\s*\\n.*\\n\\s*#\\s*spellchecker:on"`
+
 Common `extend-ignore-identifiers-re`:
 - SSL Cipher suites: `"\\bTLS_[A-Z0-9_]+(_anon_[A-Z0-9_]+)?\\b"`
