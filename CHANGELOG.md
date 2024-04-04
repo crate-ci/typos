@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `ans`
+
 ## [1.20.3] - 2024-04-02
+
+### Fixes
 
 - Don't correct `arange` in Python
 - Don't correct `EOFError` in Python
