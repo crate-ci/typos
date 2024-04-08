@@ -184,7 +184,9 @@ pub const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("puppet", &["*.erb", "*.pp", "*.rb"]),
     ("purs", &["*.purs"]),
     ("py", &[
+        "*.ipynb",
         "*.py",
+        "*.pyi",
         // From a spell-check perspective, this is more like Python than toml
         "pyproject.toml",
     ]),
