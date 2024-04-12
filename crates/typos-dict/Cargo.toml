@@ -1,6 +1,6 @@
 [package]
 name = "typos-dict"
-version = "0.11.15"
+version = "0.11.16"
 description = "Source Code Spelling Correction"
 readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
