@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct the unit `dBA` (as an identifier to limit to that case)
+
 ## [1.20.8] - 2024-04-12
 
 ### Fixes
