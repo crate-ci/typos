@@ -1,4 +1,12 @@
 bin.name = "typos"
 stdin = ""
-stdout = ""
+stdout = """
+error: `BA` should be `BY`, `BE`
+  --> ./sample.txt:1:21
+  |
+1 | Audio volume: 23.6 dBA
+  |                     ^^
+  |
+"""
 stderr = ""
+status.code = 2
