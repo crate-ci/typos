@@ -54,6 +54,7 @@ impl BuiltIn {
     fn correct_ident_with_dict<'s>(&self, ident: &str) -> Option<Status<'s>> {
         match ident {
             "O_WRONLY" => Some(Status::Valid),
+            "dBA" => Some(Status::Valid),
             _ => None,
         }
     }
