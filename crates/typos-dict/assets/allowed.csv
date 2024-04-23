@@ -38,3 +38,4 @@ ans,abbreviation for answer
 automations,while automation is uncountable there are cases where automations works like with iPhone automations
 inout,keyword in many languages but used in many more
 kms,common enough acronym for Key Management Service
+doas,built-in OpenBSD alternative to sudo (and has been ported to other systems)
