@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `doas`, the OpenBSD command
+
 ## [1.20.9] - 2024-04-16
 
 ### Fixes
