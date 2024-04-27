@@ -13,12 +13,16 @@ env:
   CLICOLOR: 1
   COLUMNS: 130
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        os: ["ubuntu-latest", "windows-latest", "macos-latest", "macos-14"]
         rust: ["stable", "beta"]
         include:
         - os: ubuntu-latest
@@ -34,12 +38,11 @@ jobs:
         toolchain: ${{ matrix.rust }}
         components: rustfmt
     - uses: Swatinem/rust-cache@v2
-    - name: Default features
-      run: cargo test --workspace
-    - name: All features
-      run: cargo test --workspace --all-features
-    - name: No-default features
-      run: cargo test --workspace --no-default-features
+    - uses: taiki-e/install-action@cargo-hack
+    - name: Build
+      run: cargo test --workspace --no-run
+    - name: Test
+      run: cargo hack test --feature-powerset --workspace
   latest:
     name: "Check latest dependencies"
     runs-on: ubuntu-latest
@@ -52,11 +55,10 @@ jobs:
         toolchain: stable
         components: rustfmt
     - uses: Swatinem/rust-cache@v2
+    - uses: taiki-e/install-action@cargo-hack
     - name: Update dependencues
       run: cargo update
-    - name: Default features
-      run: cargo test --workspace
-    - name: All features
-      run: cargo test --workspace --all-features
-    - name: No-default features
-      run: cargo test --workspace --no-default-features
+    - name: Build
+      run: cargo test --workspace --no-run
+    - name: Test
+      run: cargo hack test --feature-powerset --workspace

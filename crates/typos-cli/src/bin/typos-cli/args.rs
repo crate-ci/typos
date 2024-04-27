@@ -4,7 +4,7 @@ use clap::Parser;
 use typos_cli::config;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, clap::ValueEnum, Default)]
-pub enum Format {
+pub(crate) enum Format {
     Silent,
     Brief,
     #[default]
@@ -145,7 +145,7 @@ pub(crate) struct FileArgs {
 }
 
 impl FileArgs {
-    pub fn to_config(&self) -> config::EngineConfig {
+    pub(crate) fn to_config(&self) -> config::EngineConfig {
         config::EngineConfig {
             binary: self.binary(),
             check_filename: self.check_filename(),
@@ -189,7 +189,7 @@ pub(crate) struct ConfigArgs {
 }
 
 impl ConfigArgs {
-    pub fn to_config(&self) -> config::Config {
+    pub(crate) fn to_config(&self) -> config::Config {
         config::Config {
             files: self.walk.to_config(),
             overrides: self.overrides.to_config(),
@@ -243,7 +243,7 @@ pub(crate) struct WalkArgs {
 }
 
 impl WalkArgs {
-    pub fn to_config(&self) -> config::Walk {
+    pub(crate) fn to_config(&self) -> config::Walk {
         config::Walk {
             extend_exclude: self.exclude.clone(),
             ignore_hidden: self.ignore_hidden(),
@@ -296,6 +296,6 @@ mod test {
     #[test]
     fn verify_app() {
         use clap::CommandFactory;
-        Args::command().debug_assert()
+        Args::command().debug_assert();
     }
 }

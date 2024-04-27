@@ -13,6 +13,7 @@ include.workspace = true
 
 [package.metadata.release]
 release = false
+rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 unicase = "2.7"
@@ -25,3 +26,6 @@ codegenrs = "3.0"
 regex = "1"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 snapbox = { version = "0.5.9", features = ["path"] }
+
+[lints]
+workspace = true

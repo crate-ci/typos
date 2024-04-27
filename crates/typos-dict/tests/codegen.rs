@@ -17,6 +17,7 @@ fn generate<W: std::io::Write>(file: &mut W, prefix: &str, dict: &[u8]) {
     )
     .unwrap();
     writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
+    writeln!(file, "#![allow(unreachable_pub)]",).unwrap();
     writeln!(file).unwrap();
 
     let records: Vec<_> = csv::ReaderBuilder::new()

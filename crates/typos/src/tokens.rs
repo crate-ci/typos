@@ -130,7 +130,7 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 
 mod parser {
     use winnow::combinator::trace;
-    use winnow::combinator::*;
+    use winnow::combinator::{alt, eof, opt, peek, preceded, repeat, terminated};
     use winnow::error::ParserError;
     use winnow::prelude::*;
     use winnow::stream::AsBStr;
@@ -139,7 +139,7 @@ mod parser {
     use winnow::stream::SliceLen;
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
-    use winnow::token::*;
+    use winnow::token::{one_of, take_while};
 
     pub(crate) fn next_identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
@@ -944,7 +944,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "";
-        let expected: Vec<Identifier> = vec![];
+        let expected: Vec<Identifier<'_>> = vec![];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -956,7 +956,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "word";
-        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("word", Case::None, 0)];
+        let expected: Vec<Identifier<'_>> = vec![Identifier::new_unchecked("word", Case::None, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -968,7 +968,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A B";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("A", Case::None, 0),
             Identifier::new_unchecked("B", Case::None, 2),
         ];
@@ -983,7 +983,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A.B";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("A", Case::None, 0),
             Identifier::new_unchecked("B", Case::None, 2),
         ];
@@ -998,7 +998,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A::B";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("A", Case::None, 0),
             Identifier::new_unchecked("B", Case::None, 3),
         ];
@@ -1013,7 +1013,7 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A_B";
-        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("A_B", Case::None, 0)];
+        let expected: Vec<Identifier<'_>> = vec![Identifier::new_unchecked("A_B", Case::None, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -1025,7 +1025,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 1st 2nd 3rd 4th __5th__ World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 30),
         ];
@@ -1040,7 +1040,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 0xDEADBEEF World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 17),
         ];
@@ -1055,7 +1055,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 123e4567-e89b-12d3-a456-426652340000 World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 43),
         ];
@@ -1070,7 +1070,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 123E4567-E89B-12D3-A456-426652340000 World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 43),
         ];
@@ -1099,7 +1099,7 @@ mod test {
             ("D41D8CD98F00B204E9800998ECF8427", false),
         ] {
             let input = format!("Hello {} World", hashlike);
-            let mut expected: Vec<Identifier> = vec![
+            let mut expected: Vec<Identifier<'_>> = vec![
                 Identifier::new_unchecked("Hello", Case::None, 0),
                 Identifier::new_unchecked("World", Case::None, 7+hashlike.len()),
             ];
@@ -1118,7 +1118,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "     ///                 at /rustc/c7087fe00d2ba919df1d813c040a5d47e43b0fe7\\/src\\libstd\\rt.rs:51";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("at", Case::None, 25),
             // `rustc...` looks like the start of a URL
             Identifier::new_unchecked("rs", Case::None, 91),
@@ -1134,7 +1134,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Good Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X1Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X122Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X12== Bye";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
             Identifier::new_unchecked("Bye", Case::None, 134),
         ];
@@ -1149,7 +1149,8 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = r#""ed25519:1": "Wm+VzmOUOz08Ds+0NTWb1d4CZrVsJSikkeRxh6aCcUwu6pNC78FunoD7KNWzqFn241eYHYMGCA5McEiVPdhzBA==""#;
-        let expected: Vec<Identifier> = vec![Identifier::new_unchecked("ed25519", Case::None, 1)];
+        let expected: Vec<Identifier<'_>> =
+            vec![Identifier::new_unchecked("ed25519", Case::None, 1)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();
@@ -1161,7 +1162,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = r#"       "integrity": "sha512-hCmlUAIlUiav8Xdqw3Io4LcpA1DOt7h3LSTAC4G6JGHFFaWzI6qvFt9oilvl8BmkbBRX1IhM90ZAmpk68zccQA==","#;
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("integrity", Case::None, 8),
             Identifier::new_unchecked("sha512", Case::None, 21),
         ];
@@ -1176,7 +1177,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Good example@example.com Bye";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
             Identifier::new_unchecked("Bye", Case::None, 25),
         ];
@@ -1191,7 +1192,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Good example.com/hello Bye";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
             Identifier::new_unchecked("Bye", Case::None, 23),
         ];
@@ -1207,7 +1208,7 @@ mod test {
 
         let input =
             "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment,split Bye";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Good", Case::None, 0),
             Identifier::new_unchecked("Bye", Case::None, 86),
         ];
@@ -1222,7 +1223,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 0Hello 124 0xDEADBEEF World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("0Hello", Case::None, 6),
             Identifier::new_unchecked("World", Case::None, 28),
@@ -1238,7 +1239,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello \\Hello \\ \\\\ World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 18),
         ];
@@ -1253,7 +1254,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello \\n\\n World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 11),
         ];
@@ -1268,7 +1269,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello \\nanana\\nanana World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 21),
         ];
@@ -1283,7 +1284,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello %Hello World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("World", Case::None, 13),
         ];
@@ -1298,7 +1299,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "#[derive(Clone)] #aaa # #111 #AABBCC #hello #AABBCCDD #1175BA World";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("derive", Case::None, 2),
             Identifier::new_unchecked("Clone", Case::None, 9),
             Identifier::new_unchecked("hello", Case::None, 38),
@@ -1315,7 +1316,7 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello {{% foo %}} world!";
-        let expected: Vec<Identifier> = vec![
+        let expected: Vec<Identifier<'_>> = vec![
             Identifier::new_unchecked("Hello", Case::None, 0),
             Identifier::new_unchecked("foo", Case::None, 10),
             Identifier::new_unchecked("world", Case::None, 18),
@@ -1331,7 +1332,7 @@ mod test {
         let parser = TokenizerBuilder::new().unicode(false).build();
 
         let input = "appliqués";
-        let expected: Vec<Identifier> = vec![];
+        let expected: Vec<Identifier<'_>> = vec![];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_eq!(expected, actual);
         let actual: Vec<_> = parser.parse_str(input).collect();

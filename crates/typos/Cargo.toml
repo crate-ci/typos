@@ -11,6 +11,10 @@ edition.workspace = true
 rust-version.workspace = true
 include.workspace = true
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 anyhow = "1.0"
 thiserror = "1.0"
@@ -22,3 +26,6 @@ simdutf8 = "0.1.4"
 itertools = "0.12"
 unicode-segmentation = "1.11.0"
 bstr = "1.9"
+
+[lints]
+workspace = true

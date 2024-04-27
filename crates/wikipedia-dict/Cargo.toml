@@ -25,3 +25,6 @@ itertools = "0.12"
 codegenrs = "3.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 snapbox = { version = "0.5.9", features = ["path"] }
+
+[lints]
+workspace = true

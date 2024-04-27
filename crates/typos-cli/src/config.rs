@@ -187,7 +187,7 @@ impl Walk {
 #[serde(default)]
 #[serde(transparent)]
 pub struct TypeEngineConfig {
-    pub patterns: std::collections::HashMap<KString, GlobEngineConfig>,
+    pub patterns: HashMap<KString, GlobEngineConfig>,
 }
 
 impl TypeEngineConfig {
@@ -244,7 +244,7 @@ impl TypeEngineConfig {
         }
     }
 
-    pub fn patterns(&self) -> impl Iterator<Item = (kstring::KString, GlobEngineConfig)> {
+    pub fn patterns(&self) -> impl Iterator<Item = (KString, GlobEngineConfig)> {
         let mut engine = Self::from_defaults();
         engine.update(self);
         engine.patterns.into_iter()
@@ -256,7 +256,7 @@ impl TypeEngineConfig {
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct GlobEngineConfig {
-    pub extend_glob: Vec<kstring::KString>,
+    pub extend_glob: Vec<KString>,
     #[serde(flatten)]
     pub engine: EngineConfig,
 }
@@ -406,10 +406,10 @@ pub struct DictConfig {
     pub locale: Option<Locale>,
     #[serde(with = "serde_regex")]
     pub extend_ignore_identifiers_re: Vec<regex::Regex>,
-    pub extend_identifiers: HashMap<kstring::KString, kstring::KString>,
+    pub extend_identifiers: HashMap<KString, KString>,
     #[serde(with = "serde_regex")]
     pub extend_ignore_words_re: Vec<regex::Regex>,
-    pub extend_words: HashMap<kstring::KString, kstring::KString>,
+    pub extend_words: HashMap<KString, KString>,
 }
 
 impl DictConfig {
@@ -536,7 +536,7 @@ impl Locale {
 impl std::str::FromStr for Locale {
     type Err = String;
 
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "en" => Ok(Locale::En),
             "en-us" => Ok(Locale::EnUs),
@@ -549,7 +549,7 @@ impl std::str::FromStr for Locale {
 }
 
 impl std::fmt::Display for Locale {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match *self {
             Locale::En => write!(f, "en"),
             Locale::EnUs => write!(f, "en-us"),
@@ -625,7 +625,7 @@ mod test {
         let mut actual = base;
         actual.update(&extended);
 
-        let expected: Vec<kstring::KString> = vec!["*.foo".into(), "*.bar".into()];
+        let expected: Vec<KString> = vec!["*.foo".into(), "*.bar".into()];
         assert_eq!(actual.extend_glob, expected);
     }
 

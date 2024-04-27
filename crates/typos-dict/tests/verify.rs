@@ -189,7 +189,7 @@ fn is_word(word: &str) -> bool {
     word.chars().all(|c| c.is_alphabetic())
 }
 
-fn varcon_words() -> HashSet<unicase::UniCase<&'static str>> {
+fn varcon_words() -> HashSet<UniCase<&'static str>> {
     // Even include improper ones because we should be letting varcon handle that rather than our
     // dictionary
     varcon::VARCON
@@ -241,7 +241,7 @@ fn find_best_match<'c>(
     matches.into_iter().next().map(|(_, r)| r)
 }
 
-fn allowed_words() -> std::collections::HashMap<String, String> {
+fn allowed_words() -> HashMap<String, String> {
     let allowed_path = "assets/english.csv";
     let english_data = std::fs::read(allowed_path).unwrap();
     let mut allowed_english = csv::ReaderBuilder::new()

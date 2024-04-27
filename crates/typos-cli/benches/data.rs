@@ -1,11 +1,13 @@
-pub static EMPTY: &str = "";
+#![allow(dead_code)]
 
-pub static NO_TOKENS: &str = "                    ";
+pub(crate) static EMPTY: &str = "";
 
-pub static SINGLE_TOKEN: &str = "success";
+pub(crate) static NO_TOKENS: &str = "                    ";
+
+pub(crate) static SINGLE_TOKEN: &str = "success";
 
 // Stolen from https://github.com/BurntSushi/ripgrep/blob/master/grep-searcher/src/searcher/glue.rs
-pub static SHERLOCK: &str = "\
+pub(crate) static SHERLOCK: &str = "\
 For the Doctor Watsons of this world, as opposed to the Sherlock
 Holmeses, success in the province of detective work must always
 be, to a very large extent, the result of luck. Sherlock Holmes
@@ -15,7 +17,7 @@ and exhibited clearly, with a label attached.\
 ";
 
 // Stolen from https://github.com/BurntSushi/ripgrep/blob/master/grep-searcher/src/searcher/glue.rs
-pub static CODE: &str = "\
+pub(crate) static CODE: &str = "\
 extern crate snap;
 use std::io;
 fn main() {
@@ -28,17 +30,17 @@ fn main() {
 }
 ";
 
-pub static CORPUS: &str = include_str!("../../typos-dict/assets/words.csv");
+pub(crate) static CORPUS: &str = include_str!("../../typos-dict/assets/words.csv");
 
 #[derive(Debug)]
-pub struct Data(&'static str, &'static str);
+pub(crate) struct Data(&'static str, &'static str);
 
 impl Data {
-    pub const fn name(&self) -> &'static str {
+    pub(crate) const fn name(&self) -> &'static str {
         self.0
     }
 
-    pub const fn content(&self) -> &'static str {
+    pub(crate) const fn content(&self) -> &'static str {
         self.1
     }
 }
@@ -49,7 +51,7 @@ impl std::fmt::Display for Data {
     }
 }
 
-pub static DATA: &[Data] = &[
+pub(crate) static DATA: &[Data] = &[
     Data("empty", EMPTY),
     Data("no_tokens", NO_TOKENS),
     Data("single_token", SINGLE_TOKEN),

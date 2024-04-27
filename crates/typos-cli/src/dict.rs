@@ -43,7 +43,7 @@ impl BuiltIn {
             self.correct_with_vars(word_case)?
         };
         for s in corrections.corrections_mut() {
-            case_correct(s, word_token.case())
+            case_correct(s, word_token.case());
         }
         Some(corrections)
     }
@@ -60,10 +60,7 @@ impl BuiltIn {
     }
 
     // Not using `Status` to avoid the allocations
-    fn correct_word_with_dict(
-        &self,
-        word: unicase::UniCase<&str>,
-    ) -> Option<&'static [&'static str]> {
+    fn correct_word_with_dict(&self, word: UniCase<&str>) -> Option<&'static [&'static str]> {
         typos_dict::WORD_TRIE.find(&word).copied()
     }
 }
@@ -107,7 +104,7 @@ impl BuiltIn {
         }
     }
 
-    fn correct_with_vars(&self, word: unicase::UniCase<&str>) -> Option<Status<'static>> {
+    fn correct_with_vars(&self, word: UniCase<&str>) -> Option<Status<'static>> {
         if self.is_vars_enabled() {
             typos_vars::VARS_TRIE
                 .find(&word)
@@ -218,7 +215,7 @@ pub struct Override<'i, 'w, D> {
     ignored_identifiers: Vec<regex::Regex>,
     identifiers: HashMap<&'i str, Status<'i>, ahash::RandomState>,
     ignored_words: Vec<regex::Regex>,
-    words: HashMap<unicase::UniCase<&'w str>, Status<'w>, ahash::RandomState>,
+    words: HashMap<UniCase<&'w str>, Status<'w>, ahash::RandomState>,
     inner: D,
 }
 
@@ -302,7 +299,7 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
             // HACK: couldn't figure out the lifetime issue with replacing `cloned` with `borrow`
             if let Some(mut corrections) = self.words.get(&w).cloned() {
                 for s in corrections.corrections_mut() {
-                    case_correct(s, word_token.case())
+                    case_correct(s, word_token.case());
                 }
                 return Some(corrections);
             }

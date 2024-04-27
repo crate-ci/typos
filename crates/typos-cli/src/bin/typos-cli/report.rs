@@ -12,14 +12,14 @@ const ERROR: anstyle::Style = anstyle::AnsiColor::BrightRed.on_default();
 const INFO: anstyle::Style = anstyle::AnsiColor::BrightBlue.on_default();
 const GOOD: anstyle::Style = anstyle::AnsiColor::BrightGreen.on_default();
 
-pub struct MessageStatus<'r> {
+pub(crate) struct MessageStatus<'r> {
     typos_found: atomic::AtomicBool,
     errors_found: atomic::AtomicBool,
     reporter: &'r dyn Report,
 }
 
 impl<'r> MessageStatus<'r> {
-    pub fn new(reporter: &'r dyn Report) -> Self {
+    pub(crate) fn new(reporter: &'r dyn Report) -> Self {
         Self {
             typos_found: atomic::AtomicBool::new(false),
             errors_found: atomic::AtomicBool::new(false),
@@ -27,17 +27,17 @@ impl<'r> MessageStatus<'r> {
         }
     }
 
-    pub fn typos_found(&self) -> bool {
+    pub(crate) fn typos_found(&self) -> bool {
         self.typos_found.load(atomic::Ordering::Relaxed)
     }
 
-    pub fn errors_found(&self) -> bool {
+    pub(crate) fn errors_found(&self) -> bool {
         self.errors_found.load(atomic::Ordering::Relaxed)
     }
 }
 
 impl<'r> Report for MessageStatus<'r> {
-    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+    fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         if msg.is_typo() {
             self.typos_found.store(true, atomic::Ordering::Relaxed);
         }
@@ -49,18 +49,18 @@ impl<'r> Report for MessageStatus<'r> {
 }
 
 #[derive(Debug, Default)]
-pub struct PrintSilent;
+pub(crate) struct PrintSilent;
 
 impl Report for PrintSilent {
-    fn report(&self, _msg: Message) -> Result<(), std::io::Error> {
+    fn report(&self, _msg: Message<'_>) -> Result<(), std::io::Error> {
         Ok(())
     }
 }
 
-pub struct PrintBrief;
+pub(crate) struct PrintBrief;
 
 impl Report for PrintBrief {
-    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+    fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         match &msg {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
@@ -91,10 +91,10 @@ impl Report for PrintBrief {
     }
 }
 
-pub struct PrintLong;
+pub(crate) struct PrintLong;
 
 impl Report for PrintLong {
-    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+    fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         match &msg {
             Message::BinaryFile(msg) => {
                 log::info!("{}", msg);
@@ -125,7 +125,7 @@ impl Report for PrintLong {
     }
 }
 
-fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
+fn print_brief_correction(msg: &Typo<'_>) -> Result<(), std::io::Error> {
     let error = ERROR.render();
     let good = GOOD.render();
     let info = INFO.render();
@@ -163,7 +163,7 @@ fn print_brief_correction(msg: &Typo) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn print_long_correction(msg: &Typo) -> Result<(), std::io::Error> {
+fn print_long_correction(msg: &Typo<'_>) -> Result<(), std::io::Error> {
     let error = ERROR.render();
     let good = GOOD.render();
     let info = INFO.render();
@@ -271,10 +271,10 @@ fn context_display<'c>(context: &'c Option<Context<'c>>) -> &'c dyn std::fmt::Di
 }
 
 #[derive(Copy, Clone, Debug)]
-pub struct PrintJson;
+pub(crate) struct PrintJson;
 
 impl Report for PrintJson {
-    fn report(&self, msg: Message) -> Result<(), std::io::Error> {
+    fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         writeln!(stdout().lock(), "{}", serde_json::to_string(&msg).unwrap())?;
         Ok(())
     }
