@@ -13,7 +13,6 @@ include.workspace = true
 
 [package.metadata.release]
 release = false
-rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 unicase = "2.7"
