@@ -189,7 +189,7 @@ mod codegen {
         }
     }
 
-    fn gen_type_name<V>(leaf: &DynChild<V>) -> &'static str {
+    fn gen_type_name<V>(leaf: &DynChild<'_, V>) -> &'static str {
         match leaf {
             DynChild::Nested(_) => "dictgen::DictTrieChild::Nested",
             DynChild::Flat(_) => "dictgen::DictTrieChild::Flat",
@@ -250,7 +250,7 @@ mod codegen {
 
     impl<'s, V> DynNode<'s, V> {
         fn burst(&mut self, limit: usize) {
-            self.children.burst(limit)
+            self.children.burst(limit);
         }
     }
 

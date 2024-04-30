@@ -67,7 +67,7 @@ impl<V> DictTable<V> {
     }
 }
 
-/// UniCase look-alike that avoids const-fn so large tables don't OOM
+/// `UniCase` look-alike that avoids const-fn so large tables don't OOM
 #[derive(Copy, Clone)]
 pub enum InsensitiveStr<'s> {
     Unicode(&'s str),
@@ -111,20 +111,20 @@ impl<'s> Eq for InsensitiveStr<'s> {}
 impl<'s> core::hash::Hash for InsensitiveStr<'s> {
     #[inline]
     fn hash<H: core::hash::Hasher>(&self, hasher: &mut H) {
-        self.convert().hash(hasher)
+        self.convert().hash(hasher);
     }
 }
 
 impl<'s> core::fmt::Debug for InsensitiveStr<'s> {
     #[inline]
-    fn fmt(&self, fmt: &mut core::fmt::Formatter) -> core::fmt::Result {
+    fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         core::fmt::Debug::fmt(self.into_inner(), fmt)
     }
 }
 
 impl<'s> core::fmt::Display for InsensitiveStr<'s> {
     #[inline]
-    fn fmt(&self, fmt: &mut core::fmt::Formatter) -> core::fmt::Result {
+    fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         core::fmt::Display::fmt(self.into_inner(), fmt)
     }
 }

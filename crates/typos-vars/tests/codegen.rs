@@ -22,7 +22,7 @@ static CATEGORIES: [varcon::Category; 4] = [
     // Other basically means all
 ];
 
-fn generate_variations<W: std::io::Write>(file: &mut W) {
+fn generate_variations<W: Write>(file: &mut W) {
     let entries = entries();
 
     writeln!(
@@ -91,7 +91,7 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
         file,
         "VARS",
         "&[(u8, &VariantsMap)]",
-        entry_sets.iter().flat_map(|kv| {
+        entry_sets.iter().filter_map(|kv| {
             let (word, data) = kv;
             if is_always_valid(data) {
                 // No need to convert from current form to target form
@@ -119,7 +119,7 @@ fn generate_variations<W: std::io::Write>(file: &mut W) {
     }
 }
 
-fn generate_entry(file: &mut impl std::io::Write, symbol: &str, entry: &varcon_core::Entry) {
+fn generate_entry(file: &mut impl Write, symbol: &str, entry: &varcon_core::Entry) {
     writeln!(file, "pub(crate) static {}: VariantsMap = [", symbol).unwrap();
     for category in &CATEGORIES {
         let corrections = collect_correct(entry, *category);

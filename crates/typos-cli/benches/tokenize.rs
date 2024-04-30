@@ -1,7 +1,9 @@
+#![allow(elided_lifetimes_in_paths)]
+
 mod data;
 
 mod parse_str {
-    use super::*;
+    use super::data;
 
     #[divan::bench(args = data::DATA)]
     fn ascii(bencher: divan::Bencher, sample: &data::Data) {
@@ -12,7 +14,7 @@ mod parse_str {
         bencher
             .with_inputs(|| sample.content())
             .input_counter(divan::counter::BytesCount::of_str)
-            .bench_local_values(|sample| parser.parse_str(sample).last())
+            .bench_local_values(|sample| parser.parse_str(sample).last());
     }
 
     #[divan::bench(args = data::DATA)]
@@ -24,12 +26,12 @@ mod parse_str {
         bencher
             .with_inputs(|| sample.content())
             .input_counter(divan::counter::BytesCount::of_str)
-            .bench_local_values(|sample| parser.parse_str(sample).last())
+            .bench_local_values(|sample| parser.parse_str(sample).last());
     }
 }
 
 mod parse_bytes {
-    use super::*;
+    use super::data;
 
     #[divan::bench(args = data::DATA)]
     fn ascii(bencher: divan::Bencher, sample: &data::Data) {
@@ -40,7 +42,7 @@ mod parse_bytes {
         bencher
             .with_inputs(|| sample.content().as_bytes())
             .input_counter(divan::counter::BytesCount::of_slice)
-            .bench_local_values(|sample| parser.parse_bytes(sample).last())
+            .bench_local_values(|sample| parser.parse_bytes(sample).last());
     }
 
     #[divan::bench(args = data::DATA)]
@@ -52,7 +54,7 @@ mod parse_bytes {
         bencher
             .with_inputs(|| sample.content().as_bytes())
             .input_counter(divan::counter::BytesCount::of_slice)
-            .bench_local_values(|sample| parser.parse_bytes(sample).last())
+            .bench_local_values(|sample| parser.parse_bytes(sample).last());
     }
 }
 
@@ -62,11 +64,11 @@ fn split(bencher: divan::Bencher, sample: &data::Data) {
         typos::tokens::Identifier::new_unchecked(sample.content(), typos::tokens::Case::None, 0);
     bencher
         .counter(divan::counter::BytesCount::of_str(sample.content()))
-        .bench_local(|| symbol.split().last())
+        .bench_local(|| symbol.split().last());
 }
 
 mod parse_split_bytes {
-    use super::*;
+    use super::data;
 
     #[divan::bench(args = data::DATA)]
     fn ascii(bencher: divan::Bencher, sample: &data::Data) {
@@ -77,7 +79,7 @@ mod parse_split_bytes {
         bencher
             .with_inputs(|| sample.content().as_bytes())
             .input_counter(divan::counter::BytesCount::of_slice)
-            .bench_local_values(|sample| parser.parse_bytes(sample).flat_map(|i| i.split()).last())
+            .bench_local_values(|sample| parser.parse_bytes(sample).flat_map(|i| i.split()).last());
     }
 
     #[divan::bench(args = data::DATA)]
@@ -89,7 +91,7 @@ mod parse_split_bytes {
         bencher
             .with_inputs(|| sample.content().as_bytes())
             .input_counter(divan::counter::BytesCount::of_slice)
-            .bench_local_values(|sample| parser.parse_bytes(sample).flat_map(|i| i.split()).last())
+            .bench_local_values(|sample| parser.parse_bytes(sample).flat_map(|i| i.split()).last());
     }
 }
 

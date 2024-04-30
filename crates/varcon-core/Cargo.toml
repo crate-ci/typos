@@ -10,6 +10,10 @@ edition.workspace = true
 rust-version.workspace = true
 include.workspace = true
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [features]
 default = []
 parser = ["dep:winnow"]
@@ -19,5 +23,5 @@ flags = ["dep:enumflags2"]
 winnow = { version = "0.6.5", optional = true }
 enumflags2 = { version = "0.7", optional = true }
 
-[package.metadata.docs.rs]
-features = [ "parser", "flags" ]
+[lints]
+workspace = true

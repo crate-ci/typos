@@ -11,6 +11,10 @@ edition.workspace = true
 rust-version.workspace = true
 include.workspace = true
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [features]
 default = ["all"]
 all = ["flags"]
@@ -23,3 +27,6 @@ varcon-core = { version = "^4.0", path = "../varcon-core" }
 codegenrs = "3.0"
 varcon-core = { version = "^4.0", path = "../varcon-core", features = ["parser"] }
 snapbox = { version = "0.5.9", features = ["path"] }
+
+[lints]
+workspace = true

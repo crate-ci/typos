@@ -3,7 +3,7 @@
 use std::borrow::Cow;
 
 pub trait Report: Send + Sync {
-    fn report(&self, msg: Message) -> Result<(), std::io::Error>;
+    fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error>;
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]
@@ -101,7 +101,7 @@ pub enum Context<'m> {
 }
 
 impl<'m> std::fmt::Display for Context<'m> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
             Context::File(c) => write!(f, "{}:{}", c.path.display(), c.line_num),
             Context::Path(c) => write!(f, "{}", c.path.display()),

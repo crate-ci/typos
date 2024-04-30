@@ -4,16 +4,16 @@ use std::path::Path;
 use kstring::KString;
 
 #[derive(Default, Clone, Debug)]
-pub struct TypesBuilder {
+pub(crate) struct TypesBuilder {
     definitions: BTreeMap<KString, Vec<(KString, usize)>>,
 }
 
 impl TypesBuilder {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Default::default()
     }
 
-    pub fn add_defaults(&mut self) {
+    pub(crate) fn add_defaults(&mut self) {
         self.definitions.extend(
             crate::default_types::DEFAULT_TYPES
                 .iter()
@@ -25,11 +25,11 @@ impl TypesBuilder {
         );
     }
 
-    pub fn contains_name(&self, name: &str) -> bool {
+    pub(crate) fn contains_name(&self, name: &str) -> bool {
         self.definitions.contains_key(name)
     }
 
-    pub fn add(&mut self, name: impl Into<KString>, glob: impl Into<KString>) {
+    pub(crate) fn add(&mut self, name: impl Into<KString>, glob: impl Into<KString>) {
         let name = name.into();
         let glob = glob.into();
         let weight = self.definitions.len();
@@ -39,7 +39,7 @@ impl TypesBuilder {
             .push((glob, weight));
     }
 
-    pub fn build(self) -> Result<Types, anyhow::Error> {
+    pub(crate) fn build(self) -> Result<Types, anyhow::Error> {
         let mut definitions = self
             .definitions
             .iter()
@@ -110,7 +110,7 @@ enum GlobPart<'s> {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct Types {
+pub(crate) struct Types {
     definitions: BTreeMap<KString, Vec<KString>>,
     glob_to_name: Vec<KString>,
     set: globset::GlobSet,
@@ -119,11 +119,11 @@ pub struct Types {
 }
 
 impl Types {
-    pub fn definitions(&self) -> &BTreeMap<KString, Vec<KString>> {
+    pub(crate) fn definitions(&self) -> &BTreeMap<KString, Vec<KString>> {
         &self.definitions
     }
 
-    pub fn file_matched(&self, path: &std::path::Path) -> Option<&str> {
+    pub(crate) fn file_matched(&self, path: &Path) -> Option<&str> {
         let mut mpath = Path::new(path);
         let mut matches = self.matches.get_or_default().borrow_mut();
         loop {

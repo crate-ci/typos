@@ -66,7 +66,7 @@ impl<V> DictMap<V> {
 impl<'s> phf_shared::PhfHash for crate::InsensitiveStr<'s> {
     #[inline]
     fn phf_hash<H: core::hash::Hasher>(&self, state: &mut H) {
-        core::hash::Hash::hash(self, state)
+        core::hash::Hash::hash(self, state);
     }
 }
 
@@ -75,7 +75,7 @@ impl<'s> phf_shared::FmtConst for crate::InsensitiveStr<'s> {
         match self {
             crate::InsensitiveStr::Ascii(_) => f.write_str("dictgen::InsensitiveStr::Ascii(")?,
             crate::InsensitiveStr::Unicode(_) => {
-                f.write_str("dictgen::InsensitiveStr::Unicode(")?
+                f.write_str("dictgen::InsensitiveStr::Unicode(")?;
             }
         }
 

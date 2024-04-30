@@ -9,7 +9,7 @@ pub trait FileChecker: Send + Sync {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error>;
 }
@@ -22,7 +22,7 @@ impl FileChecker for Typos {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         if policy.check_filenames {
@@ -74,7 +74,7 @@ impl FileChecker for FixTypos {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         if policy.check_files {
@@ -149,7 +149,7 @@ impl FileChecker for DiffTypos {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         let mut content = Vec::new();
@@ -180,7 +180,7 @@ impl FileChecker for DiffTypos {
                 }
                 if !fixes.is_empty() {
                     new_content = fix_buffer(buffer.clone(), fixes.into_iter());
-                    content = buffer
+                    content = buffer;
                 }
             }
         }
@@ -253,7 +253,7 @@ impl FileChecker for Identifiers {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         let mut ignores: Option<Ignores> = None;
@@ -315,7 +315,7 @@ impl FileChecker for Words {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         let mut ignores: Option<Ignores> = None;
@@ -385,7 +385,7 @@ impl FileChecker for FileTypes {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         // Check `policy.binary` first so we can easily check performance of walking vs reading
@@ -415,7 +415,7 @@ impl FileChecker for FoundFiles {
         &self,
         path: &std::path::Path,
         explicit: bool,
-        policy: &crate::policy::Policy,
+        policy: &crate::policy::Policy<'_, '_, '_>,
         reporter: &dyn report::Report,
     ) -> Result<(), std::io::Error> {
         // Check `policy.binary` first so we can easily check performance of walking vs reading
@@ -667,7 +667,7 @@ fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'stat
 pub fn walk_path(
     walk: ignore::Walk,
     checks: &dyn FileChecker,
-    engine: &crate::policy::ConfigEngine,
+    engine: &crate::policy::ConfigEngine<'_>,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     for entry in walk {
@@ -679,7 +679,7 @@ pub fn walk_path(
 pub fn walk_path_parallel(
     walk: ignore::WalkParallel,
     checks: &dyn FileChecker,
-    engine: &crate::policy::ConfigEngine,
+    engine: &crate::policy::ConfigEngine<'_>,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
@@ -701,7 +701,7 @@ pub fn walk_path_parallel(
 fn walk_entry(
     entry: Result<ignore::DirEntry, ignore::Error>,
     checks: &dyn FileChecker,
-    engine: &crate::policy::ConfigEngine,
+    engine: &crate::policy::ConfigEngine<'_>,
     reporter: &dyn report::Report,
 ) -> Result<(), ignore::Error> {
     let entry = match entry {

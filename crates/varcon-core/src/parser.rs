@@ -1,7 +1,7 @@
 use winnow::combinator::trace;
 use winnow::prelude::*;
 
-use crate::*;
+use crate::{Category, Cluster, Entry, Pos, Tag, Type, Variant};
 
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct ClusterIter<'i> {

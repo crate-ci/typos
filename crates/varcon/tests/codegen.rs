@@ -1,3 +1,5 @@
+#![allow(clippy::self_named_module_files)] // false positive
+
 const DICT: &[u8] = include_bytes!("../assets/varcon.txt");
 
 #[test]
@@ -22,7 +24,11 @@ fn generate<W: std::io::Write>(file: &mut W) {
     .unwrap();
     writeln!(file, "#![allow(clippy::unreadable_literal)]",).unwrap();
     writeln!(file).unwrap();
-    writeln!(file, "use crate::*;").unwrap();
+    writeln!(
+        file,
+        "use crate::{{Category, Cluster, Entry, Pos, Tag, Type, Variant}};"
+    )
+    .unwrap();
     writeln!(file).unwrap();
 
     writeln!(file, "pub static VARCON: &[Cluster] = &[").unwrap();

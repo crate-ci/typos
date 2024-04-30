@@ -60,7 +60,7 @@ struct Words<'s> {
     british: HashMap<&'s str, Vec<&'s str>>,
 }
 
-fn parse_dict(raw: &str) -> Words {
+fn parse_dict(raw: &str) -> Words<'_> {
     let mut bad = HashMap::new();
     let mut main = HashMap::new();
     let mut american = HashMap::new();

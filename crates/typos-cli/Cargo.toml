@@ -12,7 +12,8 @@ rust-version.workspace = true
 include.workspace = true
 
 [package.metadata.docs.rs]
-no-default-features = true
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [package.metadata.release]
 tag-prefix = ""
@@ -94,3 +95,6 @@ harness = false
 [[bench]]
 name = "tokenize"
 harness = false
+
+[lints]
+workspace = true

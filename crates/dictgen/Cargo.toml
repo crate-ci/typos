@@ -10,6 +10,10 @@ edition.workspace = true
 rust-version.workspace = true
 include.workspace = true
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [features]
 default = ["std"]
 std = []
@@ -21,3 +25,6 @@ unicase = "2.7"
 phf = { version = "0.11", features = ["unicase"], optional = true }
 phf_codegen = { version = "0.11", optional = true }
 phf_shared = { version = "0.11", optional = true }
+
+[lints]
+workspace = true

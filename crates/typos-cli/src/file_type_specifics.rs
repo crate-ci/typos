@@ -4,9 +4,9 @@
 //! [`default_types`]: crate::default_types
 
 /// Set `check_file` to `false` for these types.
-pub const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
+pub(crate) const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
 
-pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
+pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
         "css",
         StaticDictConfig {
@@ -80,9 +80,9 @@ pub const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     ),
 ];
 
-pub struct StaticDictConfig {
-    pub ignore_idents: &'static [&'static str],
-    pub ignore_words: &'static [&'static str],
+pub(crate) struct StaticDictConfig {
+    pub(crate) ignore_idents: &'static [&'static str],
+    pub(crate) ignore_words: &'static [&'static str],
 }
 
 #[cfg(test)]

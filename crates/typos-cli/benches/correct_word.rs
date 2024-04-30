@@ -1,3 +1,5 @@
+#![allow(elided_lifetimes_in_paths)]
+
 mod regular {
     mod ok {
         #[divan::bench]

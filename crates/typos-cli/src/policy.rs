@@ -282,19 +282,19 @@ struct Intern<T> {
 }
 
 impl<T> Intern<T> {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             data: Default::default(),
         }
     }
 
-    pub fn intern(&mut self, value: T) -> usize {
+    pub(crate) fn intern(&mut self, value: T) -> usize {
         let symbol = self.data.len();
         self.data.push(value);
         symbol
     }
 
-    pub fn get(&self, symbol: usize) -> &T {
+    pub(crate) fn get(&self, symbol: usize) -> &T {
         &self.data[symbol]
     }
 }

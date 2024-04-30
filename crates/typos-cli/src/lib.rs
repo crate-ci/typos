@@ -1,5 +1,9 @@
-/// `typos_cli`'s API is unstable.  Open an issue for starting a discussion on getting a subset
-/// stabilized.
+//! `typos_cli`'s API is unstable.  Open an issue for starting a discussion on getting a subset
+//! stabilized.
+
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![warn(clippy::print_stderr)]
+#![warn(clippy::print_stdout)]
 
 #[doc(hidden)]
 pub mod config;

@@ -11,6 +11,10 @@ edition.workspace = true
 rust-version.workspace = true
 include.workspace = true
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 unicase = "2.7"
 dictgen = { version = "^0.2", path = "../dictgen" }
@@ -25,3 +29,6 @@ dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 varcon = { version = "^0.7", path = "../varcon" }
 snapbox = { version = "0.5.9", features = ["path"] }
 indexmap = "2.2.6"
+
+[lints]
+workspace = true
