@@ -1,6 +1,6 @@
 [package]
 name = "varcon"
-version = "0.7.4"
+version = "0.7.5"
 description = "Source Code Spelling Correction"
 readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
