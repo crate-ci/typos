@@ -27,12 +27,12 @@ impl BuiltIn {
     }
 
     pub fn correct_word<'s>(&'s self, word_token: typos::tokens::Word<'_>) -> Option<Status<'s>> {
-        if word_token.case() == typos::tokens::Case::None {
+        if word_token.case() == Case::None {
             return None;
         }
 
         let word = word_token.token();
-        let word_case = unicase::UniCase::new(word);
+        let word_case = UniCase::new(word);
         let mut corrections = if let Some(corrections) = self.correct_word_with_dict(word_case) {
             if corrections.is_empty() {
                 Status::Invalid
@@ -85,7 +85,7 @@ impl BuiltIn {
         if self.is_vars_enabled() {
             let mut chained: Vec<_> = corrections
                 .iter()
-                .flat_map(|c| match self.correct_with_vars(unicase::UniCase::new(c)) {
+                .flat_map(|c| match self.correct_with_vars(UniCase::new(c)) {
                     Some(Status::Valid) | None => vec![Cow::Borrowed(*c)],
                     Some(Status::Corrections(vars)) => vars,
                     Some(Status::Invalid) => {
@@ -283,7 +283,7 @@ impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
     }
 
     fn correct_word<'s>(&'s self, word_token: typos::tokens::Word<'_>) -> Option<Status<'s>> {
-        if word_token.case() == typos::tokens::Case::None {
+        if word_token.case() == Case::None {
             return None;
         }
 
@@ -319,7 +319,7 @@ mod test {
         let dict = BuiltIn::new(crate::config::Locale::default());
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
             "finallizes",
-            typos::tokens::Case::Lower,
+            Case::Lower,
             0,
         ));
         assert_eq!(
@@ -334,7 +334,7 @@ mod test {
         let dict = BuiltIn::new(crate::config::Locale::En);
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
             "finalizes",
-            typos::tokens::Case::Lower,
+            Case::Lower,
             0,
         ));
         assert_eq!(correction, None);
@@ -346,7 +346,7 @@ mod test {
         let dict = BuiltIn::new(crate::config::Locale::EnUs);
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
             "finalizes",
-            typos::tokens::Case::Lower,
+            Case::Lower,
             0,
         ));
         assert_eq!(correction, Some(Status::Valid));
@@ -358,7 +358,7 @@ mod test {
         let dict = BuiltIn::new(crate::config::Locale::EnGb);
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
             "finalizes",
-            typos::tokens::Case::Lower,
+            Case::Lower,
             0,
         ));
         assert_eq!(
@@ -373,7 +373,7 @@ mod test {
         let dict = BuiltIn::new(crate::config::Locale::EnGb);
         let correction = dict.correct_word(typos::tokens::Word::new_unchecked(
             "finallizes",
-            typos::tokens::Case::Lower,
+            Case::Lower,
             0,
         ));
         assert_eq!(

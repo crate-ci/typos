@@ -266,7 +266,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
 
         // HACK: Diff doesn't handle mixing content
         let output_reporter = if args.diff {
-            Box::new(crate::report::PrintSilent)
+            Box::new(report::PrintSilent)
         } else {
             args.format.reporter()
         };

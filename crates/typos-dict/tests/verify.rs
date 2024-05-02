@@ -91,7 +91,7 @@ fn process<S: Into<String>>(
     let rows: Vec<_> = rows
         .into_iter()
         .filter(|(typo, _)| {
-            let is_disallowed = varcon_words.contains(&unicase::UniCase::new(typo));
+            let is_disallowed = varcon_words.contains(&UniCase::new(typo));
             if is_disallowed {
                 eprintln!("{:?} is disallowed; in varcon", typo);
             }
@@ -196,7 +196,7 @@ fn varcon_words() -> HashSet<UniCase<&'static str>> {
         .iter()
         .flat_map(|c| c.entries.iter())
         .flat_map(|e| e.variants.iter())
-        .map(|v| unicase::UniCase::new(v.word))
+        .map(|v| UniCase::new(v.word))
         .collect()
 }
 
