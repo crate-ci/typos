@@ -17,6 +17,15 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         },
     ),
     (
+        "go",
+        StaticDictConfig {
+            ignore_idents: &[
+                "flate", // https://pkg.go.dev/compress/flate
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "jl",
         StaticDictConfig {
             ignore_idents: &[],
