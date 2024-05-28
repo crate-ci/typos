@@ -9,7 +9,7 @@ fn codegen() {
 
     let content = String::from_utf8(content).unwrap();
     let content = codegenrs::rustfmt(&content, None).unwrap();
-    snapbox::assert_eq(snapbox::file!["../src/vars_codegen.rs"], content);
+    snapbox::assert_data_eq!(content, snapbox::file!["../src/vars_codegen.rs"].raw());
 }
 
 static CATEGORIES: [varcon::Category; 4] = [

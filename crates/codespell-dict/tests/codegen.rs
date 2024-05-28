@@ -7,7 +7,7 @@ fn codegen() {
 
     let content = String::from_utf8(content).unwrap();
     let content = codegenrs::rustfmt(&content, None).unwrap();
-    snapbox::assert_eq(snapbox::file!["../src/dict_codegen.rs"], content);
+    snapbox::assert_data_eq!(content, snapbox::file!["../src/dict_codegen.rs"].raw());
 }
 
 #[test]
@@ -31,7 +31,7 @@ fn compat() {
         writeln!(content).unwrap();
     }
 
-    snapbox::assert_eq(snapbox::file!["../assets/compatible.csv"], &content);
+    snapbox::assert_data_eq!(content, snapbox::file!["../assets/compatible.csv"].raw());
 }
 
 fn is_word(word: &str) -> bool {

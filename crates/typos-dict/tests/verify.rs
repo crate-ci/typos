@@ -25,7 +25,7 @@ fn verify() {
     drop(wtr);
 
     let content = String::from_utf8(content).unwrap();
-    snapbox::assert_eq(snapbox::file!["../assets/words.csv"], content);
+    snapbox::assert_data_eq!(content, snapbox::file!["../assets/words.csv"].raw());
 }
 
 fn parse_dict(path: &str) -> Vec<(String, Vec<String>)> {
