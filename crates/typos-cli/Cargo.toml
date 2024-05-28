@@ -81,7 +81,7 @@ encoding_rs = "0.8.34"
 [dev-dependencies]
 assert_fs = "1.1"
 divan = "0.1.14"
-snapbox = "0.5.14"
+snapbox = "0.6.5"
 trycmd = "0.15.4"
 
 [[bench]]
