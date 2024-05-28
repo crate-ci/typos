@@ -24,7 +24,7 @@ unicase = "2.7"
 itertools = "0.12"
 codegenrs = "3.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
-snapbox = { version = "0.5.14", features = ["path"] }
+snapbox = "0.5.14"
 
 [lints]
 workspace = true

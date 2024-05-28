@@ -1153,14 +1153,9 @@ checksum = "f37d101fcafc8e73748fd8a1b7048f5979f93d372fd17027d7724c1643bc379b"
 dependencies = [
  "anstream",
  "anstyle",
- "content_inspector",
- "dunce",
- "filetime",
  "normalize-line-endings",
  "similar",
  "snapbox-macros",
- "tempfile",
- "walkdir",
 ]
 
 [[package]]

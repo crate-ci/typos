@@ -88,6 +88,7 @@ pub(crate) struct StaticDictConfig {
 #[cfg(test)]
 mod tests {
     use itertools::Itertools;
+    use snapbox::prelude::*;
 
     use super::TYPE_SPECIFIC_DICTS;
 
@@ -96,7 +97,7 @@ mod tests {
         let types: Vec<_> = TYPE_SPECIFIC_DICTS.iter().map(|(typ, _)| *typ).collect();
         let types_unique: Vec<_> = types.clone().into_iter().unique().collect();
 
-        snapbox::assert_eq(types.join("\n"), types_unique.join("\n"));
+        snapbox::assert_data_eq!(types_unique.join("\n"), types.join("\n").raw());
     }
 
     #[test]
@@ -108,6 +109,6 @@ mod tests {
         let types: Vec<_> = TYPE_SPECIFIC_DICTS.iter().map(|(typ, _)| *typ).collect();
         let types_sorted: Vec<_> = types.iter().cloned().sorted().collect();
 
-        snapbox::assert_eq(types.join("\n"), types_sorted.join("\n"));
+        snapbox::assert_data_eq!(types_sorted.join("\n"), types.join("\n").raw());
     }
 }
