@@ -22,7 +22,7 @@ dictgen = { version = "^0.2", path = "../dictgen" }
 
 [dev-dependencies]
 unicase = "2.7"
-itertools = "0.12"
+itertools = "0.13"
 codegenrs = "3.0"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 snapbox = "0.6.5"
