@@ -428,7 +428,7 @@ impl Type {
             let category = Category::parse_(input)?;
             let tag = winnow::combinator::opt(Tag::parse_).parse_next(input)?;
             let num = winnow::combinator::opt(winnow::ascii::digit1).parse_next(input)?;
-            let num = num.map(|s| s.parse().expect("parser ensured its a number"));
+            let num = num.map(|s| s.parse().expect("parser ensured it's a number"));
             let t = Type { category, tag, num };
             Ok(t)
         })

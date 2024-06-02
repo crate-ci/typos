@@ -7,13 +7,13 @@ appreciate any level you're willing to do.
 
 Need some new functionality to help?  You can let us know by opening an
 [issue][new issue]. It's helpful to look through [all issues][all issues] in
-case its already being talked about.
+case it's already being talked about.
 
 ## Bug Reports
 
 Please let us know about what problems you run into, whether in behavior or
 ergonomics of API.  You can do this by opening an [issue][new issue]. It's
-helpful to look through [all issues][all issues] in case its already being
+helpful to look through [all issues][all issues] in case it's already being
 talked about.
 
 ## Pull Requests
