@@ -75,7 +75,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Don't correct `ang` ('angle' abbreviation)
 - Don't correct `dur` ('duration' abbreviation)
-- Don't correct `lst` (used in place of 'list' when its a built-in)
+- Don't correct `lst` (used in place of 'list' when it's a built-in)
 - Don't correct `GUID` acronym
 - Don't correct `IIS` acronym
 - Don't correct `IME` acronym
@@ -601,7 +601,7 @@ Publish to PyPI (first attempt)
 
 ### Fixes
 
-- Don't correct `nilable` as its used by the Ruby community
+- Don't correct `nilable` as it's used by the Ruby community
 
 ## [1.13.3] - 2022-12-02
 
@@ -993,7 +993,7 @@ Note: MSRV is now 1.54
 #### Performance
 
 - Due to new literal detection, finding identifiers is takes 10x longer.
-  Combined with word splitting, its only takes 3x longer.  The majority of the
+  Combined with word splitting, it only takes 3x longer.  The majority of the
   time is spent in dictionary lookups, so we don't expect this to have too much impact in the end.
 
 ## [1.0.10] - 2021-06-28
