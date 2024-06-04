@@ -8,9 +8,9 @@ error: `hello` should be `goodbye`
   | ^^^^^
   |
 error: `hello` should be `goodbye`
-  --> ./file.ignore:5:1
+  --> ./file.ignore:6:1
   |
-5 | hello
+6 | hello
   | ^^^^^
   |
 """

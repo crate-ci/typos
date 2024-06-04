@@ -1,5 +1,9 @@
 hello
 # spellchecker:off
 hello
-# spellchecker:on
+henlo
+// spellchecker:on
 hello
+// ensure greedy doesn't exclude everything across blocks
+# spellchecker:off
+# spellchecker:on
