@@ -39,8 +39,8 @@ Configuration is read from the following (in precedence order)
 | type.\<name>.extend-glob   | \-            | list of strings  | File globs for matching `<name>` |
 
 Common `extend-ignore-re`:
-- Line ignore with trailing `# spellchecker:disable-line`: `"(?Rm)^.*#\\s*spellchecker:disable-line$"`
-- Line block with `# spellchecker:<on|off>`: `"#\\s*spellchecker:off\\s*\\n.*\\n\\s*#\\s*spellchecker:on"`
+- Line ignore with trailing `# spellchecker:disable-line`: `"(?Rm)^.*(#|//)\\s*spellchecker:disable-line$"`
+- Line block with `# spellchecker:<on|off>`: `"(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on"`
 
 Common `extend-ignore-identifiers-re`:
 - SSL Cipher suites: `"\\bTLS_[A-Z0-9_]+(_anon_[A-Z0-9_]+)?\\b"`
