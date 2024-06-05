@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.22.1] - 2024-06-05
+
 - In golang, `flate` is a valid term from the stdlib
 
 ## [1.22.0] - 2024-06-03
@@ -1143,7 +1145,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.22.0...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.22.1...HEAD
+[1.22.1]: https://github.com/crate-ci/typos/compare/v1.22.0...v1.22.1
 [1.22.0]: https://github.com/crate-ci/typos/compare/v1.21.0...v1.22.0
 [1.21.0]: https://github.com/crate-ci/typos/compare/v1.20.10...v1.21.0
 [1.20.10]: https://github.com/crate-ci/typos/compare/v1.20.9...v1.20.10
