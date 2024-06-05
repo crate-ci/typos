@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+- In golang, `flate` is a valid term from the stdlib
+
 ## [1.22.0] - 2024-06-03
 
 ### Fixes
