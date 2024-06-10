@@ -18,24 +18,24 @@ jobs:
 
     - name: Check spelling of file.txt
       uses: crate-ci/typos@master
-      with: 
+      with:
         files: ./file.txt
 
     - name: Use custom config file
       uses: crate-ci/typos@master
-      with: 
+      with:
         files: ./file.txt
         config: ./myconfig.toml
 
     - name: Ignore implicit configuration file
       uses: crate-ci/typos@master
-      with: 
+      with:
         files: ./file.txt
         isolated: true
 
     - name: Writes changes in the local checkout
       uses: crate-ci/typos@master
-      with: 
+      with:
         write_changes: true
 ```
 
