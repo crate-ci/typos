@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+- Correct adventerous as adventurous instead of adventures
+- Correct manifestion as manifestation instead of manifesto
+- Correct manifestior as manifestation instead of manifesto
+
 ## [1.22.3] - 2024-06-07
 
 ### Fixes
