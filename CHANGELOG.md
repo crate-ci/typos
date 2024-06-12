@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Remove Linux arm64 binary support
+
 ## [1.22.6] - 2024-06-12
 
 ## [1.22.5] - 2024-06-12
