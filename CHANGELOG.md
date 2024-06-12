@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Linux arm64 binaries
+
 ## [1.22.4] - 2024-06-10
+
+### Fixes
 
 - Correct adventerous as adventurous instead of adventures
 - Correct manifestion as manifestation instead of manifesto
