@@ -4,7 +4,10 @@ on: [pull_request]
 jobs:
   shallow:
     name: Spell Check with Typos
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout Actions Repository
       uses: actions/checkout@v4
@@ -26,7 +29,10 @@ jobs:
 
   deep:
     name: Spell Check with Type w/History
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout Actions Repository
       uses: actions/checkout@v4

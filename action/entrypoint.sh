@@ -19,13 +19,25 @@ if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
     exit 1
 fi
 
+
 if [[ ! -x ${COMMAND} ]]; then
     VERSION=1.22.7
+    if [[ "$(uname -m)" == "arm64" ]]; then
+        ARCH="aarch64"
+    else
+        ARCH="x86_64"
+    fi
+    if [[ "$(uname -s)" == "Darwin" ]]; then
+        TARGET_FILE="${ARCH}-apple-darwin"
+    else
+        TARGET_FILE="${ARCH}-unknown-linux-musl"
+    fi
+    FILE_NAME="typos-v${VERSION}-${TARGET_FILE}.tar.gz"
     log "Downloading 'typos' v${VERSION}"
-    wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz"
+    wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/${FILE_NAME}"
     mkdir -p ${_INSTALL_DIR}
-    tar -xzvf typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz -C ${_INSTALL_DIR} ./${CMD_NAME}
-    rm typos-v${VERSION}-x86_64-unknown-linux-musl.tar.gz
+    tar -xzvf "${FILE_NAME}" -C ${_INSTALL_DIR} ./${CMD_NAME}
+    rm "${FILE_NAME}"
 fi
 log "jq: $(jq --version)"
 
