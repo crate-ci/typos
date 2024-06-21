@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(action)* Add Arm, Mac support
+
 ## [1.22.7] - 2024-06-12
 
 ### Fixes
