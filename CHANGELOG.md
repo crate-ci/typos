@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Stop correcting `reoccurrence`
+
 ## [1.22.8] - 2024-06-21
 
 ### Features
