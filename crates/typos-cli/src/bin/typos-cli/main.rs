@@ -1,12 +1,13 @@
-use std::io::{BufRead as _, BufReader, Write as _};
+use std::io::{BufRead as _, BufReader, Error, Write as _};
 use std::path::PathBuf;
 
 use clap::Parser;
+use proc_exit::prelude::*;
+
+use typos_cli::report::Report;
 
 mod args;
 mod report;
-
-use proc_exit::prelude::*;
 
 fn main() {
     human_panic::setup_panic!();
@@ -315,6 +316,13 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         }
         if status_reporter.errors_found() {
             errors_found = true;
+        }
+        
+        match status_reporter.finalize() {
+            Ok(_) => {}
+            Err(err) => {
+                log::error!("Error finalizing: {}", err);
+            }
         }
     }
 

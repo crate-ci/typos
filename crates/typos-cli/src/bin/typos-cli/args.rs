@@ -10,6 +10,7 @@ pub(crate) enum Format {
     #[default]
     Long,
     Json,
+    Sarif,
 }
 
 impl Format {
@@ -19,6 +20,7 @@ impl Format {
             Format::Brief => Box::new(crate::report::PrintBrief),
             Format::Long => Box::new(crate::report::PrintLong),
             Format::Json => Box::new(crate::report::PrintJson),
+            Format::Sarif => Box::new(crate::report::PrintSarif::default()),
         }
     }
 }
