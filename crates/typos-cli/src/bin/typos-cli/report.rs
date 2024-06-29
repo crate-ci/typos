@@ -348,7 +348,7 @@ mod tests {
     fn test_calculate_visible_column_width_zwj_sequences() {
         let zwj_sequences = [
             "😵‍💫", /* U+1F635 U+200D U+1F4AB */
-            "👁️‍🗨️",   /* U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F */
+            "👁️‍🗨️", /* U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F */
         ];
         for (i, ch) in zwj_sequences.iter().enumerate() {
             let width = calculate_visible_column_width(ch);
