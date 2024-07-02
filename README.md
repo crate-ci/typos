@@ -22,6 +22,7 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
   - [False Positives](#false-positives)
   - [Integrations](#integrations)
     - [GitHub Action](docs/github-action.md)
+    - [GitHub Action with suggestions using reviewdog](https://github.com/reviewdog/action-typos)
     - [pre-commit](docs/pre-commit.md)
     - [Custom](#custom)
   - [Debugging](#debugging)
@@ -111,6 +112,7 @@ extend-exclude = ["localized/*.po"]
 ### Integrations
 
 - [GitHub Actions](docs/github-action.md)
+- [GitHub Actions with suggestions using reviewdog](https://github.com/reviewdog/action-typos)
 - [pre-commit](docs/pre-commit.md)
 - [🐊Putout Processor](https://github.com/putoutjs/putout-processor-typos)
 - [Visual Studio Code](https://github.com/tekumara/typos-vscode)
