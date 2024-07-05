@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Add missing [June 2024](https://github.com/crate-ci/typos/issues/1024) changes
+
 ## [1.23.0] - 2024-07-05
 
 ### Fixes
