@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Updated the dictionary with the [June 2024](https://github.com/crate-ci/typos/issues/1024) changes
+
 ## [1.22.9] - 2024-06-22
 
 ### Fixes
