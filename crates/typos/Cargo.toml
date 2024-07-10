@@ -29,3 +29,6 @@ bstr = "1.9"
 
 [lints]
 workspace = true
+
+[dev-dependencies]
+snapbox = "0.6.11"

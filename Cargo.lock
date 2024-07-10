@@ -1147,9 +1147,9 @@ checksum = "38b58827f4464d87d377d175e90bf58eb00fd8716ff0a62f80356b5e61555d0d"
 
 [[package]]
 name = "snapbox"
-version = "0.6.10"
+version = "0.6.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "40e14d10e4c2b4331ac24c33baa5a03e1fbca81c045b285b53b2a612d28569fb"
+checksum = "699c824ef8c2061c39efb3af4f334310b3acbfb2a50c6d1f867e4d95dcff94be"
 dependencies = [
  "anstream",
  "anstyle",
@@ -1331,6 +1331,7 @@ dependencies = [
  "once_cell",
  "serde",
  "simdutf8",
+ "snapbox",
  "thiserror",
  "unicode-segmentation",
  "unicode-xid",
