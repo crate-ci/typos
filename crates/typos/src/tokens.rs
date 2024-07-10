@@ -191,6 +191,7 @@ mod parser {
                 terminated(email_literal, peek(sep1)),
                 terminated(url_literal, peek(sep1)),
                 terminated(css_color, peek(sep1)),
+                terminated(jwt, peek(sep1)),
                 c_escape,
                 printf,
                 other,
@@ -295,6 +296,41 @@ mod parser {
                 .recognize(),
         )
         .parse_next(input)
+    }
+
+    fn jwt<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    where
+        T: Compare<char>,
+        T: Stream + StreamIsPartial + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
+    {
+        trace(
+            "jwt",
+            (
+                'e',
+                'y',
+                take_while(20.., is_jwt_token),
+                '.',
+                'e',
+                'y',
+                take_while(20.., is_jwt_token),
+                '.',
+                take_while(20.., is_jwt_token),
+            )
+                .recognize(),
+        )
+        .parse_next(input)
+    }
+
+    #[inline]
+    fn is_jwt_token(i: impl AsChar + Copy) -> bool {
+        let c = i.as_char();
+        c.is_ascii_lowercase()
+            || c.is_ascii_uppercase()
+            || c.is_ascii_digit()
+            || c == '_'
+            || c == '-'
     }
 
     fn uuid_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
@@ -1582,26 +1618,6 @@ mod test {
         case: None,
         offset: 23,
     },
-    Identifier {
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-        case: None,
-        offset: 30,
-    },
-    Identifier {
-        token: "eyJpc3MiOiJzdXBhYmFzZSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQ1MTkyODI0LCJleHAiOjE5NjA3Njg4MjR9",
-        case: None,
-        offset: 67,
-    },
-    Identifier {
-        token: "M9jrxyvPLkUxWgOYSf5dNdJ8v_eRrq810ShFRT8N",
-        case: None,
-        offset: 156,
-    },
-    Identifier {
-        token: "6M",
-        case: None,
-        offset: 197,
-    },
 ]
 
 "#]]
@@ -1625,26 +1641,6 @@ mod test {
         token: "Bearer",
         case: None,
         offset: 23,
-    },
-    Identifier {
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-        case: None,
-        offset: 30,
-    },
-    Identifier {
-        token: "eyJpc3MiOiJzdXBhYmFzZSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQ1MTkyODI0LCJleHAiOjE5NjA3Njg4MjR9",
-        case: None,
-        offset: 67,
-    },
-    Identifier {
-        token: "M9jrxyvPLkUxWgOYSf5dNdJ8v_eRrq810ShFRT8N",
-        case: None,
-        offset: 156,
-    },
-    Identifier {
-        token: "6M",
-        case: None,
-        offset: 197,
     },
 ]
 
