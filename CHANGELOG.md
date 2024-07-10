@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Automatically ignore JWT tokens
+
 ## [1.23.1] - 2024-07-05
 
 ### Fixes
