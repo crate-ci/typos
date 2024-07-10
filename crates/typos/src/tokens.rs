@@ -938,17 +938,31 @@ impl WordMode {
 #[cfg(test)]
 mod test {
     use super::*;
+    use snapbox::assert_data_eq;
+    use snapbox::prelude::*;
+    use snapbox::str;
 
     #[test]
     fn tokenize_empty_is_empty() {
         let parser = Tokenizer::new();
 
         let input = "";
-        let expected: Vec<Identifier<'_>> = vec![];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[]
+
+"#]]
+        );
     }
 
     #[test]
@@ -956,11 +970,34 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "word";
-        let expected: Vec<Identifier<'_>> = vec![Identifier::new_unchecked("word", Case::None, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "word",
+        case: None,
+        offset: 0,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "word",
+        case: None,
+        offset: 0,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -968,14 +1005,44 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A B";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("A", Case::None, 0),
-            Identifier::new_unchecked("B", Case::None, 2),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "B",
+        case: None,
+        offset: 2,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "B",
+        case: None,
+        offset: 2,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -983,14 +1050,44 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A.B";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("A", Case::None, 0),
-            Identifier::new_unchecked("B", Case::None, 2),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "B",
+        case: None,
+        offset: 2,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "B",
+        case: None,
+        offset: 2,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -998,14 +1095,44 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A::B";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("A", Case::None, 0),
-            Identifier::new_unchecked("B", Case::None, 3),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "B",
+        case: None,
+        offset: 3,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "B",
+        case: None,
+        offset: 3,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1013,11 +1140,34 @@ mod test {
         let parser = Tokenizer::new();
 
         let input = "A_B";
-        let expected: Vec<Identifier<'_>> = vec![Identifier::new_unchecked("A_B", Case::None, 0)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A_B",
+        case: None,
+        offset: 0,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "A_B",
+        case: None,
+        offset: 0,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1025,14 +1175,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 1st 2nd 3rd 4th __5th__ World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 30),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 30,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 30,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1040,14 +1220,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 0xDEADBEEF World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 17),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 17,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 17,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1055,14 +1265,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 123e4567-e89b-12d3-a456-426652340000 World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 43),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 43,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 43,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1070,14 +1310,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 123E4567-E89B-12D3-A456-426652340000 World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 43),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 43,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 43,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1107,9 +1377,9 @@ mod test {
                 expected.insert(1, Identifier::new_unchecked(hashlike, Case::None, 6));
             }
             let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-            assert_eq!(expected, actual);
+            assert_data_eq!(actual.to_debug(), expected.to_debug());
             let actual: Vec<_> = parser.parse_str(&input).collect();
-            assert_eq!(expected, actual);
+            assert_data_eq!(actual.to_debug(), expected.to_debug());
         }
     }
 
@@ -1117,16 +1387,46 @@ mod test {
     fn tokenize_hash_in_mixed_path() {
         let parser = TokenizerBuilder::new().build();
 
+        // `rustc...` looks like the start of a URL
         let input = "     ///                 at /rustc/c7087fe00d2ba919df1d813c040a5d47e43b0fe7\\/src\\libstd\\rt.rs:51";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("at", Case::None, 25),
-            // `rustc...` looks like the start of a URL
-            Identifier::new_unchecked("rs", Case::None, 91),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "at",
+        case: None,
+        offset: 25,
+    },
+    Identifier {
+        token: "rs",
+        case: None,
+        offset: 91,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "at",
+        case: None,
+        offset: 25,
+    },
+    Identifier {
+        token: "rs",
+        case: None,
+        offset: 91,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1134,14 +1434,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Good Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X1Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X122Iy9+btvut+d92V+v84444ziIqJKHK879KJH59//X12== Bye";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Good", Case::None, 0),
-            Identifier::new_unchecked("Bye", Case::None, 134),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 134,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 134,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1149,12 +1479,34 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = r#""ed25519:1": "Wm+VzmOUOz08Ds+0NTWb1d4CZrVsJSikkeRxh6aCcUwu6pNC78FunoD7KNWzqFn241eYHYMGCA5McEiVPdhzBA==""#;
-        let expected: Vec<Identifier<'_>> =
-            vec![Identifier::new_unchecked("ed25519", Case::None, 1)];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "ed25519",
+        case: None,
+        offset: 1,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "ed25519",
+        case: None,
+        offset: 1,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1162,14 +1514,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = r#"       "integrity": "sha512-hCmlUAIlUiav8Xdqw3Io4LcpA1DOt7h3LSTAC4G6JGHFFaWzI6qvFt9oilvl8BmkbBRX1IhM90ZAmpk68zccQA==","#;
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("integrity", Case::None, 8),
-            Identifier::new_unchecked("sha512", Case::None, 21),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "integrity",
+        case: None,
+        offset: 8,
+    },
+    Identifier {
+        token: "sha512",
+        case: None,
+        offset: 21,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "integrity",
+        case: None,
+        offset: 8,
+    },
+    Identifier {
+        token: "sha512",
+        case: None,
+        offset: 21,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1177,14 +1559,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Good example@example.com Bye";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Good", Case::None, 0),
-            Identifier::new_unchecked("Bye", Case::None, 25),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 25,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 25,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1192,14 +1604,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Good example.com/hello Bye";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Good", Case::None, 0),
-            Identifier::new_unchecked("Bye", Case::None, 23),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 23,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 23,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1208,14 +1650,44 @@ mod test {
 
         let input =
             "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment,split Bye";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Good", Case::None, 0),
-            Identifier::new_unchecked("Bye", Case::None, 86),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 86,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Good",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Bye",
+        case: None,
+        offset: 86,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1223,15 +1695,54 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello 0Hello 124 0xDEADBEEF World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("0Hello", Case::None, 6),
-            Identifier::new_unchecked("World", Case::None, 28),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "0Hello",
+        case: None,
+        offset: 6,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 28,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "0Hello",
+        case: None,
+        offset: 6,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 28,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1239,14 +1750,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello \\Hello \\ \\\\ World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 18),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 18,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 18,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1254,14 +1795,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello \\n\\n World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 11),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 11,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 11,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1269,14 +1840,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello \\nanana\\nanana World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 21),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 21,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 21,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1284,14 +1885,44 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello %Hello World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("World", Case::None, 13),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 13,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 13,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1299,16 +1930,64 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "#[derive(Clone)] #aaa # #111 #AABBCC #hello #AABBCCDD #1175BA World";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("derive", Case::None, 2),
-            Identifier::new_unchecked("Clone", Case::None, 9),
-            Identifier::new_unchecked("hello", Case::None, 38),
-            Identifier::new_unchecked("World", Case::None, 62),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "derive",
+        case: None,
+        offset: 2,
+    },
+    Identifier {
+        token: "Clone",
+        case: None,
+        offset: 9,
+    },
+    Identifier {
+        token: "hello",
+        case: None,
+        offset: 38,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 62,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "derive",
+        case: None,
+        offset: 2,
+    },
+    Identifier {
+        token: "Clone",
+        case: None,
+        offset: 9,
+    },
+    Identifier {
+        token: "hello",
+        case: None,
+        offset: 38,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 62,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1316,15 +1995,54 @@ mod test {
         let parser = TokenizerBuilder::new().build();
 
         let input = "Hello {{% foo %}} world!";
-        let expected: Vec<Identifier<'_>> = vec![
-            Identifier::new_unchecked("Hello", Case::None, 0),
-            Identifier::new_unchecked("foo", Case::None, 10),
-            Identifier::new_unchecked("world", Case::None, 18),
-        ];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "foo",
+        case: None,
+        offset: 10,
+    },
+    Identifier {
+        token: "world",
+        case: None,
+        offset: 18,
+    },
+]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Hello",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "foo",
+        case: None,
+        offset: 10,
+    },
+    Identifier {
+        token: "world",
+        case: None,
+        offset: 18,
+    },
+]
+
+"#]]
+        );
     }
 
     #[test]
@@ -1332,11 +2050,22 @@ mod test {
         let parser = TokenizerBuilder::new().unicode(false).build();
 
         let input = "appliqués";
-        let expected: Vec<Identifier<'_>> = vec![];
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[]
+
+"#]]
+        );
         let actual: Vec<_> = parser.parse_str(input).collect();
-        assert_eq!(expected, actual);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[]
+
+"#]]
+        );
     }
 
     #[test]
