@@ -271,11 +271,9 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        preceded(
-            ('0', alt(('x', 'X'))),
-            take_while(1.., is_hex_digit_with_sep),
-        )
-        .parse_next(input)
+        ('0', alt(('x', 'X')), take_while(1.., is_hex_digit_with_sep))
+            .recognize()
+            .parse_next(input)
     }
 
     fn css_color<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
@@ -287,13 +285,14 @@ mod parser {
     {
         trace(
             "color",
-            preceded(
+            (
                 '#',
                 alt((
-                    terminated(take_while(3..=8, is_lower_hex_digit), peek(sep1)),
-                    terminated(take_while(3..=8, is_upper_hex_digit), peek(sep1)),
+                    (take_while(3..=8, is_lower_hex_digit), peek(sep1)),
+                    (take_while(3..=8, is_upper_hex_digit), peek(sep1)),
                 )),
-            ),
+            )
+                .recognize(),
         )
         .parse_next(input)
     }
@@ -430,16 +429,16 @@ mod parser {
         trace(
             "url",
             (
-                opt(terminated(
+                opt((
                     take_while(1.., is_scheme_char),
                     // HACK: Technically you can skip `//` if you don't have a domain but that would
                     // get messy to support.
                     (':', '/', '/'),
                 )),
                 (
-                    opt(terminated(url_userinfo, '@')),
+                    opt((url_userinfo, '@')),
                     take_while(1.., is_domain_char),
-                    opt(preceded(':', take_while(1.., AsChar::is_dec_digit))),
+                    opt((':', take_while(1.., AsChar::is_dec_digit))),
                 ),
                 '/',
                 // HACK: Too lazy to enumerate
@@ -461,7 +460,7 @@ mod parser {
             "userinfo",
             (
                 take_while(1.., is_localport_char),
-                opt(preceded(':', take_while(0.., is_localport_char))),
+                opt((':', take_while(0.., is_localport_char))),
             )
                 .recognize(),
         )
@@ -480,7 +479,7 @@ mod parser {
         // incorrectly, we opt for just not evaluating it at all.
         trace(
             "escape",
-            preceded(take_while(1.., is_escape), take_while(0.., is_xid_continue)),
+            (take_while(1.., is_escape), take_while(0.., is_xid_continue)).recognize(),
         )
         .parse_next(input)
     }
@@ -492,7 +491,11 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        trace("printf", preceded('%', take_while(1.., is_xid_continue))).parse_next(input)
+        trace(
+            "printf",
+            ('%', take_while(1.., is_xid_continue)).recognize(),
+        )
+        .parse_next(input)
     }
 
     fn take_many0<I, E, F>(mut f: F) -> impl Parser<I, <I as Stream>::Slice, E>
