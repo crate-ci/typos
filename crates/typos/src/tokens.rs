@@ -1555,6 +1555,101 @@ mod test {
     }
 
     #[test]
+    fn tokenize_ignore_jwt() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQ1MTkyODI0LCJleHAiOjE5NjA3Njg4MjR9.M9jrxyvPLkUxWgOYSf5dNdJ8v_eRrq810ShFRT8N-6M'";
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "header",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Authorization",
+        case: None,
+        offset: 8,
+    },
+    Identifier {
+        token: "Bearer",
+        case: None,
+        offset: 23,
+    },
+    Identifier {
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+        case: None,
+        offset: 30,
+    },
+    Identifier {
+        token: "eyJpc3MiOiJzdXBhYmFzZSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQ1MTkyODI0LCJleHAiOjE5NjA3Njg4MjR9",
+        case: None,
+        offset: 67,
+    },
+    Identifier {
+        token: "M9jrxyvPLkUxWgOYSf5dNdJ8v_eRrq810ShFRT8N",
+        case: None,
+        offset: 156,
+    },
+    Identifier {
+        token: "6M",
+        case: None,
+        offset: 197,
+    },
+]
+
+"#]]
+        );
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "header",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "Authorization",
+        case: None,
+        offset: 8,
+    },
+    Identifier {
+        token: "Bearer",
+        case: None,
+        offset: 23,
+    },
+    Identifier {
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+        case: None,
+        offset: 30,
+    },
+    Identifier {
+        token: "eyJpc3MiOiJzdXBhYmFzZSIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNjQ1MTkyODI0LCJleHAiOjE5NjA3Njg4MjR9",
+        case: None,
+        offset: 67,
+    },
+    Identifier {
+        token: "M9jrxyvPLkUxWgOYSf5dNdJ8v_eRrq810ShFRT8N",
+        case: None,
+        offset: 156,
+    },
+    Identifier {
+        token: "6M",
+        case: None,
+        offset: 197,
+    },
+]
+
+"#]]
+        );
+    }
+
+    #[test]
     fn tokenize_ignore_email() {
         let parser = TokenizerBuilder::new().build();
 
