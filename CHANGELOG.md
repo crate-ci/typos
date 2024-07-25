@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.23.4] - 2024-07-25
+
 ### Fixes
 
 - Don't correct `countr_one` in C++
@@ -1215,7 +1217,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.23.3...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.23.4...HEAD
+[1.23.4]: https://github.com/crate-ci/typos/compare/v1.23.3...v1.23.4
 [1.23.3]: https://github.com/crate-ci/typos/compare/v1.23.2...v1.23.3
 [1.23.2]: https://github.com/crate-ci/typos/compare/v1.23.1...v1.23.2
 [1.23.1]: https://github.com/crate-ci/typos/compare/v1.23.0...v1.23.1
