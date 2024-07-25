@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(config)* Store config in `Cargo.toml`
+
 ## [1.23.4] - 2024-07-25
 
 ### Fixes
