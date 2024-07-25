@@ -8,6 +8,15 @@ pub(crate) const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
 
 pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
+        "cpp",
+        StaticDictConfig {
+            ignore_idents: &[
+                "countr_one", // `std::countr_one`
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "css",
         StaticDictConfig {
             ignore_idents: &[
