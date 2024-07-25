@@ -1,4 +1,12 @@
 bin.name = "typos"
 stdin = ""
-stdout = ""
+stdout = """
+error: `countr` should be `counter`, `contour`, `country`, `county`
+  --> ./sample.cpp:3:10
+  |
+3 |     std::countr_one(i);
+  |          ^^^^^^
+  |
+"""
 stderr = ""
+status.code = 2
