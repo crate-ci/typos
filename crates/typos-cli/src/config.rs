@@ -4,8 +4,16 @@ use kstring::KString;
 
 use crate::file_type_specifics;
 
-pub const SUPPORTED_FILE_NAMES: &[&str] =
-    &["typos.toml", "_typos.toml", ".typos.toml", "pyproject.toml"];
+pub const SUPPORTED_FILE_NAMES: &[&str] = &[
+    "typos.toml",
+    "_typos.toml",
+    ".typos.toml",
+    CARGO_TOML,
+    PYPROJECT_TOML,
+];
+
+const CARGO_TOML: &str = "Cargo.toml";
+const PYPROJECT_TOML: &str = "pyproject.toml";
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -18,6 +26,28 @@ pub struct Config {
     pub type_: TypeEngineConfig,
     #[serde(skip)]
     pub overrides: EngineConfig,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[serde(rename_all = "kebab-case")]
+pub struct CargoTomlConfig {
+    pub workspace: Option<CargoTomlPackage>,
+    pub package: Option<CargoTomlPackage>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[serde(rename_all = "kebab-case")]
+pub struct CargoTomlPackage {
+    pub metadata: CargoTomlMetadata,
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(default)]
+#[serde(rename_all = "kebab-case")]
+pub struct CargoTomlMetadata {
+    pub typos: Option<Config>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -55,15 +85,31 @@ impl Config {
             )
         })?;
 
-        if path.file_name().unwrap() == "pyproject.toml" {
-            let config = toml::from_str::<PyprojectTomlConfig>(&s)?;
+        if path.file_name().unwrap() == CARGO_TOML {
+            let config = toml::from_str::<CargoTomlConfig>(&s)?;
+            let typos = config
+                .workspace
+                .and_then(|w| w.metadata.typos)
+                .or(config.package.and_then(|p| p.metadata.typos));
 
-            if config.tool.typos.is_none() {
-                log::debug!("No `tool.typos` section found in `pyproject.toml`, skipping");
+            if let Some(typos) = typos {
+                Ok(Some(typos))
+            } else {
+                log::debug!(
+                    "No `package.metadata.typos` section found in `{CARGO_TOML}`, skipping"
+                );
 
                 Ok(None)
+            }
+        } else if path.file_name().unwrap() == PYPROJECT_TOML {
+            let config = toml::from_str::<PyprojectTomlConfig>(&s)?;
+
+            if let Some(typos) = config.tool.typos {
+                Ok(Some(typos))
             } else {
-                Ok(config.tool.typos)
+                log::debug!("No `tool.typos` section found in `{PYPROJECT_TOML}`, skipping");
+
+                Ok(None)
             }
         } else {
             Self::from_toml(&s).map(Some)
