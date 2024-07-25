@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `countr_one` in C++
+
 ## [1.23.3] - 2024-07-22
 
 ### Fixes
