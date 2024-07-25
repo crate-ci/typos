@@ -60,12 +60,12 @@ impl Config {
         if path.file_name().unwrap() == PYPROJECT_TOML {
             let config = toml::from_str::<PyprojectTomlConfig>(&s)?;
 
-            if config.tool.typos.is_none() {
+            if let Some(typos) = config.tool.typos {
+                Ok(Some(typos))
+            } else {
                 log::debug!("No `tool.typos` section found in `{PYPROJECT_TOML}`, skipping");
 
                 Ok(None)
-            } else {
-                Ok(config.tool.typos)
             }
         } else {
             Self::from_toml(&s).map(Some)
