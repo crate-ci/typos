@@ -5,7 +5,9 @@ use kstring::KString;
 use crate::file_type_specifics;
 
 pub const SUPPORTED_FILE_NAMES: &[&str] =
-    &["typos.toml", "_typos.toml", ".typos.toml", "pyproject.toml"];
+    &["typos.toml", "_typos.toml", ".typos.toml", PYPROJECT_TOML];
+
+const PYPROJECT_TOML: &str = "pyproject.toml";
 
 #[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -55,11 +57,11 @@ impl Config {
             )
         })?;
 
-        if path.file_name().unwrap() == "pyproject.toml" {
+        if path.file_name().unwrap() == PYPROJECT_TOML {
             let config = toml::from_str::<PyprojectTomlConfig>(&s)?;
 
             if config.tool.typos.is_none() {
-                log::debug!("No `tool.typos` section found in `pyproject.toml`, skipping");
+                log::debug!("No `tool.typos` section found in `{PYPROJECT_TOML}`, skipping");
 
                 Ok(None)
             } else {
