@@ -36,7 +36,7 @@ fn generate<W: std::io::Write>(file: &mut W, prefix: &str, dict: &[u8]) {
             let key = record_fields.next().unwrap();
             let value = format!(
                 "&[{}]",
-                itertools::join(record_fields.map(|field| format!(r#""{}""#, field)), ", ")
+                itertools::join(record_fields.map(|field| format!(r#""{field}""#)), ", ")
             );
             (key, value)
         }),

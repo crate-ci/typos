@@ -13,8 +13,7 @@ pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
 
     writeln!(
         file,
-        "pub static {}: dictgen::DictTable<{}> = dictgen::DictTable {{",
-        name, value_type
+        "pub static {name}: dictgen::DictTable<{value_type}> = dictgen::DictTable {{"
     )?;
     writeln!(file, "    keys: &[")?;
     for (key, _value) in data.iter() {
@@ -22,12 +21,12 @@ pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
         largest = std::cmp::max(largest, key.len());
 
         let key = if key.is_ascii() {
-            format!("dictgen::InsensitiveStr::Ascii({:?})", key)
+            format!("dictgen::InsensitiveStr::Ascii({key:?})")
         } else {
-            format!("dictgen::InsensitiveStr::Unicode({:?})", key)
+            format!("dictgen::InsensitiveStr::Unicode({key:?})")
         };
 
-        writeln!(file, "      {},", key)?;
+        writeln!(file, "      {key},")?;
     }
     if largest == 0 {
         smallest = 0;
@@ -35,10 +34,10 @@ pub fn generate_table<'d, W: std::io::Write, V: std::fmt::Display>(
     writeln!(file, "    ],")?;
     writeln!(file, "    values: &[")?;
     for (_key, value) in data.iter() {
-        writeln!(file, "      {},", value)?;
+        writeln!(file, "      {value},")?;
     }
     writeln!(file, "    ],")?;
-    writeln!(file, "    range: {}..={},", smallest, largest)?;
+    writeln!(file, "    range: {smallest}..={largest},")?;
     writeln!(file, "}};")?;
 
     Ok(())

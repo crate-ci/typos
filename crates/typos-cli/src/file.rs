@@ -237,7 +237,7 @@ impl FileChecker for DiffTypos {
             let stdout = std::io::stdout();
             let mut handle = stdout.lock();
             for line in diff {
-                write!(handle, "{}", line)?;
+                write!(handle, "{line}")?;
             }
         }
 

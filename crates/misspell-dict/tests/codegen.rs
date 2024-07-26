@@ -89,13 +89,13 @@ fn parse_dict(raw: &str) -> Words<'_> {
                     vec![captures.get(2).unwrap().as_str()],
                 );
             } else {
-                eprintln!("Unknown line: {}", line);
+                eprintln!("Unknown line: {line}");
             }
         }
     }
 
     if !bad.is_empty() {
-        panic!("Failed parsing; found extra words: {:#?}", bad);
+        panic!("Failed parsing; found extra words: {bad:#?}");
     }
 
     Words {
