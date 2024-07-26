@@ -86,12 +86,11 @@ mod codegen {
         let mut root = DynRoot::new(data);
         root.burst(limit);
 
-        let unicode_table_name = format!("{}_UNICODE_TABLE", prefix);
+        let unicode_table_name = format!("{prefix}_UNICODE_TABLE");
 
         writeln!(
             file,
-            "pub static {}_TRIE: dictgen::DictTrie<{}> = dictgen::DictTrie {{",
-            prefix, value_type
+            "pub static {prefix}_TRIE: dictgen::DictTrie<{value_type}> = dictgen::DictTrie {{"
         )?;
         writeln!(file, "    root: &{},", gen_node_name(prefix, ""))?;
         writeln!(file, "    unicode: &{},", &unicode_table_name)?;
@@ -118,8 +117,7 @@ mod codegen {
             let children_name = gen_children_name(prefix, &start);
             writeln!(
                 file,
-                "static {}: dictgen::DictTrieNode<{}> = dictgen::DictTrieNode {{",
-                node_name, value_type
+                "static {node_name}: dictgen::DictTrieNode<{value_type}> = dictgen::DictTrieNode {{"
             )?;
             writeln!(
                 file,
@@ -128,7 +126,7 @@ mod codegen {
                 children_name
             )?;
             if let Some(value) = node.value.as_ref() {
-                writeln!(file, "    value: Some({}),", value)?;
+                writeln!(file, "    value: Some({value}),")?;
             } else {
                 writeln!(file, "    value: None,")?;
             }
@@ -139,13 +137,12 @@ mod codegen {
                 DynChild::Nested(n) => {
                     writeln!(
                         file,
-                        "static {}: [Option<&dictgen::DictTrieNode<{}>>; 26] = [",
-                        children_name, value_type,
+                        "static {children_name}: [Option<&dictgen::DictTrieNode<{value_type}>>; 26] = [",
                     )?;
                     for b in b'a'..=b'z' {
                         if let Some(child) = n.get(&b) {
                             let c = b as char;
-                            let next_start = format!("{}{}", start, c);
+                            let next_start = format!("{start}{c}");
                             writeln!(file, "    Some(&{}),", gen_node_name(prefix, &next_start))?;
                             nodes.push((next_start, child));
                         } else {
@@ -171,21 +168,21 @@ mod codegen {
 
     fn gen_node_name(prefix: &str, start: &str) -> String {
         if start.is_empty() {
-            format!("{}_NODE", prefix)
+            format!("{prefix}_NODE")
         } else {
             let mut start = start.to_owned();
             start.make_ascii_uppercase();
-            format!("{}_{}_NODE", prefix, start)
+            format!("{prefix}_{start}_NODE")
         }
     }
 
     fn gen_children_name(prefix: &str, start: &str) -> String {
         if start.is_empty() {
-            format!("{}_CHILDREN", prefix)
+            format!("{prefix}_CHILDREN")
         } else {
             let mut start = start.to_owned();
             start.make_ascii_uppercase();
-            format!("{}_{}_CHILDREN", prefix, start)
+            format!("{prefix}_{start}_CHILDREN")
         }
     }
 
@@ -212,7 +209,7 @@ mod codegen {
             let mut empty = None;
             for (key, value) in data {
                 if existing.contains(key) {
-                    panic!("Duplicate present: {}", key);
+                    panic!("Duplicate present: {key}");
                 }
                 existing.insert(key);
 

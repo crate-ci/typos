@@ -773,20 +773,20 @@ impl<'t> Word<'t> {
         let mut item = itr.next().ok_or_else(|| {
             std::io::Error::new(
                 std::io::ErrorKind::InvalidInput,
-                format!("{:?} is nothing", token),
+                format!("{token:?} is nothing"),
             )
         })?;
         if item.offset != 0 {
             return Err(std::io::Error::new(
                 std::io::ErrorKind::InvalidInput,
-                format!("{:?} has padding", token),
+                format!("{token:?} has padding"),
             ));
         }
         item.offset += offset;
         if itr.next().is_some() {
             return Err(std::io::Error::new(
                 std::io::ErrorKind::InvalidInput,
-                format!("{:?} is multiple words", token),
+                format!("{token:?} is multiple words"),
             ));
         }
         Ok(item)
@@ -1407,7 +1407,7 @@ mod test {
             // A 31-character hexadecimal string: too short to be a hash.
             ("D41D8CD98F00B204E9800998ECF8427", false),
         ] {
-            let input = format!("Hello {} World", hashlike);
+            let input = format!("Hello {hashlike} World");
             let mut expected: Vec<Identifier<'_>> = vec![
                 Identifier::new_unchecked("Hello", Case::None, 0),
                 Identifier::new_unchecked("World", Case::None, 7+hashlike.len()),

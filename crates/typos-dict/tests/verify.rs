@@ -93,13 +93,13 @@ fn process<S: Into<String>>(
         .filter(|(typo, _)| {
             let is_disallowed = varcon_words.contains(&UniCase::new(typo));
             if is_disallowed {
-                eprintln!("{:?} is disallowed; in varcon", typo);
+                eprintln!("{typo:?} is disallowed; in varcon");
             }
             !is_disallowed
         })
         .filter(|(typo, _)| {
             if let Some(reason) = allowed_words.get(typo.as_ref()) {
-                eprintln!("{:?} is disallowed; {}", typo, reason);
+                eprintln!("{typo:?} is disallowed; {reason}");
                 false
             } else {
                 true

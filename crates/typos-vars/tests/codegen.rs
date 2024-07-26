@@ -52,9 +52,7 @@ fn generate_variations<W: Write>(file: &mut W) {
         file,
         "    {}",
         itertools::join(
-            CATEGORIES
-                .iter()
-                .map(|c| format!("crate::Category::{:?}", c)),
+            CATEGORIES.iter().map(|c| format!("crate::Category::{c:?}")),
             " | "
         )
     )
@@ -71,8 +69,7 @@ fn generate_variations<W: Write>(file: &mut W) {
     for (index, category) in CATEGORIES.iter().enumerate() {
         writeln!(
             file,
-            "    crate::Category::{:?} => options[{}],",
-            category, index
+            "    crate::Category::{category:?} => options[{index}],"
         )
         .unwrap();
     }
@@ -108,7 +105,7 @@ fn generate_variations<W: Write>(file: &mut W) {
 
     let no_invalid = entry_sets.values().all(|data| !is_always_invalid(data));
     writeln!(file).unwrap();
-    writeln!(file, "pub const NO_INVALID: bool = {:?};", no_invalid,).unwrap();
+    writeln!(file, "pub const NO_INVALID: bool = {no_invalid:?};",).unwrap();
 
     writeln!(file).unwrap();
     for (symbol, entry) in entries.iter() {
@@ -120,14 +117,14 @@ fn generate_variations<W: Write>(file: &mut W) {
 }
 
 fn generate_entry(file: &mut impl Write, symbol: &str, entry: &varcon_core::Entry) {
-    writeln!(file, "pub(crate) static {}: VariantsMap = [", symbol).unwrap();
+    writeln!(file, "pub(crate) static {symbol}: VariantsMap = [").unwrap();
     for category in &CATEGORIES {
         let corrections = collect_correct(entry, *category);
         let mut corrections: Vec<_> = corrections.iter().collect();
         corrections.sort_unstable();
         writeln!(file, "  &[").unwrap();
         for correction in &corrections {
-            writeln!(file, "    {:?},", correction).unwrap();
+            writeln!(file, "    {correction:?},").unwrap();
         }
         writeln!(file, "  ],").unwrap();
     }

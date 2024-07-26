@@ -153,7 +153,7 @@ fn print_brief_correction(msg: &Typo<'_>) -> Result<(), std::io::Error> {
                 context_display(&msg.context),
                 msg.typo,
                 itertools::join(
-                    corrections.iter().map(|s| format!("`{good}{}{reset}`", s)),
+                    corrections.iter().map(|s| format!("`{good}{s}{reset}`")),
                     ", "
                 )
             )?;
@@ -192,7 +192,7 @@ fn print_long_correction(msg: &Typo<'_>) -> Result<(), std::io::Error> {
                 "{error}error{reset}: `{error}{}{reset}` should be {}",
                 msg.typo,
                 itertools::join(
-                    corrections.iter().map(|s| format!("`{good}{}{reset}`", s)),
+                    corrections.iter().map(|s| format!("`{good}{s}{reset}`")),
                     ", "
                 )
             )?;
@@ -305,7 +305,7 @@ mod tests {
         ];
         for (i, ch) in latin_cyrillic_chars.iter().enumerate() {
             let width = calculate_visible_column_width(ch);
-            assert_eq!(1, width, "latin_cyrillic[{}]: {}", i, ch,);
+            assert_eq!(1, width, "latin_cyrillic[{i}]: {ch}",);
         }
     }
 
@@ -319,7 +319,7 @@ mod tests {
         ];
         for (i, ch) in cjk_chars.iter().enumerate() {
             let width = calculate_visible_column_width(ch);
-            assert_eq!(2, width, "cjk[{}]: {}", i, ch);
+            assert_eq!(2, width, "cjk[{i}]: {ch}");
         }
     }
 
@@ -340,7 +340,7 @@ mod tests {
         ];
         for (i, ch) in simple_emojis.iter().enumerate() {
             let width = calculate_visible_column_width(ch);
-            assert_eq!(2, width, "emoji[{}]: {}", i, ch);
+            assert_eq!(2, width, "emoji[{i}]: {ch}");
         }
     }
 
@@ -352,7 +352,7 @@ mod tests {
         ];
         for (i, ch) in zwj_sequences.iter().enumerate() {
             let width = calculate_visible_column_width(ch);
-            assert_eq!(2, width, "zwj[{}]: {}", i, ch);
+            assert_eq!(2, width, "zwj[{i}]: {ch}");
         }
     }
 }

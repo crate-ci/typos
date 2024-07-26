@@ -244,7 +244,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             let mut overrides = ignore::overrides::OverrideBuilder::new(".");
             for pattern in walk_policy.extend_exclude.iter() {
                 overrides
-                    .add(&format!("!{}", pattern))
+                    .add(&format!("!{pattern}"))
                     .with_code(proc_exit::sysexits::CONFIG_ERR)?;
             }
             let overrides = overrides
