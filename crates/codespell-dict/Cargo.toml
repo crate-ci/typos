@@ -1,6 +1,6 @@
 [package]
 name = "codespell-dict"
-version = "0.4.2"
+version = "0.4.3"
 description = "Source Code Spelling Correction"
 readme = "README.md"
 categories = ["development-tools", "text-processing"]
