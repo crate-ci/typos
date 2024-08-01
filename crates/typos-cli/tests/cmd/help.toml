@@ -45,7 +45,7 @@ Mode:
 
 Output:
       --format <FORMAT>  Render style for messages [default: long] [possible values: silent, brief,
-                         long, json]
+                         long, json, sarif]
       --color <WHEN>     Controls when to use color [default: auto] [possible values: auto, always,
                          never]
   -v, --verbose...       Increase logging verbosity

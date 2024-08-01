@@ -4,6 +4,10 @@ use std::borrow::Cow;
 
 pub trait Report: Send + Sync {
     fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error>;
+
+    fn generate_final_result(&self) -> Result<(), std::io::Error> {
+        Ok(())
+    }
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::From)]
