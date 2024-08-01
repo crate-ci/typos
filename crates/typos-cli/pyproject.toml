@@ -1,5 +1,5 @@
 [build-system]
-requires = ["maturin>=1.6,<1.7"]
+requires = ["maturin>=1.7,<1.8"]
 build-backend = "maturin"
 
 [project]
