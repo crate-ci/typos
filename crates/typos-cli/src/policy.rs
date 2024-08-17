@@ -319,7 +319,7 @@ impl DirConfig {
 
         let config = name
             .and_then(|name| {
-                log::debug!("{}: `{}` policy", path.display(), name);
+                log::debug!("{}: `{name}` policy", path.display());
                 self.types.get(name).copied()
             })
             .unwrap_or_else(|| {
