@@ -62,7 +62,7 @@ impl<'m> Message<'m> {
 }
 
 #[derive(Clone, Debug, serde::Serialize, derive_more::Display, derive_setters::Setters)]
-#[display("Skipping binary file {}", "path.display()")]
+#[display("Skipping binary file {}", path.display())]
 #[non_exhaustive]
 pub struct BinaryFile<'m> {
     pub path: &'m std::path::Path,

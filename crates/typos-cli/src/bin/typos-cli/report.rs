@@ -63,7 +63,7 @@ impl Report for PrintBrief {
     fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         match &msg {
             Message::BinaryFile(msg) => {
-                log::info!("{}", msg);
+                log::info!("{msg}");
             }
             Message::Typo(msg) => print_brief_correction(msg)?,
             Message::FileType(msg) => {
@@ -97,7 +97,7 @@ impl Report for PrintLong {
     fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         match &msg {
             Message::BinaryFile(msg) => {
-                log::info!("{}", msg);
+                log::info!("{msg}");
             }
             Message::Typo(msg) => print_long_correction(msg)?,
             Message::FileType(msg) => {

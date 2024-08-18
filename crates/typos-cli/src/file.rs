@@ -474,7 +474,7 @@ fn read_file(
             let (r, written) = encoding_rs::UTF_16LE.new_decoder_with_bom_removal().decode_to_string_without_replacement(&buffer, &mut decoded, true);
             let decoded = match r {
                 encoding_rs::DecoderResult::InputEmpty => Ok(decoded),
-                _ => Err(format!("invalid UTF-16LE encoding at byte {} in {}", written, path.display())),
+                _ => Err(format!("invalid UTF-16LE encoding at byte {written} in {}", path.display())),
             };
             let buffer = report_result(decoded, Some(path), reporter)?;
             (buffer.into_bytes(), content_type)
@@ -487,7 +487,7 @@ fn read_file(
             let (r, written) = encoding_rs::UTF_16BE.new_decoder_with_bom_removal().decode_to_string_without_replacement(&buffer, &mut decoded, true);
             let decoded = match r {
                 encoding_rs::DecoderResult::InputEmpty => Ok(decoded),
-                _ => Err(format!("invalid UTF-16BE encoding at byte {} in {}", written, path.display())),
+                _ => Err(format!("invalid UTF-16BE encoding at byte {written} in {}", path.display())),
             };
             let buffer = report_result(decoded, Some(path), reporter)?;
             (buffer.into_bytes(), content_type)
