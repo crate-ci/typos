@@ -227,13 +227,16 @@ impl<'s> ConfigEngine<'s> {
         let check_filename = engine.check_filename();
         let check_file = engine.check_file();
         let crate::config::EngineConfig {
-            tokenizer: mut tokenizer_config,
-            dict: mut dict_config,
+            tokenizer: tokenizer_user_config,
+            dict: dict_user_config,
             extend_ignore_re,
             ..
         } = engine;
-        tokenizer_config.update(&crate::config::TokenizerConfig::from_defaults());
-        dict_config.update(&crate::config::DictConfig::from_defaults());
+
+        let mut tokenizer_config = crate::config::TokenizerConfig::from_defaults();
+        tokenizer_config.update(&tokenizer_user_config);
+        let mut dict_config = crate::config::DictConfig::from_defaults();
+        dict_config.update(&dict_user_config);
 
         if !tokenizer_config.ignore_hex() {
             log::warn!("`ignore-hex` is deprecated");
