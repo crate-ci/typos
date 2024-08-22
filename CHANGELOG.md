@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(config)* Respect `--locale` / `default.locale` again after it was broken in 1.16.24
+
 ## [1.23.6] - 2024-07-31
 
 ### Fixes
