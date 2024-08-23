@@ -964,24 +964,12 @@ impl Entry {
             let variants =
                 winnow::combinator::separated(1.., Variant::parse_, var_sep).parse_next(input)?;
 
-            let desc_sep = (winnow::ascii::space0, '|');
-            let description = opt((desc_sep, Self::parse_description)).parse_next(input)?;
+            let mut e = Self::parse_description.parse_next(input)?;
 
             let comment_sep = (winnow::ascii::space0, '#');
             let comment =
                 opt((comment_sep, space1, winnow::ascii::till_line_ending)).parse_next(input)?;
 
-            let mut e = match description {
-                Some((_, description)) => description,
-                None => Self {
-                    variants: Vec::new(),
-                    pos: None,
-                    archaic: false,
-                    note: false,
-                    description: None,
-                    comment: None,
-                },
-            };
             e.variants = variants;
             e.comment = comment.map(|c| c.2.to_owned());
             Ok(e)
@@ -1000,18 +988,23 @@ impl Entry {
                 comment: None,
             };
 
-            let _ = opt((space1, "<abbr>")).parse_next(input)?;
-            let _ = opt((space1, "<pl>")).parse_next(input)?;
-            let pos = opt((space1, delimited('<', cut_err(Pos::parse_), cut_err('>'))))
-                .parse_next(input)?;
-            let archaic = opt((space1, archaic)).parse_next(input)?;
-            let note = opt((space1, NOTE_PREFIX)).parse_next(input)?;
-            let description = opt((space1, description)).parse_next(input)?;
+            if opt((winnow::ascii::space0, '|'))
+                .parse_next(input)?
+                .is_some()
+            {
+                let _ = opt((space1, "<abbr>")).parse_next(input)?;
+                let _ = opt((space1, "<pl>")).parse_next(input)?;
+                let pos = opt((space1, delimited('<', cut_err(Pos::parse_), cut_err('>'))))
+                    .parse_next(input)?;
+                let archaic = opt((space1, archaic)).parse_next(input)?;
+                let note = opt((space1, NOTE_PREFIX)).parse_next(input)?;
+                let description = opt((space1, description)).parse_next(input)?;
 
-            entry.pos = pos.map(|(_, p)| p);
-            entry.archaic = archaic.is_some();
-            entry.note = note.is_some();
-            entry.description = description.map(|(_, d)| d.to_owned());
+                entry.pos = pos.map(|(_, p)| p);
+                entry.archaic = archaic.is_some();
+                entry.note = note.is_some();
+                entry.description = description.map(|(_, d)| d.to_owned());
+            }
             Ok(entry)
         })
         .parse_next(input)
