@@ -1000,9 +1000,7 @@ impl Entry {
                     .parse_next(input)?;
                 entry.archaic = opt(preceded(space1, archaic)).parse_next(input)?.is_some();
                 entry.note = opt(preceded(space1, note)).parse_next(input)?;
-                entry.description = opt(preceded(space1, description))
-                    .parse_next(input)?
-                    .map(|d| d.to_owned());
+                entry.description = opt(preceded(space1, description)).parse_next(input)?;
 
                 if opt((winnow::ascii::space0, '|'))
                     .parse_next(input)?
@@ -1019,7 +1017,7 @@ impl Entry {
 
 fn note(input: &mut &str) -> PResult<String, ()> {
     let (_, _, note) = (NOTE_PREFIX, space1, description).parse_next(input)?;
-    Ok(note.to_owned())
+    Ok(note)
 }
 
 const NOTE_PREFIX: &str = "--";
