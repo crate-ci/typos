@@ -20,8 +20,8 @@ pub struct Entry {
     pub variants: &'static [Variant],
     pub pos: Option<crate::Pos>,
     pub archaic: bool,
-    pub note: bool,
     pub description: Option<&'static str>,
+    pub note: bool,
     pub comment: Option<&'static str>,
 }
 

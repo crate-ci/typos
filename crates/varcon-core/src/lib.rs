@@ -30,8 +30,8 @@ pub struct Entry {
     pub variants: Vec<Variant>,
     pub pos: Option<Pos>,
     pub archaic: bool,
-    pub note: bool,
     pub description: Option<String>,
+    pub note: bool,
     pub comment: Option<String>,
 }
 

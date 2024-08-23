@@ -102,8 +102,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
             Entry {
@@ -150,8 +150,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
             Entry {
@@ -198,8 +198,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
         ],
@@ -279,8 +279,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
             Entry {
@@ -327,8 +327,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
             Entry {
@@ -375,8 +375,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
         ],
@@ -431,8 +431,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
             Entry {
@@ -479,8 +479,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
             Entry {
@@ -527,8 +527,8 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 ],
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             },
         ],
@@ -660,8 +660,8 @@ Cluster {
             ],
             pos: None,
             archaic: false,
-            note: false,
             description: None,
+            note: false,
             comment: None,
         },
         Entry {
@@ -708,8 +708,8 @@ Cluster {
             ],
             pos: None,
             archaic: false,
-            note: false,
             description: None,
+            note: false,
             comment: None,
         },
         Entry {
@@ -756,8 +756,8 @@ Cluster {
             ],
             pos: None,
             archaic: false,
-            note: false,
             description: None,
+            note: false,
             comment: None,
         },
     ],
@@ -841,8 +841,8 @@ Cluster {
             ],
             pos: None,
             archaic: false,
-            note: false,
             description: None,
+            note: false,
             comment: None,
         },
         Entry {
@@ -889,8 +889,8 @@ Cluster {
             ],
             pos: None,
             archaic: false,
-            note: false,
             description: None,
+            note: false,
             comment: None,
         },
         Entry {
@@ -937,8 +937,8 @@ Cluster {
             ],
             pos: None,
             archaic: false,
-            note: false,
             description: None,
+            note: false,
             comment: None,
         },
     ],
@@ -983,8 +983,8 @@ impl Entry {
                 variants: Vec::new(),
                 pos: None,
                 archaic: false,
-                note: false,
                 description: None,
+                note: false,
                 comment: None,
             };
 
@@ -1092,8 +1092,8 @@ Entry {
     ],
     pos: None,
     archaic: false,
-    note: false,
     description: None,
+    note: false,
     comment: None,
 }
 
@@ -1148,10 +1148,10 @@ Entry {
     ],
     pos: None,
     archaic: false,
-    note: false,
     description: Some(
         "otherwise",
     ),
+    note: false,
     comment: None,
 }
 
@@ -1222,8 +1222,8 @@ Entry {
         Noun,
     ),
     archaic: false,
-    note: false,
     description: None,
+    note: false,
     comment: None,
 }
 
@@ -1278,8 +1278,8 @@ Entry {
     ],
     pos: None,
     archaic: false,
-    note: false,
     description: None,
+    note: false,
     comment: None,
 }
 
@@ -1322,8 +1322,8 @@ Entry {
     ],
     pos: None,
     archaic: false,
-    note: false,
     description: None,
+    note: false,
     comment: None,
 }
 
@@ -1380,10 +1380,10 @@ Entry {
     ],
     pos: None,
     archaic: true,
-    note: false,
     description: Some(
         "ship",
     ),
+    note: false,
     comment: None,
 }
 
@@ -1423,10 +1423,10 @@ Entry {
     ],
     pos: None,
     archaic: false,
-    note: true,
     description: Some(
         "plural",
     ),
+    note: true,
     comment: None,
 }
 
@@ -1489,8 +1489,8 @@ Entry {
     ],
     pos: None,
     archaic: false,
-    note: false,
     description: None,
+    note: false,
     comment: Some(
         "ODE: archaic, M-W: 'or' but can find little evidence of use",
     ),
