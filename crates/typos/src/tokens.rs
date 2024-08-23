@@ -207,7 +207,7 @@ mod parser {
         <T as Stream>::Token: AsChar + Copy,
     {
         alt((
-            one_of(|c| !is_xid_continue(c)).recognize(),
+            one_of(|c| !is_xid_continue(c)).take(),
             eof.map(|_| <T as Stream>::Slice::default()),
         ))
         .parse_next(input)
@@ -225,7 +225,7 @@ mod parser {
                 one_of(|c| !is_xid_continue(c)),
                 take_while(0.., is_ignore_char),
             )
-                .recognize(),
+                .take(),
         )
         .parse_next(input)
     }
@@ -251,7 +251,7 @@ mod parser {
                 alt((('s', 't'), ('n', 'd'), ('r', 'd'), ('t', 'h'))),
                 take_while(0.., is_sep),
             )
-                .recognize(),
+                .take(),
         )
         .parse_next(input)
     }
@@ -273,7 +273,7 @@ mod parser {
         <T as Stream>::Token: AsChar + Copy,
     {
         ('0', alt(('x', 'X')), take_while(1.., is_hex_digit_with_sep))
-            .recognize()
+            .take()
             .parse_next(input)
     }
 
@@ -293,7 +293,7 @@ mod parser {
                     (take_while(3..=8, is_upper_hex_digit), peek(sep1)),
                 )),
             )
-                .recognize(),
+                .take(),
         )
         .parse_next(input)
     }
@@ -318,7 +318,7 @@ mod parser {
                 '.',
                 take_while(20.., is_jwt_token),
             )
-                .recognize(),
+                .take(),
         )
         .parse_next(input)
     }
@@ -366,7 +366,7 @@ mod parser {
                     take_while(12, is_upper_hex_digit),
                 ),
             ))
-            .recognize(),
+            .take(),
         )
         .parse_next(input)
     }
@@ -450,7 +450,7 @@ mod parser {
                 '@',
                 take_while(1.., is_domain_char),
             )
-                .recognize(),
+                .take(),
         )
         .parse_next(input)
     }
@@ -480,7 +480,7 @@ mod parser {
                 // HACK: Too lazy to enumerate
                 take_while(0.., is_path_query_fragment),
             )
-                .recognize(),
+                .take(),
         )
         .parse_next(input)
     }
@@ -498,7 +498,7 @@ mod parser {
                 take_while(1.., is_localport_char),
                 opt((':', take_while(0.., is_localport_char))),
             )
-                .recognize(),
+                .take(),
         )
         .parse_next(input)
     }
@@ -515,7 +515,7 @@ mod parser {
         // incorrectly, we opt for just not evaluating it at all.
         trace(
             "escape",
-            (take_while(1.., is_escape), take_while(0.., is_xid_continue)).recognize(),
+            (take_while(1.., is_escape), take_while(0.., is_xid_continue)).take(),
         )
         .parse_next(input)
     }
@@ -527,11 +527,7 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        trace(
-            "printf",
-            ('%', take_while(1.., is_xid_continue)).recognize(),
-        )
-        .parse_next(input)
+        trace("printf", ('%', take_while(1.., is_xid_continue)).take()).parse_next(input)
     }
 
     fn take_many0<I, E, F>(mut f: F) -> impl Parser<I, <I as Stream>::Slice, E>
@@ -540,12 +536,7 @@ mod parser {
         F: Parser<I, <I as Stream>::Slice, E>,
         E: ParserError<I>,
     {
-        move |i: &mut I| {
-            repeat(0.., f.by_ref())
-                .map(|()| ())
-                .recognize()
-                .parse_next(i)
-        }
+        move |i: &mut I| repeat(0.., f.by_ref()).map(|()| ()).take().parse_next(i)
     }
 
     #[inline]
