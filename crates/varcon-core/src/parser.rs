@@ -994,16 +994,13 @@ impl Entry {
             {
                 let _ = opt((space1, "<abbr>")).parse_next(input)?;
                 let _ = opt((space1, "<pl>")).parse_next(input)?;
-                let pos = opt((space1, delimited('<', cut_err(Pos::parse_), cut_err('>'))))
+                entry.pos = opt(delimited((space1, '<'), cut_err(Pos::parse_), cut_err('>')))
                     .parse_next(input)?;
-                let archaic = opt((space1, archaic)).parse_next(input)?;
-                let note = opt((space1, note)).parse_next(input)?;
-                let description = opt((space1, description)).parse_next(input)?;
-
-                entry.pos = pos.map(|(_, p)| p);
-                entry.archaic = archaic.is_some();
-                entry.note = note.map(|(_, d)| d.to_owned());
-                entry.description = description.map(|(_, d)| d.to_owned());
+                entry.archaic = opt(preceded(space1, archaic)).parse_next(input)?.is_some();
+                entry.note = opt(preceded(space1, note)).parse_next(input)?;
+                entry.description = opt(preceded(space1, description))
+                    .parse_next(input)?
+                    .map(|d| d.to_owned());
             }
             Ok(entry)
         })
