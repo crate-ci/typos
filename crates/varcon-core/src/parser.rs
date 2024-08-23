@@ -1,3 +1,4 @@
+use winnow::combinator::delimited;
 use winnow::combinator::trace;
 use winnow::prelude::*;
 
@@ -992,7 +993,7 @@ impl Entry {
     fn parse_description(input: &mut &str) -> PResult<Self, ()> {
         trace("description", move |input: &mut &str| {
             let (pos, archaic, note, description) = (
-                winnow::combinator::opt((winnow::ascii::space1, Pos::parse_)),
+                winnow::combinator::opt((winnow::ascii::space1, delimited('<', Pos::parse_, '>'))),
                 winnow::combinator::opt((winnow::ascii::space1, "(-)")),
                 winnow::combinator::opt((winnow::ascii::space1, "--")),
                 winnow::combinator::opt((
@@ -1767,10 +1768,10 @@ impl Pos {
     fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("pos", move |input: &mut &str| {
             winnow::combinator::alt((
-                "<N>".value(Pos::Noun),
-                "<V>".value(Pos::Verb),
-                "<Adj>".value(Pos::Adjective),
-                "<Adv>".value(Pos::Adverb),
+                "N".value(Pos::Noun),
+                "V".value(Pos::Verb),
+                "Adj".value(Pos::Adjective),
+                "Adv".value(Pos::Adverb),
             ))
             .parse_next(input)
         })
@@ -1788,8 +1789,8 @@ mod test_pos {
 
     #[test]
     fn test_valid() {
-        let (input, actual) = Pos::parse_.parse_peek("<N>").unwrap();
-        assert_data_eq!(input, str![]);
+        let (input, actual) = Pos::parse_.parse_peek("N>").unwrap();
+        assert_data_eq!(input, str![">"]);
         assert_data_eq!(
             actual.to_debug(),
             str![[r#"
@@ -1801,8 +1802,8 @@ Noun
 
     #[test]
     fn test_extra() {
-        let (input, actual) = Pos::parse_.parse_peek("<Adj> foobar").unwrap();
-        assert_data_eq!(input, str![" foobar"]);
+        let (input, actual) = Pos::parse_.parse_peek("Adj> foobar").unwrap();
+        assert_data_eq!(input, str!["> foobar"]);
         assert_data_eq!(
             actual.to_debug(),
             str![[r#"
