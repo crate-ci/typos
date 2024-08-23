@@ -1,3 +1,4 @@
+use winnow::combinator::cut_err;
 use winnow::combinator::delimited;
 use winnow::combinator::trace;
 use winnow::prelude::*;
@@ -995,7 +996,10 @@ impl Entry {
             let (_abbr, _plural, pos, archaic, note, description) = (
                 winnow::combinator::opt((winnow::ascii::space1, "<abbr>")),
                 winnow::combinator::opt((winnow::ascii::space1, "<pl>")),
-                winnow::combinator::opt((winnow::ascii::space1, delimited('<', Pos::parse_, '>'))),
+                winnow::combinator::opt((
+                    winnow::ascii::space1,
+                    delimited('<', cut_err(Pos::parse_), cut_err('>')),
+                )),
                 winnow::combinator::opt((winnow::ascii::space1, "(-)")),
                 winnow::combinator::opt((winnow::ascii::space1, "--")),
                 winnow::combinator::opt((
@@ -1237,72 +1241,10 @@ Entry {
     fn test_pos_bad() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
-        let (input, actual) = Entry::parse_
+        let err = Entry::parse_
             .parse_peek("A B C: practice / AV Cv: practise | <Bad>\n")
-            .unwrap();
-        assert_data_eq!(
-            input,
-            str![[r#"
-
-
-"#]]
-        );
-        assert_data_eq!(
-            actual.to_debug(),
-            str![[r#"
-Entry {
-    variants: [
-        Variant {
-            types: [
-                Type {
-                    category: American,
-                    tag: None,
-                    num: None,
-                },
-                Type {
-                    category: BritishIse,
-                    tag: None,
-                    num: None,
-                },
-                Type {
-                    category: Canadian,
-                    tag: None,
-                    num: None,
-                },
-            ],
-            word: "practice",
-        },
-        Variant {
-            types: [
-                Type {
-                    category: American,
-                    tag: Some(
-                        Seldom,
-                    ),
-                    num: None,
-                },
-                Type {
-                    category: Canadian,
-                    tag: Some(
-                        Variant,
-                    ),
-                    num: None,
-                },
-            ],
-            word: "practise",
-        },
-    ],
-    pos: None,
-    archaic: false,
-    note: false,
-    description: Some(
-        "<Bad>",
-    ),
-    comment: None,
-}
-
-"#]]
-        );
+            .unwrap_err();
+        assert_data_eq!(err.to_string(), str!["Parsing Failure: ()"]);
     }
 
     #[test]
