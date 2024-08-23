@@ -13,6 +13,8 @@ pub use crate::parser::ClusterIter;
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Cluster {
     pub header: String,
+    pub verified: bool,
+    pub level: usize,
     pub entries: Vec<Entry>,
     pub notes: Vec<String>,
 }
