@@ -1,6 +1,6 @@
 #[derive(Copy, Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Cluster {
-    pub header: Option<&'static str>,
+    pub header: &'static str,
     pub entries: &'static [Entry],
     pub notes: &'static [&'static str],
 }
@@ -8,7 +8,7 @@ pub struct Cluster {
 impl Cluster {
     pub fn into_owned(self) -> crate::Cluster {
         crate::Cluster {
-            header: self.header.map(|s| s.to_owned()),
+            header: self.header.to_owned(),
             entries: self.entries.iter().map(|s| s.into_owned()).collect(),
             notes: self.notes.iter().map(|s| (*s).to_owned()).collect(),
         }
