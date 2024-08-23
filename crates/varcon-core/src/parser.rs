@@ -1304,6 +1304,54 @@ Entry {
     }
 
     #[test]
+    fn test_plural() {
+        // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
+        // cases.
+        let (input, actual) = Entry::parse_.parse_peek("_ _-: dogies | <pl>\n").unwrap();
+        assert_data_eq!(
+            input,
+            str![[r#"
+
+
+"#]]
+        );
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+Entry {
+    variants: [
+        Variant {
+            types: [
+                Type {
+                    category: Other,
+                    tag: None,
+                    num: None,
+                },
+                Type {
+                    category: Other,
+                    tag: Some(
+                        Possible,
+                    ),
+                    num: None,
+                },
+            ],
+            word: "dogies",
+        },
+    ],
+    pos: None,
+    archaic: false,
+    note: false,
+    description: Some(
+        "<pl>",
+    ),
+    comment: None,
+}
+
+"#]]
+        );
+    }
+
+    #[test]
     fn test_archaic() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
