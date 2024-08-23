@@ -36,6 +36,8 @@ fn generate<W: std::io::Write>(file: &mut W) {
         cluster.infer();
         writeln!(file, "Cluster {{").unwrap();
         writeln!(file, "  header: {:?},", cluster.header).unwrap();
+        writeln!(file, "  verified: {:?},", cluster.verified).unwrap();
+        writeln!(file, "  level: {:?},", cluster.level).unwrap();
         writeln!(file, "  entries: &[").unwrap();
         for entry in &cluster.entries {
             writeln!(file, "  Entry {{").unwrap();

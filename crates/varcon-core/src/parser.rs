@@ -54,9 +54,9 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
             str![[r#"
 [
     Cluster {
-        header: Some(
-            "acknowledgment <verified> (level 35)",
-        ),
+        header: "acknowledgment ",
+        verified: true,
+        level: 35,
         entries: [
             Entry {
                 variants: [
@@ -231,9 +231,9 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
             str![[r#"
 [
     Cluster {
-        header: Some(
-            "acknowledgment <verified> (level 35)",
-        ),
+        header: "acknowledgment ",
+        verified: true,
+        level: 35,
         entries: [
             Entry {
                 variants: [
@@ -383,9 +383,9 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
         notes: [],
     },
     Cluster {
-        header: Some(
-            "acknowledgment <verified> (level 35)",
-        ),
+        header: "acknowledgment ",
+        verified: true,
+        level: 35,
         entries: [
             Entry {
                 variants: [
@@ -551,7 +551,11 @@ impl Cluster {
             let header = (
                 "#",
                 winnow::ascii::space0,
-                winnow::ascii::till_line_ending,
+                winnow::token::take_till(1.., ('\r', '\n', '<', '(')),
+                winnow::ascii::space0,
+                opt(("<verified>", winnow::ascii::space0)),
+                delimited("(level ", winnow::ascii::digit1, ')').parse_to::<usize>(),
+                winnow::ascii::space0,
                 winnow::ascii::line_ending,
             );
             let note = preceded(
@@ -559,7 +563,7 @@ impl Cluster {
                 terminated(winnow::ascii::till_line_ending, winnow::ascii::line_ending),
             );
             let mut cluster = (
-                opt(header),
+                header,
                 winnow::combinator::repeat(
                     1..,
                     terminated(Entry::parse_, winnow::ascii::line_ending),
@@ -568,10 +572,14 @@ impl Cluster {
             );
             let (header, entries, notes): (_, _, Vec<_>) = cluster.parse_next(input)?;
 
-            let header = header.map(|s| s.2.to_owned());
+            let verified = header.4.is_some();
+            let level = header.5;
+            let header = header.2.to_owned();
             let notes = notes.into_iter().map(|s| s.to_owned()).collect();
             let c = Self {
                 header,
+                verified,
+                level,
                 entries,
                 notes,
             };
@@ -612,9 +620,9 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
             actual.to_debug(),
             str![[r#"
 Cluster {
-    header: Some(
-        "acknowledgment <verified> (level 35)",
-    ),
+    header: "acknowledgment ",
+    verified: true,
+    level: 35,
     entries: [
         Entry {
             variants: [
@@ -793,9 +801,9 @@ A B C: coloration's / B. Cv: colouration's
             actual.to_debug(),
             str![[r#"
 Cluster {
-    header: Some(
-        "coloration <verified> (level 50)",
-    ),
+    header: "coloration ",
+    verified: true,
+    level: 50,
     entries: [
         Entry {
             variants: [
