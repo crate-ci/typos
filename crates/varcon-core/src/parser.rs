@@ -1001,13 +1001,11 @@ impl Entry {
             ))
             .parse_next(input)?;
             let archaic =
-                winnow::combinator::opt((winnow::ascii::space1, "(-)")).parse_next(input)?;
-            let note = winnow::combinator::opt((winnow::ascii::space1, "--")).parse_next(input)?;
-            let description = winnow::combinator::opt((
-                winnow::ascii::space1,
-                winnow::token::take_till(0.., ('\n', '\r', '#')),
-            ))
-            .parse_next(input)?;
+                winnow::combinator::opt((winnow::ascii::space1, archaic)).parse_next(input)?;
+            let note =
+                winnow::combinator::opt((winnow::ascii::space1, NOTE_PREFIX)).parse_next(input)?;
+            let description =
+                winnow::combinator::opt((winnow::ascii::space1, description)).parse_next(input)?;
 
             let variants = Vec::new();
             let pos = pos.map(|(_, p)| p);
@@ -1026,6 +1024,17 @@ impl Entry {
         })
         .parse_next(input)
     }
+}
+
+const NOTE_PREFIX: &str = "--";
+
+fn archaic(input: &mut &str) -> PResult<(), ()> {
+    "(-)".void().parse_next(input)
+}
+
+fn description(input: &mut &str) -> PResult<String, ()> {
+    let description = winnow::token::take_till(0.., ('\n', '\r', '#')).parse_next(input)?;
+    Ok(description.to_owned())
 }
 
 #[cfg(test)]
