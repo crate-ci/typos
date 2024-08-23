@@ -31,7 +31,7 @@ pub struct Entry {
     pub pos: Option<Pos>,
     pub archaic: bool,
     pub description: Option<String>,
-    pub note: bool,
+    pub note: Option<String>,
     pub comment: Option<String>,
 }
 

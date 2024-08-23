@@ -21,7 +21,7 @@ pub struct Entry {
     pub pos: Option<crate::Pos>,
     pub archaic: bool,
     pub description: Option<&'static str>,
-    pub note: bool,
+    pub note: Option<&'static str>,
     pub comment: Option<&'static str>,
 }
 
@@ -31,8 +31,8 @@ impl Entry {
             variants: self.variants.iter().map(|v| v.into_owned()).collect(),
             pos: self.pos,
             archaic: self.archaic,
-            note: self.note,
             description: self.description.map(|s| s.to_owned()),
+            note: self.note.map(|s| s.to_owned()),
             comment: self.comment.map(|s| s.to_owned()),
         }
     }

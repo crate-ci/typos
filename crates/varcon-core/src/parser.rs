@@ -103,7 +103,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
             Entry {
@@ -151,7 +151,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
             Entry {
@@ -199,7 +199,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
         ],
@@ -280,7 +280,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
             Entry {
@@ -328,7 +328,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
             Entry {
@@ -376,7 +376,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
         ],
@@ -432,7 +432,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
             Entry {
@@ -480,7 +480,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
             Entry {
@@ -528,7 +528,7 @@ A Cv: acknowledgment's / Av B C: acknowledgement's
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             },
         ],
@@ -661,7 +661,7 @@ Cluster {
             pos: None,
             archaic: false,
             description: None,
-            note: false,
+            note: None,
             comment: None,
         },
         Entry {
@@ -709,7 +709,7 @@ Cluster {
             pos: None,
             archaic: false,
             description: None,
-            note: false,
+            note: None,
             comment: None,
         },
         Entry {
@@ -757,7 +757,7 @@ Cluster {
             pos: None,
             archaic: false,
             description: None,
-            note: false,
+            note: None,
             comment: None,
         },
     ],
@@ -842,7 +842,7 @@ Cluster {
             pos: None,
             archaic: false,
             description: None,
-            note: false,
+            note: None,
             comment: None,
         },
         Entry {
@@ -890,7 +890,7 @@ Cluster {
             pos: None,
             archaic: false,
             description: None,
-            note: false,
+            note: None,
             comment: None,
         },
         Entry {
@@ -938,7 +938,7 @@ Cluster {
             pos: None,
             archaic: false,
             description: None,
-            note: false,
+            note: None,
             comment: None,
         },
     ],
@@ -984,7 +984,7 @@ impl Entry {
                 pos: None,
                 archaic: false,
                 description: None,
-                note: false,
+                note: None,
                 comment: None,
             };
 
@@ -997,12 +997,12 @@ impl Entry {
                 let pos = opt((space1, delimited('<', cut_err(Pos::parse_), cut_err('>'))))
                     .parse_next(input)?;
                 let archaic = opt((space1, archaic)).parse_next(input)?;
-                let note = opt((space1, NOTE_PREFIX)).parse_next(input)?;
+                let note = opt((space1, NOTE_PREFIX, space1, description)).parse_next(input)?;
                 let description = opt((space1, description)).parse_next(input)?;
 
                 entry.pos = pos.map(|(_, p)| p);
                 entry.archaic = archaic.is_some();
-                entry.note = note.is_some();
+                entry.note = note.map(|(_, _, _, d)| d.to_owned());
                 entry.description = description.map(|(_, d)| d.to_owned());
             }
             Ok(entry)
@@ -1093,7 +1093,7 @@ Entry {
     pos: None,
     archaic: false,
     description: None,
-    note: false,
+    note: None,
     comment: None,
 }
 
@@ -1151,7 +1151,7 @@ Entry {
     description: Some(
         "otherwise",
     ),
-    note: false,
+    note: None,
     comment: None,
 }
 
@@ -1223,7 +1223,7 @@ Entry {
     ),
     archaic: false,
     description: None,
-    note: false,
+    note: None,
     comment: None,
 }
 
@@ -1279,7 +1279,7 @@ Entry {
     pos: None,
     archaic: false,
     description: None,
-    note: false,
+    note: None,
     comment: None,
 }
 
@@ -1323,7 +1323,7 @@ Entry {
     pos: None,
     archaic: false,
     description: None,
-    note: false,
+    note: None,
     comment: None,
 }
 
@@ -1383,7 +1383,7 @@ Entry {
     description: Some(
         "ship",
     ),
-    note: false,
+    note: None,
     comment: None,
 }
 
@@ -1423,10 +1423,10 @@ Entry {
     ],
     pos: None,
     archaic: false,
-    description: Some(
+    description: None,
+    note: Some(
         "plural",
     ),
-    note: true,
     comment: None,
 }
 
@@ -1490,7 +1490,7 @@ Entry {
     pos: None,
     archaic: false,
     description: None,
-    note: false,
+    note: None,
     comment: Some(
         "ODE: archaic, M-W: 'or' but can find little evidence of use",
     ),
