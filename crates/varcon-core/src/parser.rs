@@ -991,6 +991,15 @@ impl Entry {
 
     fn parse_description(input: &mut &str) -> PResult<Self, ()> {
         trace("description", move |input: &mut &str| {
+            let mut entry = Self {
+                variants: Vec::new(),
+                pos: None,
+                archaic: false,
+                note: false,
+                description: None,
+                comment: None,
+            };
+
             let _ = opt((space1, "<abbr>")).parse_next(input)?;
             let _ = opt((space1, "<pl>")).parse_next(input)?;
             let pos = opt((space1, delimited('<', cut_err(Pos::parse_), cut_err('>'))))
@@ -999,20 +1008,11 @@ impl Entry {
             let note = opt((space1, NOTE_PREFIX)).parse_next(input)?;
             let description = opt((space1, description)).parse_next(input)?;
 
-            let variants = Vec::new();
-            let pos = pos.map(|(_, p)| p);
-            let archaic = archaic.is_some();
-            let note = note.is_some();
-            let description = description.map(|(_, d)| d.to_owned());
-            let e = Self {
-                variants,
-                pos,
-                archaic,
-                note,
-                description,
-                comment: None,
-            };
-            Ok(e)
+            entry.pos = pos.map(|(_, p)| p);
+            entry.archaic = archaic.is_some();
+            entry.note = note.is_some();
+            entry.description = description.map(|(_, d)| d.to_owned());
+            Ok(entry)
         })
         .parse_next(input)
     }
