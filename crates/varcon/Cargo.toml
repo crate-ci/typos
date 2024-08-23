@@ -21,11 +21,11 @@ all = ["flags"]
 flags = ["varcon-core/flags"]
 
 [dependencies]
-varcon-core = { version = "^4.0", path = "../varcon-core" }
+varcon-core = { version = "^5.0", path = "../varcon-core" }
 
 [dev-dependencies]
 codegenrs = "3.0"
-varcon-core = { version = "^4.0", path = "../varcon-core", features = ["parser"] }
+varcon-core = { version = "^5.0", path = "../varcon-core", features = ["parser"] }
 snapbox = "0.6.5"
 
 [lints]

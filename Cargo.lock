@@ -1501,7 +1501,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "4.0.10"
+version = "5.0.0"
 dependencies = [
  "enumflags2",
  "snapbox",
