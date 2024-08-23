@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Update varcon (locale data) to version 2020.12.07
+
 ## [1.23.7] - 2024-08-22
 
 ### Fixes
