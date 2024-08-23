@@ -25,3 +25,6 @@ enumflags2 = { version = "0.7", optional = true }
 
 [lints]
 workspace = true
+
+[dev-dependencies]
+snapbox = "0.6.17"
