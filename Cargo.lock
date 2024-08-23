@@ -1310,7 +1310,7 @@ checksum = "6af6ae20167a9ece4bcb41af5b80f8a1f1df981f6391189ce00fd257af04126a"
 
 [[package]]
 name = "typos"
-version = "0.10.27"
+version = "0.10.28"
 dependencies = [
  "anyhow",
  "bstr",
@@ -1374,7 +1374,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.11.25"
+version = "0.11.26"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1389,7 +1389,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.8.20"
+version = "0.8.21"
 dependencies = [
  "codegenrs",
  "dictgen",
