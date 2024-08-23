@@ -124,8 +124,9 @@ pub enum Pos {
     Verb = 0x02,
     Adjective = 0x04,
     Adverb = 0x08,
-    Interjection = 0x10,
-    Preposition = 0x20,
+    AdjectiveOrAdverb = 0x10,
+    Interjection = 0x20,
+    Preposition = 0x40,
 }
 
 #[cfg(feature = "flags")]

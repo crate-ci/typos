@@ -970,6 +970,8 @@ impl Entry {
             let comment =
                 opt((comment_sep, space1, winnow::ascii::till_line_ending)).parse_next(input)?;
 
+            let _ = winnow::ascii::space0.parse_next(input)?;
+
             e.variants = variants;
             e.comment = comment.map(|c| c.2.to_owned());
             Ok(e)
@@ -1001,6 +1003,13 @@ impl Entry {
                 entry.description = opt(preceded(space1, description))
                     .parse_next(input)?
                     .map(|d| d.to_owned());
+
+                if opt((winnow::ascii::space0, '|'))
+                    .parse_next(input)?
+                    .is_some()
+                {
+                    entry.note = opt(preceded(space1, note)).parse_next(input)?;
+                }
             }
             Ok(entry)
         })
@@ -1020,7 +1029,7 @@ fn archaic(input: &mut &str) -> PResult<(), ()> {
 }
 
 fn description(input: &mut &str) -> PResult<String, ()> {
-    let description = winnow::token::take_till(0.., ('\n', '\r', '#')).parse_next(input)?;
+    let description = winnow::token::take_till(0.., ('\n', '\r', '#', '|')).parse_next(input)?;
     Ok(description.to_owned())
 }
 
@@ -1437,6 +1446,56 @@ Entry {
     }
 
     #[test]
+    fn test_description_and_note() {
+        // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
+        // cases.
+        let (input, actual) = Entry::parse_
+            .parse_peek("A B: wizz | as in \"gee whiz\" | -- Ox: informal, chiefly N. Amer.\n")
+            .unwrap();
+        assert_data_eq!(
+            input,
+            str![[r#"
+
+
+"#]]
+        );
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+Entry {
+    variants: [
+        Variant {
+            types: [
+                Type {
+                    category: American,
+                    tag: None,
+                    num: None,
+                },
+                Type {
+                    category: BritishIse,
+                    tag: None,
+                    num: None,
+                },
+            ],
+            word: "wizz",
+        },
+    ],
+    pos: None,
+    archaic: false,
+    description: Some(
+        "as in /"gee whiz/" ",
+    ),
+    note: Some(
+        "Ox: informal, chiefly N. Amer.",
+    ),
+    comment: None,
+}
+
+"#]]
+        );
+    }
+
+    #[test]
     fn test_trailing_comment() {
         let (input, actual) = Entry::parse_.parse_peek(
             "A B: accursed / AV B-: accurst # ODE: archaic, M-W: 'or' but can find little evidence of use\n",
@@ -1511,9 +1570,15 @@ impl Variant {
     fn parse_(input: &mut &str) -> PResult<Self, ()> {
         trace("variant", move |input: &mut &str| {
             let types = winnow::combinator::separated(1.., Type::parse_, space1);
+            let columns =
+                winnow::combinator::separated(0.., winnow::ascii::digit1, space1).map(|()| ());
             let sep = (":", winnow::ascii::space0);
-            let (types, word) =
-                winnow::combinator::separated_pair(types, sep, word).parse_next(input)?;
+            let ((types, _, _columns), word) = winnow::combinator::separated_pair(
+                (types, winnow::ascii::space0, columns),
+                sep,
+                word,
+            )
+            .parse_next(input)?;
             let v = Self { types, word };
             Ok(v)
         })
@@ -1622,6 +1687,35 @@ Variant {
         },
     ],
     word: "air gun",
+}
+
+"#]]
+        );
+    }
+
+    #[test]
+    fn test_columns() {
+        // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
+        // cases.
+        let (input, actual) = Variant::parse_.parse_peek("A B 1 2: aeries").unwrap();
+        assert_data_eq!(input, str![""]);
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+Variant {
+    types: [
+        Type {
+            category: American,
+            tag: None,
+            num: None,
+        },
+        Type {
+            category: BritishIse,
+            tag: None,
+            num: None,
+        },
+    ],
+    word: "aeries",
 }
 
 "#]]
@@ -1874,6 +1968,7 @@ impl Pos {
                 "V".value(Pos::Verb),
                 "Adj".value(Pos::Adjective),
                 "Adv".value(Pos::Adverb),
+                "A".value(Pos::AdjectiveOrAdverb),
                 "Inj".value(Pos::Interjection),
                 "Prep".value(Pos::Preposition),
             ))

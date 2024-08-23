@@ -1,8 +1,9 @@
 Variant Conversion Info (VarCon)
+********************************
 
-Version 2019.10.06
+Version 2020.12.07
 
-Copyright 2000-2016 by Kevin Atkinson (kevina@gnu.org) and Benjamin
+Copyright 2000-2020 by Kevin Atkinson (kevina@gnu.org) and Benjamin
 Titze (btitze@protonmail.ch).
 
 This package contains information to convert between American,
@@ -11,9 +12,17 @@ other variant information.
 
 The latest version can be found at http://wordlist.aspell.net/.
 
+
+File Format
+===========
+
 The main data file is varcon.txt.  It contains information on the
-preferred American, British, and Canadian spelling of a word as well
-as other variant information.
+preferred American, British, Canadian and Australian spelling of a
+word as well as other variant information.
+
+
+Varcon Lines
+------------
 
 Each line contains a mapping between the various spellings of a word.
 Words are tagged to indicate where the spelling is used, and each
@@ -32,6 +41,7 @@ spelling is sometimes used in America (as indicated the "Av").
 More generally each tag consists of a spelling category (for example
 "A") followed possible by a variant indicator.  The spelling
 categories are as follows:
+
   A: American
   B: British "ise" spelling
   Z: British "ize" spelling or OED preferred Spelling
@@ -39,7 +49,9 @@ categories are as follows:
   D: Australian
   _: Other (Variant info based on American dictionaries, never used
             with any of the above).
+
 and the variants tags are as follows:
+
   .: equal
   v: variant
   V: seldom used variant
@@ -66,6 +78,13 @@ If there are no tags with the 'Z' spelling category on the line then
 'B' implies 'Z'.  Similarly if there are no 'C' tags then 'Z' implies
 'C'.  If there are no 'D' tags then 'B' implies 'D'.
 
+Some entries may have a number after the tags, this is a column
+number and will be explained later.
+
+
+Varcon Clusters
+---------------
+
 For ease of reading and maintaining the data file, each line is
 grouped in a cluster of closely related words.  Each cluster is
 uniquely identified by a headword, which is generally the American
@@ -86,10 +105,26 @@ the headword is found in.  The levels generally mean the following:
          unabridged dictionary
    > 80: May not even be a legal word
 
-Sometimes the spelling of a word depends on the usage.  If so the word
-is listed more than once within a cluster, with any usage information
-being indicated after a " | ".  For example here is part of the cluster
-for prize:
+Earlier versions of varcon contained numerous errors.  With version
+5.0 massive effort has been made to correct many of these errors.
+Clusters that have undergone some form of verification (and likely
+correction) are marked with "<verified>".  As of version 5.0, most
+clusters with headwords word in common usage (SCOWL level 35 and
+below) should now be checked, as well as many others.  No effort was
+made to check clusters with headwords in SCOWL level 80 and above;
+many of those entries are unlikely to be in the dictionary anyway.
+
+
+Varcon Groups
+-------------
+
+Sometimes the spelling of a word depends on the usage in which case a
+cluster is split into multiple groups with each group represting one
+usage of a word.  Usage annotations and/or pos tags are used to
+distinguish one group from another.
+
+Usage information is given after a " | ".  For example here is part of
+the cluster for prize:
   A B: prize | reward
   A B: prizes | reward
   A C: prize / B: prise | otherwise
@@ -102,50 +137,90 @@ consists of a number, for example:
   A B: sake | :1
   A C: sake / Av B Cv: saki | :2
 
-Sometimes part-of-speech (POS) info is given to help distinguish which
-form is used.  For example:
+A part-of-speech (POS) tag may also given after a " | ", for example:
   A B C: practice / AV Cv: practise | <N>
   A Cv: practice / AV B C: practise | <V>
-POS info is always given in the form "<POS>" and if a definition
+POS tags are always given in the form "<POS>" and if a definition
 is also given the POS info is always first.  The POS tags used are as
 follows:
   <N>: Noun
   <V>: Verb
   <Adj>: Adjective
   <Adv>: Adverb
+  <A>: Adjective or Adverb
+  <Inj>
+  <Prep>
+  <abbr>
+
+
+Additional Annotations
+----------------------
 
 A "(-)" before the definition indicated a rarely used or archaic form
 of a word, for example:
   A B: bark | :1
   A: bark / Av B: barque | (-) ship
 
-A "--" indicates a note rather than definition.  This is generally
-used to indicate that the spelling of the plural form not depend on
-the spelling of the root word, for example:
-  _: cabby / _.: cabbie
-  _: cabbies | -- plural
+A "| -- pl: someword" indicates that the word is a plural and the root
+is someword.
 
-Misc. notes on a particular form of a word are given after a "#" on
-the same line.  Misc. notes for the cluster are given at the end of
-the cluster and are prefixed with "##", for example:
+A plain "| -- pl" indicates that the word is a plural and the root is
+elsewhere within the group.  It is used when one form of the plural is
+the same as the root word, for example:
+  _1: yak | :1
+  _ 1: yaks / _V 1: yak | :1 | -- pl
+  _ 1: yak's | :1
+
+A "| --" otherwise indicates a note which gives additional context but
+does not create it's own group like a definition does.
+
+A "#" after a line indicates a comment that is often used to indicate
+why.  A "##" after a cluster indicates the the comment applies to the
+entire cluster, for example:
   # coloration <verified> (level 50)
   A B C: coloration / B. Cv: colouration
   A B C: colorations / B. Cv: colourations
   A B C: coloration's / B. Cv: colouration's
   ## OED has coloration as the preferred spelling and discolouration as a
   ## variant for British Engl or some reason
-In the notes ODE (not to be confused with OED) stands for Oxford
+In the comments ODE (not to be confused with OED) stands for Oxford
 Dictionary of English, "Ox" is used for any Oxford dictionary, and
 "M-W" for Merriam-Webster.
 
-Earlier versions of varcon contained numerous errors.  With version
-5.0 massive effort has been made to correct many of these errors.
-Clusters that have undergone some form of verification (and likely
-correction) are marked with "<verified>".  As of version 5.0, most
-clusters with headwords word in common usage (SCOWL level 35 and
-below) should now be checked, as well as many others.  No effort was
-made to check clusters with headwords in SCOWL level 80 and above;
-many of those entries are unlikely to be in the dictionary anyway.
+
+Varcon Columns
+--------------
+
+Varcon does not directly expresses the relation of words within a
+group as it is normally easy to derive.  For example given a simple
+group of:
+  A: acknowledgment / B: acknowledgement
+  A: acknowledgments / B: acknowledgements
+  A: acknowledgment's / B: acknowledgement's
+it is clear that acknowledgments is the plural form of acknowledgment
+since they are both the American spelling of a word.  While
+acknowledgEments is the plural form of acknowledgEment since they are
+both the British forms of a word.  Within a group each varcon line
+is considered a row in a table and each entry within a line is considered
+a column.  Within this group the first column is the American spelling
+and the second is the British.
+
+Sometime the column assignment unclear, when they are explicit column
+numbers may be given.  For example:
+  A B: caulk / Av: calk / AV Bv 1: caulking / AV 2: calking | <N> :3
+  A B: caulks / Av: calks / AV Bv 1: caulkings / AV 2: calkings | <N> :3
+  A B: caulk's / Av: calk's / AV Bv 1: caulking's / AV 2: calking's | <N> :3
+
+Each column must contain exactly one spelling of the base form of a
+word, however a column may contain multiple derived forms for a single
+spelling of the base form, for example:
+  A B D 1: amoeba / Av Dv 2: ameba
+  A B D 1: amoebas / Av Bv Dv 1: amoebae / Av Dv 2: amebas / Av Dv 2: amebae
+  A B D 1: amoeba's / Av Dv 2: ameba's
+
+
+Additional Files
+================
 
 The file variant-also.tab contains additional mappings between various
 spellings of a word which are not yet in varcon.txt.  No attempt is
@@ -155,6 +230,7 @@ automatically from the AGID inflection database.  The file
 variant-wroot.tab is like variant-infl.tab except that it also
 included the root form of the word.
 
+
 The file voc.tab is similar to varcon.txt but converts between
 vocabulary instead of spelling.  Unlike varcon.tab it is a simple tab
 separated file with the fields corresponding to the American, British,
@@ -163,10 +239,12 @@ the same thing the words are separated with commas.  The last column
 contains additional notes on when the word is used.  Unlike varcon.txt
 it is generally not suitable for automatic conversion.
 
+
 The "make-variant" Perl script will combine varcon.txt,
 variant-also.tab, and variant-infl.tab into one huge mapping and will
 output the result to "variant.tab".  If the "no-infl" option is given
 than variant-infl.tab will not be included.
+
 
 The "split" script will split out the information in varcon.txt into
 several word lists named as follows:
@@ -181,6 +259,7 @@ as follows:
   V => 1
   - => 2
 "-uncommon" is used for forms marked with "(-)" as already described.
+
 
 The "translate" Perl script will translate a text file from one
 spelling to another. Its usage is:
@@ -199,8 +278,13 @@ Text is read in from standard input and is outputted to standard out.
 Words are marked with a '?' before and after the questionable word
 when the option is enabled.
 
+
 The file varcon.pm contains some library routines for parsing
 varcon.txt and is used by many of the scripts above.
+
+
+Feedback
+========
 
 If you discover any errors in these mappings or have suggestions for
 additions please file a bug report at
@@ -208,7 +292,9 @@ https://github.com/kevina/wordlist/issues, or alternatively email me
 directly at kevina@gnu.org, but I will likely tell you to file a bug
 report so that I don't forget about it.
 
-SOURCE:
+
+Sources
+=======
 
 These mappings were compiled from numerous sources.
 
@@ -296,9 +382,22 @@ The primary sources for this addition were:
     http://blogs.usyd.edu.au/elac/2008/01/webster_in_australia.html
 
 
-CHANGELOG:
+Changelog
+=========
 
-From 2017.08.24 to 2018.10.06
+From 2018.10.06 to 2020.12.07
+
+   - Additional documentation on file format
+
+   - Minor change in file format
+
+   - Fix scripts to work with modern versions of Perl.
+
+   - Various new entries
+
+   - Additional cleanups
+
+From 2017.08.24 to 2019.10.06
 
    - Added entries for: eukaryote, prokaryote, virtualization, volcanism
 
@@ -423,9 +522,11 @@ From Revision 1 to Revision 2 (January 27, 2001)
     words in them. 
   - Added variant-infl.tab
 
-COPYRIGHT:
 
-Copyright 2000-2018 by Kevin Atkinson
+Copyright
+=========
+
+Copyright 2000-2019 by Kevin Atkinson
 
 Permission to use, copy, modify, distribute and sell this array, the
 associated software, and its documentation for any purpose is hereby
