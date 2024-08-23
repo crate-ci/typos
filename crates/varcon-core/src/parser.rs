@@ -992,7 +992,8 @@ impl Entry {
 
     fn parse_description(input: &mut &str) -> PResult<Self, ()> {
         trace("description", move |input: &mut &str| {
-            let (_plural, pos, archaic, note, description) = (
+            let (_abbr, _plural, pos, archaic, note, description) = (
+                winnow::combinator::opt((winnow::ascii::space1, "<abbr>")),
                 winnow::combinator::opt((winnow::ascii::space1, "<pl>")),
                 winnow::combinator::opt((winnow::ascii::space1, delimited('<', Pos::parse_, '>'))),
                 winnow::combinator::opt((winnow::ascii::space1, "(-)")),
@@ -1386,9 +1387,7 @@ Entry {
     pos: None,
     archaic: false,
     note: false,
-    description: Some(
-        "<abbr>",
-    ),
+    description: None,
     comment: None,
 }
 
