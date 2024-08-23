@@ -993,21 +993,21 @@ impl Entry {
 
     fn parse_description(input: &mut &str) -> PResult<Self, ()> {
         trace("description", move |input: &mut &str| {
-            let (_abbr, _plural, pos, archaic, note, description) = (
-                winnow::combinator::opt((winnow::ascii::space1, "<abbr>")),
-                winnow::combinator::opt((winnow::ascii::space1, "<pl>")),
-                winnow::combinator::opt((
-                    winnow::ascii::space1,
-                    delimited('<', cut_err(Pos::parse_), cut_err('>')),
-                )),
-                winnow::combinator::opt((winnow::ascii::space1, "(-)")),
-                winnow::combinator::opt((winnow::ascii::space1, "--")),
-                winnow::combinator::opt((
-                    winnow::ascii::space1,
-                    winnow::token::take_till(0.., ('\n', '\r', '#')),
-                )),
-            )
-                .parse_next(input)?;
+            let _ = winnow::combinator::opt((winnow::ascii::space1, "<abbr>")).parse_next(input)?;
+            let _ = winnow::combinator::opt((winnow::ascii::space1, "<pl>")).parse_next(input)?;
+            let pos = winnow::combinator::opt((
+                winnow::ascii::space1,
+                delimited('<', cut_err(Pos::parse_), cut_err('>')),
+            ))
+            .parse_next(input)?;
+            let archaic =
+                winnow::combinator::opt((winnow::ascii::space1, "(-)")).parse_next(input)?;
+            let note = winnow::combinator::opt((winnow::ascii::space1, "--")).parse_next(input)?;
+            let description = winnow::combinator::opt((
+                winnow::ascii::space1,
+                winnow::token::take_till(0.., ('\n', '\r', '#')),
+            ))
+            .parse_next(input)?;
 
             let variants = Vec::new();
             let pos = pos.map(|(_, p)| p);
