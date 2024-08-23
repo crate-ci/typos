@@ -1351,6 +1351,52 @@ Entry {
     }
 
     #[test]
+    fn test_abbr() {
+        // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
+        // cases.
+        let (input, actual) = Entry::parse_.parse_peek("A B: ha | <abbr>\n").unwrap();
+        assert_data_eq!(
+            input,
+            str![[r#"
+
+
+"#]]
+        );
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+Entry {
+    variants: [
+        Variant {
+            types: [
+                Type {
+                    category: American,
+                    tag: None,
+                    num: None,
+                },
+                Type {
+                    category: BritishIse,
+                    tag: None,
+                    num: None,
+                },
+            ],
+            word: "ha",
+        },
+    ],
+    pos: None,
+    archaic: false,
+    note: false,
+    description: Some(
+        "<abbr>",
+    ),
+    comment: None,
+}
+
+"#]]
+        );
+    }
+
+    #[test]
     fn test_archaic() {
         // Having nothing after `A` causes an incomplete parse. Shouldn't be a problem for my use
         // cases.
