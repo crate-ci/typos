@@ -997,18 +997,23 @@ impl Entry {
                 let pos = opt((space1, delimited('<', cut_err(Pos::parse_), cut_err('>'))))
                     .parse_next(input)?;
                 let archaic = opt((space1, archaic)).parse_next(input)?;
-                let note = opt((space1, NOTE_PREFIX, space1, description)).parse_next(input)?;
+                let note = opt((space1, note)).parse_next(input)?;
                 let description = opt((space1, description)).parse_next(input)?;
 
                 entry.pos = pos.map(|(_, p)| p);
                 entry.archaic = archaic.is_some();
-                entry.note = note.map(|(_, _, _, d)| d.to_owned());
+                entry.note = note.map(|(_, d)| d.to_owned());
                 entry.description = description.map(|(_, d)| d.to_owned());
             }
             Ok(entry)
         })
         .parse_next(input)
     }
+}
+
+fn note(input: &mut &str) -> PResult<String, ()> {
+    let (_, _, note) = (NOTE_PREFIX, space1, description).parse_next(input)?;
+    Ok(note.to_owned())
 }
 
 const NOTE_PREFIX: &str = "--";
