@@ -1936,6 +1936,7 @@ impl Pos {
                 "V".value(Pos::Verb),
                 "Adj".value(Pos::Adjective),
                 "Adv".value(Pos::Adverb),
+                "Inj".value(Pos::Interjection),
             ))
             .parse_next(input)
         })
