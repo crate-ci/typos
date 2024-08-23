@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Remove unverified varcon (locale data) entries
+
 ## [1.24.0] - 2024-08-23
 
 ### Features
