@@ -166,6 +166,7 @@ fn is_always_invalid(data: &[(&str, varcon::CategorySet)]) -> bool {
 fn entries() -> BTreeMap<String, varcon_core::Entry> {
     varcon::VARCON
         .iter()
+        .filter(|c| c.verified)
         .flat_map(|c| c.entries.iter())
         .filter(|e| {
             e.variants
