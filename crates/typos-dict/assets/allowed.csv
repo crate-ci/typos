@@ -40,3 +40,5 @@ inout,keyword in many languages but used in many more
 kms,common enough acronym for Key Management Service
 doas,built-in OpenBSD alternative to sudo (and has been ported to other systems)
 healthz,common name for health check endpoints
+readd,as in re-add but as an identifier
+unices,alt plural of unixes
