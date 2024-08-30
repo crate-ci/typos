@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Performance
+
+- Cap unbounded parsing to avoid worst case performance (hit with test data)
+
 ## [1.24.1] - 2024-08-23
 
 ### Fixes
