@@ -141,6 +141,10 @@ mod parser {
     use winnow::stream::StreamIsPartial;
     use winnow::token::{one_of, take_while};
 
+    /// Avoid worst-case parse times by limiting how much a `take_while` can take if something
+    /// later may cause it to fail.
+    const NON_TERMINATING_CAP: usize = 1024;
+
     pub(crate) fn next_identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
@@ -446,7 +450,7 @@ mod parser {
         trace(
             "email",
             (
-                take_while(1.., is_localport_char),
+                take_while(1..NON_TERMINATING_CAP, is_localport_char),
                 '@',
                 take_while(1.., is_domain_char),
             )
@@ -466,15 +470,18 @@ mod parser {
             "url",
             (
                 opt((
-                    take_while(1.., is_scheme_char),
+                    take_while(1..NON_TERMINATING_CAP, is_scheme_char),
                     // HACK: Technically you can skip `//` if you don't have a domain but that would
                     // get messy to support.
                     (':', '/', '/'),
                 )),
                 (
                     opt((url_userinfo, '@')),
-                    take_while(1.., is_domain_char),
-                    opt((':', take_while(1.., AsChar::is_dec_digit))),
+                    take_while(1..NON_TERMINATING_CAP, is_domain_char),
+                    opt((
+                        ':',
+                        take_while(1..NON_TERMINATING_CAP, AsChar::is_dec_digit),
+                    )),
                 ),
                 '/',
                 // HACK: Too lazy to enumerate
@@ -495,8 +502,8 @@ mod parser {
         trace(
             "userinfo",
             (
-                take_while(1.., is_localport_char),
-                opt((':', take_while(0.., is_localport_char))),
+                take_while(1..NON_TERMINATING_CAP, is_localport_char),
+                opt((':', take_while(0..NON_TERMINATING_CAP, is_localport_char))),
             )
                 .take(),
         )
@@ -515,7 +522,11 @@ mod parser {
         // incorrectly, we opt for just not evaluating it at all.
         trace(
             "escape",
-            (take_while(1.., is_escape), take_while(0.., is_xid_continue)).take(),
+            (
+                take_while(1..NON_TERMINATING_CAP, is_escape),
+                take_while(0.., is_xid_continue),
+            )
+                .take(),
         )
         .parse_next(input)
     }
