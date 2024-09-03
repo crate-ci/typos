@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Offer a correction for `grather`
+
 ## [1.24.3] - 2024-08-30
 
 ### Fixes
