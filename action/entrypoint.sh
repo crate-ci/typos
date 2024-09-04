@@ -27,16 +27,26 @@ if [[ ! -x ${COMMAND} ]]; then
     else
         ARCH="x86_64"
     fi
-    if [[ "$(uname -s)" == "Darwin" ]]; then
+    UNAME=$(uname -s)
+    if [[ "$UNAME" == "Darwin" ]]; then
         TARGET_FILE="${ARCH}-apple-darwin"
+        FILE_EXT="tar.gz"
+    elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* || "$UNAME" == MSYS* ]] ; then
+        TARGET_FILE="${ARCH}-pc-windows-msvc"
+        FILE_EXT="zip"
     else
         TARGET_FILE="${ARCH}-unknown-linux-musl"
+        FILE_EXT="tar.gz"
     fi
-    FILE_NAME="typos-v${VERSION}-${TARGET_FILE}.tar.gz"
+    FILE_NAME="typos-v${VERSION}-${TARGET_FILE}.${FILE_EXT}"
     log "Downloading 'typos' v${VERSION}"
     wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/${FILE_NAME}"
     mkdir -p ${_INSTALL_DIR}
-    tar -xzvf "${FILE_NAME}" -C ${_INSTALL_DIR} ./${CMD_NAME}
+    if [[ "$FILE_EXT" == "zip" ]]; then
+        unzip -o "${FILE_NAME}" -d ${_INSTALL_DIR} ${CMD_NAME}.exe
+    else
+        tar -xzvf "${FILE_NAME}" -C ${_INSTALL_DIR} ./${CMD_NAME}
+    fi
     rm "${FILE_NAME}"
 fi
 log "jq: $(jq --version)"
