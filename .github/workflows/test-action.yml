@@ -6,11 +6,15 @@ jobs:
     name: Spell Check with Typos
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout Actions Repository
       uses: actions/checkout@v4
+
+    - name: Install wget for Windows
+      if: matrix.os == 'windows-latest'
+      run: choco install wget --no-progress
 
     - name: Prepare file with mistakes.
       run: echo "Finallizes" > file.txt
@@ -31,13 +35,17 @@ jobs:
     name: Spell Check with Type w/History
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout Actions Repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - name: Install wget for Windows
+      if: matrix.os == 'windows-latest'
+      run: choco install wget --no-progress
 
     - name: Prepare file with mistakes.
       run: echo "Finallizes" > file.txt
