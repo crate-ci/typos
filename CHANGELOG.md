@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- *(action)* Support windows
+
 ## [1.24.4] - 2024-09-03
 
 ### Fixes
