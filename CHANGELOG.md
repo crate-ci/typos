@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Respect negation (`!`) in `extend-exclude`
+
 ## [1.24.5] - 2024-09-04
 
 ### Features
