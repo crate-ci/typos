@@ -261,7 +261,17 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
                     }
                 }
             }
-            walk.overrides(overrides);
+            walk.filter_entry(move |entry| {
+                let path = entry.path();
+                let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
+                let matched = overrides.matched(path, is_dir);
+                log::debug!("match({path:?}, {is_dir}) == {matched:?}");
+                match matched {
+                    ignore::Match::None => true,
+                    ignore::Match::Ignore(_) => false,
+                    ignore::Match::Whitelist(_) => true,
+                }
+            });
         }
 
         // HACK: Diff doesn't handle mixing content
