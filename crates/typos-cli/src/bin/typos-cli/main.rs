@@ -241,27 +241,35 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             walk.sort_by_file_name(|a, b| a.cmp(b));
         }
         if !walk_policy.extend_exclude.is_empty() {
-            let mut overrides = ignore::overrides::OverrideBuilder::new(".");
+            let mut ignores = ignore::gitignore::GitignoreBuilder::new(".");
             for pattern in walk_policy.extend_exclude.iter() {
-                overrides
-                    .add(&format!("!{pattern}"))
+                ignores
+                    .add_line(None, pattern)
                     .with_code(proc_exit::sysexits::CONFIG_ERR)?;
             }
-            let overrides = overrides
-                .build()
-                .with_code(proc_exit::sysexits::CONFIG_ERR)?;
+            let ignores = ignores.build().with_code(proc_exit::sysexits::CONFIG_ERR)?;
             if args.force_exclude {
                 let mut ancestors = path.ancestors().collect::<Vec<_>>();
                 ancestors.reverse();
                 for path in ancestors {
-                    match overrides.matched(path, path.is_dir()) {
+                    match ignores.matched(path, path.is_dir()) {
                         ignore::Match::None => {}
                         ignore::Match::Ignore(_) => continue 'path,
                         ignore::Match::Whitelist(_) => break,
                     }
                 }
             }
-            walk.overrides(overrides);
+            walk.filter_entry(move |entry| {
+                let path = entry.path();
+                let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
+                let matched = ignores.matched(path, is_dir);
+                log::debug!("match({path:?}, {is_dir}) == {matched:?}");
+                match matched {
+                    ignore::Match::None => true,
+                    ignore::Match::Ignore(_) => false,
+                    ignore::Match::Whitelist(_) => true,
+                }
+            });
         }
 
         // HACK: Diff doesn't handle mixing content
