@@ -244,7 +244,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             let mut overrides = ignore::overrides::OverrideBuilder::new(".");
             for pattern in walk_policy.extend_exclude.iter() {
                 overrides
-                    .add(&format!("!{pattern}"))
+                    .add(pattern)
                     .with_code(proc_exit::sysexits::CONFIG_ERR)?;
             }
             let overrides = overrides
@@ -268,8 +268,8 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
                 log::debug!("match({path:?}, {is_dir}) == {matched:?}");
                 match matched {
                     ignore::Match::None => true,
-                    ignore::Match::Ignore(_) => false,
-                    ignore::Match::Whitelist(_) => true,
+                    ignore::Match::Ignore(_) => true,
+                    ignore::Match::Whitelist(_) => false,
                 }
             });
         }
