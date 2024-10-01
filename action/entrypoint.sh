@@ -21,7 +21,7 @@ fi
 
 
 if [[ ! -x ${COMMAND} ]]; then
-    VERSION=1.24.6
+    VERSION=1.25.0
     if [[ "$(uname -m)" == "arm64" ]]; then
         ARCH="aarch64"
     else
