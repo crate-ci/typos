@@ -5,7 +5,7 @@
   entry: typos
   args: [--write-changes, --force-exclude]
   types: [text]
-  stages: [commit, merge-commit, push, manual]
+  stages: [pre-commit, pre-merge-commit, pre-push, manual]
 
 - id: typos-docker
   name: typos
@@ -14,7 +14,7 @@
   entry: typos
   args: [--write-changes, --force-exclude]
   types: [text]
-  stages: [commit, merge-commit, push, manual]
+  stages: [pre-commit, pre-merge-commit, pre-push, manual]
 
 - id: typos-src
   name: typos
@@ -23,4 +23,4 @@
   entry: typos
   args: [--write-changes, --force-exclude]
   types: [text]
-  stages: [commit, merge-commit, push, manual]
+  stages: [pre-commit, pre-merge-commit, pre-push, manual]
