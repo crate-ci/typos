@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- *(pre-commit)* Requires 3.2+
+
+### Fixes
+
+- *(pre-commit)* Resolve deprecations in 4.0 about deprecated stage names
+
 ## [1.25.0] - 2024-10-01
 
 ### Fixes
