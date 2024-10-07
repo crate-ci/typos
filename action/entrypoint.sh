@@ -63,6 +63,11 @@ if [ "${INPUT_WRITE_CHANGES:-false}" == "true" ]; then
     ARGS+=" --write-changes"
 fi
 
+# Force exclude of files or patterns
+if [ "${INPUT_FORCE_EXCLUDE:-false}" == "true" ]; then
+    ARGS+=" --force-exclude"
+fi
+
 # Use a custom configuration file
 if [[ -n "${INPUT_CONFIG:-}" ]]; then
     ARGS+=" --config ${INPUT_CONFIG}"
