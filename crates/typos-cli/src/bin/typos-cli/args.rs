@@ -67,6 +67,10 @@ pub(crate) struct Args {
     #[arg(long, short = 'w', group = "mode", help_heading = "Mode")]
     pub(crate) write_changes: bool,
 
+    /// Prompt for each suggested correction whether to write the fix
+    #[arg(long, short = 'a', group = "mode", help_heading = "Mode")]
+    pub(crate) write_ask: bool,
+
     /// Debug: Print each file that would be spellchecked.
     #[arg(long, group = "mode", help_heading = "Mode")]
     pub(crate) files: bool,
