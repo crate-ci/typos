@@ -289,6 +289,8 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             &typos_cli::file::Identifiers
         } else if args.words {
             &typos_cli::file::Words
+        } else if args.write_ask {
+            &typos_cli::file::AskFixTypos
         } else if args.write_changes {
             &typos_cli::file::FixTypos
         } else if args.diff {
