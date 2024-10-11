@@ -1,4 +1,5 @@
 use bstr::ByteSlice;
+use dialoguer::{Confirm, Select};
 use std::io::Read;
 use std::io::Write;
 
@@ -126,6 +127,87 @@ impl FileChecker for FixTypos {
                         reporter.report(msg.into())?;
                     }
                 }
+                if !fixes.is_empty() {
+                    let new_path = fix_file_name(path, file_name, fixes.into_iter())?;
+                    std::fs::rename(path, new_path)?;
+                }
+            }
+        }
+
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Interactive;
+
+impl FileChecker for Interactive {
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        policy: &crate::policy::Policy<'_, '_, '_>,
+        reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        if policy.check_files {
+            let (buffer, content_type) = read_file(path, reporter)?;
+            let bc = buffer.clone();
+            if !explicit && !policy.binary && content_type.is_binary() {
+                let msg = report::BinaryFile { path };
+                reporter.report(msg.into())?;
+            } else {
+                let mut fixes = Vec::new();
+
+                let mut accum_line_num = AccumulateLineNum::new();
+                for typo in check_bytes(&bc, policy) {
+                    let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
+                    let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
+                    let msg = report::Typo {
+                        context: Some(report::FileContext { path, line_num }.into()),
+                        buffer: std::borrow::Cow::Borrowed(line),
+                        byte_offset: line_offset,
+                        typo: typo.typo.as_ref(),
+                        corrections: typo.corrections.clone(),
+                    };
+                    // HACK: we use the reporter to display the possible corrections to the user
+                    // this will be looking very ugly with the format set to anything else than json
+                    // technically we should only report typos when not correcting
+                    reporter.report(msg.into())?;
+
+                    if let Some(correction_index) = select_fix(&typo) {
+                        fixes.push((typo, correction_index));
+                    }
+                }
+
+                if !fixes.is_empty() || path == std::path::Path::new("-") {
+                    let buffer = fix_buffer(buffer, fixes.into_iter());
+                    write_file(path, content_type, buffer, reporter)?;
+                }
+            }
+        }
+
+        if policy.check_filenames {
+            if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let mut fixes = Vec::new();
+
+                for typo in check_str(file_name, policy) {
+                    let msg = report::Typo {
+                        context: Some(report::PathContext { path }.into()),
+                        buffer: std::borrow::Cow::Borrowed(file_name.as_bytes()),
+                        byte_offset: typo.byte_offset,
+                        typo: typo.typo.as_ref(),
+                        corrections: typo.corrections.clone(),
+                    };
+                    // HACK: we use the reporter to display the possible corrections to the user
+                    // this will be looking very ugly with the format set to anything else than json
+                    // technically we should only report typos when not correcting
+                    reporter.report(msg.into())?;
+
+                    if let Some(correction_index) = select_fix(&typo) {
+                        fixes.push((typo, correction_index));
+                    }
+                }
+
                 if !fixes.is_empty() {
                     let new_path = fix_file_name(path, file_name, fixes.into_iter())?;
                     std::fs::rename(path, new_path)?;
@@ -673,6 +755,35 @@ fn fix_file_name<'a>(
     let new_name = String::from_utf8(new_name).expect("corrections are valid utf-8");
     let new_path = path.with_file_name(new_name);
     Ok(new_path)
+}
+
+fn select_fix(typo: &typos::Typo<'_>) -> Option<usize> {
+    let corrections = match &typo.corrections {
+        typos::Status::Corrections(c) => c,
+        _ => return None,
+    };
+
+    if corrections.len() == 1 {
+        Confirm::new()
+            .with_prompt("Do you want to apply the fix suggested above?")
+            .default(true)
+            .show_default(true)
+            .interact()
+            .ok()?;
+
+        Some(0)
+    } else {
+        let mut items = corrections.clone();
+
+        items.insert(0, std::borrow::Cow::from("None (skip)"));
+        let selection = Select::new()
+            .with_prompt("Please choose one of the following suggestions")
+            .items(&items)
+            .default(0)
+            .interact()
+            .ok()?;
+        selection.checked_sub(1)
+    }
 }
 
 pub fn walk_path(

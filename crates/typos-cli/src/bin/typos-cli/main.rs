@@ -32,6 +32,14 @@ fn run() -> proc_exit::ExitResult {
 
     init_logging(args.verbose.log_level());
 
+    // HACK: Ensure the terminal gets reset to a good state if the user hits ctrl-c during a prompt
+    // https://github.com/console-rs/dialoguer/issues/294
+    ctrlc::set_handler(move || {
+        let _ = console::Term::stdout().show_cursor();
+        std::process::exit(130);
+    })
+    .expect("Failed to set handler for Ctrl+C needed to restore terminal defaults after killing the process");
+
     if let Some(output_path) = args.dump_config.as_ref() {
         run_dump_config(&args, output_path)
     } else if args.type_list {
@@ -289,6 +297,8 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             &typos_cli::file::Identifiers
         } else if args.words {
             &typos_cli::file::Words
+        } else if args.interactive {
+            &typos_cli::file::Interactive
         } else if args.write_changes {
             &typos_cli::file::FixTypos
         } else if args.diff {
