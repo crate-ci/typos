@@ -87,7 +87,7 @@ impl FileChecker for FixTypos {
                 let mut accum_line_num = AccumulateLineNum::new();
                 for typo in check_bytes(&buffer, policy) {
                     if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                        fixes.push((typo.into_owned(), 0));
                     } else {
                         let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
                         let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
@@ -114,7 +114,7 @@ impl FileChecker for FixTypos {
                 let mut fixes = Vec::new();
                 for typo in check_str(file_name, policy) {
                     if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                        fixes.push((typo.into_owned(), 0));
                     } else {
                         let msg = report::Typo {
                             context: Some(report::PathContext { path }.into()),
@@ -160,7 +160,7 @@ impl FileChecker for DiffTypos {
                 let mut accum_line_num = AccumulateLineNum::new();
                 for typo in check_bytes(&buffer, policy) {
                     if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                        fixes.push((typo.into_owned(), 0));
                     } else {
                         let line_num = accum_line_num.line_num(&buffer, typo.byte_offset);
                         let (line, line_offset) = extract_line(&buffer, typo.byte_offset);
@@ -188,7 +188,7 @@ impl FileChecker for DiffTypos {
                 let mut fixes = Vec::new();
                 for typo in check_str(file_name, policy) {
                     if is_fixable(&typo) {
-                        fixes.push(typo.into_owned());
+                        fixes.push((typo.into_owned(), 0));
                     } else {
                         let msg = report::Typo {
                             context: Some(report::PathContext { path }.into()),
@@ -642,10 +642,17 @@ fn is_fixable(typo: &typos::Typo<'_>) -> bool {
     extract_fix(typo).is_some()
 }
 
-fn fix_buffer<'a>(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'a>>) -> Vec<u8> {
+fn fix_buffer<'a>(
+    mut buffer: Vec<u8>,
+    typos: impl Iterator<Item = (typos::Typo<'a>, usize)>,
+) -> Vec<u8> {
     let mut offset = 0isize;
-    for typo in typos {
-        let fix = extract_fix(&typo).expect("Caller only provides fixable typos");
+    for (typo, correction_index) in typos {
+        let fix = match &typo.corrections {
+            typos::Status::Corrections(c) => Some(c[correction_index].as_ref()),
+            _ => None,
+        }
+        .expect("Caller provided invalid fix index");
         let start = ((typo.byte_offset as isize) + offset) as usize;
         let end = start + typo.typo.len();
 
@@ -659,7 +666,7 @@ fn fix_buffer<'a>(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'
 fn fix_file_name<'a>(
     path: &std::path::Path,
     file_name: &'a str,
-    fixes: impl Iterator<Item = typos::Typo<'a>>,
+    fixes: impl Iterator<Item = (typos::Typo<'a>, usize)>,
 ) -> Result<std::path::PathBuf, std::io::Error> {
     let file_name = file_name.to_owned().into_bytes();
     let new_name = fix_buffer(file_name, fixes);
@@ -777,10 +784,15 @@ mod test {
         let line = line.as_bytes().to_vec();
         let corrections = corrections
             .into_iter()
-            .map(|(byte_offset, typo, correction)| typos::Typo {
-                byte_offset,
-                typo: typo.into(),
-                corrections: typos::Status::Corrections(vec![correction.into()]),
+            .map(|(byte_offset, typo, correction)| {
+                (
+                    typos::Typo {
+                        byte_offset,
+                        typo: typo.into(),
+                        corrections: typos::Status::Corrections(vec![correction.into()]),
+                    },
+                    0,
+                )
             });
         let actual = fix_buffer(line, corrections);
         String::from_utf8(actual).unwrap()
