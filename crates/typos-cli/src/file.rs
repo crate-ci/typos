@@ -127,11 +127,7 @@ impl FileChecker for FixTypos {
                     }
                 }
                 if !fixes.is_empty() {
-                    let file_name = file_name.to_owned().into_bytes();
-                    let new_name = fix_buffer(file_name, fixes.into_iter());
-                    let new_name =
-                        String::from_utf8(new_name).expect("corrections are valid utf-8");
-                    let new_path = path.with_file_name(new_name);
+                    let new_path = fix_file_name(path, file_name, fixes.into_iter())?;
                     std::fs::rename(path, new_path)?;
                 }
             }
@@ -205,11 +201,7 @@ impl FileChecker for DiffTypos {
                     }
                 }
                 if !fixes.is_empty() {
-                    let file_name = file_name.to_owned().into_bytes();
-                    let new_name = fix_buffer(file_name, fixes.into_iter());
-                    let new_name =
-                        String::from_utf8(new_name).expect("corrections are valid utf-8");
-                    new_path = Some(path.with_file_name(new_name));
+                    new_path = fix_file_name(path, file_name, fixes.into_iter()).ok();
                 }
             }
         }
@@ -650,7 +642,7 @@ fn is_fixable(typo: &typos::Typo<'_>) -> bool {
     extract_fix(typo).is_some()
 }
 
-fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'static>>) -> Vec<u8> {
+fn fix_buffer<'a>(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'a>>) -> Vec<u8> {
     let mut offset = 0isize;
     for typo in typos {
         let fix = extract_fix(&typo).expect("Caller only provides fixable typos");
@@ -662,6 +654,18 @@ fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'stat
         offset += (fix.len() as isize) - (typo.typo.len() as isize);
     }
     buffer
+}
+
+fn fix_file_name<'a>(
+    path: &std::path::Path,
+    file_name: &'a str,
+    fixes: impl Iterator<Item = typos::Typo<'a>>,
+) -> Result<std::path::PathBuf, std::io::Error> {
+    let file_name = file_name.to_owned().into_bytes();
+    let new_name = fix_buffer(file_name, fixes);
+    let new_name = String::from_utf8(new_name).expect("corrections are valid utf-8");
+    let new_path = path.with_file_name(new_name);
+    Ok(new_path)
 }
 
 pub fn walk_path(
