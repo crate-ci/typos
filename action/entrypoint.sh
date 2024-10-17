@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 SOURCE_DIR="$(dirname -- ${BASH_SOURCE[0]:-$0})";
 
@@ -19,6 +19,21 @@ if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
     exit 1
 fi
 
+# Usage: download_file URL > filename
+if which curl >/dev/null 2>&1; then
+    download_file () {
+        command curl -fsSL "$@"
+    }
+    log "curl: $(curl --version | head -n 1)"
+elif which wget >/dev/null 2>&1; then
+    download_file () {
+        wget -O- "$@"
+    }
+    log "wget: $(wget --version | head -n 1)"
+else
+    echo "Could not find 'curl' or 'wget' in your path"
+    exit 1
+fi
 
 if [[ ! -x ${COMMAND} ]]; then
     VERSION=1.26.0
@@ -40,7 +55,8 @@ if [[ ! -x ${COMMAND} ]]; then
     fi
     FILE_NAME="typos-v${VERSION}-${TARGET_FILE}.${FILE_EXT}"
     log "Downloading 'typos' v${VERSION}"
-    wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/${FILE_NAME}"
+    URL="https://github.com/crate-ci/typos/releases/download/v${VERSION}/${FILE_NAME}"
+    download_file "${URL}" > "${FILE_NAME}"
     mkdir -p ${_INSTALL_DIR}
     if [[ "$FILE_EXT" == "zip" ]]; then
         unzip -o "${FILE_NAME}" -d ${_INSTALL_DIR} ${CMD_NAME}.exe
