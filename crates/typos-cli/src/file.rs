@@ -715,6 +715,10 @@ fn walk_entry(
         .iter()
         .any(|n| *n == entry.file_name())
     {
+        log::debug!(
+            "{}: skipping potemtial config file as it may have typos",
+            entry.path().display()
+        );
         return Ok(());
     }
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
