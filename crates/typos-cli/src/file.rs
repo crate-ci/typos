@@ -669,9 +669,10 @@ pub fn walk_path(
     checks: &dyn FileChecker,
     engine: &crate::policy::ConfigEngine<'_>,
     reporter: &dyn report::Report,
+    force_exclude: bool,
 ) -> Result<(), ignore::Error> {
     for entry in walk {
-        walk_entry(entry, checks, engine, reporter)?;
+        walk_entry(entry, checks, engine, reporter, force_exclude)?;
     }
     Ok(())
 }
@@ -681,11 +682,12 @@ pub fn walk_path_parallel(
     checks: &dyn FileChecker,
     engine: &crate::policy::ConfigEngine<'_>,
     reporter: &dyn report::Report,
+    force_exclude: bool,
 ) -> Result<(), ignore::Error> {
     let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match walk_entry(entry, checks, engine, reporter) {
+            match walk_entry(entry, checks, engine, reporter, force_exclude) {
                 Ok(()) => ignore::WalkState::Continue,
                 Err(err) => {
                     *error.lock().unwrap() = Err(err);
@@ -703,6 +705,7 @@ fn walk_entry(
     checks: &dyn FileChecker,
     engine: &crate::policy::ConfigEngine<'_>,
     reporter: &dyn report::Report,
+    force_exclude: bool,
 ) -> Result<(), ignore::Error> {
     let entry = match entry {
         Ok(entry) => entry,
@@ -722,7 +725,7 @@ fn walk_entry(
         return Ok(());
     }
     if entry.file_type().map(|t| t.is_file()).unwrap_or(true) {
-        let explicit = entry.depth() == 0;
+        let explicit = entry.depth() == 0 && !force_exclude;
         let (path, lookup_path) = if entry.is_stdin() {
             let path = std::path::Path::new("-");
             let cwd = std::env::current_dir().map_err(|err| {

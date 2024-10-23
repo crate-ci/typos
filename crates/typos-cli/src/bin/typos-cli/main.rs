@@ -298,13 +298,20 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         };
 
         if single_threaded {
-            typos_cli::file::walk_path(walk.build(), selected_checks, &engine, reporter)
+            typos_cli::file::walk_path(
+                walk.build(),
+                selected_checks,
+                &engine,
+                reporter,
+                args.force_exclude,
+            )
         } else {
             typos_cli::file::walk_path_parallel(
                 walk.build_parallel(),
                 selected_checks,
                 &engine,
                 reporter,
+                args.force_exclude,
             )
         }
         .map_err(|e| {

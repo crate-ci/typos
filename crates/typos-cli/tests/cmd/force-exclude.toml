@@ -1,5 +1,5 @@
 bin.name = "typos"
-args = "file.ignore ignore/file parent/ignore/file --force-exclude"
+args = "file.ignore ignore/file parent/ignore/file binary --force-exclude"
 stdin = ""
 stdout = ""
 stderr = ""
