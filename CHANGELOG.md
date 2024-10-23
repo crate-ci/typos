@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Respect `--force-exclude` for binary files
+
 ## [1.26.0] - 2024-10-07
 
 ### Compatibility
