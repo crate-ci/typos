@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.26.6] - 2024-10-24
+
 ## [1.26.5] - 2024-10-24
 
 ## [1.26.4] - 2024-10-24
@@ -1315,7 +1317,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.26.5...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.26.6...HEAD
+[1.26.6]: https://github.com/crate-ci/typos/compare/v1.26.5...v1.26.6
 [1.26.5]: https://github.com/crate-ci/typos/compare/v1.26.4...v1.26.5
 [1.26.4]: https://github.com/crate-ci/typos/compare/v1.26.3...v1.26.4
 [1.26.3]: https://github.com/crate-ci/typos/compare/v1.26.2...v1.26.3
