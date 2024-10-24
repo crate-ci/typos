@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Accept `tesselate` variants
+
 ## [1.26.1] - 2024-10-23
 
 ### Fixes
