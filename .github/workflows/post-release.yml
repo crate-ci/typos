@@ -32,7 +32,7 @@ jobs:
     name: create-release
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ env.TAG }}
+      tag: ${{ env.TAG }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
