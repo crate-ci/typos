@@ -19,40 +19,39 @@ on:
     tags:
     - "v*.*.*"
     - "!varcon*"
+
 env:
   BIN_NAME: typos
+
+# We need this to be able to create releases.
+permissions:
+  contents: write
+
 jobs:
   create-release:
     name: create-release
     runs-on: ubuntu-latest
     outputs:
-      upload_url: ${{ steps.release.outputs.upload_url }}
-      release_version: ${{ env.RELEASE_VERSION }}
+      version: ${{ env.TAG }}
     steps:
-    - name: Get the release version from the tag
-      shell: bash
-      if: env.RELEASE_VERSION == ''
-      run: |
-        # See: https://github.community/t5/GitHub-Actions/How-to-get-just-the-tag-name/m-p/32167/highlight/true#M1027
-        echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-        echo "version is: ${{ env.RELEASE_VERSION }}"
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 1
+    - name: Get the release version from the tag
+      if: env.TAG == ''
+      run: echo "TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+    - name: Show the tag
+      run: |
+        echo "tag is: $TAG"
     - name: Generate Release Notes
       run: |
-        ./.github/workflows/release-notes.py --tag ${{ env.RELEASE_VERSION }} --output notes-${{ env.RELEASE_VERSION }}.md
-        cat notes-${{ env.RELEASE_VERSION }}.md
+        ./.github/workflows/release-notes.py --tag ${{ env.TAG }} --output notes-${{ env.ERSION }}.md
+        cat notes-${{ env.TAG }}.md
     - name: Create GitHub release
-      id: release
-      uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ env.RELEASE_VERSION }}
-        release_name: ${{ env.RELEASE_VERSION }}
-        body_path: notes-${{ env.RELEASE_VERSION }}.md
+        GH_TOKEN: ${{ github.token }}
+      run: gh release create $TAG --verify-tag --draft --title $TAG --notes-file notes-${{ env.TAG }}.md
   build-release:
     name: build-release
     needs: create-release
@@ -99,7 +98,7 @@ jobs:
       shell: bash
       run: |
         outdir="./target/${{ matrix.target }}/release"
-        staging="${{ env.BIN_NAME }}-${{ needs.create-release.outputs.release_version }}-${{ matrix.target }}"
+        staging="${{ env.BIN_NAME }}-${{ needs.create-release.outputs.tag }}-${{ matrix.target }}"
         mkdir -p "$staging"/doc
         cp {README.md,LICENSE-*} "$staging/"
         cp {CHANGELOG.md,docs/*} "$staging/doc/"
@@ -116,11 +115,18 @@ jobs:
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
         fi
     - name: Upload release archive
-      uses: actions/upload-release-asset@v1.0.2
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.create-release.outputs.upload_url }}
-        asset_path: ${{ env.ASSET }}
-        asset_name: ${{ env.ASSET }}
-        asset_content_type: application/octet-stream
+        GH_TOKEN: ${{ github.token }}
+      shell: bash
+      run: |
+        tag="${{ needs.create-release.outputs.tag }}"
+        gh release upload "$tag" ${{ env.ASSET }}
+  publish-release:
+    name: Publish Release
+    needs: [prepare-release, build-release]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Publish Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh release edit "${{ needs.create-release.outputs.tag }}" --draft=false
