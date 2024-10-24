@@ -46,7 +46,7 @@ jobs:
         echo "tag is: $TAG"
     - name: Generate Release Notes
       run: |
-        ./.github/workflows/release-notes.py --tag ${{ env.TAG }} --output notes-${{ env.ERSION }}.md
+        ./.github/workflows/release-notes.py --tag ${{ env.TAG }} --output notes-${{ env.TAG }}.md
         cat notes-${{ env.TAG }}.md
     - name: Create GitHub release
       env:
