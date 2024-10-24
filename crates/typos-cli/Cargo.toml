@@ -1,6 +1,6 @@
 [package]
 name = "typos-cli"
-version = "1.26.4"
+version = "1.26.5"
 description = "Source Code Spelling Correction"
 readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
