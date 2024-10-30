@@ -719,7 +719,7 @@ fn walk_entry(
         .any(|n| *n == entry.file_name())
     {
         log::debug!(
-            "{}: skipping potemtial config file as it may have typos",
+            "{}: skipping potential config file as it may have typos",
             entry.path().display()
         );
         return Ok(());
