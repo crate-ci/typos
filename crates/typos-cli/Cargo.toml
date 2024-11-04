@@ -77,11 +77,13 @@ colorchoice-clap = "1.0.3"
 serde_regex = "1.1.0"
 regex = "1.10.4"
 encoding_rs = "0.8.34"
+anstyle-query = "1.1.2"
 
 [dev-dependencies]
 assert_fs = "1.1"
 divan = "0.1.14"
 snapbox = "0.6.5"
+temp-env = "0.3.6"
 trycmd = "0.15.4"
 
 [[bench]]

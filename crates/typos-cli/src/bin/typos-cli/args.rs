@@ -102,7 +102,7 @@ pub(crate) struct Args {
     pub(crate) format: Format,
 
     #[command(flatten, next_help_heading = "Output")]
-    pub(crate) color: colorchoice_clap::Color,
+    pub(crate) color: ColorArg,
 
     #[command(flatten, next_help_heading = "Output")]
     pub(crate) verbose: clap_verbosity_flag::Verbosity,
@@ -289,6 +289,54 @@ fn resolve_bool_arg(yes: bool, no: bool) -> Option<bool> {
     }
 }
 
+#[derive(Debug, clap::Args)]
+#[clap(mut_arg("color", ColorArg::documentation))]
+pub(crate) struct ColorArg {
+    #[command(flatten)]
+    pub(crate) color: colorchoice_clap::Color,
+}
+
+impl ColorArg {
+    pub(crate) fn write_global(&self) {
+        self.as_choice().write_global();
+    }
+
+    /// Augment the --color command-line switch documentation with information about
+    /// environment variables.
+    fn documentation(arg: clap::Arg) -> clap::Arg {
+        arg.help(concat!(
+            "Controls when to use color; respects the standard NO_COLOR, ",
+            "FORCE_COLOR, CLIFORCE and CLIFORCE_COLOR environment variables",
+        ))
+    }
+
+    /// Determine color choice from cli args and environment variables
+    fn as_choice(&self) -> anstream::ColorChoice {
+        // anstream::AutoStream::choice() will test NO_COLOR before accepting
+        // other env vars, so we need to test it here before testing
+        // FORCE_COLOR. Other env vars (CLICOLOR & CLICOLOR_FORCE) can be left
+        // to anstream to test for later when handling ColorChoice::Auto.
+        match self.color.as_choice() {
+            anstream::ColorChoice::Auto if anstyle_query::no_color() => {
+                anstream::ColorChoice::Never
+            }
+            anstream::ColorChoice::Auto if ColorArg::envvar_set("FORCE_COLOR") => {
+                anstream::ColorChoice::Always
+            }
+            choice => choice,
+        }
+    }
+
+    /// Test if key is an environment variable that exists and is not empty.
+    #[inline]
+    fn envvar_set<K: AsRef<std::ffi::OsStr>>(key: K) -> bool {
+        !std::env::var_os(key)
+            .as_deref()
+            .unwrap_or_default()
+            .is_empty()
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -297,5 +345,73 @@ mod test {
     fn verify_app() {
         use clap::CommandFactory;
         Args::command().debug_assert();
+    }
+
+    fn color_arg(choice: clap::ColorChoice) -> ColorArg {
+        ColorArg {
+            color: colorchoice_clap::Color { color: choice },
+        }
+    }
+
+    #[test]
+    fn test_color_arg_no_env_vars() {
+        let color_arg_auto = color_arg(clap::ColorChoice::Auto);
+        temp_env::with_vars_unset(["FORCE_COLOR", "NO_COLOR"], || {
+            assert_eq!(color_arg_auto.as_choice(), anstream::ColorChoice::Auto);
+        });
+    }
+
+    #[test]
+    fn test_color_arg_force_color() {
+        let color_arg_auto = color_arg(clap::ColorChoice::Auto);
+        temp_env::with_vars([("FORCE_COLOR", Some("1")), ("NO_COLOR", None)], || {
+            assert_eq!(color_arg_auto.as_choice(), anstream::ColorChoice::Always);
+        });
+    }
+
+    #[test]
+    fn test_color_arg_force_color_empty() {
+        let color_arg_auto = color_arg(clap::ColorChoice::Auto);
+        temp_env::with_vars([("FORCE_COLOR", Some("")), ("NO_COLOR", None)], || {
+            assert_eq!(color_arg_auto.as_choice(), anstream::ColorChoice::Auto);
+        });
+    }
+
+    #[test]
+    fn test_color_arg_no_color() {
+        let color_arg_auto = color_arg(clap::ColorChoice::Auto);
+        temp_env::with_vars([("FORCE_COLOR", None), ("NO_COLOR", Some("1"))], || {
+            assert_eq!(color_arg_auto.as_choice(), anstream::ColorChoice::Never);
+        });
+    }
+
+    #[test]
+    fn test_color_arg_no_color_trumps_force_color() {
+        let color_arg_auto = color_arg(clap::ColorChoice::Auto);
+        temp_env::with_vars(
+            [("FORCE_COLOR", Some("1")), ("NO_COLOR", Some("1"))],
+            || {
+                assert_eq!(color_arg_auto.as_choice(), anstream::ColorChoice::Never);
+            },
+        );
+    }
+
+    #[test]
+    fn test_explicit_never_arg_trumps_env_vars() {
+        let color_arg_never = color_arg(clap::ColorChoice::Never);
+        temp_env::with_vars(
+            [("FORCE_COLOR", Some("1")), ("NO_COLOR", Some("1"))],
+            || {
+                assert_eq!(color_arg_never.as_choice(), anstream::ColorChoice::Never);
+            },
+        );
+    }
+
+    #[test]
+    fn test_explicit_always_arg_trumps_env_vars() {
+            let color_arg_always = color_arg(clap::ColorChoice::Always);
+        temp_env::with_vars([("FORCE_COLOR", None), ("NO_COLOR", Some("1"))], || {
+            assert_eq!(color_arg_always.as_choice(), anstream::ColorChoice::Always);
+        });
     }
 }

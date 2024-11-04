@@ -46,8 +46,9 @@ Mode:
 Output:
       --format <FORMAT>  Render style for messages [default: long] [possible values: silent, brief,
                          long, json]
-      --color <WHEN>     Controls when to use color [default: auto] [possible values: auto, always,
-                         never]
+      --color <WHEN>     Controls when to use color; respects the standard NO_COLOR, FORCE_COLOR,
+                         CLIFORCE and CLIFORCE_COLOR environment variables [default: auto] [possible
+                         values: auto, always, never]
   -v, --verbose...       Increase logging verbosity
   -q, --quiet...         Decrease logging verbosity
 """
