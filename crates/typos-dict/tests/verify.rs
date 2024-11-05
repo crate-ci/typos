@@ -194,6 +194,7 @@ fn varcon_words() -> HashSet<UniCase<&'static str>> {
     // dictionary
     varcon::VARCON
         .iter()
+        .filter(|c| c.verified)
         .flat_map(|c| c.entries.iter())
         .flat_map(|e| e.variants.iter())
         .map(|v| UniCase::new(v.word))
