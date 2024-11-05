@@ -227,7 +227,7 @@ fn find_best_match<'c>(
     #[allow(clippy::single_match)]
     match (typo, correction) {
         // Picking the worst option due to a letter swap being an edit distance of two
-        ("alinging", "aligning") => {
+        ("alinging", "aligning") | ("alingment", "alignment") | ("alingments", "alignments") => {
             return None;
         }
         _ => {}
