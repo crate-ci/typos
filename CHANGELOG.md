@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `alingment` as `alignment`, rather than `alinement`
+
 ## [1.27.0] - 2024-11-01
 
 ### Features
