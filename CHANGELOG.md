@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixes
 
 - Don't correct `alloced`
-- Don't correct `registor`, a more domain specific variant of `register`
+- Don't correct `requestor`, a more domain specific variant of `requester`
 
 ## [1.27.2] - 2024-11-06
 
