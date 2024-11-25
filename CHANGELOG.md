@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Updated the dictionary with the [November 2024](https://github.com/crate-ci/typos/issues/1139) changes
+- Add many new types and file extensions to the `--type-list`, including ada, alire, bat, candid, carp, cml, devicetree, dita, dockercompose, grpbuild, graphql, hare, lean, meson, prolog, raku, reasonml, rescript, solidity, svelte, usd, v, wgsl
+
 ## [1.27.3] - 2024-11-08
 
 ### Fixes
