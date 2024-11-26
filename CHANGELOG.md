@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.28.1] - 2024-11-26
+
 ### Fixes
 
 - Add back in `lock` file types accidentally removed in 1.28 (`go.sum`, `requirements.txt`)
@@ -1357,7 +1359,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.28.0...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.28.1...HEAD
+[1.28.1]: https://github.com/crate-ci/typos/compare/v1.28.0...v1.28.1
 [1.28.0]: https://github.com/crate-ci/typos/compare/v1.27.3...v1.28.0
 [1.27.3]: https://github.com/crate-ci/typos/compare/v1.27.2...v1.27.3
 [1.27.2]: https://github.com/crate-ci/typos/compare/v1.27.1...v1.27.2
