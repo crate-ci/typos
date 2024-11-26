@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Add back in `lock` file types accidentally removed in 1.28 (`go.sum`, `requirements.txt`)
+
 ## [1.28.0] - 2024-11-25
 
 ### Features
