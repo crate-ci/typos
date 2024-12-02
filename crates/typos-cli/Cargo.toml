@@ -47,7 +47,7 @@ typos-vars = { version = "^0.8", path = "../typos-vars", optional = true }
 unicase = "2.7"
 anyhow = "1.0"
 clap = { version = "4.5.4", features = ["derive"] }
-clap-verbosity-flag = "2.2"
+clap-verbosity-flag = "3.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.8.12"
