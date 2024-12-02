@@ -203,7 +203,11 @@ fn varcon_words() -> HashSet<UniCase<&'static str>> {
 
 fn proper_word_variants() -> HashMap<&'static str, HashSet<&'static str>> {
     let mut words: HashMap<&'static str, HashSet<&'static str>> = HashMap::new();
-    for entry in varcon::VARCON.iter().flat_map(|c| c.entries.iter()) {
+    for entry in varcon::VARCON
+        .iter()
+        .filter(|c| c.verified)
+        .flat_map(|c| c.entries.iter())
+    {
         let variants: HashSet<_> = entry
             .variants
             .iter()
