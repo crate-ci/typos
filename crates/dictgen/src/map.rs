@@ -62,14 +62,14 @@ impl<V> DictMap<V> {
     }
 }
 
-impl<'s> phf_shared::PhfHash for crate::InsensitiveStr<'s> {
+impl phf_shared::PhfHash for crate::InsensitiveStr<'_> {
     #[inline]
     fn phf_hash<H: core::hash::Hasher>(&self, state: &mut H) {
         core::hash::Hash::hash(self, state);
     }
 }
 
-impl<'s> phf_shared::FmtConst for crate::InsensitiveStr<'s> {
+impl phf_shared::FmtConst for crate::InsensitiveStr<'_> {
     fn fmt_const(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         match self {
             crate::InsensitiveStr::Ascii(_) => f.write_str("dictgen::InsensitiveStr::Ascii(")?,

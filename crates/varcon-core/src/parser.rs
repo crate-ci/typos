@@ -22,7 +22,7 @@ impl<'i> ClusterIter<'i> {
     }
 }
 
-impl<'i> Iterator for ClusterIter<'i> {
+impl Iterator for ClusterIter<'_> {
     type Item = Cluster;
 
     fn next(&mut self) -> Option<Cluster> {

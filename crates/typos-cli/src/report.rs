@@ -80,7 +80,7 @@ pub struct Typo<'m> {
     pub corrections: typos::Status<'m>,
 }
 
-impl<'m> Default for Typo<'m> {
+impl Default for Typo<'_> {
     fn default() -> Self {
         Self {
             context: None,
@@ -100,7 +100,7 @@ pub enum Context<'m> {
     Path(PathContext<'m>),
 }
 
-impl<'m> std::fmt::Display for Context<'m> {
+impl std::fmt::Display for Context<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
             Context::File(c) => write!(f, "{}:{}", c.path.display(), c.line_num),
@@ -116,7 +116,7 @@ pub struct FileContext<'m> {
     pub line_num: usize,
 }
 
-impl<'m> Default for FileContext<'m> {
+impl Default for FileContext<'_> {
     fn default() -> Self {
         Self {
             path: std::path::Path::new("-"),
@@ -131,7 +131,7 @@ pub struct PathContext<'m> {
     pub path: &'m std::path::Path,
 }
 
-impl<'m> Default for PathContext<'m> {
+impl Default for PathContext<'_> {
     fn default() -> Self {
         Self {
             path: std::path::Path::new("-"),
@@ -160,7 +160,7 @@ impl<'m> FileType<'m> {
     }
 }
 
-impl<'m> Default for FileType<'m> {
+impl Default for FileType<'_> {
     fn default() -> Self {
         Self {
             path: std::path::Path::new("-"),
@@ -181,7 +181,7 @@ impl<'m> File<'m> {
     }
 }
 
-impl<'m> Default for File<'m> {
+impl Default for File<'_> {
     fn default() -> Self {
         Self {
             path: std::path::Path::new("-"),
@@ -198,7 +198,7 @@ pub struct Parse<'m> {
     pub data: &'m str,
 }
 
-impl<'m> Default for Parse<'m> {
+impl Default for Parse<'_> {
     fn default() -> Self {
         Self {
             context: None,
@@ -216,13 +216,13 @@ pub struct Error<'m> {
     pub msg: String,
 }
 
-impl<'m> Error<'m> {
+impl Error<'_> {
     pub fn new(msg: String) -> Self {
         Self { context: None, msg }
     }
 }
 
-impl<'m> Default for Error<'m> {
+impl Default for Error<'_> {
     fn default() -> Self {
         Self {
             context: None,

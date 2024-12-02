@@ -98,30 +98,30 @@ impl<'s> From<unicase::UniCase<&'s str>> for InsensitiveStr<'s> {
     }
 }
 
-impl<'s1, 's2> PartialEq<InsensitiveStr<'s2>> for InsensitiveStr<'s1> {
+impl<'s2> PartialEq<InsensitiveStr<'s2>> for InsensitiveStr<'_> {
     #[inline]
     fn eq(&self, other: &InsensitiveStr<'s2>) -> bool {
         self.convert() == other.convert()
     }
 }
 
-impl<'s> Eq for InsensitiveStr<'s> {}
+impl Eq for InsensitiveStr<'_> {}
 
-impl<'s> core::hash::Hash for InsensitiveStr<'s> {
+impl core::hash::Hash for InsensitiveStr<'_> {
     #[inline]
     fn hash<H: core::hash::Hasher>(&self, hasher: &mut H) {
         self.convert().hash(hasher);
     }
 }
 
-impl<'s> core::fmt::Debug for InsensitiveStr<'s> {
+impl core::fmt::Debug for InsensitiveStr<'_> {
     #[inline]
     fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         core::fmt::Debug::fmt(self.into_inner(), fmt)
     }
 }
 
-impl<'s> core::fmt::Display for InsensitiveStr<'s> {
+impl core::fmt::Display for InsensitiveStr<'_> {
     #[inline]
     fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         core::fmt::Display::fmt(self.into_inner(), fmt)

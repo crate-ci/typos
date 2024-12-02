@@ -36,7 +36,7 @@ impl<'r> MessageStatus<'r> {
     }
 }
 
-impl<'r> Report for MessageStatus<'r> {
+impl Report for MessageStatus<'_> {
     fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         if msg.is_typo() {
             self.typos_found.store(true, atomic::Ordering::Relaxed);

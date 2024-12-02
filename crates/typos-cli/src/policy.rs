@@ -359,7 +359,7 @@ pub struct Policy<'t, 'd, 'i> {
     pub ignore: &'i [regex::Regex],
 }
 
-impl<'t, 'd, 'i> Policy<'t, 'd, 'i> {
+impl Policy<'_, '_, '_> {
     pub fn new() -> Self {
         Default::default()
     }
@@ -369,7 +369,7 @@ static DEFAULT_TOKENIZER: typos::tokens::Tokenizer = typos::tokens::Tokenizer::n
 static DEFAULT_DICT: crate::dict::BuiltIn = crate::dict::BuiltIn::new(crate::config::Locale::En);
 static DEFAULT_IGNORE: &[regex::Regex] = &[];
 
-impl<'t, 'd, 'i> Default for Policy<'t, 'd, 'i> {
+impl Default for Policy<'_, '_, '_> {
     fn default() -> Self {
         Self {
             check_filenames: true,

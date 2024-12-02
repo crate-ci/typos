@@ -70,7 +70,7 @@ pub struct Typo<'m> {
     pub corrections: crate::Status<'m>,
 }
 
-impl<'m> Typo<'m> {
+impl Typo<'_> {
     pub fn into_owned(self) -> Typo<'static> {
         Typo {
             byte_offset: self.byte_offset,
@@ -94,7 +94,7 @@ impl<'m> Typo<'m> {
     }
 }
 
-impl<'m> Default for Typo<'m> {
+impl Default for Typo<'_> {
     fn default() -> Self {
         Self {
             byte_offset: 0,

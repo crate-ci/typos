@@ -264,7 +264,7 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
     }
 }
 
-impl<'i, 'w, D: typos::Dictionary> typos::Dictionary for Override<'i, 'w, D> {
+impl<D: typos::Dictionary> typos::Dictionary for Override<'_, '_, D> {
     fn correct_ident<'s>(&'s self, ident: typos::tokens::Identifier<'_>) -> Option<Status<'s>> {
         for ignored in &self.ignored_identifiers {
             if ignored.is_match(ident.token()) {

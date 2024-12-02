@@ -245,7 +245,7 @@ mod codegen {
         value: Option<V>,
     }
 
-    impl<'s, V> DynNode<'s, V> {
+    impl<V> DynNode<'_, V> {
         fn burst(&mut self, limit: usize) {
             self.children.burst(limit);
         }
@@ -256,7 +256,7 @@ mod codegen {
         Flat(Vec<(&'s [u8], V)>),
     }
 
-    impl<'s, V> DynChild<'s, V> {
+    impl<V> DynChild<'_, V> {
         fn burst(&mut self, limit: usize) {
             match self {
                 DynChild::Nested(children) => {
