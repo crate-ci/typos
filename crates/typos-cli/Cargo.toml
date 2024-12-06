@@ -66,7 +66,6 @@ itertools = "0.13"
 serde_json = "1.0"
 kstring = { version = "2.0.0", features = ["serde"] }
 typed-arena = "2.0.2"
-maplit = "1.0"
 unicode-width = "0.2.0"
 unic-emoji-char = "0.9.0"
 thread_local = "1.1.8"
@@ -81,6 +80,7 @@ encoding_rs = "0.8.34"
 [dev-dependencies]
 assert_fs = "1.1"
 divan = "0.1.14"
+maplit = "1.0"
 snapbox = "0.6.5"
 trycmd = "0.15.4"
 

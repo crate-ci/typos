@@ -247,10 +247,8 @@ version = "0.4.3"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.13.0",
  "snapbox",
  "typos",
- "unicase",
 ]
 
 [[package]]
@@ -411,7 +409,6 @@ name = "dictgen"
 version = "0.2.9"
 dependencies = [
  "phf",
- "phf_codegen",
  "phf_shared",
  "unicase",
 ]
@@ -784,10 +781,8 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.13.0",
  "regex",
  "snapbox",
- "unicase",
 ]
 
 [[package]]
@@ -839,16 +834,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ade2d8b8f33c7333b51bcf0428d37e217e9f32192ae4772156f65063b8ce03dc"
 dependencies = [
  "phf_macros",
- "phf_shared",
-]
-
-[[package]]
-name = "phf_codegen"
-version = "0.11.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8d39688d359e6b34654d328e262234662d16cc0f60ec8dcbe5e718709342a5a"
-dependencies = [
- "phf_generator",
  "phf_shared",
 ]
 
@@ -1222,26 +1207,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3369f5ac52d5eb6ab48c6b4ffdc8efbcad6b89c765749064ba298f2c68a16a76"
 
 [[package]]
-name = "thiserror"
-version = "2.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f49a1853cf82743e3b7950f77e0f4d622ca36cf4317cba00c767838bac8d490"
-dependencies = [
- "thiserror-impl",
-]
-
-[[package]]
-name = "thiserror-impl"
-version = "2.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8381894bb3efe0c4acac3ded651301ceee58a15d47c2e34885ed1908ad667061"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "thread_local"
 version = "1.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1313,15 +1278,11 @@ checksum = "6af6ae20167a9ece4bcb41af5b80f8a1f1df981f6391189ce00fd257af04126a"
 name = "typos"
 version = "0.10.29"
 dependencies = [
- "anyhow",
  "bstr",
  "itertools 0.13.0",
- "once_cell",
  "serde",
  "simdutf8",
  "snapbox",
- "thiserror",
- "unicode-segmentation",
  "unicode-xid",
  "winnow",
 ]
@@ -1397,7 +1358,6 @@ dependencies = [
  "itertools 0.13.0",
  "snapbox",
  "typos",
- "unicase",
  "varcon",
  "varcon-core",
 ]
@@ -1543,9 +1503,7 @@ version = "0.4.0"
 dependencies = [
  "codegenrs",
  "dictgen",
- "itertools 0.13.0",
  "snapbox",
- "unicase",
 ]
 
 [[package]]
