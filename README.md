@@ -40,18 +40,18 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 (installable via [gh-install](https://github.com/crate-ci/gh-install)).
 
 Or use rust to install:
-```bash
-cargo install typos-cli
+```console
+$ cargo install typos-cli
 ```
 
 Or use [Homebrew](https://brew.sh/) to install:
-```bash
-brew install typos-cli
+```console
+$ brew install typos-cli
 ```
 
 Or use [Conda](https://conda.io/) to install:
-```bash
-conda install typos
+```console
+$ conda install typos
 ```
 
 Or use [Pacman](https://wiki.archlinux.org/title/pacman) to install:
@@ -62,14 +62,14 @@ sudo pacman -S typos
 ## Getting Started
 
 Most commonly, you'll either want to see what typos are available with
-```bash
-typos
+```console
+$ typos
 ```
 
 Or have them fixed
-```bash
-typos --write-changes
-typos -w
+```console
+$ typos --write-changes
+$ typos -w
 ```
 If there is any ambiguity (multiple possible corrections), `typos` will just report it to the user and move on.
 
@@ -124,27 +124,27 @@ extend-exclude = ["localized/*.po"]
 - `--format json` to get jsonlines with exit code 0 on no errors, code 2 on typos, anything else is an error.
 
 Examples:
-```bash
-# Read file from stdin, write corrected version to stdout
-typos - --write-changes
-# Creates a diff of what would change
-typos dir/file --diff
-# Fully programmatic control
-typos dir/file --format json
+```console
+$ # Read file from stdin, write corrected version to stdout
+$ typos - --write-changes
+$ # Creates a diff of what would change
+$ typos dir/file --diff
+$ # Fully programmatic control
+$ typos dir/file --format json
 ```
 
 ### Debugging
 
 You can see what the effective config looks like by running
-```bash
-typos --dump-config -
+```console
+$ typos --dump-config -
 ```
 
 You can then see how typos is processing your project with
-```bash
-typos --files
-typos --identifiers
-typos --words
+```console
+$ typos --files
+$ typos --identifiers
+$ typos --words
 ```
 
 If you need to dig in more, you can enable debug logging with `-v`
