@@ -2,15 +2,19 @@
 
 > **Source code spell checker**
 
-Finds and corrects spelling mistakes among source code:
-- Fast enough to run on monorepos
-- Low false positives so you can run on PRs
+Detects and corrects spelling mistakes in source code:
+
+- Detect and correct spelling mistakes in source code with minimal false positives.
+- Operate efficiently on large repositories, making it ideal for continuous integration workflows.
+
+
+
 
 ![Screenshot](./docs/screenshot.png)
 
 [![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
-![License](https://img.shields.io/crates/l/typos.svg)
+![License: MIT/Apache 2.0](https://img.shields.io/crates/l/typos.svg)
 [![Crates Status](https://img.shields.io/crates/v/typos.svg)][Crates.io]
 
 Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
@@ -63,17 +67,19 @@ sudo pacman -S typos
 
 Most commonly, you'll either want to see what typos are available with
 ```bash
+# Display detected typos.
 typos
 ```
 
 Or have them fixed
 ```bash
+# Fix typos and overwrite changes.
 typos --write-changes
 typos -w
 ```
 If there is any ambiguity (multiple possible corrections), `typos` will just report it to the user and move on.
 
-### False-positives
+### False Positives
 
 Sometimes, what looks like a typo is intentional, like with people's names, acronyms, or localized content.
 
@@ -82,12 +88,12 @@ To mark a word or an identifier (grouping of words) as valid, add it your [`_typ
 [default]
 extend-ignore-identifiers-re = [
     # *sigh* this just isn't worth the cost of fixing
-    "AttributeID.*Supress.*",
+    "AttributeID.*Suppress.*",
 ]
 
 [default.extend-identifiers]
 # *sigh* this just isn't worth the cost of fixing
-AttributeIDSupressMenu = "AttributeIDSupressMenu"
+AttributeIDSuppressMenu = "AttributeIDSuppressMenu"
 
 [default.extend-words]
 # Don't correct the surname "Teh"
@@ -97,6 +103,7 @@ teh = "teh"
 For cases like localized content, you can disable spell checking of file contents while still checking the file name:
 ```toml
 [type.po]
+# Disables spell checking for file contents while still checking the file name.
 extend-glob = ["*.po"]
 check-file = false
 ```
@@ -160,7 +167,8 @@ If you are using `files.extend-exclude`,
 are you running into [#593](https://github.com/crate-ci/typos/issues/593)?
 If you are using `files.ignore-vcs = true`,
 is the file in your `.gitignore` but git tracks it anyways?
-Prefer allowing the file explicitly (see [#909](https://github.com/crate-ci/typos/issues/909)).
+Consider explicitly allowing the file in the configuration (see [Issue #909](https://github.com/crate-ci/typos/issues/909)).
+
 
 **Does the identifier show up in `typos --identifiers` or the word show up in `typos --words`?**
 If not, it might be subject to one of typos' heuristics for
