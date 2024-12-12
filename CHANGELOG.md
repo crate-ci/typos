@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Correct `imlementations`, `includs`, `qurorum`, `transatctions`, `trasnactions`, `validasted`, `vview`
+
 ## [1.28.2] - 2024-12-02
 
 ### Fixes
