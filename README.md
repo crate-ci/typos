@@ -73,7 +73,7 @@ $ typos -w
 ```
 If there is any ambiguity (multiple possible corrections), `typos` will just report it to the user and move on.
 
-### False-positives
+### False Positives
 
 Sometimes, what looks like a typo is intentional, like with people's names, acronyms, or localized content.
 
