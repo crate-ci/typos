@@ -2,10 +2,10 @@
 
 > **Source code spell checker**
 
-Finds and corrects spelling mistakes among source code:
-- Fast enough to run on monorepos
-- Low false positives so you can run on PRs
-
+Detects and fixes spelling mistakes in the source code:
+- Optimized for fast execution on monorepos
+- Minimizes false positives, making it ideal for running on pull requests.
+  
 ![Screenshot](./docs/screenshot.png)
 
 [![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
