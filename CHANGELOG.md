@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- `--format sarif` support
+
 ## [1.28.3] - 2024-12-12
 
 ### Fixes
