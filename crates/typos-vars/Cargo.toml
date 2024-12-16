@@ -16,7 +16,6 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs", "--generate-link-to-definition"]
 
 [dependencies]
-unicase = "2.7"
 dictgen = { version = "^0.2", path = "../dictgen" }
 varcon-core = { version = "^5.0", path = "../varcon-core", features = ["flags"] }
 
@@ -24,7 +23,6 @@ varcon-core = { version = "^5.0", path = "../varcon-core", features = ["flags"] 
 varcon = { version = "^1.0", path = "../varcon", features = ["flags"] }
 varcon-core = { version = "^5.0", path = "../varcon-core", features = ["flags"] }
 typos = { version = "^0.10", path = "../typos" }
-unicase = "2.7"
 codegenrs = "3.0"
 itertools = "0.13"
 dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }

@@ -17,13 +17,12 @@ rustdoc-args = ["--cfg", "docsrs", "--generate-link-to-definition"]
 [features]
 default = ["std"]
 std = []
-codegen = ["std", "dep:phf_codegen"]
+codegen = ["std"]
 map = ["dep:phf", "dep:phf_shared"]
 
 [dependencies]
 unicase = "2.7"
 phf = { version = "0.11", features = ["unicase"], optional = true }
-phf_codegen = { version = "0.11", optional = true }
 phf_shared = { version = "0.11", optional = true }
 
 [lints]
