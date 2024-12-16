@@ -1,0 +1,4 @@
+[default.extend-words]
+invalid = ""
+incorrect = "corrected"
+different = "size"

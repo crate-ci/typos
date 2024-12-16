@@ -8,6 +8,8 @@ mod report;
 
 use proc_exit::prelude::*;
 
+use typos_cli::report::Report;
+
 fn main() {
     human_panic::setup_panic!();
     let result = run();
@@ -187,6 +189,13 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         None => None,
     };
 
+    // HACK: Diff doesn't handle mixing content
+    let global_reporter = if args.diff {
+        Box::new(report::PrintSilent)
+    } else {
+        args.format.reporter()
+    };
+
     // Note: file_list and args.path are mutually exclusive, enforced by clap
     'path: for path in file_list.as_ref().unwrap_or(&args.path) {
         // Note paths are passed through stdin, `-` is treated like a normal path
@@ -272,14 +281,8 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             });
         }
 
-        // HACK: Diff doesn't handle mixing content
-        let output_reporter = if args.diff {
-            Box::new(report::PrintSilent)
-        } else {
-            args.format.reporter()
-        };
-        let status_reporter = report::MessageStatus::new(output_reporter.as_ref());
-        let reporter: &dyn typos_cli::report::Report = &status_reporter;
+        let status_reporter = report::MessageStatus::new(global_reporter.as_ref());
+        let reporter: &dyn Report = &status_reporter;
 
         let selected_checks: &dyn typos_cli::file::FileChecker = if args.files {
             &typos_cli::file::FoundFiles
@@ -331,6 +334,11 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         if status_reporter.errors_found() {
             errors_found = true;
         }
+    }
+
+    if let Err(err) = global_reporter.generate_final_result() {
+        errors_found = true;
+        log::error!("could not render end-report: {}", err);
     }
 
     if errors_found {
