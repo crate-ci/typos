@@ -1,10 +1,15 @@
 1nd->1st
+1rt->1st
+1rd->1st
 2rd->2nd
 2st->2nd
+2rt->2nd
 3nd->3rd
 3rt->3rd
 3st->3rd
 4rd->4th
+4st->4th
+4rt->4th
 a-diaerers->a-diaereses
 aaccess->access
 aaccessibility->accessibility
