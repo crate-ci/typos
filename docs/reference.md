@@ -39,6 +39,8 @@ Configuration is read from the following (in precedence order)
 | type.\<name>.\<field>      | \<varied>     | \<varied> | \<varied> | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s. |
 | type.\<name>.extend-glob   | \-            | list of strings | \- | File globs for matching `<name>`. |
 
+### Example configurations
+
 Common `extend-ignore-re`:
 - Line ignore with trailing `# spellchecker:disable-line`: `"(?Rm)^.*(#|//)\\s*spellchecker:disable-line$"`
 - Line block with `# spellchecker:<on|off>`: `"(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on"`
