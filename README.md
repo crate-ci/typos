@@ -55,8 +55,8 @@ $ conda install typos
 ```
 
 Or use [Pacman](https://wiki.archlinux.org/title/pacman) to install:
-```
-sudo pacman -S typos
+```console
+$ sudo pacman -S typos
 ```
 
 ## Getting Started
