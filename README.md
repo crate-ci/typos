@@ -8,6 +8,8 @@ Finds and corrects spelling mistakes among source code:
 
 ![Screenshot](./docs/screenshot.png)
 
+
+[![Downloads](https://img.shields.io/github/downloads/crate-ci/typos/total.svg)](https://github.com/crate-ci/typos/releases)
 [![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
 ![License](https://img.shields.io/crates/l/typos.svg)
