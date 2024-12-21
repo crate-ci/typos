@@ -15,8 +15,6 @@ Finds and corrects spelling mistakes among source code:
 ![License](https://img.shields.io/crates/l/typos.svg)
 [![Crates Status](https://img.shields.io/crates/v/typos.svg)][Crates.io]
 
-Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
-
 ## Documentation
 
 - [Installation](#install)
@@ -187,3 +185,7 @@ For more on the trade offs of these approaches, see [Design](docs/design.md).
 
 [Crates.io]: https://crates.io/crates/typos-cli
 [Documentation]: https://docs.rs/typos
+
+## License
+Typos is available under the [MIT License](LICENSE-MIT) or the [Apache 2.0 License](LICENSE-APACHE).
+
