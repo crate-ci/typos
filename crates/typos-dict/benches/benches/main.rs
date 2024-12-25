@@ -1,19 +1,37 @@
 #![allow(clippy::wildcard_imports)]
 
-const MISS: &str = "finalizes";
-const HIT: &str = "finallizes";
+mod map_codegen;
+mod trie_codegen;
 
-mod trie {
+mod miss {
     use super::*;
 
+    const MISS: &str = "finalizes";
+
     #[divan::bench(args = [unicase::UniCase::new(MISS)])]
-    fn miss(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
-        typos_dict::WORD_TRIE.find(&word)
+    fn map(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
+        map_codegen::WORD.find(&word)
+    }
+
+    #[divan::bench(args = [unicase::UniCase::new(MISS)])]
+    fn trie(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
+        trie_codegen::WORD_TRIE.find(&word)
+    }
+}
+
+mod hit {
+    use super::*;
+
+    const HIT: &str = "finallizes";
+
+    #[divan::bench(args = [unicase::UniCase::new(HIT)])]
+    fn map(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
+        map_codegen::WORD.find(&word)
     }
 
     #[divan::bench(args = [unicase::UniCase::new(HIT)])]
-    fn hit(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
-        typos_dict::WORD_TRIE.find(&word)
+    fn trie(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
+        trie_codegen::WORD_TRIE.find(&word)
     }
 }
 
