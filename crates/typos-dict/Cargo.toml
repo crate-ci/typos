@@ -28,6 +28,11 @@ dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
 varcon = { version = "^1.0", path = "../varcon" }
 snapbox = "0.6.5"
 indexmap = "2.2.6"
+divan = "0.1.16"
 
 [lints]
 workspace = true
+
+[[bench]]
+name = "benches"
+harness = false

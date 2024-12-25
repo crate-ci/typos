@@ -1496,6 +1496,7 @@ dependencies = [
  "codegenrs",
  "csv",
  "dictgen",
+ "divan",
  "edit-distance",
  "indexmap",
  "itertools 0.13.0",
