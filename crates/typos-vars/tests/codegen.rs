@@ -84,24 +84,25 @@ fn generate_variations<W: Write>(file: &mut W) {
 
     let entry_sets = entry_sets(entries.iter());
     let mut referenced_symbols: HashSet<&str> = HashSet::new();
-    dictgen::generate_trie(
-        file,
-        "VARS",
-        "&[(u8, &VariantsMap)]",
-        entry_sets.iter().filter_map(|kv| {
-            let (word, data) = kv;
-            if is_always_valid(data) {
-                // No need to convert from current form to target form
-                None
-            } else {
-                referenced_symbols.extend(data.iter().map(|(s, _)| s));
-                let value = generate_link(data);
-                Some((*word, value))
-            }
-        }),
-        64,
-    )
-    .unwrap();
+    dictgen::DictGen::new()
+        .name("VARS_TRIE")
+        .value_type("&[(u8, &VariantsMap)]")
+        .trie()
+        .write(
+            file,
+            entry_sets.iter().filter_map(|kv| {
+                let (word, data) = kv;
+                if is_always_valid(data) {
+                    // No need to convert from current form to target form
+                    None
+                } else {
+                    referenced_symbols.extend(data.iter().map(|(s, _)| s));
+                    let value = generate_link(data);
+                    Some((*word, value))
+                }
+            }),
+        )
+        .unwrap();
 
     let no_invalid = entry_sets.values().all(|data| !is_always_invalid(data));
     writeln!(file).unwrap();

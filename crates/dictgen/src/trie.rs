@@ -1,15 +1,28 @@
-/// # Panics
-///
-/// - On duplicate entry
 #[cfg(feature = "codegen")]
-pub fn generate_trie<'d, W: std::io::Write, V: std::fmt::Display>(
-    file: &mut W,
-    prefix: &str,
-    value_type: &str,
-    data: impl Iterator<Item = (&'d str, V)>,
-    limit: usize,
-) -> Result<(), std::io::Error> {
-    codegen::generate_trie(file, prefix, value_type, data, limit)
+pub struct DictTrieGen<'g> {
+    pub(crate) gen: crate::DictGen<'g>,
+    pub(crate) limit: usize,
+}
+
+#[cfg(feature = "codegen")]
+impl DictTrieGen<'_> {
+    pub fn limit(mut self, limit: usize) -> Self {
+        self.limit = limit;
+        self
+    }
+
+    /// # Panics
+    ///
+    /// - On duplicate entry
+    pub fn write<'d, W: std::io::Write, V: std::fmt::Display>(
+        &self,
+        file: &mut W,
+        data: impl Iterator<Item = (&'d str, V)>,
+    ) -> Result<(), std::io::Error> {
+        let name = self.gen.name;
+        let value_type = self.gen.value_type;
+        codegen::generate_trie(file, name, value_type, data, self.limit)
+    }
 }
 
 pub struct DictTrie<V: 'static> {
@@ -78,7 +91,7 @@ pub enum DictTrieChild<V: 'static> {
 mod codegen {
     pub(super) fn generate_trie<'d, W: std::io::Write, V: std::fmt::Display>(
         file: &mut W,
-        prefix: &str,
+        name: &str,
         value_type: &str,
         data: impl Iterator<Item = (&'d str, V)>,
         limit: usize,
@@ -86,13 +99,13 @@ mod codegen {
         let mut root = DynRoot::new(data);
         root.burst(limit);
 
-        let unicode_table_name = format!("{prefix}_UNICODE_TABLE");
+        let unicode_table_name = format!("{name}_UNICODE_TABLE");
 
         writeln!(
             file,
-            "pub static {prefix}_TRIE: dictgen::DictTrie<{value_type}> = dictgen::DictTrie {{"
+            "pub static {name}: dictgen::DictTrie<{value_type}> = dictgen::DictTrie {{"
         )?;
-        writeln!(file, "    root: &{},", gen_node_name(prefix, ""))?;
+        writeln!(file, "    root: &{},", gen_node_name(name, ""))?;
         writeln!(file, "    unicode: &{},", &unicode_table_name)?;
         writeln!(
             file,
@@ -103,18 +116,17 @@ mod codegen {
         writeln!(file, "}};")?;
         writeln!(file)?;
 
-        crate::generate_table(
-            file,
-            &unicode_table_name,
-            value_type,
-            root.unicode.into_iter(),
-        )?;
+        crate::DictGen::new()
+            .name(&unicode_table_name)
+            .value_type(value_type)
+            .table()
+            .write(file, root.unicode.into_iter())?;
         writeln!(file)?;
 
         let mut nodes = vec![("".to_owned(), &root.root)];
         while let Some((start, node)) = nodes.pop() {
-            let node_name = gen_node_name(prefix, &start);
-            let children_name = gen_children_name(prefix, &start);
+            let node_name = gen_node_name(name, &start);
+            let children_name = gen_children_name(name, &start);
             writeln!(
                 file,
                 "static {node_name}: dictgen::DictTrieNode<{value_type}> = dictgen::DictTrieNode {{"
@@ -143,7 +155,7 @@ mod codegen {
                         if let Some(child) = n.get(&b) {
                             let c = b as char;
                             let next_start = format!("{start}{c}");
-                            writeln!(file, "    Some(&{}),", gen_node_name(prefix, &next_start))?;
+                            writeln!(file, "    Some(&{}),", gen_node_name(name, &next_start))?;
                             nodes.push((next_start, child));
                         } else {
                             writeln!(file, "    None,")?;
@@ -156,7 +168,11 @@ mod codegen {
                         let k = std::str::from_utf8(k).expect("this was originally a `str`");
                         (k, v)
                     });
-                    crate::generate_table(file, &children_name, value_type, table_input)?;
+                    crate::DictGen::new()
+                        .name(&children_name)
+                        .value_type(value_type)
+                        .table()
+                        .write(file, table_input)?;
                 }
             }
             writeln!(file)?;
