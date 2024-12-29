@@ -106,7 +106,7 @@ impl BuiltIn {
 
     fn correct_with_vars(&self, word: UniCase<&str>) -> Option<Status<'static>> {
         if self.is_vars_enabled() {
-            typos_vars::VARS_TRIE
+            typos_vars::VARS
                 .find(&word)
                 .map(|variants| self.select_variant(variants))
         } else {

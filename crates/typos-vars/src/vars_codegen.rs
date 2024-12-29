@@ -23,59 +23,58 @@ pub fn corrections(category: crate::Category, options: VariantsMap) -> &'static 
     }
 }
 
-pub static VARS_TRIE: dictgen::DictTrie<&[(u8, &VariantsMap)]> = dictgen::DictTrie {
-    root: &VARS_TRIE_NODE,
-    unicode: &VARS_TRIE_UNICODE_TABLE,
+pub static VARS: dictgen::DictTrie<&[(u8, &VariantsMap)]> = dictgen::DictTrie {
+    root: &VARS_NODE,
+    unicode: &VARS_UNICODE_TABLE,
     range: 2..=21,
 };
 
-pub static VARS_TRIE_UNICODE_TABLE: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[],
-        values: &[],
-        range: 0..=0,
-    };
+pub static VARS_UNICODE_TABLE: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[],
+    values: &[],
+    range: 0..=0,
+};
 
-static VARS_TRIE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_CHILDREN),
+static VARS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_A_NODE),
-    Some(&VARS_TRIE_B_NODE),
-    Some(&VARS_TRIE_C_NODE),
-    Some(&VARS_TRIE_D_NODE),
-    Some(&VARS_TRIE_E_NODE),
-    Some(&VARS_TRIE_F_NODE),
-    Some(&VARS_TRIE_G_NODE),
-    Some(&VARS_TRIE_H_NODE),
-    Some(&VARS_TRIE_I_NODE),
-    Some(&VARS_TRIE_J_NODE),
-    Some(&VARS_TRIE_K_NODE),
-    Some(&VARS_TRIE_L_NODE),
-    Some(&VARS_TRIE_M_NODE),
-    Some(&VARS_TRIE_N_NODE),
-    Some(&VARS_TRIE_O_NODE),
-    Some(&VARS_TRIE_P_NODE),
-    Some(&VARS_TRIE_Q_NODE),
-    Some(&VARS_TRIE_R_NODE),
-    Some(&VARS_TRIE_S_NODE),
-    Some(&VARS_TRIE_T_NODE),
-    Some(&VARS_TRIE_U_NODE),
-    Some(&VARS_TRIE_V_NODE),
-    Some(&VARS_TRIE_W_NODE),
+static VARS_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_A_NODE),
+    Some(&VARS_B_NODE),
+    Some(&VARS_C_NODE),
+    Some(&VARS_D_NODE),
+    Some(&VARS_E_NODE),
+    Some(&VARS_F_NODE),
+    Some(&VARS_G_NODE),
+    Some(&VARS_H_NODE),
+    Some(&VARS_I_NODE),
+    Some(&VARS_J_NODE),
+    Some(&VARS_K_NODE),
+    Some(&VARS_L_NODE),
+    Some(&VARS_M_NODE),
+    Some(&VARS_N_NODE),
+    Some(&VARS_O_NODE),
+    Some(&VARS_P_NODE),
+    Some(&VARS_Q_NODE),
+    Some(&VARS_R_NODE),
+    Some(&VARS_S_NODE),
+    Some(&VARS_T_NODE),
+    Some(&VARS_U_NODE),
+    Some(&VARS_V_NODE),
+    Some(&VARS_W_NODE),
     None,
-    Some(&VARS_TRIE_Y_NODE),
+    Some(&VARS_Y_NODE),
     None,
 ];
 
-static VARS_TRIE_Y_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_Y_CHILDREN),
+static VARS_Y_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_Y_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_Y_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_Y_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("odeled"),
         dictgen::InsensitiveStr::Ascii("odeler"),
@@ -111,27 +110,27 @@ pub static VARS_TRIE_Y_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dic
     range: 6..=8,
 };
 
-static VARS_TRIE_W_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_W_CHILDREN),
+static VARS_W_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_W_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_W_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_WA_NODE),
+static VARS_W_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_WA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_WE_NODE),
+    Some(&VARS_WE_NODE),
     None,
     None,
-    Some(&VARS_TRIE_WH_NODE),
-    Some(&VARS_TRIE_WI_NODE),
+    Some(&VARS_WH_NODE),
+    Some(&VARS_WI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_WO_NODE),
+    Some(&VARS_WO_NODE),
     None,
     None,
     None,
@@ -145,12 +144,12 @@ static VARS_TRIE_W_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_WO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_WO_CHILDREN),
+static VARS_WO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_WO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_WO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_WO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("manise"),
         dictgen::InsensitiveStr::Ascii("manised"),
@@ -214,12 +213,12 @@ pub static VARS_TRIE_WO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=9,
 };
 
-static VARS_TRIE_WI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_WI_CHILDREN),
+static VARS_WI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_WI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_WI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_WI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lfullier"),
         dictgen::InsensitiveStr::Ascii("lfulliest"),
@@ -271,23 +270,23 @@ pub static VARS_TRIE_WI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=12,
 };
 
-static VARS_TRIE_WH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_WH_CHILDREN),
+static VARS_WH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_WH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_WH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_WH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("iskeys")],
     values: &[&[(0b01001, &ENTRY_WHISKEYS_7436468433370877238)]],
     range: 6..=6,
 };
 
-static VARS_TRIE_WE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_WE_CHILDREN),
+static VARS_WE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_WE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_WE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_WE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aseled"),
         dictgen::InsensitiveStr::Ascii("aseling"),
@@ -311,12 +310,12 @@ pub static VARS_TRIE_WE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=13,
 };
 
-static VARS_TRIE_WA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_WA_CHILDREN),
+static VARS_WA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_WA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_WA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_WA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ggon"),
         dictgen::InsensitiveStr::Ascii("ggoned"),
@@ -364,33 +363,33 @@ pub static VARS_TRIE_WA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=13,
 };
 
-static VARS_TRIE_V_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_V_CHILDREN),
+static VARS_V_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_V_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_V_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_VA_NODE),
+static VARS_V_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_VA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_VE_NODE),
+    Some(&VARS_VE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_VI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_VO_NODE),
+    Some(&VARS_VI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_VU_NODE),
+    Some(&VARS_VO_NODE),
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_VU_NODE),
     None,
     None,
     None,
@@ -398,12 +397,12 @@ static VARS_TRIE_V_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_VU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VU_CHILDREN),
+static VARS_VU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lcanisation"),
         dictgen::InsensitiveStr::Ascii("lcanisations"),
@@ -467,12 +466,12 @@ pub static VARS_TRIE_VU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=12,
 };
 
-static VARS_TRIE_VO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VO_CHILDREN),
+static VARS_VO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("calisation"),
         dictgen::InsensitiveStr::Ascii("calisations"),
@@ -528,12 +527,12 @@ pub static VARS_TRIE_VO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=13,
 };
 
-static VARS_TRIE_VI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VI_CHILDREN),
+static VARS_VI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ctimisation"),
         dictgen::InsensitiveStr::Ascii("ctimisations"),
@@ -663,12 +662,12 @@ pub static VARS_TRIE_VI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=12,
 };
 
-static VARS_TRIE_VE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VE_CHILDREN),
+static VARS_VE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nder"),
         dictgen::InsensitiveStr::Ascii("nders"),
@@ -728,12 +727,12 @@ pub static VARS_TRIE_VE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=13,
 };
 
-static VARS_TRIE_VA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_VA_CHILDREN),
+static VARS_VA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_VA_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_VA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_VA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
@@ -745,14 +744,14 @@ static VARS_TRIE_VA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_VAL_NODE),
+    Some(&VARS_VAL_NODE),
     None,
-    Some(&VARS_TRIE_VAN_NODE),
+    Some(&VARS_VAN_NODE),
     None,
-    Some(&VARS_TRIE_VAP_NODE),
+    Some(&VARS_VAP_NODE),
     None,
-    Some(&VARS_TRIE_VAR_NODE),
-    Some(&VARS_TRIE_VAS_NODE),
+    Some(&VARS_VAR_NODE),
+    Some(&VARS_VAS_NODE),
     None,
     None,
     None,
@@ -762,12 +761,12 @@ static VARS_TRIE_VA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_VAS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VAS_CHILDREN),
+static VARS_VAS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VAS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VAS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VAS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ectomise"),
         dictgen::InsensitiveStr::Ascii("ectomised"),
@@ -787,12 +786,12 @@ pub static VARS_TRIE_VAS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=10,
 };
 
-static VARS_TRIE_VAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VAR_CHILDREN),
+static VARS_VAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VAR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("icolored"),
         dictgen::InsensitiveStr::Ascii("icoloredder"),
@@ -816,12 +815,12 @@ pub static VARS_TRIE_VAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=13,
 };
 
-static VARS_TRIE_VAP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VAP_CHILDREN),
+static VARS_VAP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VAP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VAP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VAP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ored"),
@@ -885,12 +884,12 @@ pub static VARS_TRIE_VAP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=10,
 };
 
-static VARS_TRIE_VAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VAN_CHILDREN),
+static VARS_VAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VAN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dalise"),
         dictgen::InsensitiveStr::Ascii("dalised"),
@@ -914,12 +913,12 @@ pub static VARS_TRIE_VAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_VAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_VAL_CHILDREN),
+static VARS_VAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_VAL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_VAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_VAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orisation"),
@@ -959,12 +958,12 @@ pub static VARS_TRIE_VAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=10,
 };
 
-static VARS_TRIE_U_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_U_CHILDREN),
+static VARS_U_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_U_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_U_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_U_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
@@ -978,13 +977,13 @@ static VARS_TRIE_U_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
     None,
     None,
-    Some(&VARS_TRIE_UN_NODE),
+    Some(&VARS_UN_NODE),
     None,
-    Some(&VARS_TRIE_UP_NODE),
+    Some(&VARS_UP_NODE),
     None,
-    Some(&VARS_TRIE_UR_NODE),
-    Some(&VARS_TRIE_US_NODE),
-    Some(&VARS_TRIE_UT_NODE),
+    Some(&VARS_UR_NODE),
+    Some(&VARS_US_NODE),
+    Some(&VARS_UT_NODE),
     None,
     None,
     None,
@@ -993,12 +992,12 @@ static VARS_TRIE_U_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_UT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UT_CHILDREN),
+static VARS_UT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ilisable"),
         dictgen::InsensitiveStr::Ascii("ilisables"),
@@ -1038,23 +1037,23 @@ pub static VARS_TRIE_UT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=10,
 };
 
-static VARS_TRIE_US_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_US_CHILDREN),
+static VARS_US_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_US_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_US_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_US_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("eability")],
     values: &[&[(0b00001, &ENTRY_USABILITY_14697152389699662448)]],
     range: 8..=8,
 };
 
-static VARS_TRIE_UR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UR_CHILDREN),
+static VARS_UR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aemia"),
         dictgen::InsensitiveStr::Ascii("aemias"),
@@ -1098,12 +1097,12 @@ pub static VARS_TRIE_UR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=11,
 };
 
-static VARS_TRIE_UP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UP_CHILDREN),
+static VARS_UP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("draft"),
         dictgen::InsensitiveStr::Ascii("drafts"),
@@ -1119,32 +1118,32 @@ pub static VARS_TRIE_UP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=8,
 };
 
-static VARS_TRIE_UN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_UN_CHILDREN),
+static VARS_UN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_UN_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_UN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_UNA_NODE),
+static VARS_UN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_UNA_NODE),
     None,
-    Some(&VARS_TRIE_UNC_NODE),
-    Some(&VARS_TRIE_UND_NODE),
-    Some(&VARS_TRIE_UNE_NODE),
-    Some(&VARS_TRIE_UNF_NODE),
-    Some(&VARS_TRIE_UNG_NODE),
+    Some(&VARS_UNC_NODE),
+    Some(&VARS_UND_NODE),
+    Some(&VARS_UNE_NODE),
+    Some(&VARS_UNF_NODE),
+    Some(&VARS_UNG_NODE),
     None,
-    Some(&VARS_TRIE_UNI_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_UNL_NODE),
+    Some(&VARS_UNI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_UNO_NODE),
-    Some(&VARS_TRIE_UNP_NODE),
+    Some(&VARS_UNL_NODE),
     None,
-    Some(&VARS_TRIE_UNR_NODE),
-    Some(&VARS_TRIE_UNS_NODE),
-    Some(&VARS_TRIE_UNT_NODE),
+    None,
+    Some(&VARS_UNO_NODE),
+    Some(&VARS_UNP_NODE),
+    None,
+    Some(&VARS_UNR_NODE),
+    Some(&VARS_UNS_NODE),
+    Some(&VARS_UNT_NODE),
     None,
     None,
     None,
@@ -1153,12 +1152,12 @@ static VARS_TRIE_UN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_UNT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNT_CHILDREN),
+static VARS_UNT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rammeled"),
         dictgen::InsensitiveStr::Ascii("rammeledder"),
@@ -1178,12 +1177,12 @@ pub static VARS_TRIE_UNT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=13,
 };
 
-static VARS_TRIE_UNS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNS_CHILDREN),
+static VARS_UNS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("avorier"),
         dictgen::InsensitiveStr::Ascii("avories"),
@@ -1227,12 +1226,12 @@ pub static VARS_TRIE_UNS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=14,
 };
 
-static VARS_TRIE_UNR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNR_CHILDREN),
+static VARS_UNR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aveled"),
         dictgen::InsensitiveStr::Ascii("aveling"),
@@ -1308,12 +1307,12 @@ pub static VARS_TRIE_UNR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=13,
 };
 
-static VARS_TRIE_UNP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNP_CHILDREN),
+static VARS_UNP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("asteurised"),
         dictgen::InsensitiveStr::Ascii("asteurized"),
@@ -1345,12 +1344,12 @@ pub static VARS_TRIE_UNP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=12,
 };
 
-static VARS_TRIE_UNO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNO_CHILDREN),
+static VARS_UNO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rganised"),
         dictgen::InsensitiveStr::Ascii("rganized"),
@@ -1362,12 +1361,12 @@ pub static VARS_TRIE_UNO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=8,
 };
 
-static VARS_TRIE_UNL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNL_CHILDREN),
+static VARS_UNL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abeled"),
         dictgen::InsensitiveStr::Ascii("abeledder"),
@@ -1389,12 +1388,12 @@ pub static VARS_TRIE_UNL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=11,
 };
 
-static VARS_TRIE_UNI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNI_CHILDREN),
+static VARS_UNI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("onisation"),
         dictgen::InsensitiveStr::Ascii("onisations"),
@@ -1450,23 +1449,23 @@ pub static VARS_TRIE_UNI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=14,
 };
 
-static VARS_TRIE_UNG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNG_CHILDREN),
+static VARS_UNG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("lamourous")],
     values: &[&[(0b11010, &ENTRY_UNGLAMOROUS_17159152581421977091)]],
     range: 9..=9,
 };
 
-static VARS_TRIE_UNF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNF_CHILDREN),
+static VARS_UNF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNF_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("avorable"),
         dictgen::InsensitiveStr::Ascii("avorabler"),
@@ -1526,12 +1525,12 @@ pub static VARS_TRIE_UNF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=13,
 };
 
-static VARS_TRIE_UNE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNE_CHILDREN),
+static VARS_UNE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("qualed"),
         dictgen::InsensitiveStr::Ascii("qualedder"),
@@ -1551,12 +1550,12 @@ pub static VARS_TRIE_UNE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_UND_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UND_CHILDREN),
+static VARS_UND_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UND_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UND_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UND_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eremphasise"),
         dictgen::InsensitiveStr::Ascii("eremphasised"),
@@ -1604,12 +1603,12 @@ pub static VARS_TRIE_UND_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 9..=14,
 };
 
-static VARS_TRIE_UNC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNC_CHILDREN),
+static VARS_UNC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ivilised"),
         dictgen::InsensitiveStr::Ascii("ivilized"),
@@ -1637,12 +1636,12 @@ pub static VARS_TRIE_UNC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_UNA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_UNA_CHILDREN),
+static VARS_UNA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_UNA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_UNA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_UNA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ppetising"),
         dictgen::InsensitiveStr::Ascii("ppetisinger"),
@@ -1686,46 +1685,46 @@ pub static VARS_TRIE_UNA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 9..=14,
 };
 
-static VARS_TRIE_T_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_T_CHILDREN),
+static VARS_T_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_T_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_T_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_TA_NODE),
+static VARS_T_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_TA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_TE_NODE),
+    Some(&VARS_TE_NODE),
     None,
     None,
-    Some(&VARS_TRIE_TH_NODE),
-    Some(&VARS_TRIE_TI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_TO_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_TR_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_TU_NODE),
+    Some(&VARS_TH_NODE),
+    Some(&VARS_TI_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_TY_NODE),
-    Some(&VARS_TRIE_TZ_NODE),
+    None,
+    None,
+    Some(&VARS_TO_NODE),
+    None,
+    None,
+    Some(&VARS_TR_NODE),
+    None,
+    None,
+    Some(&VARS_TU_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_TY_NODE),
+    Some(&VARS_TZ_NODE),
 ];
 
-static VARS_TRIE_TZ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TZ_CHILDREN),
+static VARS_TZ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TZ_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TZ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TZ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ar"),
         dictgen::InsensitiveStr::Ascii("ars"),
@@ -1737,12 +1736,12 @@ pub static VARS_TRIE_TZ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=3,
 };
 
-static VARS_TRIE_TY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TY_CHILDREN),
+static VARS_TY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rannise"),
         dictgen::InsensitiveStr::Ascii("rannised"),
@@ -1774,12 +1773,12 @@ pub static VARS_TRIE_TY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=10,
 };
 
-static VARS_TRIE_TU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TU_CHILDREN),
+static VARS_TU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("laraemia"),
         dictgen::InsensitiveStr::Ascii("laraemias"),
@@ -1823,13 +1822,13 @@ pub static VARS_TRIE_TU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=9,
 };
 
-static VARS_TRIE_TR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_TR_CHILDREN),
+static VARS_TR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_TR_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_TR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_TRA_NODE),
+static VARS_TR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_TRA_NODE),
     None,
     None,
     None,
@@ -1837,13 +1836,13 @@ static VARS_TRIE_TR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_TRI_NODE),
+    Some(&VARS_TRI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_TRO_NODE),
+    Some(&VARS_TRO_NODE),
     None,
     None,
     None,
@@ -1857,12 +1856,12 @@ static VARS_TRIE_TR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_TRO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TRO_CHILDREN),
+static VARS_TRO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TRO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TRO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TRO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("llied"),
         dictgen::InsensitiveStr::Ascii("llies"),
@@ -1886,12 +1885,12 @@ pub static VARS_TRIE_TRO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=7,
 };
 
-static VARS_TRIE_TRI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TRI_CHILDREN),
+static VARS_TRI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TRI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aled"),
         dictgen::InsensitiveStr::Ascii("aling"),
@@ -1931,12 +1930,12 @@ pub static VARS_TRIE_TRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=12,
 };
 
-static VARS_TRIE_TRA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TRA_CHILDREN),
+static VARS_TRA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TRA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TRA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TRA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mmeled"),
         dictgen::InsensitiveStr::Ascii("mmeling"),
@@ -2062,12 +2061,12 @@ pub static VARS_TRIE_TRA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=12,
 };
 
-static VARS_TRIE_TO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TO_CHILDREN),
+static VARS_TO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("taled"),
         dictgen::InsensitiveStr::Ascii("taling"),
@@ -2131,12 +2130,12 @@ pub static VARS_TRIE_TO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=11,
 };
 
-static VARS_TRIE_TI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TI_CHILDREN),
+static VARS_TI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dbit"),
         dictgen::InsensitiveStr::Ascii("dbits"),
@@ -2168,12 +2167,12 @@ pub static VARS_TRIE_TI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=8,
 };
 
-static VARS_TRIE_TH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TH_CHILDREN),
+static VARS_TH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eater"),
         dictgen::InsensitiveStr::Ascii("eatergoer"),
@@ -2251,12 +2250,12 @@ pub static VARS_TRIE_TH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=11,
 };
 
-static VARS_TRIE_TE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TE_CHILDREN),
+static VARS_TE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aselled"),
         dictgen::InsensitiveStr::Ascii("aseller"),
@@ -2370,12 +2369,12 @@ pub static VARS_TRIE_TE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=12,
 };
 
-static VARS_TRIE_TA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_TA_CHILDREN),
+static VARS_TA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_TA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_TA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_TA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mboura"),
         dictgen::InsensitiveStr::Ascii("mbouras"),
@@ -2465,46 +2464,46 @@ pub static VARS_TRIE_TA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=14,
 };
 
-static VARS_TRIE_S_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_S_CHILDREN),
+static VARS_S_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_S_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_S_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_SA_NODE),
+static VARS_S_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_SA_NODE),
     None,
-    Some(&VARS_TRIE_SC_NODE),
+    Some(&VARS_SC_NODE),
     None,
-    Some(&VARS_TRIE_SE_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_SH_NODE),
-    Some(&VARS_TRIE_SI_NODE),
-    None,
-    Some(&VARS_TRIE_SK_NODE),
-    Some(&VARS_TRIE_SL_NODE),
-    Some(&VARS_TRIE_SM_NODE),
-    Some(&VARS_TRIE_SN_NODE),
-    Some(&VARS_TRIE_SO_NODE),
-    Some(&VARS_TRIE_SP_NODE),
-    Some(&VARS_TRIE_SQ_NODE),
+    Some(&VARS_SE_NODE),
     None,
     None,
-    Some(&VARS_TRIE_ST_NODE),
-    Some(&VARS_TRIE_SU_NODE),
+    Some(&VARS_SH_NODE),
+    Some(&VARS_SI_NODE),
     None,
-    Some(&VARS_TRIE_SW_NODE),
+    Some(&VARS_SK_NODE),
+    Some(&VARS_SL_NODE),
+    Some(&VARS_SM_NODE),
+    Some(&VARS_SN_NODE),
+    Some(&VARS_SO_NODE),
+    Some(&VARS_SP_NODE),
+    Some(&VARS_SQ_NODE),
     None,
-    Some(&VARS_TRIE_SY_NODE),
+    None,
+    Some(&VARS_ST_NODE),
+    Some(&VARS_SU_NODE),
+    None,
+    Some(&VARS_SW_NODE),
+    None,
+    Some(&VARS_SY_NODE),
     None,
 ];
 
-static VARS_TRIE_SY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_SY_CHILDREN),
+static VARS_SY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_SY_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_SY_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_SY_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
@@ -2516,14 +2515,14 @@ static VARS_TRIE_SY_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_SYL_NODE),
-    Some(&VARS_TRIE_SYM_NODE),
-    Some(&VARS_TRIE_SYN_NODE),
+    Some(&VARS_SYL_NODE),
+    Some(&VARS_SYM_NODE),
+    Some(&VARS_SYN_NODE),
     None,
-    Some(&VARS_TRIE_SYP_NODE),
+    Some(&VARS_SYP_NODE),
     None,
     None,
-    Some(&VARS_TRIE_SYS_NODE),
+    Some(&VARS_SYS_NODE),
     None,
     None,
     None,
@@ -2533,12 +2532,12 @@ static VARS_TRIE_SY_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_SYS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SYS_CHILDREN),
+static VARS_SYS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SYS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SYS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SYS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tematisation"),
         dictgen::InsensitiveStr::Ascii("tematisations"),
@@ -2610,12 +2609,12 @@ pub static VARS_TRIE_SYS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=13,
 };
 
-static VARS_TRIE_SYP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SYP_CHILDREN),
+static VARS_SYP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SYP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SYP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SYP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hon"),
         dictgen::InsensitiveStr::Ascii("honed"),
@@ -2631,12 +2630,12 @@ pub static VARS_TRIE_SYP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=6,
 };
 
-static VARS_TRIE_SYN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SYN_CHILDREN),
+static VARS_SYN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SYN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SYN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SYN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("chronisation"),
         dictgen::InsensitiveStr::Ascii("chronisations"),
@@ -2736,12 +2735,12 @@ pub static VARS_TRIE_SYN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=13,
 };
 
-static VARS_TRIE_SYM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SYM_CHILDREN),
+static VARS_SYM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SYM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SYM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SYM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bolisation"),
         dictgen::InsensitiveStr::Ascii("bolisations"),
@@ -2819,12 +2818,12 @@ pub static VARS_TRIE_SYM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_SYL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SYL_CHILDREN),
+static VARS_SYL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SYL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SYL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SYL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("labise"),
         dictgen::InsensitiveStr::Ascii("labised"),
@@ -2864,12 +2863,12 @@ pub static VARS_TRIE_SYL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_SW_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SW_CHILDREN),
+static VARS_SW_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SW_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SW_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SW_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iveled"),
         dictgen::InsensitiveStr::Ascii("iveling"),
@@ -2885,12 +2884,12 @@ pub static VARS_TRIE_SW_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=8,
 };
 
-static VARS_TRIE_SU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SU_CHILDREN),
+static VARS_SU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bsidisation"),
         dictgen::InsensitiveStr::Ascii("bsidisations"),
@@ -3018,25 +3017,21 @@ pub static VARS_TRIE_SU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=14,
 };
 
-static VARS_TRIE_ST_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_ST_CHILDREN),
+static VARS_ST_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_ST_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_ST_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_STA_NODE),
+static VARS_ST_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_STA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_STE_NODE),
+    Some(&VARS_STE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_STI_NODE),
-    None,
-    None,
-    None,
-    None,
+    Some(&VARS_STI_NODE),
     None,
     None,
     None,
@@ -3048,16 +3043,20 @@ static VARS_TRIE_ST_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_STY_NODE),
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_STY_NODE),
     None,
 ];
 
-static VARS_TRIE_STY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_STY_CHILDREN),
+static VARS_STY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_STY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_STY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_STY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lisation"),
         dictgen::InsensitiveStr::Ascii("lisations"),
@@ -3089,12 +3088,12 @@ pub static VARS_TRIE_STY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=9,
 };
 
-static VARS_TRIE_STI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_STI_CHILDREN),
+static VARS_STI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_STI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_STI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_STI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gmatisation"),
         dictgen::InsensitiveStr::Ascii("gmatisations"),
@@ -3126,12 +3125,12 @@ pub static VARS_TRIE_STI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_STE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_STE_CHILDREN),
+static VARS_STE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_STE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_STE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_STE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nciled"),
         dictgen::InsensitiveStr::Ascii("nciling"),
@@ -3195,12 +3194,12 @@ pub static VARS_TRIE_STE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_STA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_STA_CHILDREN),
+static VARS_STA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_STA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_STA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_STA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bilisation"),
         dictgen::InsensitiveStr::Ascii("bilisations"),
@@ -3264,12 +3263,12 @@ pub static VARS_TRIE_STA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=13,
 };
 
-static VARS_TRIE_SQ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SQ_CHILDREN),
+static VARS_SQ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SQ_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("uirreled"),
         dictgen::InsensitiveStr::Ascii("uirreling"),
@@ -3285,12 +3284,12 @@ pub static VARS_TRIE_SQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 8..=10,
 };
 
-static VARS_TRIE_SP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SP_CHILDREN),
+static VARS_SP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ecialisation"),
         dictgen::InsensitiveStr::Ascii("ecialisations"),
@@ -3394,25 +3393,16 @@ pub static VARS_TRIE_SP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=15,
 };
 
-static VARS_TRIE_SO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_SO_CHILDREN),
+static VARS_SO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_SO_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_SO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_SO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
-    Some(&VARS_TRIE_SOC_NODE),
-    Some(&VARS_TRIE_SOD_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_SOL_NODE),
-    Some(&VARS_TRIE_SOM_NODE),
+    Some(&VARS_SOC_NODE),
+    Some(&VARS_SOD_NODE),
     None,
     None,
     None,
@@ -3420,20 +3410,29 @@ static VARS_TRIE_SO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
+    Some(&VARS_SOL_NODE),
+    Some(&VARS_SOM_NODE),
     None,
-    Some(&VARS_TRIE_SOV_NODE),
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_SOV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_SOV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SOV_CHILDREN),
+static VARS_SOV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SOV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SOV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SOV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ietisation"),
         dictgen::InsensitiveStr::Ascii("ietisations"),
@@ -3465,12 +3464,12 @@ pub static VARS_TRIE_SOV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_SOM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SOM_CHILDREN),
+static VARS_SOM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SOM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SOM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SOM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ber"),
         dictgen::InsensitiveStr::Ascii("berer"),
@@ -3490,12 +3489,12 @@ pub static VARS_TRIE_SOM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=9,
 };
 
-static VARS_TRIE_SOL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SOL_CHILDREN),
+static VARS_SOL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SOL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SOL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SOL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("arisation"),
         dictgen::InsensitiveStr::Ascii("arisations"),
@@ -3603,12 +3602,12 @@ pub static VARS_TRIE_SOL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=12,
 };
 
-static VARS_TRIE_SOD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SOD_CHILDREN),
+static VARS_SOD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SOD_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SOD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SOD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("omise"),
         dictgen::InsensitiveStr::Ascii("omised"),
@@ -3632,12 +3631,12 @@ pub static VARS_TRIE_SOD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_SOC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SOC_CHILDREN),
+static VARS_SOC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SOC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SOC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SOC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ialisation"),
         dictgen::InsensitiveStr::Ascii("ialisations"),
@@ -3669,12 +3668,12 @@ pub static VARS_TRIE_SOC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_SN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SN_CHILDREN),
+static VARS_SN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iveled"),
         dictgen::InsensitiveStr::Ascii("iveler"),
@@ -3718,12 +3717,12 @@ pub static VARS_TRIE_SN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=9,
 };
 
-static VARS_TRIE_SM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SM_CHILDREN),
+static VARS_SM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("idge"),
         dictgen::InsensitiveStr::Ascii("idges"),
@@ -3743,12 +3742,12 @@ pub static VARS_TRIE_SM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=8,
 };
 
-static VARS_TRIE_SL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SL_CHILDREN),
+static VARS_SL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("enderise"),
         dictgen::InsensitiveStr::Ascii("enderised"),
@@ -3778,12 +3777,12 @@ pub static VARS_TRIE_SL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=10,
 };
 
-static VARS_TRIE_SK_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SK_CHILDREN),
+static VARS_SK_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SK_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SK_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SK_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eptic"),
         dictgen::InsensitiveStr::Ascii("eptical"),
@@ -3811,12 +3810,12 @@ pub static VARS_TRIE_SK_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=10,
 };
 
-static VARS_TRIE_SI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SI_CHILDREN),
+static VARS_SI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gnaled"),
         dictgen::InsensitiveStr::Ascii("gnaler"),
@@ -3872,12 +3871,12 @@ pub static VARS_TRIE_SI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=14,
 };
 
-static VARS_TRIE_SH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SH_CHILDREN),
+static VARS_SH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aikh"),
         dictgen::InsensitiveStr::Ascii("aikhs"),
@@ -3913,30 +3912,30 @@ pub static VARS_TRIE_SH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=9,
 };
 
-static VARS_TRIE_SE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_SE_CHILDREN),
+static VARS_SE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_SE_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_SE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_SE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_SEB_NODE),
-    Some(&VARS_TRIE_SEC_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_SEI_NODE),
+    Some(&VARS_SEB_NODE),
+    Some(&VARS_SEC_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_SEN_NODE),
     None,
-    Some(&VARS_TRIE_SEP_NODE),
+    Some(&VARS_SEI_NODE),
     None,
-    Some(&VARS_TRIE_SER_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_SEN_NODE),
+    None,
+    Some(&VARS_SEP_NODE),
+    None,
+    Some(&VARS_SER_NODE),
     None,
     None,
     None,
@@ -3947,12 +3946,12 @@ static VARS_TRIE_SE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_SER_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SER_CHILDREN),
+static VARS_SER_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SER_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ialisation"),
         dictgen::InsensitiveStr::Ascii("ialisations"),
@@ -4008,12 +4007,12 @@ pub static VARS_TRIE_SER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_SEP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SEP_CHILDREN),
+static VARS_SEP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SEP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SEP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SEP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ticaemia"),
         dictgen::InsensitiveStr::Ascii("ticaemias"),
@@ -4049,12 +4048,12 @@ pub static VARS_TRIE_SEP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=9,
 };
 
-static VARS_TRIE_SEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SEN_CHILDREN),
+static VARS_SEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SEN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sationalise"),
         dictgen::InsensitiveStr::Ascii("sationalised"),
@@ -4150,12 +4149,12 @@ pub static VARS_TRIE_SEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=16,
 };
 
-static VARS_TRIE_SEI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SEI_CHILDREN),
+static VARS_SEI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SEI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ser"),
         dictgen::InsensitiveStr::Ascii("sers"),
@@ -4171,12 +4170,12 @@ pub static VARS_TRIE_SEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=4,
 };
 
-static VARS_TRIE_SEC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SEC_CHILDREN),
+static VARS_SEC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SEC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SEC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SEC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tionalise"),
         dictgen::InsensitiveStr::Ascii("tionalised"),
@@ -4224,12 +4223,12 @@ pub static VARS_TRIE_SEC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_SEB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SEB_CHILDREN),
+static VARS_SEB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SEB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SEB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SEB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orrhea"),
         dictgen::InsensitiveStr::Ascii("orrheas"),
@@ -4249,12 +4248,12 @@ pub static VARS_TRIE_SEB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_SC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SC_CHILDREN),
+static VARS_SC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("andalise"),
         dictgen::InsensitiveStr::Ascii("andalised"),
@@ -4362,16 +4361,14 @@ pub static VARS_TRIE_SC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=13,
 };
 
-static VARS_TRIE_SA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_SA_CHILDREN),
+static VARS_SA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_SA_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_SA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_SA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_SAB_NODE),
-    None,
-    None,
+    Some(&VARS_SAB_NODE),
     None,
     None,
     None,
@@ -4379,29 +4376,31 @@ static VARS_TRIE_SA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_SAL_NODE),
-    None,
-    Some(&VARS_TRIE_SAN_NODE),
     None,
     None,
+    Some(&VARS_SAL_NODE),
+    None,
+    Some(&VARS_SAN_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_SAT_NODE),
     None,
-    Some(&VARS_TRIE_SAV_NODE),
+    None,
+    Some(&VARS_SAT_NODE),
+    None,
+    Some(&VARS_SAV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_SAV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SAV_CHILDREN),
+static VARS_SAV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SAV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ior"),
         dictgen::InsensitiveStr::Ascii("iors"),
@@ -4477,12 +4476,12 @@ pub static VARS_TRIE_SAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=10,
 };
 
-static VARS_TRIE_SAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SAT_CHILDREN),
+static VARS_SAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SAT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("irisation"),
         dictgen::InsensitiveStr::Ascii("irise"),
@@ -4510,12 +4509,12 @@ pub static VARS_TRIE_SAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=9,
 };
 
-static VARS_TRIE_SAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SAN_CHILDREN),
+static VARS_SAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SAN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("daled"),
         dictgen::InsensitiveStr::Ascii("daling"),
@@ -4563,12 +4562,12 @@ pub static VARS_TRIE_SAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_SAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SAL_CHILDREN),
+static VARS_SAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SAL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("able"),
         dictgen::InsensitiveStr::Ascii("abler"),
@@ -4594,12 +4593,12 @@ pub static VARS_TRIE_SAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=9,
 };
 
-static VARS_TRIE_SAB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_SAB_CHILDREN),
+static VARS_SAB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_SAB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_SAB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_SAB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("ered"),
@@ -4615,33 +4614,33 @@ pub static VARS_TRIE_SAB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=5,
 };
 
-static VARS_TRIE_R_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_R_CHILDREN),
+static VARS_R_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_R_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_R_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_RA_NODE),
+static VARS_R_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_RA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_RE_NODE),
+    Some(&VARS_RE_NODE),
     None,
     None,
-    Some(&VARS_TRIE_RH_NODE),
-    Some(&VARS_TRIE_RI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_RO_NODE),
+    Some(&VARS_RH_NODE),
+    Some(&VARS_RI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_RU_NODE),
+    Some(&VARS_RO_NODE),
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_RU_NODE),
     None,
     None,
     None,
@@ -4649,12 +4648,12 @@ static VARS_TRIE_R_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_RU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_RU_CHILDREN),
+static VARS_RU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_RU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_RU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_RU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bberise"),
         dictgen::InsensitiveStr::Ascii("bberised"),
@@ -4718,12 +4717,12 @@ pub static VARS_TRIE_RU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=11,
 };
 
-static VARS_TRIE_RO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_RO_CHILDREN),
+static VARS_RO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_RO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_RO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_RO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("botisation"),
         dictgen::InsensitiveStr::Ascii("botisations"),
@@ -4827,12 +4826,12 @@ pub static VARS_TRIE_RO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=14,
 };
 
-static VARS_TRIE_RI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_RI_CHILDREN),
+static VARS_RI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_RI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_RI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_RI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gor"),
         dictgen::InsensitiveStr::Ascii("gors"),
@@ -4880,12 +4879,12 @@ pub static VARS_TRIE_RI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=12,
 };
 
-static VARS_TRIE_RH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_RH_CHILDREN),
+static VARS_RH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_RH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_RH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_RH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("apsodise"),
         dictgen::InsensitiveStr::Ascii("apsodised"),
@@ -4909,46 +4908,46 @@ pub static VARS_TRIE_RH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 8..=10,
 };
 
-static VARS_TRIE_RE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_RE_CHILDREN),
+static VARS_RE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_RE_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_RE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_REA_NODE),
+static VARS_RE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_REA_NODE),
     None,
-    Some(&VARS_TRIE_REC_NODE),
-    Some(&VARS_TRIE_RED_NODE),
-    Some(&VARS_TRIE_REE_NODE),
-    Some(&VARS_TRIE_REF_NODE),
-    Some(&VARS_TRIE_REG_NODE),
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_REL_NODE),
-    Some(&VARS_TRIE_REM_NODE),
-    None,
-    Some(&VARS_TRIE_REO_NODE),
-    Some(&VARS_TRIE_REP_NODE),
+    Some(&VARS_REC_NODE),
+    Some(&VARS_RED_NODE),
+    Some(&VARS_REE_NODE),
+    Some(&VARS_REF_NODE),
+    Some(&VARS_REG_NODE),
     None,
     None,
     None,
     None,
+    Some(&VARS_REL_NODE),
+    Some(&VARS_REM_NODE),
     None,
-    Some(&VARS_TRIE_REV_NODE),
+    Some(&VARS_REO_NODE),
+    Some(&VARS_REP_NODE),
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_REV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_REV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REV_CHILDREN),
+static VARS_REV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -5016,12 +5015,12 @@ pub static VARS_TRIE_REV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=12,
 };
 
-static VARS_TRIE_REP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REP_CHILDREN),
+static VARS_REP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rogramme"),
         dictgen::InsensitiveStr::Ascii("rogrammes"),
@@ -5033,12 +5032,12 @@ pub static VARS_TRIE_REP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=9,
 };
 
-static VARS_TRIE_REO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REO_CHILDREN),
+static VARS_REO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rganisation"),
         dictgen::InsensitiveStr::Ascii("rganisations"),
@@ -5078,12 +5077,12 @@ pub static VARS_TRIE_REO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_REM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REM_CHILDREN),
+static VARS_REM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("odeled"),
         dictgen::InsensitiveStr::Ascii("odeling"),
@@ -5115,12 +5114,12 @@ pub static VARS_TRIE_REM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=8,
 };
 
-static VARS_TRIE_REL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REL_CHILDREN),
+static VARS_REL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ativisation"),
         dictgen::InsensitiveStr::Ascii("ativisations"),
@@ -5152,12 +5151,12 @@ pub static VARS_TRIE_REL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_REG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REG_CHILDREN),
+static VARS_REG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ularisation"),
         dictgen::InsensitiveStr::Ascii("ularisations"),
@@ -5189,12 +5188,12 @@ pub static VARS_TRIE_REG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_REF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REF_CHILDREN),
+static VARS_REF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REF_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ueled"),
         dictgen::InsensitiveStr::Ascii("ueling"),
@@ -5210,12 +5209,12 @@ pub static VARS_TRIE_REF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_REE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REE_CHILDREN),
+static VARS_REE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nforce"),
         dictgen::InsensitiveStr::Ascii("nforced"),
@@ -5231,12 +5230,12 @@ pub static VARS_TRIE_REE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_RED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_RED_CHILDREN),
+static VARS_RED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_RED_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_RED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_RED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ialed"),
         dictgen::InsensitiveStr::Ascii("ialing"),
@@ -5252,12 +5251,12 @@ pub static VARS_TRIE_RED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_REC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REC_CHILDREN),
+static VARS_REC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("apitalisation"),
         dictgen::InsensitiveStr::Ascii("apitalisations"),
@@ -5381,12 +5380,12 @@ pub static VARS_TRIE_REC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=14,
 };
 
-static VARS_TRIE_REA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_REA_CHILDREN),
+static VARS_REA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_REA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_REA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_REA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lisabilities"),
         dictgen::InsensitiveStr::Ascii("lisability"),
@@ -5468,12 +5467,12 @@ pub static VARS_TRIE_REA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=12,
 };
 
-static VARS_TRIE_RA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_RA_CHILDREN),
+static VARS_RA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_RA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_RA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_RA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cialise"),
         dictgen::InsensitiveStr::Ascii("cialises"),
@@ -5595,12 +5594,12 @@ pub static VARS_TRIE_RA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=14,
 };
 
-static VARS_TRIE_Q_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_Q_CHILDREN),
+static VARS_Q_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_Q_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_Q_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_Q_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("uantisation"),
         dictgen::InsensitiveStr::Ascii("uantisations"),
@@ -5654,46 +5653,46 @@ pub static VARS_TRIE_Q_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dic
     range: 6..=12,
 };
 
-static VARS_TRIE_P_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_P_CHILDREN),
+static VARS_P_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_P_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_P_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_PA_NODE),
+static VARS_P_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_PA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_PE_NODE),
+    Some(&VARS_PE_NODE),
     None,
     None,
-    Some(&VARS_TRIE_PH_NODE),
-    Some(&VARS_TRIE_PI_NODE),
+    Some(&VARS_PH_NODE),
+    Some(&VARS_PI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_PL_NODE),
+    Some(&VARS_PL_NODE),
     None,
     None,
-    Some(&VARS_TRIE_PO_NODE),
+    Some(&VARS_PO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_PR_NODE),
-    Some(&VARS_TRIE_PS_NODE),
+    Some(&VARS_PR_NODE),
+    Some(&VARS_PS_NODE),
     None,
-    Some(&VARS_TRIE_PU_NODE),
+    Some(&VARS_PU_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_PY_NODE),
+    Some(&VARS_PY_NODE),
     None,
 ];
 
-static VARS_TRIE_PY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PY_CHILDREN),
+static VARS_PY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("jama"),
         dictgen::InsensitiveStr::Ascii("jamas"),
@@ -5729,12 +5728,12 @@ pub static VARS_TRIE_PY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=8,
 };
 
-static VARS_TRIE_PU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PU_CHILDREN),
+static VARS_PU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("blicise"),
         dictgen::InsensitiveStr::Ascii("blicised"),
@@ -5798,12 +5797,12 @@ pub static VARS_TRIE_PU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=12,
 };
 
-static VARS_TRIE_PS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PS_CHILDREN),
+static VARS_PS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ychoanalyse"),
         dictgen::InsensitiveStr::Ascii("ychoanalysed"),
@@ -5841,27 +5840,27 @@ pub static VARS_TRIE_PS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 10..=13,
 };
 
-static VARS_TRIE_PR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_PR_CHILDREN),
+static VARS_PR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_PR_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_PR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_PRA_NODE),
+static VARS_PR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_PRA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_PRE_NODE),
+    Some(&VARS_PRE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_PRI_NODE),
+    Some(&VARS_PRI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_PRO_NODE),
+    Some(&VARS_PRO_NODE),
     None,
     None,
     None,
@@ -5875,12 +5874,12 @@ static VARS_TRIE_PR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_PRO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PRO_CHILDREN),
+static VARS_PRO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PRO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PRO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PRO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("fessionalisation"),
         dictgen::InsensitiveStr::Ascii("fessionalisations"),
@@ -5982,12 +5981,12 @@ pub static VARS_TRIE_PRO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=17,
 };
 
-static VARS_TRIE_PRI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PRI_CHILDREN),
+static VARS_PRI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PRI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("maeval"),
         dictgen::InsensitiveStr::Ascii("maevally"),
@@ -6063,12 +6062,12 @@ pub static VARS_TRIE_PRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=12,
 };
 
-static VARS_TRIE_PRE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PRE_CHILDREN),
+static VARS_PRE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PRE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PRE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PRE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("conise"),
         dictgen::InsensitiveStr::Ascii("conised"),
@@ -6142,12 +6141,12 @@ pub static VARS_TRIE_PRE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=12,
 };
 
-static VARS_TRIE_PRA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PRA_CHILDREN),
+static VARS_PRA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PRA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PRA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PRA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cticed"),
         dictgen::InsensitiveStr::Ascii("cticer"),
@@ -6167,33 +6166,33 @@ pub static VARS_TRIE_PRA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=7,
 };
 
-static VARS_TRIE_PO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_PO_CHILDREN),
+static VARS_PO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_PO_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_PO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_PO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_POE_NODE),
+    Some(&VARS_POE_NODE),
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_POL_NODE),
-    Some(&VARS_TRIE_POM_NODE),
+    Some(&VARS_POL_NODE),
+    Some(&VARS_POM_NODE),
     None,
     None,
-    Some(&VARS_TRIE_POP_NODE),
+    Some(&VARS_POP_NODE),
     None,
-    Some(&VARS_TRIE_POR_NODE),
+    Some(&VARS_POR_NODE),
     None,
     None,
-    Some(&VARS_TRIE_POU_NODE),
+    Some(&VARS_POU_NODE),
     None,
     None,
     None,
@@ -6201,12 +6200,12 @@ static VARS_TRIE_PO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_POU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_POU_CHILDREN),
+static VARS_POU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_POU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_POU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_POU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rer"),
         dictgen::InsensitiveStr::Ascii("rers"),
@@ -6218,12 +6217,12 @@ pub static VARS_TRIE_POU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=4,
 };
 
-static VARS_TRIE_POR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_POR_CHILDREN),
+static VARS_POR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_POR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_POR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_POR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("ers"),
@@ -6235,12 +6234,12 @@ pub static VARS_TRIE_POR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=3,
 };
 
-static VARS_TRIE_POP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_POP_CHILDREN),
+static VARS_POP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_POP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_POP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_POP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ularisation"),
         dictgen::InsensitiveStr::Ascii("ularisations"),
@@ -6280,12 +6279,12 @@ pub static VARS_TRIE_POP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_POM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_POM_CHILDREN),
+static VARS_POM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_POM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_POM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_POM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("meled"),
         dictgen::InsensitiveStr::Ascii("meling"),
@@ -6301,12 +6300,12 @@ pub static VARS_TRIE_POM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_POL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_POL_CHILDREN),
+static VARS_POL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_POL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_POL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_POL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("arisable"),
         dictgen::InsensitiveStr::Ascii("arisables"),
@@ -6418,12 +6417,12 @@ pub static VARS_TRIE_POL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=12,
 };
 
-static VARS_TRIE_POE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_POE_CHILDREN),
+static VARS_POE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_POE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_POE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_POE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ticise"),
         dictgen::InsensitiveStr::Ascii("ticised"),
@@ -6463,13 +6462,13 @@ pub static VARS_TRIE_POE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=8,
 };
 
-static VARS_TRIE_PL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_PL_CHILDREN),
+static VARS_PL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_PL_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_PL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_PLA_NODE),
+static VARS_PL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_PLA_NODE),
     None,
     None,
     None,
@@ -6483,13 +6482,13 @@ static VARS_TRIE_PL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_PLO_NODE),
+    Some(&VARS_PLO_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_PLU_NODE),
+    Some(&VARS_PLU_NODE),
     None,
     None,
     None,
@@ -6497,12 +6496,12 @@ static VARS_TRIE_PL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_PLU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PLU_CHILDREN),
+static VARS_PLU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PLU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PLU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PLU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ralisation"),
         dictgen::InsensitiveStr::Ascii("ralisations"),
@@ -6534,12 +6533,12 @@ pub static VARS_TRIE_PLU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_PLO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PLO_CHILDREN),
+static VARS_PLO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PLO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PLO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PLO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ugh"),
         dictgen::InsensitiveStr::Ascii("ughable"),
@@ -6591,12 +6590,12 @@ pub static VARS_TRIE_PLO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 1..=9,
 };
 
-static VARS_TRIE_PLA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PLA_CHILDREN),
+static VARS_PLA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PLA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PLA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PLA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("giarise"),
         dictgen::InsensitiveStr::Ascii("giarised"),
@@ -6692,12 +6691,12 @@ pub static VARS_TRIE_PLA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=12,
 };
 
-static VARS_TRIE_PI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PI_CHILDREN),
+static VARS_PI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aster"),
         dictgen::InsensitiveStr::Ascii("asters"),
@@ -6713,12 +6712,12 @@ pub static VARS_TRIE_PI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=6,
 };
 
-static VARS_TRIE_PH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PH_CHILDREN),
+static VARS_PH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ilosophise"),
         dictgen::InsensitiveStr::Ascii("ilosophised"),
@@ -6794,30 +6793,30 @@ pub static VARS_TRIE_PH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=15,
 };
 
-static VARS_TRIE_PE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_PE_CHILDREN),
+static VARS_PE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_PE_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_PE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_PE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
-    Some(&VARS_TRIE_PED_NODE),
-    None,
-    None,
-    None,
-    None,
+    Some(&VARS_PED_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_PEN_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_PER_NODE),
+    None,
+    Some(&VARS_PEN_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_PER_NODE),
     None,
     None,
     None,
@@ -6828,12 +6827,12 @@ static VARS_TRIE_PE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_PER_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PER_CHILDREN),
+static VARS_PER_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PER_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iled"),
         dictgen::InsensitiveStr::Ascii("iling"),
@@ -6881,12 +6880,12 @@ pub static VARS_TRIE_PER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=13,
 };
 
-static VARS_TRIE_PEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PEN_CHILDREN),
+static VARS_PEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PEN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alisation"),
         dictgen::InsensitiveStr::Ascii("alisations"),
@@ -6930,12 +6929,12 @@ pub static VARS_TRIE_PEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_PED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PED_CHILDREN),
+static VARS_PED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PED_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("agog"),
         dictgen::InsensitiveStr::Ascii("agogs"),
@@ -7011,33 +7010,33 @@ pub static VARS_TRIE_PED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=15,
 };
 
-static VARS_TRIE_PA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_PA_CHILDREN),
+static VARS_PA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_PA_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_PA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_PA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_PAE_NODE),
+    Some(&VARS_PAE_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_PAJ_NODE),
+    Some(&VARS_PAJ_NODE),
     None,
-    Some(&VARS_TRIE_PAL_NODE),
+    Some(&VARS_PAL_NODE),
     None,
-    Some(&VARS_TRIE_PAN_NODE),
+    Some(&VARS_PAN_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_PAR_NODE),
-    Some(&VARS_TRIE_PAS_NODE),
-    Some(&VARS_TRIE_PAT_NODE),
-    Some(&VARS_TRIE_PAU_NODE),
+    Some(&VARS_PAR_NODE),
+    Some(&VARS_PAS_NODE),
+    Some(&VARS_PAT_NODE),
+    Some(&VARS_PAU_NODE),
     None,
     None,
     None,
@@ -7045,12 +7044,12 @@ static VARS_TRIE_PA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_PAU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAU_CHILDREN),
+static VARS_PAU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("perisation"),
         dictgen::InsensitiveStr::Ascii("perisations"),
@@ -7082,12 +7081,12 @@ pub static VARS_TRIE_PAU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_PAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAT_CHILDREN),
+static VARS_PAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ronise"),
         dictgen::InsensitiveStr::Ascii("ronised"),
@@ -7135,12 +7134,12 @@ pub static VARS_TRIE_PAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=13,
 };
 
-static VARS_TRIE_PAS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAS_CHILDREN),
+static VARS_PAS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sivisation"),
         dictgen::InsensitiveStr::Ascii("sivization"),
@@ -7184,12 +7183,12 @@ pub static VARS_TRIE_PAS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_PAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAR_CHILDREN),
+static VARS_PAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alyse"),
         dictgen::InsensitiveStr::Ascii("alysed"),
@@ -7299,12 +7298,12 @@ pub static VARS_TRIE_PAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=15,
 };
 
-static VARS_TRIE_PAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAN_CHILDREN),
+static VARS_PAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("egyrise"),
         dictgen::InsensitiveStr::Ascii("egyrised"),
@@ -7348,12 +7347,12 @@ pub static VARS_TRIE_PAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=9,
 };
 
-static VARS_TRIE_PAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAL_CHILDREN),
+static VARS_PAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aeoclimatologies"),
         dictgen::InsensitiveStr::Ascii("aeoclimatology"),
@@ -7429,12 +7428,12 @@ pub static VARS_TRIE_PAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=16,
 };
 
-static VARS_TRIE_PAJ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAJ_CHILDREN),
+static VARS_PAJ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAJ_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAJ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAJ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ama"),
         dictgen::InsensitiveStr::Ascii("amas"),
@@ -7446,12 +7445,12 @@ pub static VARS_TRIE_PAJ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=4,
 };
 
-static VARS_TRIE_PAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_PAE_CHILDREN),
+static VARS_PAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_PAE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_PAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_PAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("derast"),
         dictgen::InsensitiveStr::Ascii("derasts"),
@@ -7479,46 +7478,46 @@ pub static VARS_TRIE_PAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_O_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_O_CHILDREN),
+static VARS_O_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_O_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_O_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_O_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_OB_NODE),
-    Some(&VARS_TRIE_OC_NODE),
-    Some(&VARS_TRIE_OD_NODE),
-    Some(&VARS_TRIE_OE_NODE),
-    Some(&VARS_TRIE_OF_NODE),
-    None,
-    None,
+    Some(&VARS_OB_NODE),
+    Some(&VARS_OC_NODE),
+    Some(&VARS_OD_NODE),
+    Some(&VARS_OE_NODE),
+    Some(&VARS_OF_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_OM_NODE),
     None,
     None,
-    Some(&VARS_TRIE_OP_NODE),
+    Some(&VARS_OM_NODE),
     None,
-    Some(&VARS_TRIE_OR_NODE),
-    Some(&VARS_TRIE_OS_NODE),
     None,
-    Some(&VARS_TRIE_OU_NODE),
-    Some(&VARS_TRIE_OV_NODE),
+    Some(&VARS_OP_NODE),
     None,
-    Some(&VARS_TRIE_OX_NODE),
+    Some(&VARS_OR_NODE),
+    Some(&VARS_OS_NODE),
+    None,
+    Some(&VARS_OU_NODE),
+    Some(&VARS_OV_NODE),
+    None,
+    Some(&VARS_OX_NODE),
     None,
     None,
 ];
 
-static VARS_TRIE_OX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OX_CHILDREN),
+static VARS_OX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OX_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("idisable"),
         dictgen::InsensitiveStr::Ascii("idisables"),
@@ -7570,12 +7569,12 @@ pub static VARS_TRIE_OX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=10,
 };
 
-static VARS_TRIE_OV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OV_CHILDREN),
+static VARS_OV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ercapitalise"),
         dictgen::InsensitiveStr::Ascii("ercapitalised"),
@@ -7671,12 +7670,12 @@ pub static VARS_TRIE_OV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 11..=17,
 };
 
-static VARS_TRIE_OU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OU_CHILDREN),
+static VARS_OU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rang"),
         dictgen::InsensitiveStr::Ascii("rangs"),
@@ -7704,12 +7703,12 @@ pub static VARS_TRIE_OU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=12,
 };
 
-static VARS_TRIE_OS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OS_CHILDREN),
+static VARS_OS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tracise"),
         dictgen::InsensitiveStr::Ascii("tracised"),
@@ -7733,12 +7732,12 @@ pub static VARS_TRIE_OS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=9,
 };
 
-static VARS_TRIE_OR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OR_CHILDREN),
+static VARS_OR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gandie"),
         dictgen::InsensitiveStr::Ascii("gandy"),
@@ -7850,12 +7849,12 @@ pub static VARS_TRIE_OR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=17,
 };
 
-static VARS_TRIE_OP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OP_CHILDREN),
+static VARS_OP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("timisation"),
         dictgen::InsensitiveStr::Ascii("timisations"),
@@ -7895,12 +7894,12 @@ pub static VARS_TRIE_OP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=11,
 };
 
-static VARS_TRIE_OM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OM_CHILDREN),
+static VARS_OM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("elet"),
         dictgen::InsensitiveStr::Ascii("elets"),
@@ -7912,12 +7911,12 @@ pub static VARS_TRIE_OM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=5,
 };
 
-static VARS_TRIE_OF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OF_CHILDREN),
+static VARS_OF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OF_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("fence"),
         dictgen::InsensitiveStr::Ascii("fences"),
@@ -7933,12 +7932,12 @@ pub static VARS_TRIE_OF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=6,
 };
 
-static VARS_TRIE_OE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OE_CHILDREN),
+static VARS_OE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cumenism"),
         dictgen::InsensitiveStr::Ascii("dema"),
@@ -7978,12 +7977,12 @@ pub static VARS_TRIE_OE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=10,
 };
 
-static VARS_TRIE_OD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OD_CHILDREN),
+static VARS_OD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OD_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orless"),
@@ -8011,12 +8010,12 @@ pub static VARS_TRIE_OD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=10,
 };
 
-static VARS_TRIE_OC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OC_CHILDREN),
+static VARS_OC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("her"),
         dictgen::InsensitiveStr::Ascii("hered"),
@@ -8054,12 +8053,12 @@ pub static VARS_TRIE_OC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=9,
 };
 
-static VARS_TRIE_OB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_OB_CHILDREN),
+static VARS_OB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_OB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_OB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_OB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("jectivise"),
         dictgen::InsensitiveStr::Ascii("jectivised"),
@@ -8083,27 +8082,27 @@ pub static VARS_TRIE_OB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 9..=11,
 };
 
-static VARS_TRIE_N_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_N_CHILDREN),
+static VARS_N_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_N_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_N_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_NA_NODE),
+static VARS_N_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_NA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_NE_NODE),
+    Some(&VARS_NE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_NI_NODE),
+    Some(&VARS_NI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_NO_NODE),
+    Some(&VARS_NO_NODE),
     None,
     None,
     None,
@@ -8117,12 +8116,12 @@ static VARS_TRIE_N_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_NO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NO_CHILDREN),
+static VARS_NO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rmalisation"),
         dictgen::InsensitiveStr::Ascii("rmalisations"),
@@ -8206,12 +8205,12 @@ pub static VARS_TRIE_NO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=12,
 };
 
-static VARS_TRIE_NI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NI_CHILDREN),
+static VARS_NI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("te"),
         dictgen::InsensitiveStr::Ascii("ter"),
@@ -8235,33 +8234,33 @@ pub static VARS_TRIE_NI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=12,
 };
 
-static VARS_TRIE_NE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_NE_CHILDREN),
+static VARS_NE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_NE_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_NE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_NE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_NEB_NODE),
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_NEG_NODE),
-    None,
-    Some(&VARS_TRIE_NEI_NODE),
+    Some(&VARS_NEB_NODE),
     None,
     None,
     None,
     None,
+    Some(&VARS_NEG_NODE),
     None,
-    Some(&VARS_TRIE_NEO_NODE),
+    Some(&VARS_NEI_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_NET_NODE),
-    Some(&VARS_TRIE_NEU_NODE),
+    None,
+    Some(&VARS_NEO_NODE),
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_NET_NODE),
+    Some(&VARS_NEU_NODE),
     None,
     None,
     None,
@@ -8269,12 +8268,12 @@ static VARS_TRIE_NE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_NEU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NEU_CHILDREN),
+static VARS_NEU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NEU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NEU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NEU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tralisation"),
         dictgen::InsensitiveStr::Ascii("tralisations"),
@@ -8314,12 +8313,12 @@ pub static VARS_TRIE_NEU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_NET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NET_CHILDREN),
+static VARS_NET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NET_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("t"),
         dictgen::InsensitiveStr::Ascii("ts"),
@@ -8331,12 +8330,12 @@ pub static VARS_TRIE_NET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 1..=2,
 };
 
-static VARS_TRIE_NEO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NEO_CHILDREN),
+static VARS_NEO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NEO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NEO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NEO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("logise"),
         dictgen::InsensitiveStr::Ascii("logised"),
@@ -8360,12 +8359,12 @@ pub static VARS_TRIE_NEO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_NEI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NEI_CHILDREN),
+static VARS_NEI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NEI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ghbor"),
         dictgen::InsensitiveStr::Ascii("ghbored"),
@@ -8421,12 +8420,12 @@ pub static VARS_TRIE_NEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=14,
 };
 
-static VARS_TRIE_NEG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NEG_CHILDREN),
+static VARS_NEG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NEG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NEG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NEG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lig"),
         dictgen::InsensitiveStr::Ascii("ligs"),
@@ -8438,12 +8437,12 @@ pub static VARS_TRIE_NEG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=4,
 };
 
-static VARS_TRIE_NEB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NEB_CHILDREN),
+static VARS_NEB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NEB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NEB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NEB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ulise"),
         dictgen::InsensitiveStr::Ascii("ulised"),
@@ -8475,12 +8474,12 @@ pub static VARS_TRIE_NEB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_NA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_NA_CHILDREN),
+static VARS_NA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_NA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_NA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_NA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nometer"),
         dictgen::InsensitiveStr::Ascii("nometers"),
@@ -8584,46 +8583,46 @@ pub static VARS_TRIE_NA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=14,
 };
 
-static VARS_TRIE_M_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_M_CHILDREN),
+static VARS_M_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_M_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_M_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_MA_NODE),
+static VARS_M_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_MA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_ME_NODE),
+    Some(&VARS_ME_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_MI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_MO_NODE),
+    Some(&VARS_MI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_MU_NODE),
+    Some(&VARS_MO_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_MY_NODE),
+    None,
+    None,
+    Some(&VARS_MU_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_MY_NODE),
     None,
 ];
 
-static VARS_TRIE_MY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MY_CHILDREN),
+static VARS_MY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("thicise"),
         dictgen::InsensitiveStr::Ascii("thicised"),
@@ -8683,12 +8682,12 @@ pub static VARS_TRIE_MY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=11,
 };
 
-static VARS_TRIE_MU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MU_CHILDREN),
+static VARS_MU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("stache"),
         dictgen::InsensitiveStr::Ascii("stached"),
@@ -8702,57 +8701,57 @@ pub static VARS_TRIE_MU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=7,
 };
 
-static VARS_TRIE_MO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_MO_CHILDREN),
+static VARS_MO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_MO_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_MO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_MO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_MOB_NODE),
+    Some(&VARS_MOB_NODE),
     None,
-    Some(&VARS_TRIE_MOD_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_MOG_NODE),
-    None,
-    Some(&VARS_TRIE_MOI_NODE),
+    Some(&VARS_MOD_NODE),
     None,
     None,
-    Some(&VARS_TRIE_MOL_NODE),
+    Some(&VARS_MOG_NODE),
     None,
-    Some(&VARS_TRIE_MON_NODE),
+    Some(&VARS_MOI_NODE),
+    None,
+    None,
+    Some(&VARS_MOL_NODE),
+    None,
+    Some(&VARS_MON_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_MOR_NODE),
+    Some(&VARS_MOR_NODE),
     None,
-    Some(&VARS_TRIE_MOT_NODE),
-    Some(&VARS_TRIE_MOU_NODE),
-    Some(&VARS_TRIE_MOV_NODE),
+    Some(&VARS_MOT_NODE),
+    Some(&VARS_MOU_NODE),
+    Some(&VARS_MOV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_MOV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOV_CHILDREN),
+static VARS_MOV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("eability")],
     values: &[&[(0b00001, &ENTRY_MOVABILITY_2120736134131484989)]],
     range: 8..=8,
 };
 
-static VARS_TRIE_MOU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOU_CHILDREN),
+static VARS_MOU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ld"),
         dictgen::InsensitiveStr::Ascii("lded"),
@@ -8798,12 +8797,12 @@ pub static VARS_TRIE_MOU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=7,
 };
 
-static VARS_TRIE_MOT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOT_CHILDREN),
+static VARS_MOT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orisation"),
         dictgen::InsensitiveStr::Ascii("orisations"),
@@ -8835,12 +8834,12 @@ pub static VARS_TRIE_MOT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_MOR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOR_CHILDREN),
+static VARS_MOR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alisation"),
         dictgen::InsensitiveStr::Ascii("alisations"),
@@ -8888,12 +8887,12 @@ pub static VARS_TRIE_MOR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=11,
 };
 
-static VARS_TRIE_MON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MON_CHILDREN),
+static VARS_MON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MON_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ecious"),
         dictgen::InsensitiveStr::Ascii("etisation"),
@@ -8987,12 +8986,12 @@ pub static VARS_TRIE_MON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=12,
 };
 
-static VARS_TRIE_MOL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOL_CHILDREN),
+static VARS_MOL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("d"),
         dictgen::InsensitiveStr::Ascii("ded"),
@@ -9038,12 +9037,12 @@ pub static VARS_TRIE_MOL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 1..=6,
 };
 
-static VARS_TRIE_MOI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOI_CHILDREN),
+static VARS_MOI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sturise"),
         dictgen::InsensitiveStr::Ascii("sturised"),
@@ -9075,23 +9074,23 @@ pub static VARS_TRIE_MOI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=9,
 };
 
-static VARS_TRIE_MOG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOG_CHILDREN),
+static VARS_MOG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("gy")],
     values: &[&[(0b10011, &ENTRY_MOGGY_7403358484289979778)]],
     range: 2..=2,
 };
 
-static VARS_TRIE_MOD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOD_CHILDREN),
+static VARS_MOD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOD_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -9151,12 +9150,12 @@ pub static VARS_TRIE_MOD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=11,
 };
 
-static VARS_TRIE_MOB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MOB_CHILDREN),
+static VARS_MOB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MOB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MOB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MOB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ilisable"),
         dictgen::InsensitiveStr::Ascii("ilisabler"),
@@ -9212,32 +9211,32 @@ pub static VARS_TRIE_MOB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_MI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_MI_CHILDREN),
+static VARS_MI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_MI_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_MI_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_MIA_NODE),
+static VARS_MI_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_MIA_NODE),
     None,
-    Some(&VARS_TRIE_MIC_NODE),
-    None,
-    None,
+    Some(&VARS_MIC_NODE),
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_MIL_NODE),
-    None,
-    Some(&VARS_TRIE_MIN_NODE),
     None,
     None,
+    Some(&VARS_MIL_NODE),
+    None,
+    Some(&VARS_MIN_NODE),
     None,
     None,
-    Some(&VARS_TRIE_MIS_NODE),
-    Some(&VARS_TRIE_MIT_NODE),
+    None,
+    None,
+    Some(&VARS_MIS_NODE),
+    Some(&VARS_MIT_NODE),
     None,
     None,
     None,
@@ -9246,12 +9245,12 @@ static VARS_TRIE_MI_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_MIT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MIT_CHILDREN),
+static VARS_MIT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MIT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MIT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MIT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("ered"),
@@ -9275,12 +9274,12 @@ pub static VARS_TRIE_MIT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=5,
 };
 
-static VARS_TRIE_MIS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MIS_CHILDREN),
+static VARS_MIS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MIS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MIS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MIS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("behavior"),
         dictgen::InsensitiveStr::Ascii("behaviors"),
@@ -9316,12 +9315,12 @@ pub static VARS_TRIE_MIS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_MIN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MIN_CHILDREN),
+static VARS_MIN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MIN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MIN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MIN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eralisation"),
         dictgen::InsensitiveStr::Ascii("eralisations"),
@@ -9411,12 +9410,12 @@ pub static VARS_TRIE_MIN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=13,
 };
 
-static VARS_TRIE_MIL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MIL_CHILDREN),
+static VARS_MIL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MIL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MIL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MIL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("itarisation"),
         dictgen::InsensitiveStr::Ascii("itarisations"),
@@ -9468,12 +9467,12 @@ pub static VARS_TRIE_MIL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_MIC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MIC_CHILDREN),
+static VARS_MIC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MIC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rometre"),
         dictgen::InsensitiveStr::Ascii("rometres"),
@@ -9493,12 +9492,12 @@ pub static VARS_TRIE_MIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=18,
 };
 
-static VARS_TRIE_MIA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MIA_CHILDREN),
+static VARS_MIA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MIA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MIA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MIA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ow"),
         dictgen::InsensitiveStr::Ascii("owed"),
@@ -9514,32 +9513,32 @@ pub static VARS_TRIE_MIA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=5,
 };
 
-static VARS_TRIE_ME_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_ME_CHILDREN),
+static VARS_ME_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_ME_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_ME_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_MEA_NODE),
+static VARS_ME_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_MEA_NODE),
     None,
-    Some(&VARS_TRIE_MEC_NODE),
-    Some(&VARS_TRIE_MED_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_MEG_NODE),
+    Some(&VARS_MEC_NODE),
+    Some(&VARS_MED_NODE),
     None,
     None,
-    None,
-    None,
-    Some(&VARS_TRIE_MEL_NODE),
-    Some(&VARS_TRIE_MEM_NODE),
-    Some(&VARS_TRIE_MEN_NODE),
+    Some(&VARS_MEG_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_MER_NODE),
-    Some(&VARS_TRIE_MES_NODE),
-    Some(&VARS_TRIE_MET_NODE),
+    None,
+    Some(&VARS_MEL_NODE),
+    Some(&VARS_MEM_NODE),
+    Some(&VARS_MEN_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_MER_NODE),
+    Some(&VARS_MES_NODE),
+    Some(&VARS_MET_NODE),
     None,
     None,
     None,
@@ -9548,12 +9547,12 @@ static VARS_TRIE_ME_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_MET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MET_CHILDREN),
+static VARS_MET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MET_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abolisable"),
         dictgen::InsensitiveStr::Ascii("abolisables"),
@@ -9657,12 +9656,12 @@ pub static VARS_TRIE_MET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=11,
 };
 
-static VARS_TRIE_MES_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MES_CHILDREN),
+static VARS_MES_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MES_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MES_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MES_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("merise"),
         dictgen::InsensitiveStr::Ascii("merised"),
@@ -9686,12 +9685,12 @@ pub static VARS_TRIE_MES_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_MER_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MER_CHILDREN),
+static VARS_MER_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MER_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cerise"),
         dictgen::InsensitiveStr::Ascii("cerised"),
@@ -9715,12 +9714,12 @@ pub static VARS_TRIE_MER_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_MEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MEN_CHILDREN),
+static VARS_MEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MEN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ad"),
         dictgen::InsensitiveStr::Ascii("adic"),
@@ -9734,12 +9733,12 @@ pub static VARS_TRIE_MEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=4,
 };
 
-static VARS_TRIE_MEM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MEM_CHILDREN),
+static VARS_MEM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MEM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MEM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MEM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orialise"),
         dictgen::InsensitiveStr::Ascii("orialised"),
@@ -9795,12 +9794,12 @@ pub static VARS_TRIE_MEM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_MEL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MEL_CHILDREN),
+static VARS_MEL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MEL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("odise"),
         dictgen::InsensitiveStr::Ascii("odised"),
@@ -9840,12 +9839,12 @@ pub static VARS_TRIE_MEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=12,
 };
 
-static VARS_TRIE_MEG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MEG_CHILDREN),
+static VARS_MEG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MEG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MEG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MEG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("agramme"),
         dictgen::InsensitiveStr::Ascii("agrammes"),
@@ -9857,12 +9856,12 @@ pub static VARS_TRIE_MEG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=8,
 };
 
-static VARS_TRIE_MED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MED_CHILDREN),
+static VARS_MED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MED_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alist"),
         dictgen::InsensitiveStr::Ascii("alists"),
@@ -9882,12 +9881,12 @@ pub static VARS_TRIE_MED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_MEC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MEC_CHILDREN),
+static VARS_MEC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MEC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MEC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MEC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hanisation"),
         dictgen::InsensitiveStr::Ascii("hanisations"),
@@ -9927,12 +9926,12 @@ pub static VARS_TRIE_MEC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_MEA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MEA_CHILDREN),
+static VARS_MEA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MEA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MEA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MEA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ger"),
         dictgen::InsensitiveStr::Ascii("gerrer"),
@@ -9952,46 +9951,46 @@ pub static VARS_TRIE_MEA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=7,
 };
 
-static VARS_TRIE_MA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_MA_CHILDREN),
+static VARS_MA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_MA_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_MA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_MA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_MAG_NODE),
+    Some(&VARS_MAG_NODE),
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_MAN_NODE),
+    Some(&VARS_MAN_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_MAR_NODE),
+    Some(&VARS_MAR_NODE),
     None,
-    Some(&VARS_TRIE_MAT_NODE),
+    Some(&VARS_MAT_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_MAX_NODE),
+    Some(&VARS_MAX_NODE),
     None,
     None,
 ];
 
-static VARS_TRIE_MAX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MAX_CHILDREN),
+static VARS_MAX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MAX_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MAX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MAX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("imisation"),
         dictgen::InsensitiveStr::Ascii("imisations"),
@@ -10031,12 +10030,12 @@ pub static VARS_TRIE_MAX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_MAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MAT_CHILDREN),
+static VARS_MAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MAT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("erialisation"),
         dictgen::InsensitiveStr::Ascii("erialisations"),
@@ -10070,12 +10069,12 @@ pub static VARS_TRIE_MAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=13,
 };
 
-static VARS_TRIE_MAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MAR_CHILDREN),
+static VARS_MAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MAR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bleise"),
         dictgen::InsensitiveStr::Ascii("bleised"),
@@ -10167,12 +10166,12 @@ pub static VARS_TRIE_MAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=13,
 };
 
-static VARS_TRIE_MAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MAN_CHILDREN),
+static VARS_MAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MAN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("daean"),
         dictgen::InsensitiveStr::Ascii("daeans"),
@@ -10250,12 +10249,12 @@ pub static VARS_TRIE_MAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=14,
 };
 
-static VARS_TRIE_MAG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_MAG_CHILDREN),
+static VARS_MAG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_MAG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_MAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_MAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("netisation"),
         dictgen::InsensitiveStr::Ascii("netisations"),
@@ -10287,46 +10286,46 @@ pub static VARS_TRIE_MAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_L_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_L_CHILDREN),
+static VARS_L_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_L_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_L_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_LA_NODE),
+static VARS_L_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_LA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_LE_NODE),
+    Some(&VARS_LE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_LI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_LO_NODE),
+    Some(&VARS_LI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_LU_NODE),
+    Some(&VARS_LO_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_LY_NODE),
+    None,
+    None,
+    Some(&VARS_LU_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_LY_NODE),
     None,
 ];
 
-static VARS_TRIE_LY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LY_CHILDREN),
+static VARS_LY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ophilisation"),
         dictgen::InsensitiveStr::Ascii("ophilisations"),
@@ -10358,12 +10357,12 @@ pub static VARS_TRIE_LY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 8..=13,
 };
 
-static VARS_TRIE_LU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LU_CHILDREN),
+static VARS_LU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("pines"),
         dictgen::InsensitiveStr::Ascii("ster"),
@@ -10405,12 +10404,12 @@ pub static VARS_TRIE_LU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 1..=11,
 };
 
-static VARS_TRIE_LO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LO_CHILDREN),
+static VARS_LO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("botomise"),
         dictgen::InsensitiveStr::Ascii("botomised"),
@@ -10508,57 +10507,57 @@ pub static VARS_TRIE_LO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=11,
 };
 
-static VARS_TRIE_LI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_LI_CHILDREN),
+static VARS_LI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_LI_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_LI_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_LI_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_LIB_NODE),
-    Some(&VARS_TRIE_LIC_NODE),
-    None,
-    None,
+    Some(&VARS_LIB_NODE),
+    Some(&VARS_LIC_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_LIK_NODE),
     None,
     None,
-    Some(&VARS_TRIE_LIN_NODE),
-    Some(&VARS_TRIE_LIO_NODE),
+    Some(&VARS_LIK_NODE),
     None,
-    Some(&VARS_TRIE_LIQ_NODE),
     None,
-    Some(&VARS_TRIE_LIS_NODE),
-    Some(&VARS_TRIE_LIT_NODE),
+    Some(&VARS_LIN_NODE),
+    Some(&VARS_LIO_NODE),
     None,
-    Some(&VARS_TRIE_LIV_NODE),
+    Some(&VARS_LIQ_NODE),
+    None,
+    Some(&VARS_LIS_NODE),
+    Some(&VARS_LIT_NODE),
+    None,
+    Some(&VARS_LIV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_LIV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIV_CHILDREN),
+static VARS_LIV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("able")],
     values: &[&[(0b11001, &ENTRY_LIVABLE_13408079841838673902)]],
     range: 4..=4,
 };
 
-static VARS_TRIE_LIT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIT_CHILDREN),
+static VARS_LIT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("eralise"),
@@ -10590,12 +10589,12 @@ pub static VARS_TRIE_LIT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=9,
 };
 
-static VARS_TRIE_LIS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIS_CHILDREN),
+static VARS_LIS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("someness"),
         dictgen::InsensitiveStr::Ascii("somenesses"),
@@ -10611,12 +10610,12 @@ pub static VARS_TRIE_LIS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=10,
 };
 
-static VARS_TRIE_LIQ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIQ_CHILDREN),
+static VARS_LIQ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIQ_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("uidise"),
         dictgen::InsensitiveStr::Ascii("uidised"),
@@ -10652,12 +10651,12 @@ pub static VARS_TRIE_LIQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_LIO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIO_CHILDREN),
+static VARS_LIO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nisation"),
         dictgen::InsensitiveStr::Ascii("nisations"),
@@ -10697,12 +10696,12 @@ pub static VARS_TRIE_LIO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=9,
 };
 
-static VARS_TRIE_LIN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIN_CHILDREN),
+static VARS_LIN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("earise"),
         dictgen::InsensitiveStr::Ascii("earised"),
@@ -10726,12 +10725,12 @@ pub static VARS_TRIE_LIN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_LIK_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIK_CHILDREN),
+static VARS_LIK_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIK_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIK_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIK_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abilities"),
         dictgen::InsensitiveStr::Ascii("ability"),
@@ -10747,12 +10746,12 @@ pub static VARS_TRIE_LIK_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=10,
 };
 
-static VARS_TRIE_LIC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIC_CHILDREN),
+static VARS_LIC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ence"),
         dictgen::InsensitiveStr::Ascii("enced"),
@@ -10774,12 +10773,12 @@ pub static VARS_TRIE_LIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=6,
 };
 
-static VARS_TRIE_LIB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LIB_CHILDREN),
+static VARS_LIB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LIB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LIB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LIB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -10847,12 +10846,12 @@ pub static VARS_TRIE_LIB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=12,
 };
 
-static VARS_TRIE_LE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LE_CHILDREN),
+static VARS_LE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("arnt"),
         dictgen::InsensitiveStr::Ascii("galisation"),
@@ -10942,12 +10941,12 @@ pub static VARS_TRIE_LE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=13,
 };
 
-static VARS_TRIE_LA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_LA_CHILDREN),
+static VARS_LA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_LA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_LA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_LA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("beled"),
         dictgen::InsensitiveStr::Ascii("beler"),
@@ -11079,12 +11078,12 @@ pub static VARS_TRIE_LA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=12,
 };
 
-static VARS_TRIE_K_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_K_CHILDREN),
+static VARS_K_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_K_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_K_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_K_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("enneled"),
         dictgen::InsensitiveStr::Ascii("enneling"),
@@ -11188,12 +11187,12 @@ pub static VARS_TRIE_K_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dic
     range: 7..=14,
 };
 
-static VARS_TRIE_J_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_J_CHILDREN),
+static VARS_J_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_J_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_J_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_J_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ailor"),
         dictgen::InsensitiveStr::Ascii("ailors"),
@@ -11279,32 +11278,32 @@ pub static VARS_TRIE_J_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dic
     range: 3..=11,
 };
 
-static VARS_TRIE_I_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_I_CHILDREN),
+static VARS_I_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_I_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_I_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_I_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
-    Some(&VARS_TRIE_ID_NODE),
-    None,
-    None,
-    None,
-    None,
+    Some(&VARS_ID_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_IM_NODE),
-    Some(&VARS_TRIE_IN_NODE),
-    Some(&VARS_TRIE_IO_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_IS_NODE),
-    Some(&VARS_TRIE_IT_NODE),
+    None,
+    Some(&VARS_IM_NODE),
+    Some(&VARS_IN_NODE),
+    Some(&VARS_IO_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_IS_NODE),
+    Some(&VARS_IT_NODE),
     None,
     None,
     None,
@@ -11313,12 +11312,12 @@ static VARS_TRIE_I_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_IT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_IT_CHILDREN),
+static VARS_IT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_IT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_IT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_IT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alicisation"),
         dictgen::InsensitiveStr::Ascii("alicisations"),
@@ -11374,12 +11373,12 @@ pub static VARS_TRIE_IT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=12,
 };
 
-static VARS_TRIE_IS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_IS_CHILDREN),
+static VARS_IS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_IS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_IS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_IS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("chaemia"),
         dictgen::InsensitiveStr::Ascii("chaemias"),
@@ -11399,12 +11398,12 @@ pub static VARS_TRIE_IS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=8,
 };
 
-static VARS_TRIE_IO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_IO_CHILDREN),
+static VARS_IO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_IO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_IO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_IO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dise"),
         dictgen::InsensitiveStr::Ascii("dised"),
@@ -11476,32 +11475,32 @@ pub static VARS_TRIE_IO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=9,
 };
 
-static VARS_TRIE_IN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_IN_CHILDREN),
+static VARS_IN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_IN_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_IN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_IN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
-    Some(&VARS_TRIE_INC_NODE),
-    Some(&VARS_TRIE_IND_NODE),
+    Some(&VARS_INC_NODE),
+    Some(&VARS_IND_NODE),
     None,
-    Some(&VARS_TRIE_INF_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_INI_NODE),
+    Some(&VARS_INF_NODE),
     None,
     None,
-    None,
+    Some(&VARS_INI_NODE),
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_INS_NODE),
-    Some(&VARS_TRIE_INT_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_INS_NODE),
+    Some(&VARS_INT_NODE),
     None,
     None,
     None,
@@ -11510,12 +11509,12 @@ static VARS_TRIE_IN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_INT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_INT_CHILDREN),
+static VARS_INT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_INT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_INT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_INT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ellectualise"),
         dictgen::InsensitiveStr::Ascii("ellectualised"),
@@ -11611,12 +11610,12 @@ pub static VARS_TRIE_INT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=18,
 };
 
-static VARS_TRIE_INS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_INS_CHILDREN),
+static VARS_INS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_INS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_INS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_INS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tal"),
         dictgen::InsensitiveStr::Ascii("tallment"),
@@ -11664,12 +11663,12 @@ pub static VARS_TRIE_INS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=18,
 };
 
-static VARS_TRIE_INI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_INI_CHILDREN),
+static VARS_INI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_INI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_INI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_INI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tialed"),
         dictgen::InsensitiveStr::Ascii("tialing"),
@@ -11709,12 +11708,12 @@ pub static VARS_TRIE_INI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=12,
 };
 
-static VARS_TRIE_INF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_INF_CHILDREN),
+static VARS_INF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_INF_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_INF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_INF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lexion"),
         dictgen::InsensitiveStr::Ascii("lexions"),
@@ -11726,12 +11725,12 @@ pub static VARS_TRIE_INF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=7,
 };
 
-static VARS_TRIE_IND_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_IND_CHILDREN),
+static VARS_IND_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_IND_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_IND_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_IND_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ianisation"),
         dictgen::InsensitiveStr::Ascii("ianise"),
@@ -11815,12 +11814,12 @@ pub static VARS_TRIE_IND_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=15,
 };
 
-static VARS_TRIE_INC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_INC_CHILDREN),
+static VARS_INC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_INC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_INC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_INC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("entivise"),
         dictgen::InsensitiveStr::Ascii("entivised"),
@@ -11856,12 +11855,12 @@ pub static VARS_TRIE_INC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=10,
 };
 
-static VARS_TRIE_IM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_IM_CHILDREN),
+static VARS_IM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_IM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_IM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_IM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bedment"),
         dictgen::InsensitiveStr::Ascii("bedments"),
@@ -11973,12 +11972,12 @@ pub static VARS_TRIE_IM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=14,
 };
 
-static VARS_TRIE_ID_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ID_CHILDREN),
+static VARS_ID_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ID_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ID_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ID_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ealisation"),
         dictgen::InsensitiveStr::Ascii("ealisations"),
@@ -12042,46 +12041,46 @@ pub static VARS_TRIE_ID_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=11,
 };
 
-static VARS_TRIE_H_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_H_CHILDREN),
+static VARS_H_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_H_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_H_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_HA_NODE),
+static VARS_H_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_HA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_HE_NODE),
+    Some(&VARS_HE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_HI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_HO_NODE),
+    Some(&VARS_HI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_HU_NODE),
+    Some(&VARS_HO_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_HY_NODE),
+    None,
+    None,
+    Some(&VARS_HU_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_HY_NODE),
     None,
 ];
 
-static VARS_TRIE_HY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HY_CHILDREN),
+static VARS_HY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bridisable"),
         dictgen::InsensitiveStr::Ascii("bridisabler"),
@@ -12199,12 +12198,12 @@ pub static VARS_TRIE_HY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=12,
 };
 
-static VARS_TRIE_HU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HU_CHILDREN),
+static VARS_HU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("manisation"),
         dictgen::InsensitiveStr::Ascii("manisations"),
@@ -12274,12 +12273,12 @@ pub static VARS_TRIE_HU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=14,
 };
 
-static VARS_TRIE_HO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_HO_CHILDREN),
+static VARS_HO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_HO_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_HO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_HO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
@@ -12292,13 +12291,13 @@ static VARS_TRIE_HO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_HOM_NODE),
-    Some(&VARS_TRIE_HON_NODE),
-    Some(&VARS_TRIE_HOO_NODE),
+    Some(&VARS_HOM_NODE),
+    Some(&VARS_HON_NODE),
+    Some(&VARS_HOO_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_HOS_NODE),
+    Some(&VARS_HOS_NODE),
     None,
     None,
     None,
@@ -12308,12 +12307,12 @@ static VARS_TRIE_HO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_HOS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HOS_CHILDREN),
+static VARS_HOS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HOS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HOS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HOS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("pitalisation"),
         dictgen::InsensitiveStr::Ascii("pitalisations"),
@@ -12345,12 +12344,12 @@ pub static VARS_TRIE_HOS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=13,
 };
 
-static VARS_TRIE_HOO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HOO_CHILDREN),
+static VARS_HOO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HOO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HOO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HOO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rah"),
         dictgen::InsensitiveStr::Ascii("rahs"),
@@ -12362,12 +12361,12 @@ pub static VARS_TRIE_HOO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=4,
 };
 
-static VARS_TRIE_HON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HON_CHILDREN),
+static VARS_HON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HON_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orable"),
@@ -12431,12 +12430,12 @@ pub static VARS_TRIE_HON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=13,
 };
 
-static VARS_TRIE_HOM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HOM_CHILDREN),
+static VARS_HOM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HOM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HOM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HOM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("oeopath"),
         dictgen::InsensitiveStr::Ascii("oeopathic"),
@@ -12508,12 +12507,12 @@ pub static VARS_TRIE_HOM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_HI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HI_CHILDREN),
+static VARS_HI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ccupped"),
         dictgen::InsensitiveStr::Ascii("ccupping"),
@@ -12525,12 +12524,12 @@ pub static VARS_TRIE_HI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=8,
 };
 
-static VARS_TRIE_HE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HE_CHILDREN),
+static VARS_HE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("braise"),
         dictgen::InsensitiveStr::Ascii("braised"),
@@ -12654,12 +12653,12 @@ pub static VARS_TRIE_HE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=12,
 };
 
-static VARS_TRIE_HA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_HA_CHILDREN),
+static VARS_HA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_HA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_HA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_HA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("emal"),
         dictgen::InsensitiveStr::Ascii("ematite"),
@@ -12771,46 +12770,46 @@ pub static VARS_TRIE_HA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=12,
 };
 
-static VARS_TRIE_G_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_G_CHILDREN),
+static VARS_G_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_G_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_G_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_GA_NODE),
+static VARS_G_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_GA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_GE_NODE),
+    Some(&VARS_GE_NODE),
     None,
     None,
-    Some(&VARS_TRIE_GH_NODE),
-    Some(&VARS_TRIE_GI_NODE),
+    Some(&VARS_GH_NODE),
+    Some(&VARS_GI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_GL_NODE),
+    Some(&VARS_GL_NODE),
     None,
     None,
-    Some(&VARS_TRIE_GO_NODE),
+    Some(&VARS_GO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_GR_NODE),
-    None,
-    None,
-    None,
+    Some(&VARS_GR_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_GY_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_GY_NODE),
     None,
 ];
 
-static VARS_TRIE_GY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GY_CHILDREN),
+static VARS_GY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("naecological"),
         dictgen::InsensitiveStr::Ascii("naecologicaler"),
@@ -12858,12 +12857,12 @@ pub static VARS_TRIE_GY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 8..=15,
 };
 
-static VARS_TRIE_GR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GR_CHILDREN),
+static VARS_GR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aecism"),
         dictgen::InsensitiveStr::Ascii("aecisms"),
@@ -12975,12 +12974,12 @@ pub static VARS_TRIE_GR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=13,
 };
 
-static VARS_TRIE_GO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GO_CHILDREN),
+static VARS_GO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iter"),
         dictgen::InsensitiveStr::Ascii("iters"),
@@ -13020,12 +13019,12 @@ pub static VARS_TRIE_GO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=12,
 };
 
-static VARS_TRIE_GL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GL_CHILDREN),
+static VARS_GL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("amor"),
         dictgen::InsensitiveStr::Ascii("amored"),
@@ -13107,12 +13106,12 @@ pub static VARS_TRIE_GL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=12,
 };
 
-static VARS_TRIE_GI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GI_CHILDREN),
+static VARS_GI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gagramme"),
         dictgen::InsensitiveStr::Ascii("gagrammes"),
@@ -13124,12 +13123,12 @@ pub static VARS_TRIE_GI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 8..=9,
 };
 
-static VARS_TRIE_GH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GH_CHILDREN),
+static VARS_GH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ettoisation"),
         dictgen::InsensitiveStr::Ascii("ettoisations"),
@@ -13161,12 +13160,12 @@ pub static VARS_TRIE_GH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=12,
 };
 
-static VARS_TRIE_GE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GE_CHILDREN),
+static VARS_GE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("latinisation"),
         dictgen::InsensitiveStr::Ascii("latinisations"),
@@ -13258,12 +13257,12 @@ pub static VARS_TRIE_GE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=14,
 };
 
-static VARS_TRIE_GA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_GA_CHILDREN),
+static VARS_GA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_GA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_GA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_GA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("llicise"),
         dictgen::InsensitiveStr::Ascii("llicised"),
@@ -13353,33 +13352,33 @@ pub static VARS_TRIE_GA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=12,
 };
 
-static VARS_TRIE_F_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_F_CHILDREN),
+static VARS_F_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_F_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_F_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_FA_NODE),
+static VARS_F_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_FA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_FE_NODE),
+    Some(&VARS_FE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_FI_NODE),
+    Some(&VARS_FI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_FL_NODE),
+    Some(&VARS_FL_NODE),
     None,
     None,
-    Some(&VARS_TRIE_FO_NODE),
+    Some(&VARS_FO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_FR_NODE),
+    Some(&VARS_FR_NODE),
     None,
     None,
-    Some(&VARS_TRIE_FU_NODE),
+    Some(&VARS_FU_NODE),
     None,
     None,
     None,
@@ -13387,12 +13386,12 @@ static VARS_TRIE_F_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_FU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FU_CHILDREN),
+static VARS_FU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eling"),
@@ -13448,12 +13447,12 @@ pub static VARS_TRIE_FU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=10,
 };
 
-static VARS_TRIE_FR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FR_CHILDREN),
+static VARS_FR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aternisation"),
         dictgen::InsensitiveStr::Ascii("aternisations"),
@@ -13485,12 +13484,12 @@ pub static VARS_TRIE_FR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 8..=13,
 };
 
-static VARS_TRIE_FO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FO_CHILDREN),
+static VARS_FO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("calisation"),
         dictgen::InsensitiveStr::Ascii("calisations"),
@@ -13590,12 +13589,12 @@ pub static VARS_TRIE_FO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=12,
 };
 
-static VARS_TRIE_FL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FL_CHILDREN),
+static VARS_FL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("anneled"),
         dictgen::InsensitiveStr::Ascii("annelet"),
@@ -13705,12 +13704,12 @@ pub static VARS_TRIE_FL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=12,
 };
 
-static VARS_TRIE_FI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FI_CHILDREN),
+static VARS_FI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ber"),
         dictgen::InsensitiveStr::Ascii("berboard"),
@@ -13810,12 +13809,12 @@ pub static VARS_TRIE_FI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=15,
 };
 
-static VARS_TRIE_FE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FE_CHILDREN),
+static VARS_FE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cal"),
         dictgen::InsensitiveStr::Ascii("ces"),
@@ -13935,46 +13934,46 @@ pub static VARS_TRIE_FE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=13,
 };
 
-static VARS_TRIE_FA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_FA_CHILDREN),
+static VARS_FA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_FA_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_FA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_FA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
-    Some(&VARS_TRIE_FAC_NODE),
+    Some(&VARS_FAC_NODE),
     None,
-    Some(&VARS_TRIE_FAE_NODE),
+    Some(&VARS_FAE_NODE),
     None,
-    Some(&VARS_TRIE_FAG_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_FAM_NODE),
-    Some(&VARS_TRIE_FAN_NODE),
+    Some(&VARS_FAG_NODE),
     None,
     None,
     None,
     None,
     None,
+    Some(&VARS_FAM_NODE),
+    Some(&VARS_FAN_NODE),
     None,
     None,
-    Some(&VARS_TRIE_FAV_NODE),
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_FAV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_FAV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FAV_CHILDREN),
+static VARS_FAV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FAV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orable"),
@@ -14066,12 +14065,12 @@ pub static VARS_TRIE_FAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=13,
 };
 
-static VARS_TRIE_FAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FAN_CHILDREN),
+static VARS_FAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FAN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tasise"),
         dictgen::InsensitiveStr::Ascii("tasised"),
@@ -14095,12 +14094,12 @@ pub static VARS_TRIE_FAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_FAM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FAM_CHILDREN),
+static VARS_FAM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FAM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FAM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FAM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iliarisation"),
         dictgen::InsensitiveStr::Ascii("iliarisations"),
@@ -14132,12 +14131,12 @@ pub static VARS_TRIE_FAM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=13,
 };
 
-static VARS_TRIE_FAG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FAG_CHILDREN),
+static VARS_FAG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FAG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ot"),
         dictgen::InsensitiveStr::Ascii("oted"),
@@ -14159,12 +14158,12 @@ pub static VARS_TRIE_FAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=5,
 };
 
-static VARS_TRIE_FAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FAE_CHILDREN),
+static VARS_FAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FAE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cal"),
         dictgen::InsensitiveStr::Ascii("ces"),
@@ -14176,12 +14175,12 @@ pub static VARS_TRIE_FAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=3,
 };
 
-static VARS_TRIE_FAC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_FAC_CHILDREN),
+static VARS_FAC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_FAC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_FAC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_FAC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("torisation"),
         dictgen::InsensitiveStr::Ascii("torisations"),
@@ -14213,46 +14212,46 @@ pub static VARS_TRIE_FAC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_E_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_E_CHILDREN),
+static VARS_E_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_E_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_E_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_E_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
-    Some(&VARS_TRIE_EC_NODE),
-    Some(&VARS_TRIE_ED_NODE),
+    Some(&VARS_EC_NODE),
+    Some(&VARS_ED_NODE),
     None,
     None,
-    Some(&VARS_TRIE_EG_NODE),
+    Some(&VARS_EG_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_EL_NODE),
-    Some(&VARS_TRIE_EM_NODE),
-    Some(&VARS_TRIE_EN_NODE),
+    Some(&VARS_EL_NODE),
+    Some(&VARS_EM_NODE),
+    Some(&VARS_EN_NODE),
     None,
-    Some(&VARS_TRIE_EP_NODE),
-    Some(&VARS_TRIE_EQ_NODE),
+    Some(&VARS_EP_NODE),
+    Some(&VARS_EQ_NODE),
     None,
-    Some(&VARS_TRIE_ES_NODE),
-    Some(&VARS_TRIE_ET_NODE),
-    Some(&VARS_TRIE_EU_NODE),
-    Some(&VARS_TRIE_EV_NODE),
+    Some(&VARS_ES_NODE),
+    Some(&VARS_ET_NODE),
+    Some(&VARS_EU_NODE),
+    Some(&VARS_EV_NODE),
     None,
-    Some(&VARS_TRIE_EX_NODE),
-    Some(&VARS_TRIE_EY_NODE),
+    Some(&VARS_EX_NODE),
+    Some(&VARS_EY_NODE),
     None,
 ];
 
-static VARS_TRIE_EY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EY_CHILDREN),
+static VARS_EY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rie"),
         dictgen::InsensitiveStr::Ascii("ry"),
@@ -14264,12 +14263,12 @@ pub static VARS_TRIE_EY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=3,
 };
 
-static VARS_TRIE_EX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EX_CHILDREN),
+static VARS_EX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EX_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orcize"),
         dictgen::InsensitiveStr::Ascii("orcized"),
@@ -14359,12 +14358,12 @@ pub static VARS_TRIE_EX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=14,
 };
 
-static VARS_TRIE_EV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EV_CHILDREN),
+static VARS_EV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("angelisation"),
         dictgen::InsensitiveStr::Ascii("angelisations"),
@@ -14412,12 +14411,12 @@ pub static VARS_TRIE_EV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=13,
 };
 
-static VARS_TRIE_EU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EU_CHILDREN),
+static VARS_EU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("logise"),
         dictgen::InsensitiveStr::Ascii("logised"),
@@ -14481,12 +14480,12 @@ pub static VARS_TRIE_EU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=14,
 };
 
-static VARS_TRIE_ET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ET_CHILDREN),
+static VARS_ET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ET_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ernalise"),
         dictgen::InsensitiveStr::Ascii("ernalised"),
@@ -14546,12 +14545,12 @@ pub static VARS_TRIE_ET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=11,
 };
 
-static VARS_TRIE_ES_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ES_CHILDREN),
+static VARS_ES_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ES_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ES_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ES_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ophagi"),
         dictgen::InsensitiveStr::Ascii("ophagus"),
@@ -14605,12 +14604,12 @@ pub static VARS_TRIE_ES_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=10,
 };
 
-static VARS_TRIE_EQ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EQ_CHILDREN),
+static VARS_EQ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EQ_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ualed"),
         dictgen::InsensitiveStr::Ascii("ualing"),
@@ -14662,12 +14661,12 @@ pub static VARS_TRIE_EQ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=11,
 };
 
-static VARS_TRIE_EP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EP_CHILDREN),
+static VARS_EP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aulet"),
         dictgen::InsensitiveStr::Ascii("aulets"),
@@ -14715,12 +14714,12 @@ pub static VARS_TRIE_EP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=12,
 };
 
-static VARS_TRIE_EN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EN_CHILDREN),
+static VARS_EN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ameled"),
         dictgen::InsensitiveStr::Ascii("ameler"),
@@ -14862,12 +14861,12 @@ pub static VARS_TRIE_EN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=11,
 };
 
-static VARS_TRIE_EM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EM_CHILDREN),
+static VARS_EM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("blematise"),
         dictgen::InsensitiveStr::Ascii("blematised"),
@@ -14951,12 +14950,12 @@ pub static VARS_TRIE_EM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=12,
 };
 
-static VARS_TRIE_EL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EL_CHILDREN),
+static VARS_EL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("egise"),
         dictgen::InsensitiveStr::Ascii("egised"),
@@ -14980,12 +14979,12 @@ pub static VARS_TRIE_EL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=7,
 };
 
-static VARS_TRIE_EG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EG_CHILDREN),
+static VARS_EG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("is"),
         dictgen::InsensitiveStr::Ascii("ises"),
@@ -14997,12 +14996,12 @@ pub static VARS_TRIE_EG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 2..=4,
 };
 
-static VARS_TRIE_ED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ED_CHILDREN),
+static VARS_ED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ED_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ema"),
         dictgen::InsensitiveStr::Ascii("emas"),
@@ -15036,12 +15035,12 @@ pub static VARS_TRIE_ED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=12,
 };
 
-static VARS_TRIE_EC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_EC_CHILDREN),
+static VARS_EC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_EC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_EC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_EC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("onomise"),
         dictgen::InsensitiveStr::Ascii("onomised"),
@@ -15073,46 +15072,46 @@ pub static VARS_TRIE_EC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=9,
 };
 
-static VARS_TRIE_D_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_D_CHILDREN),
+static VARS_D_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_D_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_D_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_D_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_DE_NODE),
+    Some(&VARS_DE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DI_NODE),
+    Some(&VARS_DI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_DO_NODE),
+    Some(&VARS_DO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DR_NODE),
+    Some(&VARS_DR_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DU_NODE),
+    Some(&VARS_DU_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DY_NODE),
+    Some(&VARS_DY_NODE),
     None,
 ];
 
-static VARS_TRIE_DY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DY_CHILDREN),
+static VARS_DY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("spnea"),
         dictgen::InsensitiveStr::Ascii("spneas"),
@@ -15128,12 +15127,12 @@ pub static VARS_TRIE_DY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=7,
 };
 
-static VARS_TRIE_DU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DU_CHILDREN),
+static VARS_DU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -15169,12 +15168,12 @@ pub static VARS_TRIE_DU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=7,
 };
 
-static VARS_TRIE_DR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DR_CHILDREN),
+static VARS_DR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aftboard"),
         dictgen::InsensitiveStr::Ascii("aftboards"),
@@ -15284,12 +15283,12 @@ pub static VARS_TRIE_DR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=14,
 };
 
-static VARS_TRIE_DO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DO_CHILDREN),
+static VARS_DO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gmatise"),
         dictgen::InsensitiveStr::Ascii("gmatised"),
@@ -15329,46 +15328,46 @@ pub static VARS_TRIE_DO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=9,
 };
 
-static VARS_TRIE_DI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_DI_CHILDREN),
+static VARS_DI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_DI_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_DI_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_DIA_NODE),
+static VARS_DI_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_DIA_NODE),
     None,
-    Some(&VARS_TRIE_DIC_NODE),
+    Some(&VARS_DIC_NODE),
     None,
-    Some(&VARS_TRIE_DIE_NODE),
+    Some(&VARS_DIE_NODE),
     None,
-    Some(&VARS_TRIE_DIG_NODE),
-    None,
-    None,
+    Some(&VARS_DIG_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_DIO_NODE),
-    Some(&VARS_TRIE_DIP_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DIS_NODE),
+    Some(&VARS_DIO_NODE),
+    Some(&VARS_DIP_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DIV_NODE),
+    Some(&VARS_DIS_NODE),
+    None,
+    None,
+    Some(&VARS_DIV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_DIV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIV_CHILDREN),
+static VARS_DIV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DIV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("inise"),
         dictgen::InsensitiveStr::Ascii("inised"),
@@ -15392,32 +15391,32 @@ pub static VARS_TRIE_DIV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_DIS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_DIS_CHILDREN),
+static VARS_DIS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_DIS_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_DIS_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_DIS_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
-    Some(&VARS_TRIE_DISC_NODE),
+    Some(&VARS_DISC_NODE),
     None,
-    Some(&VARS_TRIE_DISE_NODE),
-    Some(&VARS_TRIE_DISF_NODE),
+    Some(&VARS_DISE_NODE),
+    Some(&VARS_DISF_NODE),
     None,
-    Some(&VARS_TRIE_DISH_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_DISO_NODE),
+    Some(&VARS_DISH_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_DIST_NODE),
+    None,
+    None,
+    Some(&VARS_DISO_NODE),
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_DIST_NODE),
     None,
     None,
     None,
@@ -15426,236 +15425,230 @@ static VARS_TRIE_DIS_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
 ];
 
-static VARS_TRIE_DIST_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIST_CHILDREN),
+static VARS_DIST_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIST_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIST_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("ill"),
-            dictgen::InsensitiveStr::Ascii("ills"),
-        ],
-        values: &[
-            &[(0b01001, &ENTRY_DISTILL_72998375259612317)],
-            &[(0b01001, &ENTRY_DISTILLS_6330479058124863728)],
-        ],
-        range: 3..=4,
-    };
+pub static VARS_DIST_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("ill"),
+        dictgen::InsensitiveStr::Ascii("ills"),
+    ],
+    values: &[
+        &[(0b01001, &ENTRY_DISTILL_72998375259612317)],
+        &[(0b01001, &ENTRY_DISTILLS_6330479058124863728)],
+    ],
+    range: 3..=4,
+};
 
-static VARS_TRIE_DISO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DISO_CHILDREN),
+static VARS_DISO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DISO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DISO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("rganisation"),
-            dictgen::InsensitiveStr::Ascii("rganisations"),
-            dictgen::InsensitiveStr::Ascii("rganise"),
-            dictgen::InsensitiveStr::Ascii("rganised"),
-            dictgen::InsensitiveStr::Ascii("rganises"),
-            dictgen::InsensitiveStr::Ascii("rganising"),
-            dictgen::InsensitiveStr::Ascii("rganization"),
-            dictgen::InsensitiveStr::Ascii("rganizations"),
-            dictgen::InsensitiveStr::Ascii("rganize"),
-            dictgen::InsensitiveStr::Ascii("rganized"),
-            dictgen::InsensitiveStr::Ascii("rganizes"),
-            dictgen::InsensitiveStr::Ascii("rganizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DISORGANIZATION_16996811069576322696)],
-            &[(0b10010, &ENTRY_DISORGANIZATIONS_5594690456228431300)],
-            &[(0b10010, &ENTRY_DISORGANIZE_8532063637419651098)],
-            &[(0b10010, &ENTRY_DISORGANIZED_8174306046630470447)],
-            &[(0b10010, &ENTRY_DISORGANIZES_2153949974040488529)],
-            &[(0b10010, &ENTRY_DISORGANIZING_9571942280468279076)],
-            &[(0b01001, &ENTRY_DISORGANIZATION_16996811069576322696)],
-            &[(0b01001, &ENTRY_DISORGANIZATIONS_5594690456228431300)],
-            &[(0b01001, &ENTRY_DISORGANIZE_8532063637419651098)],
-            &[(0b01001, &ENTRY_DISORGANIZED_8174306046630470447)],
-            &[(0b01001, &ENTRY_DISORGANIZES_2153949974040488529)],
-            &[(0b01001, &ENTRY_DISORGANIZING_9571942280468279076)],
-        ],
-        range: 7..=12,
-    };
+pub static VARS_DISO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("rganisation"),
+        dictgen::InsensitiveStr::Ascii("rganisations"),
+        dictgen::InsensitiveStr::Ascii("rganise"),
+        dictgen::InsensitiveStr::Ascii("rganised"),
+        dictgen::InsensitiveStr::Ascii("rganises"),
+        dictgen::InsensitiveStr::Ascii("rganising"),
+        dictgen::InsensitiveStr::Ascii("rganization"),
+        dictgen::InsensitiveStr::Ascii("rganizations"),
+        dictgen::InsensitiveStr::Ascii("rganize"),
+        dictgen::InsensitiveStr::Ascii("rganized"),
+        dictgen::InsensitiveStr::Ascii("rganizes"),
+        dictgen::InsensitiveStr::Ascii("rganizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DISORGANIZATION_16996811069576322696)],
+        &[(0b10010, &ENTRY_DISORGANIZATIONS_5594690456228431300)],
+        &[(0b10010, &ENTRY_DISORGANIZE_8532063637419651098)],
+        &[(0b10010, &ENTRY_DISORGANIZED_8174306046630470447)],
+        &[(0b10010, &ENTRY_DISORGANIZES_2153949974040488529)],
+        &[(0b10010, &ENTRY_DISORGANIZING_9571942280468279076)],
+        &[(0b01001, &ENTRY_DISORGANIZATION_16996811069576322696)],
+        &[(0b01001, &ENTRY_DISORGANIZATIONS_5594690456228431300)],
+        &[(0b01001, &ENTRY_DISORGANIZE_8532063637419651098)],
+        &[(0b01001, &ENTRY_DISORGANIZED_8174306046630470447)],
+        &[(0b01001, &ENTRY_DISORGANIZES_2153949974040488529)],
+        &[(0b01001, &ENTRY_DISORGANIZING_9571942280468279076)],
+    ],
+    range: 7..=12,
+};
 
-static VARS_TRIE_DISH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DISH_CHILDREN),
+static VARS_DISH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DISH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DISH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("eveled"),
-            dictgen::InsensitiveStr::Ascii("eveling"),
-            dictgen::InsensitiveStr::Ascii("evelled"),
-            dictgen::InsensitiveStr::Ascii("evelling"),
-            dictgen::InsensitiveStr::Ascii("onor"),
-            dictgen::InsensitiveStr::Ascii("onorable"),
-            dictgen::InsensitiveStr::Ascii("onorableness"),
-            dictgen::InsensitiveStr::Ascii("onorablenesses"),
-            dictgen::InsensitiveStr::Ascii("onorabler"),
-            dictgen::InsensitiveStr::Ascii("onorables"),
-            dictgen::InsensitiveStr::Ascii("onorablest"),
-            dictgen::InsensitiveStr::Ascii("onorablier"),
-            dictgen::InsensitiveStr::Ascii("onorablies"),
-            dictgen::InsensitiveStr::Ascii("onorabliest"),
-            dictgen::InsensitiveStr::Ascii("onorably"),
-            dictgen::InsensitiveStr::Ascii("onored"),
-            dictgen::InsensitiveStr::Ascii("onoring"),
-            dictgen::InsensitiveStr::Ascii("onors"),
-            dictgen::InsensitiveStr::Ascii("onour"),
-            dictgen::InsensitiveStr::Ascii("onourable"),
-            dictgen::InsensitiveStr::Ascii("onourableness"),
-            dictgen::InsensitiveStr::Ascii("onourablenesses"),
-            dictgen::InsensitiveStr::Ascii("onourabler"),
-            dictgen::InsensitiveStr::Ascii("onourables"),
-            dictgen::InsensitiveStr::Ascii("onourablest"),
-            dictgen::InsensitiveStr::Ascii("onourablier"),
-            dictgen::InsensitiveStr::Ascii("onourablies"),
-            dictgen::InsensitiveStr::Ascii("onourabliest"),
-            dictgen::InsensitiveStr::Ascii("onourably"),
-            dictgen::InsensitiveStr::Ascii("onoured"),
-            dictgen::InsensitiveStr::Ascii("onouring"),
-            dictgen::InsensitiveStr::Ascii("onours"),
-        ],
-        values: &[
-            &[(0b00001, &ENTRY_DISHEVELED_870550093566288707)],
-            &[(0b00001, &ENTRY_DISHEVELING_6322833404479205492)],
-            &[(0b11010, &ENTRY_DISHEVELED_870550093566288707)],
-            &[(0b11010, &ENTRY_DISHEVELING_6322833404479205492)],
-            &[(0b11001, &ENTRY_DISHONOR_11620713121077259513)],
-            &[(0b11001, &ENTRY_DISHONORABLE_38080454965404032)],
-            &[(0b11001, &ENTRY_DISHONORABLENESS_10657592516833463167)],
-            &[(0b11001, &ENTRY_DISHONORABLENESSES_17639524963688776538)],
-            &[(0b11001, &ENTRY_DISHONORABLER_13799504522206021743)],
-            &[(0b11001, &ENTRY_DISHONORABLES_16248754702342750197)],
-            &[(0b11001, &ENTRY_DISHONORABLEST_15156355191001228972)],
-            &[(0b11001, &ENTRY_DISHONORABLIER_1654116585736260216)],
-            &[(0b11001, &ENTRY_DISHONORABLIES_15514876857964789392)],
-            &[(0b11001, &ENTRY_DISHONORABLIEST_16101869312549419261)],
-            &[(0b11001, &ENTRY_DISHONORABLY_7020648298729028040)],
-            &[(0b11001, &ENTRY_DISHONORED_2157274559673536220)],
-            &[(0b11001, &ENTRY_DISHONORING_2399726273028722915)],
-            &[(0b11001, &ENTRY_DISHONORS_1597149550458150983)],
-            &[(0b11010, &ENTRY_DISHONOR_11620713121077259513)],
-            &[(0b11010, &ENTRY_DISHONORABLE_38080454965404032)],
-            &[(0b11010, &ENTRY_DISHONORABLENESS_10657592516833463167)],
-            &[(0b11010, &ENTRY_DISHONORABLENESSES_17639524963688776538)],
-            &[(0b11010, &ENTRY_DISHONORABLER_13799504522206021743)],
-            &[(0b11010, &ENTRY_DISHONORABLES_16248754702342750197)],
-            &[(0b11010, &ENTRY_DISHONORABLEST_15156355191001228972)],
-            &[(0b11010, &ENTRY_DISHONORABLIER_1654116585736260216)],
-            &[(0b11010, &ENTRY_DISHONORABLIES_15514876857964789392)],
-            &[(0b11010, &ENTRY_DISHONORABLIEST_16101869312549419261)],
-            &[(0b11010, &ENTRY_DISHONORABLY_7020648298729028040)],
-            &[(0b11010, &ENTRY_DISHONORED_2157274559673536220)],
-            &[(0b11010, &ENTRY_DISHONORING_2399726273028722915)],
-            &[(0b11010, &ENTRY_DISHONORS_1597149550458150983)],
-        ],
-        range: 4..=15,
-    };
+pub static VARS_DISH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("eveled"),
+        dictgen::InsensitiveStr::Ascii("eveling"),
+        dictgen::InsensitiveStr::Ascii("evelled"),
+        dictgen::InsensitiveStr::Ascii("evelling"),
+        dictgen::InsensitiveStr::Ascii("onor"),
+        dictgen::InsensitiveStr::Ascii("onorable"),
+        dictgen::InsensitiveStr::Ascii("onorableness"),
+        dictgen::InsensitiveStr::Ascii("onorablenesses"),
+        dictgen::InsensitiveStr::Ascii("onorabler"),
+        dictgen::InsensitiveStr::Ascii("onorables"),
+        dictgen::InsensitiveStr::Ascii("onorablest"),
+        dictgen::InsensitiveStr::Ascii("onorablier"),
+        dictgen::InsensitiveStr::Ascii("onorablies"),
+        dictgen::InsensitiveStr::Ascii("onorabliest"),
+        dictgen::InsensitiveStr::Ascii("onorably"),
+        dictgen::InsensitiveStr::Ascii("onored"),
+        dictgen::InsensitiveStr::Ascii("onoring"),
+        dictgen::InsensitiveStr::Ascii("onors"),
+        dictgen::InsensitiveStr::Ascii("onour"),
+        dictgen::InsensitiveStr::Ascii("onourable"),
+        dictgen::InsensitiveStr::Ascii("onourableness"),
+        dictgen::InsensitiveStr::Ascii("onourablenesses"),
+        dictgen::InsensitiveStr::Ascii("onourabler"),
+        dictgen::InsensitiveStr::Ascii("onourables"),
+        dictgen::InsensitiveStr::Ascii("onourablest"),
+        dictgen::InsensitiveStr::Ascii("onourablier"),
+        dictgen::InsensitiveStr::Ascii("onourablies"),
+        dictgen::InsensitiveStr::Ascii("onourabliest"),
+        dictgen::InsensitiveStr::Ascii("onourably"),
+        dictgen::InsensitiveStr::Ascii("onoured"),
+        dictgen::InsensitiveStr::Ascii("onouring"),
+        dictgen::InsensitiveStr::Ascii("onours"),
+    ],
+    values: &[
+        &[(0b00001, &ENTRY_DISHEVELED_870550093566288707)],
+        &[(0b00001, &ENTRY_DISHEVELING_6322833404479205492)],
+        &[(0b11010, &ENTRY_DISHEVELED_870550093566288707)],
+        &[(0b11010, &ENTRY_DISHEVELING_6322833404479205492)],
+        &[(0b11001, &ENTRY_DISHONOR_11620713121077259513)],
+        &[(0b11001, &ENTRY_DISHONORABLE_38080454965404032)],
+        &[(0b11001, &ENTRY_DISHONORABLENESS_10657592516833463167)],
+        &[(0b11001, &ENTRY_DISHONORABLENESSES_17639524963688776538)],
+        &[(0b11001, &ENTRY_DISHONORABLER_13799504522206021743)],
+        &[(0b11001, &ENTRY_DISHONORABLES_16248754702342750197)],
+        &[(0b11001, &ENTRY_DISHONORABLEST_15156355191001228972)],
+        &[(0b11001, &ENTRY_DISHONORABLIER_1654116585736260216)],
+        &[(0b11001, &ENTRY_DISHONORABLIES_15514876857964789392)],
+        &[(0b11001, &ENTRY_DISHONORABLIEST_16101869312549419261)],
+        &[(0b11001, &ENTRY_DISHONORABLY_7020648298729028040)],
+        &[(0b11001, &ENTRY_DISHONORED_2157274559673536220)],
+        &[(0b11001, &ENTRY_DISHONORING_2399726273028722915)],
+        &[(0b11001, &ENTRY_DISHONORS_1597149550458150983)],
+        &[(0b11010, &ENTRY_DISHONOR_11620713121077259513)],
+        &[(0b11010, &ENTRY_DISHONORABLE_38080454965404032)],
+        &[(0b11010, &ENTRY_DISHONORABLENESS_10657592516833463167)],
+        &[(0b11010, &ENTRY_DISHONORABLENESSES_17639524963688776538)],
+        &[(0b11010, &ENTRY_DISHONORABLER_13799504522206021743)],
+        &[(0b11010, &ENTRY_DISHONORABLES_16248754702342750197)],
+        &[(0b11010, &ENTRY_DISHONORABLEST_15156355191001228972)],
+        &[(0b11010, &ENTRY_DISHONORABLIER_1654116585736260216)],
+        &[(0b11010, &ENTRY_DISHONORABLIES_15514876857964789392)],
+        &[(0b11010, &ENTRY_DISHONORABLIEST_16101869312549419261)],
+        &[(0b11010, &ENTRY_DISHONORABLY_7020648298729028040)],
+        &[(0b11010, &ENTRY_DISHONORED_2157274559673536220)],
+        &[(0b11010, &ENTRY_DISHONORING_2399726273028722915)],
+        &[(0b11010, &ENTRY_DISHONORS_1597149550458150983)],
+    ],
+    range: 4..=15,
+};
 
-static VARS_TRIE_DISF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DISF_CHILDREN),
+static VARS_DISF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DISF_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DISF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("avor"),
-            dictgen::InsensitiveStr::Ascii("avored"),
-            dictgen::InsensitiveStr::Ascii("avoring"),
-            dictgen::InsensitiveStr::Ascii("avors"),
-            dictgen::InsensitiveStr::Ascii("avour"),
-            dictgen::InsensitiveStr::Ascii("avoured"),
-            dictgen::InsensitiveStr::Ascii("avouring"),
-            dictgen::InsensitiveStr::Ascii("avours"),
-        ],
-        values: &[
-            &[(0b11001, &ENTRY_DISFAVOR_11771334909061188611)],
-            &[(0b11001, &ENTRY_DISFAVORED_6170594285770625316)],
-            &[(0b11001, &ENTRY_DISFAVORING_8029210556789284619)],
-            &[(0b11001, &ENTRY_DISFAVORS_7649343434045517378)],
-            &[(0b11010, &ENTRY_DISFAVOR_11771334909061188611)],
-            &[(0b11010, &ENTRY_DISFAVORED_6170594285770625316)],
-            &[(0b11010, &ENTRY_DISFAVORING_8029210556789284619)],
-            &[(0b11010, &ENTRY_DISFAVORS_7649343434045517378)],
-        ],
-        range: 4..=8,
-    };
+pub static VARS_DISF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("avor"),
+        dictgen::InsensitiveStr::Ascii("avored"),
+        dictgen::InsensitiveStr::Ascii("avoring"),
+        dictgen::InsensitiveStr::Ascii("avors"),
+        dictgen::InsensitiveStr::Ascii("avour"),
+        dictgen::InsensitiveStr::Ascii("avoured"),
+        dictgen::InsensitiveStr::Ascii("avouring"),
+        dictgen::InsensitiveStr::Ascii("avours"),
+    ],
+    values: &[
+        &[(0b11001, &ENTRY_DISFAVOR_11771334909061188611)],
+        &[(0b11001, &ENTRY_DISFAVORED_6170594285770625316)],
+        &[(0b11001, &ENTRY_DISFAVORING_8029210556789284619)],
+        &[(0b11001, &ENTRY_DISFAVORS_7649343434045517378)],
+        &[(0b11010, &ENTRY_DISFAVOR_11771334909061188611)],
+        &[(0b11010, &ENTRY_DISFAVORED_6170594285770625316)],
+        &[(0b11010, &ENTRY_DISFAVORING_8029210556789284619)],
+        &[(0b11010, &ENTRY_DISFAVORS_7649343434045517378)],
+    ],
+    range: 4..=8,
+};
 
-static VARS_TRIE_DISE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DISE_CHILDREN),
+static VARS_DISE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DISE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DISE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("mboweled"),
-            dictgen::InsensitiveStr::Ascii("mboweling"),
-            dictgen::InsensitiveStr::Ascii("mbowelled"),
-            dictgen::InsensitiveStr::Ascii("mbowelling"),
-        ],
-        values: &[
-            &[(0b00001, &ENTRY_DISEMBOWELED_4919626984837066547)],
-            &[(0b00001, &ENTRY_DISEMBOWELING_17785417677818928746)],
-            &[(0b11010, &ENTRY_DISEMBOWELED_4919626984837066547)],
-            &[(0b11010, &ENTRY_DISEMBOWELING_17785417677818928746)],
-        ],
-        range: 8..=10,
-    };
+pub static VARS_DISE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("mboweled"),
+        dictgen::InsensitiveStr::Ascii("mboweling"),
+        dictgen::InsensitiveStr::Ascii("mbowelled"),
+        dictgen::InsensitiveStr::Ascii("mbowelling"),
+    ],
+    values: &[
+        &[(0b00001, &ENTRY_DISEMBOWELED_4919626984837066547)],
+        &[(0b00001, &ENTRY_DISEMBOWELING_17785417677818928746)],
+        &[(0b11010, &ENTRY_DISEMBOWELED_4919626984837066547)],
+        &[(0b11010, &ENTRY_DISEMBOWELING_17785417677818928746)],
+    ],
+    range: 8..=10,
+};
 
-static VARS_TRIE_DISC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DISC_CHILDREN),
+static VARS_DISC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DISC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DISC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("olor"),
-            dictgen::InsensitiveStr::Ascii("olored"),
-            dictgen::InsensitiveStr::Ascii("oloreds"),
-            dictgen::InsensitiveStr::Ascii("oloring"),
-            dictgen::InsensitiveStr::Ascii("olors"),
-            dictgen::InsensitiveStr::Ascii("olour"),
-            dictgen::InsensitiveStr::Ascii("olouration"),
-            dictgen::InsensitiveStr::Ascii("olourations"),
-            dictgen::InsensitiveStr::Ascii("oloured"),
-            dictgen::InsensitiveStr::Ascii("oloureds"),
-            dictgen::InsensitiveStr::Ascii("olouring"),
-            dictgen::InsensitiveStr::Ascii("olours"),
-        ],
-        values: &[
-            &[(0b01001, &ENTRY_DISCOLOR_2037841141685560590)],
-            &[(0b01001, &ENTRY_DISCOLORED_16908798995974595866)],
-            &[(0b01001, &ENTRY_DISCOLOREDS_7473250501334264517)],
-            &[(0b01001, &ENTRY_DISCOLORING_8629722440902022000)],
-            &[(0b01001, &ENTRY_DISCOLORS_3188891474327267925)],
-            &[(0b11010, &ENTRY_DISCOLOR_2037841141685560590)],
-            &[(0b11010, &ENTRY_DISCOLORATION_1217061862280012422)],
-            &[(0b11010, &ENTRY_DISCOLORATIONS_1674651272709360573)],
-            &[(0b11010, &ENTRY_DISCOLORED_16908798995974595866)],
-            &[(0b11010, &ENTRY_DISCOLOREDS_7473250501334264517)],
-            &[(0b11010, &ENTRY_DISCOLORING_8629722440902022000)],
-            &[(0b11010, &ENTRY_DISCOLORS_3188891474327267925)],
-        ],
-        range: 4..=11,
-    };
+pub static VARS_DISC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("olor"),
+        dictgen::InsensitiveStr::Ascii("olored"),
+        dictgen::InsensitiveStr::Ascii("oloreds"),
+        dictgen::InsensitiveStr::Ascii("oloring"),
+        dictgen::InsensitiveStr::Ascii("olors"),
+        dictgen::InsensitiveStr::Ascii("olour"),
+        dictgen::InsensitiveStr::Ascii("olouration"),
+        dictgen::InsensitiveStr::Ascii("olourations"),
+        dictgen::InsensitiveStr::Ascii("oloured"),
+        dictgen::InsensitiveStr::Ascii("oloureds"),
+        dictgen::InsensitiveStr::Ascii("olouring"),
+        dictgen::InsensitiveStr::Ascii("olours"),
+    ],
+    values: &[
+        &[(0b01001, &ENTRY_DISCOLOR_2037841141685560590)],
+        &[(0b01001, &ENTRY_DISCOLORED_16908798995974595866)],
+        &[(0b01001, &ENTRY_DISCOLOREDS_7473250501334264517)],
+        &[(0b01001, &ENTRY_DISCOLORING_8629722440902022000)],
+        &[(0b01001, &ENTRY_DISCOLORS_3188891474327267925)],
+        &[(0b11010, &ENTRY_DISCOLOR_2037841141685560590)],
+        &[(0b11010, &ENTRY_DISCOLORATION_1217061862280012422)],
+        &[(0b11010, &ENTRY_DISCOLORATIONS_1674651272709360573)],
+        &[(0b11010, &ENTRY_DISCOLORED_16908798995974595866)],
+        &[(0b11010, &ENTRY_DISCOLOREDS_7473250501334264517)],
+        &[(0b11010, &ENTRY_DISCOLORING_8629722440902022000)],
+        &[(0b11010, &ENTRY_DISCOLORS_3188891474327267925)],
+    ],
+    range: 4..=11,
+};
 
-static VARS_TRIE_DIP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIP_CHILDREN),
+static VARS_DIP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DIP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hthongisation"),
         dictgen::InsensitiveStr::Ascii("hthongisations"),
@@ -15687,12 +15680,12 @@ pub static VARS_TRIE_DIP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 9..=14,
 };
 
-static VARS_TRIE_DIO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIO_CHILDREN),
+static VARS_DIO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DIO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("pter"),
         dictgen::InsensitiveStr::Ascii("pters"),
@@ -15708,12 +15701,12 @@ pub static VARS_TRIE_DIO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=5,
 };
 
-static VARS_TRIE_DIG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIG_CHILDREN),
+static VARS_DIG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DIG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("italise"),
         dictgen::InsensitiveStr::Ascii("italised"),
@@ -15767,23 +15760,23 @@ pub static VARS_TRIE_DIG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_DIE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIE_CHILDREN),
+static VARS_DIE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DIE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("cious")],
     values: &[&[(0b00001, &ENTRY_DIOECIOUS_755179665025369568)]],
     range: 5..=5,
 };
 
-static VARS_TRIE_DIC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIC_CHILDREN),
+static VARS_DIC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hotomise"),
         dictgen::InsensitiveStr::Ascii("hotomised"),
@@ -15807,12 +15800,12 @@ pub static VARS_TRIE_DIC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=10,
 };
 
-static VARS_TRIE_DIA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DIA_CHILDREN),
+static VARS_DIA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DIA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DIA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DIA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("led"),
         dictgen::InsensitiveStr::Ascii("ling"),
@@ -15872,46 +15865,46 @@ pub static VARS_TRIE_DIA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=10,
 };
 
-static VARS_TRIE_DE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_DE_CHILDREN),
+static VARS_DE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_DE_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_DE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_DE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
-    Some(&VARS_TRIE_DEC_NODE),
+    Some(&VARS_DEC_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DEF_NODE),
+    Some(&VARS_DEF_NODE),
     None,
-    Some(&VARS_TRIE_DEH_NODE),
-    Some(&VARS_TRIE_DEI_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_DEL_NODE),
-    Some(&VARS_TRIE_DEM_NODE),
-    Some(&VARS_TRIE_DEN_NODE),
-    Some(&VARS_TRIE_DEO_NODE),
-    Some(&VARS_TRIE_DEP_NODE),
+    Some(&VARS_DEH_NODE),
+    Some(&VARS_DEI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DES_NODE),
-    Some(&VARS_TRIE_DET_NODE),
+    Some(&VARS_DEL_NODE),
+    Some(&VARS_DEM_NODE),
+    Some(&VARS_DEN_NODE),
+    Some(&VARS_DEO_NODE),
+    Some(&VARS_DEP_NODE),
     None,
-    Some(&VARS_TRIE_DEV_NODE),
+    None,
+    Some(&VARS_DES_NODE),
+    Some(&VARS_DET_NODE),
+    None,
+    Some(&VARS_DEV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_DEV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEV_CHILDREN),
+static VARS_DEV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DEV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iled"),
         dictgen::InsensitiveStr::Ascii("iling"),
@@ -15951,12 +15944,12 @@ pub static VARS_TRIE_DEV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=12,
 };
 
-static VARS_TRIE_DET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DET_CHILDREN),
+static VARS_DET_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DET_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ribalisation"),
         dictgen::InsensitiveStr::Ascii("ribalisations"),
@@ -15988,19 +15981,17 @@ pub static VARS_TRIE_DET_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=13,
 };
 
-static VARS_TRIE_DES_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_DES_CHILDREN),
+static VARS_DES_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_DES_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_DES_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_DESA_NODE),
+static VARS_DES_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_DESA_NODE),
     None,
-    Some(&VARS_TRIE_DESC_NODE),
+    Some(&VARS_DESC_NODE),
     None,
-    Some(&VARS_TRIE_DESE_NODE),
-    None,
-    None,
+    Some(&VARS_DESE_NODE),
     None,
     None,
     None,
@@ -16009,12 +16000,14 @@ static VARS_TRIE_DES_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
     None,
     None,
-    Some(&VARS_TRIE_DESP_NODE),
+    None,
+    None,
+    Some(&VARS_DESP_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DEST_NODE),
-    Some(&VARS_TRIE_DESU_NODE),
+    Some(&VARS_DEST_NODE),
+    Some(&VARS_DESU_NODE),
     None,
     None,
     None,
@@ -16022,251 +16015,245 @@ static VARS_TRIE_DES_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
 ];
 
-static VARS_TRIE_DESU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DESU_CHILDREN),
+static VARS_DESU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DESU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DESU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("lfurization"),
-            dictgen::InsensitiveStr::Ascii("lfurizations"),
-            dictgen::InsensitiveStr::Ascii("lfurize"),
-            dictgen::InsensitiveStr::Ascii("lfurized"),
-            dictgen::InsensitiveStr::Ascii("lfurizes"),
-            dictgen::InsensitiveStr::Ascii("lfurizing"),
-            dictgen::InsensitiveStr::Ascii("lphurisation"),
-            dictgen::InsensitiveStr::Ascii("lphurisations"),
-            dictgen::InsensitiveStr::Ascii("lphurise"),
-            dictgen::InsensitiveStr::Ascii("lphurised"),
-            dictgen::InsensitiveStr::Ascii("lphurises"),
-            dictgen::InsensitiveStr::Ascii("lphurising"),
-            dictgen::InsensitiveStr::Ascii("lphurization"),
-            dictgen::InsensitiveStr::Ascii("lphurizations"),
-            dictgen::InsensitiveStr::Ascii("lphurize"),
-            dictgen::InsensitiveStr::Ascii("lphurized"),
-            dictgen::InsensitiveStr::Ascii("lphurizes"),
-            dictgen::InsensitiveStr::Ascii("lphurizing"),
-        ],
-        values: &[
-            &[(0b00001, &ENTRY_DESULFURIZATION_7274801890477561400)],
-            &[(0b00001, &ENTRY_DESULFURIZATIONS_2177003244823249071)],
-            &[(0b00001, &ENTRY_DESULFURIZE_13186827014999009464)],
-            &[(0b00001, &ENTRY_DESULFURIZED_2406386063012452485)],
-            &[(0b00001, &ENTRY_DESULFURIZES_35072370079092901)],
-            &[(0b00001, &ENTRY_DESULFURIZING_15868123655289821047)],
-            &[(0b10010, &ENTRY_DESULFURIZATION_7274801890477561400)],
-            &[(0b10010, &ENTRY_DESULFURIZATIONS_2177003244823249071)],
-            &[(0b10010, &ENTRY_DESULFURIZE_13186827014999009464)],
-            &[(0b10010, &ENTRY_DESULFURIZED_2406386063012452485)],
-            &[(0b10010, &ENTRY_DESULFURIZES_35072370079092901)],
-            &[(0b10010, &ENTRY_DESULFURIZING_15868123655289821047)],
-            &[(0b01000, &ENTRY_DESULFURIZATION_7274801890477561400)],
-            &[(0b01000, &ENTRY_DESULFURIZATIONS_2177003244823249071)],
-            &[(0b01000, &ENTRY_DESULFURIZE_13186827014999009464)],
-            &[(0b01000, &ENTRY_DESULFURIZED_2406386063012452485)],
-            &[(0b01000, &ENTRY_DESULFURIZES_35072370079092901)],
-            &[(0b01000, &ENTRY_DESULFURIZING_15868123655289821047)],
-        ],
-        range: 7..=13,
-    };
+pub static VARS_DESU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("lfurization"),
+        dictgen::InsensitiveStr::Ascii("lfurizations"),
+        dictgen::InsensitiveStr::Ascii("lfurize"),
+        dictgen::InsensitiveStr::Ascii("lfurized"),
+        dictgen::InsensitiveStr::Ascii("lfurizes"),
+        dictgen::InsensitiveStr::Ascii("lfurizing"),
+        dictgen::InsensitiveStr::Ascii("lphurisation"),
+        dictgen::InsensitiveStr::Ascii("lphurisations"),
+        dictgen::InsensitiveStr::Ascii("lphurise"),
+        dictgen::InsensitiveStr::Ascii("lphurised"),
+        dictgen::InsensitiveStr::Ascii("lphurises"),
+        dictgen::InsensitiveStr::Ascii("lphurising"),
+        dictgen::InsensitiveStr::Ascii("lphurization"),
+        dictgen::InsensitiveStr::Ascii("lphurizations"),
+        dictgen::InsensitiveStr::Ascii("lphurize"),
+        dictgen::InsensitiveStr::Ascii("lphurized"),
+        dictgen::InsensitiveStr::Ascii("lphurizes"),
+        dictgen::InsensitiveStr::Ascii("lphurizing"),
+    ],
+    values: &[
+        &[(0b00001, &ENTRY_DESULFURIZATION_7274801890477561400)],
+        &[(0b00001, &ENTRY_DESULFURIZATIONS_2177003244823249071)],
+        &[(0b00001, &ENTRY_DESULFURIZE_13186827014999009464)],
+        &[(0b00001, &ENTRY_DESULFURIZED_2406386063012452485)],
+        &[(0b00001, &ENTRY_DESULFURIZES_35072370079092901)],
+        &[(0b00001, &ENTRY_DESULFURIZING_15868123655289821047)],
+        &[(0b10010, &ENTRY_DESULFURIZATION_7274801890477561400)],
+        &[(0b10010, &ENTRY_DESULFURIZATIONS_2177003244823249071)],
+        &[(0b10010, &ENTRY_DESULFURIZE_13186827014999009464)],
+        &[(0b10010, &ENTRY_DESULFURIZED_2406386063012452485)],
+        &[(0b10010, &ENTRY_DESULFURIZES_35072370079092901)],
+        &[(0b10010, &ENTRY_DESULFURIZING_15868123655289821047)],
+        &[(0b01000, &ENTRY_DESULFURIZATION_7274801890477561400)],
+        &[(0b01000, &ENTRY_DESULFURIZATIONS_2177003244823249071)],
+        &[(0b01000, &ENTRY_DESULFURIZE_13186827014999009464)],
+        &[(0b01000, &ENTRY_DESULFURIZED_2406386063012452485)],
+        &[(0b01000, &ENTRY_DESULFURIZES_35072370079092901)],
+        &[(0b01000, &ENTRY_DESULFURIZING_15868123655289821047)],
+    ],
+    range: 7..=13,
+};
 
-static VARS_TRIE_DEST_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEST_CHILDREN),
+static VARS_DEST_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEST_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEST_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("abilisation"),
-            dictgen::InsensitiveStr::Ascii("abilise"),
-            dictgen::InsensitiveStr::Ascii("abilised"),
-            dictgen::InsensitiveStr::Ascii("abilises"),
-            dictgen::InsensitiveStr::Ascii("abilising"),
-            dictgen::InsensitiveStr::Ascii("abilization"),
-            dictgen::InsensitiveStr::Ascii("abilize"),
-            dictgen::InsensitiveStr::Ascii("abilized"),
-            dictgen::InsensitiveStr::Ascii("abilizes"),
-            dictgen::InsensitiveStr::Ascii("abilizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DESTABILIZATION_13317005930133883698)],
-            &[(0b10010, &ENTRY_DESTABILIZE_6658582433887926026)],
-            &[(0b10010, &ENTRY_DESTABILIZED_798803001524481006)],
-            &[(0b10010, &ENTRY_DESTABILIZES_9175954977739946204)],
-            &[(0b10010, &ENTRY_DESTABILIZING_11313904175788895920)],
-            &[(0b01001, &ENTRY_DESTABILIZATION_13317005930133883698)],
-            &[(0b01001, &ENTRY_DESTABILIZE_6658582433887926026)],
-            &[(0b01001, &ENTRY_DESTABILIZED_798803001524481006)],
-            &[(0b01001, &ENTRY_DESTABILIZES_9175954977739946204)],
-            &[(0b01001, &ENTRY_DESTABILIZING_11313904175788895920)],
-        ],
-        range: 7..=11,
-    };
+pub static VARS_DEST_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("abilisation"),
+        dictgen::InsensitiveStr::Ascii("abilise"),
+        dictgen::InsensitiveStr::Ascii("abilised"),
+        dictgen::InsensitiveStr::Ascii("abilises"),
+        dictgen::InsensitiveStr::Ascii("abilising"),
+        dictgen::InsensitiveStr::Ascii("abilization"),
+        dictgen::InsensitiveStr::Ascii("abilize"),
+        dictgen::InsensitiveStr::Ascii("abilized"),
+        dictgen::InsensitiveStr::Ascii("abilizes"),
+        dictgen::InsensitiveStr::Ascii("abilizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DESTABILIZATION_13317005930133883698)],
+        &[(0b10010, &ENTRY_DESTABILIZE_6658582433887926026)],
+        &[(0b10010, &ENTRY_DESTABILIZED_798803001524481006)],
+        &[(0b10010, &ENTRY_DESTABILIZES_9175954977739946204)],
+        &[(0b10010, &ENTRY_DESTABILIZING_11313904175788895920)],
+        &[(0b01001, &ENTRY_DESTABILIZATION_13317005930133883698)],
+        &[(0b01001, &ENTRY_DESTABILIZE_6658582433887926026)],
+        &[(0b01001, &ENTRY_DESTABILIZED_798803001524481006)],
+        &[(0b01001, &ENTRY_DESTABILIZES_9175954977739946204)],
+        &[(0b01001, &ENTRY_DESTABILIZING_11313904175788895920)],
+    ],
+    range: 7..=11,
+};
 
-static VARS_TRIE_DESP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DESP_CHILDREN),
+static VARS_DESP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DESP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DESP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("atch"),
-            dictgen::InsensitiveStr::Ascii("atched"),
-            dictgen::InsensitiveStr::Ascii("atches"),
-            dictgen::InsensitiveStr::Ascii("atching"),
-        ],
-        values: &[
-            &[(0b10011, &ENTRY_DISPATCH_1411749765220275516)],
-            &[(0b10011, &ENTRY_DISPATCHED_15237234107206890876)],
-            &[(0b10011, &ENTRY_DISPATCHES_6888853082053231509)],
-            &[(0b10011, &ENTRY_DISPATCHING_14791196208532843181)],
-        ],
-        range: 4..=7,
-    };
+pub static VARS_DESP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("atch"),
+        dictgen::InsensitiveStr::Ascii("atched"),
+        dictgen::InsensitiveStr::Ascii("atches"),
+        dictgen::InsensitiveStr::Ascii("atching"),
+    ],
+    values: &[
+        &[(0b10011, &ENTRY_DISPATCH_1411749765220275516)],
+        &[(0b10011, &ENTRY_DISPATCHED_15237234107206890876)],
+        &[(0b10011, &ENTRY_DISPATCHES_6888853082053231509)],
+        &[(0b10011, &ENTRY_DISPATCHING_14791196208532843181)],
+    ],
+    range: 4..=7,
+};
 
-static VARS_TRIE_DESE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DESE_CHILDREN),
+static VARS_DESE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DESE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DESE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("nsitisation"),
-            dictgen::InsensitiveStr::Ascii("nsitisations"),
-            dictgen::InsensitiveStr::Ascii("nsitise"),
-            dictgen::InsensitiveStr::Ascii("nsitised"),
-            dictgen::InsensitiveStr::Ascii("nsitiser"),
-            dictgen::InsensitiveStr::Ascii("nsitisers"),
-            dictgen::InsensitiveStr::Ascii("nsitises"),
-            dictgen::InsensitiveStr::Ascii("nsitising"),
-            dictgen::InsensitiveStr::Ascii("nsitization"),
-            dictgen::InsensitiveStr::Ascii("nsitizations"),
-            dictgen::InsensitiveStr::Ascii("nsitize"),
-            dictgen::InsensitiveStr::Ascii("nsitized"),
-            dictgen::InsensitiveStr::Ascii("nsitizer"),
-            dictgen::InsensitiveStr::Ascii("nsitizers"),
-            dictgen::InsensitiveStr::Ascii("nsitizes"),
-            dictgen::InsensitiveStr::Ascii("nsitizing"),
-            dictgen::InsensitiveStr::Ascii("xualise"),
-            dictgen::InsensitiveStr::Ascii("xualised"),
-            dictgen::InsensitiveStr::Ascii("xualises"),
-            dictgen::InsensitiveStr::Ascii("xualising"),
-            dictgen::InsensitiveStr::Ascii("xualize"),
-            dictgen::InsensitiveStr::Ascii("xualized"),
-            dictgen::InsensitiveStr::Ascii("xualizes"),
-            dictgen::InsensitiveStr::Ascii("xualizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DESENSITIZATION_6477425684013695224)],
-            &[(0b10010, &ENTRY_DESENSITIZATIONS_2653162068724592823)],
-            &[(0b10010, &ENTRY_DESENSITIZE_7076278913280010375)],
-            &[(0b10010, &ENTRY_DESENSITIZED_18060076779967037190)],
-            &[(0b10010, &ENTRY_DESENSITIZER_17295084989835588516)],
-            &[(0b10010, &ENTRY_DESENSITIZERS_4492855637688265508)],
-            &[(0b10010, &ENTRY_DESENSITIZES_14085116376101022093)],
-            &[(0b10010, &ENTRY_DESENSITIZING_1861532716047418795)],
-            &[(0b01001, &ENTRY_DESENSITIZATION_6477425684013695224)],
-            &[(0b01001, &ENTRY_DESENSITIZATIONS_2653162068724592823)],
-            &[(0b01001, &ENTRY_DESENSITIZE_7076278913280010375)],
-            &[(0b01001, &ENTRY_DESENSITIZED_18060076779967037190)],
-            &[(0b01001, &ENTRY_DESENSITIZER_17295084989835588516)],
-            &[(0b01001, &ENTRY_DESENSITIZERS_4492855637688265508)],
-            &[(0b01001, &ENTRY_DESENSITIZES_14085116376101022093)],
-            &[(0b01001, &ENTRY_DESENSITIZING_1861532716047418795)],
-            &[(0b10010, &ENTRY_DESEXUALIZE_1452349021755288588)],
-            &[(0b10010, &ENTRY_DESEXUALIZED_14697196652232596540)],
-            &[(0b10010, &ENTRY_DESEXUALIZES_310153221369007273)],
-            &[(0b10010, &ENTRY_DESEXUALIZING_12199543455593087481)],
-            &[(0b01001, &ENTRY_DESEXUALIZE_1452349021755288588)],
-            &[(0b01001, &ENTRY_DESEXUALIZED_14697196652232596540)],
-            &[(0b01001, &ENTRY_DESEXUALIZES_310153221369007273)],
-            &[(0b01001, &ENTRY_DESEXUALIZING_12199543455593087481)],
-        ],
-        range: 7..=12,
-    };
+pub static VARS_DESE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("nsitisation"),
+        dictgen::InsensitiveStr::Ascii("nsitisations"),
+        dictgen::InsensitiveStr::Ascii("nsitise"),
+        dictgen::InsensitiveStr::Ascii("nsitised"),
+        dictgen::InsensitiveStr::Ascii("nsitiser"),
+        dictgen::InsensitiveStr::Ascii("nsitisers"),
+        dictgen::InsensitiveStr::Ascii("nsitises"),
+        dictgen::InsensitiveStr::Ascii("nsitising"),
+        dictgen::InsensitiveStr::Ascii("nsitization"),
+        dictgen::InsensitiveStr::Ascii("nsitizations"),
+        dictgen::InsensitiveStr::Ascii("nsitize"),
+        dictgen::InsensitiveStr::Ascii("nsitized"),
+        dictgen::InsensitiveStr::Ascii("nsitizer"),
+        dictgen::InsensitiveStr::Ascii("nsitizers"),
+        dictgen::InsensitiveStr::Ascii("nsitizes"),
+        dictgen::InsensitiveStr::Ascii("nsitizing"),
+        dictgen::InsensitiveStr::Ascii("xualise"),
+        dictgen::InsensitiveStr::Ascii("xualised"),
+        dictgen::InsensitiveStr::Ascii("xualises"),
+        dictgen::InsensitiveStr::Ascii("xualising"),
+        dictgen::InsensitiveStr::Ascii("xualize"),
+        dictgen::InsensitiveStr::Ascii("xualized"),
+        dictgen::InsensitiveStr::Ascii("xualizes"),
+        dictgen::InsensitiveStr::Ascii("xualizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DESENSITIZATION_6477425684013695224)],
+        &[(0b10010, &ENTRY_DESENSITIZATIONS_2653162068724592823)],
+        &[(0b10010, &ENTRY_DESENSITIZE_7076278913280010375)],
+        &[(0b10010, &ENTRY_DESENSITIZED_18060076779967037190)],
+        &[(0b10010, &ENTRY_DESENSITIZER_17295084989835588516)],
+        &[(0b10010, &ENTRY_DESENSITIZERS_4492855637688265508)],
+        &[(0b10010, &ENTRY_DESENSITIZES_14085116376101022093)],
+        &[(0b10010, &ENTRY_DESENSITIZING_1861532716047418795)],
+        &[(0b01001, &ENTRY_DESENSITIZATION_6477425684013695224)],
+        &[(0b01001, &ENTRY_DESENSITIZATIONS_2653162068724592823)],
+        &[(0b01001, &ENTRY_DESENSITIZE_7076278913280010375)],
+        &[(0b01001, &ENTRY_DESENSITIZED_18060076779967037190)],
+        &[(0b01001, &ENTRY_DESENSITIZER_17295084989835588516)],
+        &[(0b01001, &ENTRY_DESENSITIZERS_4492855637688265508)],
+        &[(0b01001, &ENTRY_DESENSITIZES_14085116376101022093)],
+        &[(0b01001, &ENTRY_DESENSITIZING_1861532716047418795)],
+        &[(0b10010, &ENTRY_DESEXUALIZE_1452349021755288588)],
+        &[(0b10010, &ENTRY_DESEXUALIZED_14697196652232596540)],
+        &[(0b10010, &ENTRY_DESEXUALIZES_310153221369007273)],
+        &[(0b10010, &ENTRY_DESEXUALIZING_12199543455593087481)],
+        &[(0b01001, &ENTRY_DESEXUALIZE_1452349021755288588)],
+        &[(0b01001, &ENTRY_DESEXUALIZED_14697196652232596540)],
+        &[(0b01001, &ENTRY_DESEXUALIZES_310153221369007273)],
+        &[(0b01001, &ENTRY_DESEXUALIZING_12199543455593087481)],
+    ],
+    range: 7..=12,
+};
 
-static VARS_TRIE_DESC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DESC_CHILDREN),
+static VARS_DESC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DESC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DESC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[dictgen::InsensitiveStr::Ascii("endents")],
-        values: &[&[(0b00001, &ENTRY_DESCENDANTS_15651999902366879600)]],
-        range: 7..=7,
-    };
+pub static VARS_DESC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[dictgen::InsensitiveStr::Ascii("endents")],
+    values: &[&[(0b00001, &ENTRY_DESCENDANTS_15651999902366879600)]],
+    range: 7..=7,
+};
 
-static VARS_TRIE_DESA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DESA_CHILDREN),
+static VARS_DESA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DESA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DESA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("linisation"),
-            dictgen::InsensitiveStr::Ascii("linisations"),
-            dictgen::InsensitiveStr::Ascii("linise"),
-            dictgen::InsensitiveStr::Ascii("linised"),
-            dictgen::InsensitiveStr::Ascii("linises"),
-            dictgen::InsensitiveStr::Ascii("linising"),
-            dictgen::InsensitiveStr::Ascii("linization"),
-            dictgen::InsensitiveStr::Ascii("linizations"),
-            dictgen::InsensitiveStr::Ascii("linize"),
-            dictgen::InsensitiveStr::Ascii("linized"),
-            dictgen::InsensitiveStr::Ascii("linizes"),
-            dictgen::InsensitiveStr::Ascii("linizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DESALINIZATION_18136851436548406134)],
-            &[(0b10010, &ENTRY_DESALINIZATIONS_1947156449217935933)],
-            &[(0b10010, &ENTRY_DESALINIZE_15580269981634714244)],
-            &[(0b10010, &ENTRY_DESALINIZED_787514518667266596)],
-            &[(0b10010, &ENTRY_DESALINIZES_3392036422321879852)],
-            &[(0b10010, &ENTRY_DESALINIZING_7600583977642503954)],
-            &[(0b01001, &ENTRY_DESALINIZATION_18136851436548406134)],
-            &[(0b01001, &ENTRY_DESALINIZATIONS_1947156449217935933)],
-            &[(0b01001, &ENTRY_DESALINIZE_15580269981634714244)],
-            &[(0b01001, &ENTRY_DESALINIZED_787514518667266596)],
-            &[(0b01001, &ENTRY_DESALINIZES_3392036422321879852)],
-            &[(0b01001, &ENTRY_DESALINIZING_7600583977642503954)],
-        ],
-        range: 6..=11,
-    };
+pub static VARS_DESA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("linisation"),
+        dictgen::InsensitiveStr::Ascii("linisations"),
+        dictgen::InsensitiveStr::Ascii("linise"),
+        dictgen::InsensitiveStr::Ascii("linised"),
+        dictgen::InsensitiveStr::Ascii("linises"),
+        dictgen::InsensitiveStr::Ascii("linising"),
+        dictgen::InsensitiveStr::Ascii("linization"),
+        dictgen::InsensitiveStr::Ascii("linizations"),
+        dictgen::InsensitiveStr::Ascii("linize"),
+        dictgen::InsensitiveStr::Ascii("linized"),
+        dictgen::InsensitiveStr::Ascii("linizes"),
+        dictgen::InsensitiveStr::Ascii("linizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DESALINIZATION_18136851436548406134)],
+        &[(0b10010, &ENTRY_DESALINIZATIONS_1947156449217935933)],
+        &[(0b10010, &ENTRY_DESALINIZE_15580269981634714244)],
+        &[(0b10010, &ENTRY_DESALINIZED_787514518667266596)],
+        &[(0b10010, &ENTRY_DESALINIZES_3392036422321879852)],
+        &[(0b10010, &ENTRY_DESALINIZING_7600583977642503954)],
+        &[(0b01001, &ENTRY_DESALINIZATION_18136851436548406134)],
+        &[(0b01001, &ENTRY_DESALINIZATIONS_1947156449217935933)],
+        &[(0b01001, &ENTRY_DESALINIZE_15580269981634714244)],
+        &[(0b01001, &ENTRY_DESALINIZED_787514518667266596)],
+        &[(0b01001, &ENTRY_DESALINIZES_3392036422321879852)],
+        &[(0b01001, &ENTRY_DESALINIZING_7600583977642503954)],
+    ],
+    range: 6..=11,
+};
 
-static VARS_TRIE_DEP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_DEP_CHILDREN),
+static VARS_DEP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_DEP_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_DEP_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_DEPA_NODE),
+static VARS_DEP_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_DEPA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DEPE_NODE),
-    None,
-    None,
-    None,
-    None,
+    Some(&VARS_DEPE_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_DEPO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DEPR_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DEPU_NODE),
+    Some(&VARS_DEPO_NODE),
+    None,
+    None,
+    Some(&VARS_DEPR_NODE),
+    None,
+    None,
+    Some(&VARS_DEPU_NODE),
     None,
     None,
     None,
@@ -16274,246 +16261,241 @@ static VARS_TRIE_DEP_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
 ];
 
-static VARS_TRIE_DEPU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEPU_CHILDREN),
+static VARS_DEPU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEPU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEPU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("tise"),
-            dictgen::InsensitiveStr::Ascii("tised"),
-            dictgen::InsensitiveStr::Ascii("tises"),
-            dictgen::InsensitiveStr::Ascii("tising"),
-            dictgen::InsensitiveStr::Ascii("tize"),
-            dictgen::InsensitiveStr::Ascii("tized"),
-            dictgen::InsensitiveStr::Ascii("tizes"),
-            dictgen::InsensitiveStr::Ascii("tizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEPUTIZE_14708452402802592517)],
-            &[(0b10010, &ENTRY_DEPUTIZED_15591871669346119917)],
-            &[(0b10010, &ENTRY_DEPUTIZES_16885595381873833095)],
-            &[(0b10010, &ENTRY_DEPUTIZING_11731565191775615613)],
-            &[(0b01001, &ENTRY_DEPUTIZE_14708452402802592517)],
-            &[(0b01001, &ENTRY_DEPUTIZED_15591871669346119917)],
-            &[(0b01001, &ENTRY_DEPUTIZES_16885595381873833095)],
-            &[(0b01001, &ENTRY_DEPUTIZING_11731565191775615613)],
-        ],
-        range: 4..=6,
-    };
+pub static VARS_DEPU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("tise"),
+        dictgen::InsensitiveStr::Ascii("tised"),
+        dictgen::InsensitiveStr::Ascii("tises"),
+        dictgen::InsensitiveStr::Ascii("tising"),
+        dictgen::InsensitiveStr::Ascii("tize"),
+        dictgen::InsensitiveStr::Ascii("tized"),
+        dictgen::InsensitiveStr::Ascii("tizes"),
+        dictgen::InsensitiveStr::Ascii("tizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEPUTIZE_14708452402802592517)],
+        &[(0b10010, &ENTRY_DEPUTIZED_15591871669346119917)],
+        &[(0b10010, &ENTRY_DEPUTIZES_16885595381873833095)],
+        &[(0b10010, &ENTRY_DEPUTIZING_11731565191775615613)],
+        &[(0b01001, &ENTRY_DEPUTIZE_14708452402802592517)],
+        &[(0b01001, &ENTRY_DEPUTIZED_15591871669346119917)],
+        &[(0b01001, &ENTRY_DEPUTIZES_16885595381873833095)],
+        &[(0b01001, &ENTRY_DEPUTIZING_11731565191775615613)],
+    ],
+    range: 4..=6,
+};
 
-static VARS_TRIE_DEPR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEPR_CHILDREN),
+static VARS_DEPR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEPR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEPR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("essurisation"),
-            dictgen::InsensitiveStr::Ascii("essurisations"),
-            dictgen::InsensitiveStr::Ascii("essurise"),
-            dictgen::InsensitiveStr::Ascii("essurised"),
-            dictgen::InsensitiveStr::Ascii("essurises"),
-            dictgen::InsensitiveStr::Ascii("essurising"),
-            dictgen::InsensitiveStr::Ascii("essurization"),
-            dictgen::InsensitiveStr::Ascii("essurizations"),
-            dictgen::InsensitiveStr::Ascii("essurize"),
-            dictgen::InsensitiveStr::Ascii("essurized"),
-            dictgen::InsensitiveStr::Ascii("essurizes"),
-            dictgen::InsensitiveStr::Ascii("essurizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEPRESSURIZATION_10217952263080064818)],
-            &[(0b10010, &ENTRY_DEPRESSURIZATIONS_3229591287232610524)],
-            &[(0b10010, &ENTRY_DEPRESSURIZE_4006202201627920697)],
-            &[(0b10010, &ENTRY_DEPRESSURIZED_4661479933134951890)],
-            &[(0b10010, &ENTRY_DEPRESSURIZES_6344315569910956899)],
-            &[(0b10010, &ENTRY_DEPRESSURIZING_309386769136380221)],
-            &[(0b01001, &ENTRY_DEPRESSURIZATION_10217952263080064818)],
-            &[(0b01001, &ENTRY_DEPRESSURIZATIONS_3229591287232610524)],
-            &[(0b01001, &ENTRY_DEPRESSURIZE_4006202201627920697)],
-            &[(0b01001, &ENTRY_DEPRESSURIZED_4661479933134951890)],
-            &[(0b01001, &ENTRY_DEPRESSURIZES_6344315569910956899)],
-            &[(0b01001, &ENTRY_DEPRESSURIZING_309386769136380221)],
-        ],
-        range: 8..=13,
-    };
+pub static VARS_DEPR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("essurisation"),
+        dictgen::InsensitiveStr::Ascii("essurisations"),
+        dictgen::InsensitiveStr::Ascii("essurise"),
+        dictgen::InsensitiveStr::Ascii("essurised"),
+        dictgen::InsensitiveStr::Ascii("essurises"),
+        dictgen::InsensitiveStr::Ascii("essurising"),
+        dictgen::InsensitiveStr::Ascii("essurization"),
+        dictgen::InsensitiveStr::Ascii("essurizations"),
+        dictgen::InsensitiveStr::Ascii("essurize"),
+        dictgen::InsensitiveStr::Ascii("essurized"),
+        dictgen::InsensitiveStr::Ascii("essurizes"),
+        dictgen::InsensitiveStr::Ascii("essurizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEPRESSURIZATION_10217952263080064818)],
+        &[(0b10010, &ENTRY_DEPRESSURIZATIONS_3229591287232610524)],
+        &[(0b10010, &ENTRY_DEPRESSURIZE_4006202201627920697)],
+        &[(0b10010, &ENTRY_DEPRESSURIZED_4661479933134951890)],
+        &[(0b10010, &ENTRY_DEPRESSURIZES_6344315569910956899)],
+        &[(0b10010, &ENTRY_DEPRESSURIZING_309386769136380221)],
+        &[(0b01001, &ENTRY_DEPRESSURIZATION_10217952263080064818)],
+        &[(0b01001, &ENTRY_DEPRESSURIZATIONS_3229591287232610524)],
+        &[(0b01001, &ENTRY_DEPRESSURIZE_4006202201627920697)],
+        &[(0b01001, &ENTRY_DEPRESSURIZED_4661479933134951890)],
+        &[(0b01001, &ENTRY_DEPRESSURIZES_6344315569910956899)],
+        &[(0b01001, &ENTRY_DEPRESSURIZING_309386769136380221)],
+    ],
+    range: 8..=13,
+};
 
-static VARS_TRIE_DEPO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEPO_CHILDREN),
+static VARS_DEPO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEPO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEPO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("larisation"),
-            dictgen::InsensitiveStr::Ascii("larisations"),
-            dictgen::InsensitiveStr::Ascii("larise"),
-            dictgen::InsensitiveStr::Ascii("larised"),
-            dictgen::InsensitiveStr::Ascii("larises"),
-            dictgen::InsensitiveStr::Ascii("larising"),
-            dictgen::InsensitiveStr::Ascii("larization"),
-            dictgen::InsensitiveStr::Ascii("larizations"),
-            dictgen::InsensitiveStr::Ascii("larize"),
-            dictgen::InsensitiveStr::Ascii("larized"),
-            dictgen::InsensitiveStr::Ascii("larizes"),
-            dictgen::InsensitiveStr::Ascii("larizing"),
-            dictgen::InsensitiveStr::Ascii("liticisation"),
-            dictgen::InsensitiveStr::Ascii("liticise"),
-            dictgen::InsensitiveStr::Ascii("liticised"),
-            dictgen::InsensitiveStr::Ascii("liticises"),
-            dictgen::InsensitiveStr::Ascii("liticising"),
-            dictgen::InsensitiveStr::Ascii("liticization"),
-            dictgen::InsensitiveStr::Ascii("liticize"),
-            dictgen::InsensitiveStr::Ascii("liticized"),
-            dictgen::InsensitiveStr::Ascii("liticizes"),
-            dictgen::InsensitiveStr::Ascii("liticizing"),
-            dictgen::InsensitiveStr::Ascii("lymerisation"),
-            dictgen::InsensitiveStr::Ascii("lymerisations"),
-            dictgen::InsensitiveStr::Ascii("lymerise"),
-            dictgen::InsensitiveStr::Ascii("lymerised"),
-            dictgen::InsensitiveStr::Ascii("lymerises"),
-            dictgen::InsensitiveStr::Ascii("lymerising"),
-            dictgen::InsensitiveStr::Ascii("lymerization"),
-            dictgen::InsensitiveStr::Ascii("lymerizations"),
-            dictgen::InsensitiveStr::Ascii("lymerize"),
-            dictgen::InsensitiveStr::Ascii("lymerized"),
-            dictgen::InsensitiveStr::Ascii("lymerizes"),
-            dictgen::InsensitiveStr::Ascii("lymerizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEPOLARIZATION_15774978100153361770)],
-            &[(0b10010, &ENTRY_DEPOLARIZATIONS_16752636127743385337)],
-            &[(0b10010, &ENTRY_DEPOLARIZE_14265169874625051800)],
-            &[(0b10010, &ENTRY_DEPOLARIZED_377191566140430593)],
-            &[(0b10010, &ENTRY_DEPOLARIZES_3226445999634432202)],
-            &[(0b10010, &ENTRY_DEPOLARIZING_5347205347171321160)],
-            &[(0b01001, &ENTRY_DEPOLARIZATION_15774978100153361770)],
-            &[(0b01001, &ENTRY_DEPOLARIZATIONS_16752636127743385337)],
-            &[(0b01001, &ENTRY_DEPOLARIZE_14265169874625051800)],
-            &[(0b01001, &ENTRY_DEPOLARIZED_377191566140430593)],
-            &[(0b01001, &ENTRY_DEPOLARIZES_3226445999634432202)],
-            &[(0b01001, &ENTRY_DEPOLARIZING_5347205347171321160)],
-            &[(0b10010, &ENTRY_DEPOLITICIZATION_15265110179231465481)],
-            &[(0b10010, &ENTRY_DEPOLITICIZE_7370960578004693927)],
-            &[(0b10010, &ENTRY_DEPOLITICIZED_17235888679911223431)],
-            &[(0b10010, &ENTRY_DEPOLITICIZES_13700298543339019300)],
-            &[(0b10010, &ENTRY_DEPOLITICIZING_2647277921869165326)],
-            &[(0b01001, &ENTRY_DEPOLITICIZATION_15265110179231465481)],
-            &[(0b01001, &ENTRY_DEPOLITICIZE_7370960578004693927)],
-            &[(0b01001, &ENTRY_DEPOLITICIZED_17235888679911223431)],
-            &[(0b01001, &ENTRY_DEPOLITICIZES_13700298543339019300)],
-            &[(0b01001, &ENTRY_DEPOLITICIZING_2647277921869165326)],
-            &[(0b10010, &ENTRY_DEPOLYMERIZATION_3633275984619877932)],
-            &[(0b10010, &ENTRY_DEPOLYMERIZATIONS_11969399143532196145)],
-            &[(0b10010, &ENTRY_DEPOLYMERIZE_17116091341951567184)],
-            &[(0b10010, &ENTRY_DEPOLYMERIZED_3571703505928412135)],
-            &[(0b10010, &ENTRY_DEPOLYMERIZES_18366430796592539914)],
-            &[(0b10010, &ENTRY_DEPOLYMERIZING_4657392775383874483)],
-            &[(0b01001, &ENTRY_DEPOLYMERIZATION_3633275984619877932)],
-            &[(0b01001, &ENTRY_DEPOLYMERIZATIONS_11969399143532196145)],
-            &[(0b01001, &ENTRY_DEPOLYMERIZE_17116091341951567184)],
-            &[(0b01001, &ENTRY_DEPOLYMERIZED_3571703505928412135)],
-            &[(0b01001, &ENTRY_DEPOLYMERIZES_18366430796592539914)],
-            &[(0b01001, &ENTRY_DEPOLYMERIZING_4657392775383874483)],
-        ],
-        range: 6..=13,
-    };
+pub static VARS_DEPO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("larisation"),
+        dictgen::InsensitiveStr::Ascii("larisations"),
+        dictgen::InsensitiveStr::Ascii("larise"),
+        dictgen::InsensitiveStr::Ascii("larised"),
+        dictgen::InsensitiveStr::Ascii("larises"),
+        dictgen::InsensitiveStr::Ascii("larising"),
+        dictgen::InsensitiveStr::Ascii("larization"),
+        dictgen::InsensitiveStr::Ascii("larizations"),
+        dictgen::InsensitiveStr::Ascii("larize"),
+        dictgen::InsensitiveStr::Ascii("larized"),
+        dictgen::InsensitiveStr::Ascii("larizes"),
+        dictgen::InsensitiveStr::Ascii("larizing"),
+        dictgen::InsensitiveStr::Ascii("liticisation"),
+        dictgen::InsensitiveStr::Ascii("liticise"),
+        dictgen::InsensitiveStr::Ascii("liticised"),
+        dictgen::InsensitiveStr::Ascii("liticises"),
+        dictgen::InsensitiveStr::Ascii("liticising"),
+        dictgen::InsensitiveStr::Ascii("liticization"),
+        dictgen::InsensitiveStr::Ascii("liticize"),
+        dictgen::InsensitiveStr::Ascii("liticized"),
+        dictgen::InsensitiveStr::Ascii("liticizes"),
+        dictgen::InsensitiveStr::Ascii("liticizing"),
+        dictgen::InsensitiveStr::Ascii("lymerisation"),
+        dictgen::InsensitiveStr::Ascii("lymerisations"),
+        dictgen::InsensitiveStr::Ascii("lymerise"),
+        dictgen::InsensitiveStr::Ascii("lymerised"),
+        dictgen::InsensitiveStr::Ascii("lymerises"),
+        dictgen::InsensitiveStr::Ascii("lymerising"),
+        dictgen::InsensitiveStr::Ascii("lymerization"),
+        dictgen::InsensitiveStr::Ascii("lymerizations"),
+        dictgen::InsensitiveStr::Ascii("lymerize"),
+        dictgen::InsensitiveStr::Ascii("lymerized"),
+        dictgen::InsensitiveStr::Ascii("lymerizes"),
+        dictgen::InsensitiveStr::Ascii("lymerizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEPOLARIZATION_15774978100153361770)],
+        &[(0b10010, &ENTRY_DEPOLARIZATIONS_16752636127743385337)],
+        &[(0b10010, &ENTRY_DEPOLARIZE_14265169874625051800)],
+        &[(0b10010, &ENTRY_DEPOLARIZED_377191566140430593)],
+        &[(0b10010, &ENTRY_DEPOLARIZES_3226445999634432202)],
+        &[(0b10010, &ENTRY_DEPOLARIZING_5347205347171321160)],
+        &[(0b01001, &ENTRY_DEPOLARIZATION_15774978100153361770)],
+        &[(0b01001, &ENTRY_DEPOLARIZATIONS_16752636127743385337)],
+        &[(0b01001, &ENTRY_DEPOLARIZE_14265169874625051800)],
+        &[(0b01001, &ENTRY_DEPOLARIZED_377191566140430593)],
+        &[(0b01001, &ENTRY_DEPOLARIZES_3226445999634432202)],
+        &[(0b01001, &ENTRY_DEPOLARIZING_5347205347171321160)],
+        &[(0b10010, &ENTRY_DEPOLITICIZATION_15265110179231465481)],
+        &[(0b10010, &ENTRY_DEPOLITICIZE_7370960578004693927)],
+        &[(0b10010, &ENTRY_DEPOLITICIZED_17235888679911223431)],
+        &[(0b10010, &ENTRY_DEPOLITICIZES_13700298543339019300)],
+        &[(0b10010, &ENTRY_DEPOLITICIZING_2647277921869165326)],
+        &[(0b01001, &ENTRY_DEPOLITICIZATION_15265110179231465481)],
+        &[(0b01001, &ENTRY_DEPOLITICIZE_7370960578004693927)],
+        &[(0b01001, &ENTRY_DEPOLITICIZED_17235888679911223431)],
+        &[(0b01001, &ENTRY_DEPOLITICIZES_13700298543339019300)],
+        &[(0b01001, &ENTRY_DEPOLITICIZING_2647277921869165326)],
+        &[(0b10010, &ENTRY_DEPOLYMERIZATION_3633275984619877932)],
+        &[(0b10010, &ENTRY_DEPOLYMERIZATIONS_11969399143532196145)],
+        &[(0b10010, &ENTRY_DEPOLYMERIZE_17116091341951567184)],
+        &[(0b10010, &ENTRY_DEPOLYMERIZED_3571703505928412135)],
+        &[(0b10010, &ENTRY_DEPOLYMERIZES_18366430796592539914)],
+        &[(0b10010, &ENTRY_DEPOLYMERIZING_4657392775383874483)],
+        &[(0b01001, &ENTRY_DEPOLYMERIZATION_3633275984619877932)],
+        &[(0b01001, &ENTRY_DEPOLYMERIZATIONS_11969399143532196145)],
+        &[(0b01001, &ENTRY_DEPOLYMERIZE_17116091341951567184)],
+        &[(0b01001, &ENTRY_DEPOLYMERIZED_3571703505928412135)],
+        &[(0b01001, &ENTRY_DEPOLYMERIZES_18366430796592539914)],
+        &[(0b01001, &ENTRY_DEPOLYMERIZING_4657392775383874483)],
+    ],
+    range: 6..=13,
+};
 
-static VARS_TRIE_DEPE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEPE_CHILDREN),
+static VARS_DEPE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEPE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEPE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("ndance"),
-            dictgen::InsensitiveStr::Ascii("ndances"),
-            dictgen::InsensitiveStr::Ascii("ndant"),
-            dictgen::InsensitiveStr::Ascii("ndants"),
-            dictgen::InsensitiveStr::Ascii("rsonalisation"),
-            dictgen::InsensitiveStr::Ascii("rsonalisations"),
-            dictgen::InsensitiveStr::Ascii("rsonalise"),
-            dictgen::InsensitiveStr::Ascii("rsonalised"),
-            dictgen::InsensitiveStr::Ascii("rsonalises"),
-            dictgen::InsensitiveStr::Ascii("rsonalising"),
-            dictgen::InsensitiveStr::Ascii("rsonalization"),
-            dictgen::InsensitiveStr::Ascii("rsonalizations"),
-            dictgen::InsensitiveStr::Ascii("rsonalize"),
-            dictgen::InsensitiveStr::Ascii("rsonalized"),
-            dictgen::InsensitiveStr::Ascii("rsonalizes"),
-            dictgen::InsensitiveStr::Ascii("rsonalizing"),
-        ],
-        values: &[
-            &[(0b00001, &ENTRY_DEPENDENCE_2975032857660330940)],
-            &[(0b00001, &ENTRY_DEPENDENCES_4898857694362268650)],
-            &[(0b11010, &ENTRY_DEPENDENT_15548837712937438814)],
-            &[(0b11010, &ENTRY_DEPENDENTS_6484680412761939586)],
-            &[(0b10010, &ENTRY_DEPERSONALIZATION_3798571196825324317)],
-            &[(0b10010, &ENTRY_DEPERSONALIZATIONS_13800546258710189283)],
-            &[(0b10010, &ENTRY_DEPERSONALIZE_6577935583661707932)],
-            &[(0b10010, &ENTRY_DEPERSONALIZED_4395700992531987338)],
-            &[(0b10010, &ENTRY_DEPERSONALIZES_2561116931316488871)],
-            &[(0b10010, &ENTRY_DEPERSONALIZING_12778802923540312835)],
-            &[(0b01001, &ENTRY_DEPERSONALIZATION_3798571196825324317)],
-            &[(0b01001, &ENTRY_DEPERSONALIZATIONS_13800546258710189283)],
-            &[(0b01001, &ENTRY_DEPERSONALIZE_6577935583661707932)],
-            &[(0b01001, &ENTRY_DEPERSONALIZED_4395700992531987338)],
-            &[(0b01001, &ENTRY_DEPERSONALIZES_2561116931316488871)],
-            &[(0b01001, &ENTRY_DEPERSONALIZING_12778802923540312835)],
-        ],
-        range: 5..=14,
-    };
+pub static VARS_DEPE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("ndance"),
+        dictgen::InsensitiveStr::Ascii("ndances"),
+        dictgen::InsensitiveStr::Ascii("ndant"),
+        dictgen::InsensitiveStr::Ascii("ndants"),
+        dictgen::InsensitiveStr::Ascii("rsonalisation"),
+        dictgen::InsensitiveStr::Ascii("rsonalisations"),
+        dictgen::InsensitiveStr::Ascii("rsonalise"),
+        dictgen::InsensitiveStr::Ascii("rsonalised"),
+        dictgen::InsensitiveStr::Ascii("rsonalises"),
+        dictgen::InsensitiveStr::Ascii("rsonalising"),
+        dictgen::InsensitiveStr::Ascii("rsonalization"),
+        dictgen::InsensitiveStr::Ascii("rsonalizations"),
+        dictgen::InsensitiveStr::Ascii("rsonalize"),
+        dictgen::InsensitiveStr::Ascii("rsonalized"),
+        dictgen::InsensitiveStr::Ascii("rsonalizes"),
+        dictgen::InsensitiveStr::Ascii("rsonalizing"),
+    ],
+    values: &[
+        &[(0b00001, &ENTRY_DEPENDENCE_2975032857660330940)],
+        &[(0b00001, &ENTRY_DEPENDENCES_4898857694362268650)],
+        &[(0b11010, &ENTRY_DEPENDENT_15548837712937438814)],
+        &[(0b11010, &ENTRY_DEPENDENTS_6484680412761939586)],
+        &[(0b10010, &ENTRY_DEPERSONALIZATION_3798571196825324317)],
+        &[(0b10010, &ENTRY_DEPERSONALIZATIONS_13800546258710189283)],
+        &[(0b10010, &ENTRY_DEPERSONALIZE_6577935583661707932)],
+        &[(0b10010, &ENTRY_DEPERSONALIZED_4395700992531987338)],
+        &[(0b10010, &ENTRY_DEPERSONALIZES_2561116931316488871)],
+        &[(0b10010, &ENTRY_DEPERSONALIZING_12778802923540312835)],
+        &[(0b01001, &ENTRY_DEPERSONALIZATION_3798571196825324317)],
+        &[(0b01001, &ENTRY_DEPERSONALIZATIONS_13800546258710189283)],
+        &[(0b01001, &ENTRY_DEPERSONALIZE_6577935583661707932)],
+        &[(0b01001, &ENTRY_DEPERSONALIZED_4395700992531987338)],
+        &[(0b01001, &ENTRY_DEPERSONALIZES_2561116931316488871)],
+        &[(0b01001, &ENTRY_DEPERSONALIZING_12778802923540312835)],
+    ],
+    range: 5..=14,
+};
 
-static VARS_TRIE_DEPA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEPA_CHILDREN),
+static VARS_DEPA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEPA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEPA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("rtmentalisation"),
-            dictgen::InsensitiveStr::Ascii("rtmentalisations"),
-            dictgen::InsensitiveStr::Ascii("rtmentalise"),
-            dictgen::InsensitiveStr::Ascii("rtmentalised"),
-            dictgen::InsensitiveStr::Ascii("rtmentalises"),
-            dictgen::InsensitiveStr::Ascii("rtmentalising"),
-            dictgen::InsensitiveStr::Ascii("rtmentalization"),
-            dictgen::InsensitiveStr::Ascii("rtmentalizations"),
-            dictgen::InsensitiveStr::Ascii("rtmentalize"),
-            dictgen::InsensitiveStr::Ascii("rtmentalized"),
-            dictgen::InsensitiveStr::Ascii("rtmentalizes"),
-            dictgen::InsensitiveStr::Ascii("rtmentalizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEPARTMENTALIZATION_16732736631808006231)],
-            &[(0b10010, &ENTRY_DEPARTMENTALIZATIONS_12433036246957322206)],
-            &[(0b10010, &ENTRY_DEPARTMENTALIZE_12544989001599465845)],
-            &[(0b10010, &ENTRY_DEPARTMENTALIZED_6440346371168938642)],
-            &[(0b10010, &ENTRY_DEPARTMENTALIZES_5200360728452577607)],
-            &[(0b10010, &ENTRY_DEPARTMENTALIZING_14933842151249052929)],
-            &[(0b01001, &ENTRY_DEPARTMENTALIZATION_16732736631808006231)],
-            &[(0b01001, &ENTRY_DEPARTMENTALIZATIONS_12433036246957322206)],
-            &[(0b01001, &ENTRY_DEPARTMENTALIZE_12544989001599465845)],
-            &[(0b01001, &ENTRY_DEPARTMENTALIZED_6440346371168938642)],
-            &[(0b01001, &ENTRY_DEPARTMENTALIZES_5200360728452577607)],
-            &[(0b01001, &ENTRY_DEPARTMENTALIZING_14933842151249052929)],
-        ],
-        range: 11..=16,
-    };
+pub static VARS_DEPA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("rtmentalisation"),
+        dictgen::InsensitiveStr::Ascii("rtmentalisations"),
+        dictgen::InsensitiveStr::Ascii("rtmentalise"),
+        dictgen::InsensitiveStr::Ascii("rtmentalised"),
+        dictgen::InsensitiveStr::Ascii("rtmentalises"),
+        dictgen::InsensitiveStr::Ascii("rtmentalising"),
+        dictgen::InsensitiveStr::Ascii("rtmentalization"),
+        dictgen::InsensitiveStr::Ascii("rtmentalizations"),
+        dictgen::InsensitiveStr::Ascii("rtmentalize"),
+        dictgen::InsensitiveStr::Ascii("rtmentalized"),
+        dictgen::InsensitiveStr::Ascii("rtmentalizes"),
+        dictgen::InsensitiveStr::Ascii("rtmentalizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEPARTMENTALIZATION_16732736631808006231)],
+        &[(0b10010, &ENTRY_DEPARTMENTALIZATIONS_12433036246957322206)],
+        &[(0b10010, &ENTRY_DEPARTMENTALIZE_12544989001599465845)],
+        &[(0b10010, &ENTRY_DEPARTMENTALIZED_6440346371168938642)],
+        &[(0b10010, &ENTRY_DEPARTMENTALIZES_5200360728452577607)],
+        &[(0b10010, &ENTRY_DEPARTMENTALIZING_14933842151249052929)],
+        &[(0b01001, &ENTRY_DEPARTMENTALIZATION_16732736631808006231)],
+        &[(0b01001, &ENTRY_DEPARTMENTALIZATIONS_12433036246957322206)],
+        &[(0b01001, &ENTRY_DEPARTMENTALIZE_12544989001599465845)],
+        &[(0b01001, &ENTRY_DEPARTMENTALIZED_6440346371168938642)],
+        &[(0b01001, &ENTRY_DEPARTMENTALIZES_5200360728452577607)],
+        &[(0b01001, &ENTRY_DEPARTMENTALIZING_14933842151249052929)],
+    ],
+    range: 11..=16,
+};
 
-static VARS_TRIE_DEO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEO_CHILDREN),
+static VARS_DEO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DEO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dorisation"),
         dictgen::InsensitiveStr::Ascii("dorisations"),
@@ -16553,12 +16535,12 @@ pub static VARS_TRIE_DEO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_DEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEN_CHILDREN),
+static VARS_DEN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ationalisation"),
         dictgen::InsensitiveStr::Ascii("ationalisations"),
@@ -16642,374 +16624,369 @@ pub static VARS_TRIE_DEN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=15,
 };
 
-static VARS_TRIE_DEM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_DEM_CHILDREN),
+static VARS_DEM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_DEM_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_DEM_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_DEMA_NODE),
+static VARS_DEM_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_DEMA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DEME_NODE),
+    Some(&VARS_DEME_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DEMI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_DEMO_NODE),
+    Some(&VARS_DEMI_NODE),
     None,
     None,
     None,
     None,
     None,
+    Some(&VARS_DEMO_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_DEMY_NODE),
+    None,
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_DEMY_NODE),
     None,
 ];
 
-static VARS_TRIE_DEMY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEMY_CHILDREN),
+static VARS_DEMY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEMY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEMY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("thologise"),
-            dictgen::InsensitiveStr::Ascii("thologised"),
-            dictgen::InsensitiveStr::Ascii("thologises"),
-            dictgen::InsensitiveStr::Ascii("thologising"),
-            dictgen::InsensitiveStr::Ascii("thologize"),
-            dictgen::InsensitiveStr::Ascii("thologized"),
-            dictgen::InsensitiveStr::Ascii("thologizes"),
-            dictgen::InsensitiveStr::Ascii("thologizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEMYTHOLOGIZE_16256850336374180662)],
-            &[(0b10010, &ENTRY_DEMYTHOLOGIZED_1548902620938435190)],
-            &[(0b10010, &ENTRY_DEMYTHOLOGIZES_9084348299549456287)],
-            &[(0b10010, &ENTRY_DEMYTHOLOGIZING_16424025398156147764)],
-            &[(0b01001, &ENTRY_DEMYTHOLOGIZE_16256850336374180662)],
-            &[(0b01001, &ENTRY_DEMYTHOLOGIZED_1548902620938435190)],
-            &[(0b01001, &ENTRY_DEMYTHOLOGIZES_9084348299549456287)],
-            &[(0b01001, &ENTRY_DEMYTHOLOGIZING_16424025398156147764)],
-        ],
-        range: 9..=11,
-    };
+pub static VARS_DEMY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("thologise"),
+        dictgen::InsensitiveStr::Ascii("thologised"),
+        dictgen::InsensitiveStr::Ascii("thologises"),
+        dictgen::InsensitiveStr::Ascii("thologising"),
+        dictgen::InsensitiveStr::Ascii("thologize"),
+        dictgen::InsensitiveStr::Ascii("thologized"),
+        dictgen::InsensitiveStr::Ascii("thologizes"),
+        dictgen::InsensitiveStr::Ascii("thologizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEMYTHOLOGIZE_16256850336374180662)],
+        &[(0b10010, &ENTRY_DEMYTHOLOGIZED_1548902620938435190)],
+        &[(0b10010, &ENTRY_DEMYTHOLOGIZES_9084348299549456287)],
+        &[(0b10010, &ENTRY_DEMYTHOLOGIZING_16424025398156147764)],
+        &[(0b01001, &ENTRY_DEMYTHOLOGIZE_16256850336374180662)],
+        &[(0b01001, &ENTRY_DEMYTHOLOGIZED_1548902620938435190)],
+        &[(0b01001, &ENTRY_DEMYTHOLOGIZES_9084348299549456287)],
+        &[(0b01001, &ENTRY_DEMYTHOLOGIZING_16424025398156147764)],
+    ],
+    range: 9..=11,
+};
 
-static VARS_TRIE_DEMO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEMO_CHILDREN),
+static VARS_DEMO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEMO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEMO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("bilisation"),
-            dictgen::InsensitiveStr::Ascii("bilisations"),
-            dictgen::InsensitiveStr::Ascii("bilise"),
-            dictgen::InsensitiveStr::Ascii("bilised"),
-            dictgen::InsensitiveStr::Ascii("bilises"),
-            dictgen::InsensitiveStr::Ascii("bilising"),
-            dictgen::InsensitiveStr::Ascii("bilization"),
-            dictgen::InsensitiveStr::Ascii("bilizations"),
-            dictgen::InsensitiveStr::Ascii("bilize"),
-            dictgen::InsensitiveStr::Ascii("bilized"),
-            dictgen::InsensitiveStr::Ascii("bilizes"),
-            dictgen::InsensitiveStr::Ascii("bilizing"),
-            dictgen::InsensitiveStr::Ascii("cratisation"),
-            dictgen::InsensitiveStr::Ascii("cratisations"),
-            dictgen::InsensitiveStr::Ascii("cratise"),
-            dictgen::InsensitiveStr::Ascii("cratised"),
-            dictgen::InsensitiveStr::Ascii("cratises"),
-            dictgen::InsensitiveStr::Ascii("cratising"),
-            dictgen::InsensitiveStr::Ascii("cratization"),
-            dictgen::InsensitiveStr::Ascii("cratizations"),
-            dictgen::InsensitiveStr::Ascii("cratize"),
-            dictgen::InsensitiveStr::Ascii("cratized"),
-            dictgen::InsensitiveStr::Ascii("cratizes"),
-            dictgen::InsensitiveStr::Ascii("cratizing"),
-            dictgen::InsensitiveStr::Ascii("netisation"),
-            dictgen::InsensitiveStr::Ascii("netisations"),
-            dictgen::InsensitiveStr::Ascii("netise"),
-            dictgen::InsensitiveStr::Ascii("netised"),
-            dictgen::InsensitiveStr::Ascii("netises"),
-            dictgen::InsensitiveStr::Ascii("netising"),
-            dictgen::InsensitiveStr::Ascii("netization"),
-            dictgen::InsensitiveStr::Ascii("netizations"),
-            dictgen::InsensitiveStr::Ascii("netize"),
-            dictgen::InsensitiveStr::Ascii("netized"),
-            dictgen::InsensitiveStr::Ascii("netizes"),
-            dictgen::InsensitiveStr::Ascii("netizing"),
-            dictgen::InsensitiveStr::Ascii("nisation"),
-            dictgen::InsensitiveStr::Ascii("nise"),
-            dictgen::InsensitiveStr::Ascii("nised"),
-            dictgen::InsensitiveStr::Ascii("nises"),
-            dictgen::InsensitiveStr::Ascii("nising"),
-            dictgen::InsensitiveStr::Ascii("nization"),
-            dictgen::InsensitiveStr::Ascii("nize"),
-            dictgen::InsensitiveStr::Ascii("nized"),
-            dictgen::InsensitiveStr::Ascii("nizes"),
-            dictgen::InsensitiveStr::Ascii("nizing"),
-            dictgen::InsensitiveStr::Ascii("ralisation"),
-            dictgen::InsensitiveStr::Ascii("ralisations"),
-            dictgen::InsensitiveStr::Ascii("ralise"),
-            dictgen::InsensitiveStr::Ascii("ralised"),
-            dictgen::InsensitiveStr::Ascii("ralises"),
-            dictgen::InsensitiveStr::Ascii("ralising"),
-            dictgen::InsensitiveStr::Ascii("ralisingly"),
-            dictgen::InsensitiveStr::Ascii("ralization"),
-            dictgen::InsensitiveStr::Ascii("ralizations"),
-            dictgen::InsensitiveStr::Ascii("ralize"),
-            dictgen::InsensitiveStr::Ascii("ralized"),
-            dictgen::InsensitiveStr::Ascii("ralizes"),
-            dictgen::InsensitiveStr::Ascii("ralizing"),
-            dictgen::InsensitiveStr::Ascii("ralizingly"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEMOBILIZATION_1049482128993581914)],
-            &[(0b10010, &ENTRY_DEMOBILIZATIONS_13060676951440773109)],
-            &[(0b10010, &ENTRY_DEMOBILIZE_14631658221062411664)],
-            &[(0b10010, &ENTRY_DEMOBILIZED_17675606354573049345)],
-            &[(0b10010, &ENTRY_DEMOBILIZES_10953083886563254885)],
-            &[(0b10010, &ENTRY_DEMOBILIZING_12570129016674680770)],
-            &[(0b01001, &ENTRY_DEMOBILIZATION_1049482128993581914)],
-            &[(0b01001, &ENTRY_DEMOBILIZATIONS_13060676951440773109)],
-            &[(0b01001, &ENTRY_DEMOBILIZE_14631658221062411664)],
-            &[(0b01001, &ENTRY_DEMOBILIZED_17675606354573049345)],
-            &[(0b01001, &ENTRY_DEMOBILIZES_10953083886563254885)],
-            &[(0b01001, &ENTRY_DEMOBILIZING_12570129016674680770)],
-            &[(0b10010, &ENTRY_DEMOCRATIZATION_14834678678990587615)],
-            &[(0b10010, &ENTRY_DEMOCRATIZATIONS_3121981811677706660)],
-            &[(0b10010, &ENTRY_DEMOCRATIZE_14651228604547676688)],
-            &[(0b10010, &ENTRY_DEMOCRATIZED_12561497189609834727)],
-            &[(0b10010, &ENTRY_DEMOCRATIZES_9683541385378161525)],
-            &[(0b10010, &ENTRY_DEMOCRATIZING_17328231163322967219)],
-            &[(0b01001, &ENTRY_DEMOCRATIZATION_14834678678990587615)],
-            &[(0b01001, &ENTRY_DEMOCRATIZATIONS_3121981811677706660)],
-            &[(0b01001, &ENTRY_DEMOCRATIZE_14651228604547676688)],
-            &[(0b01001, &ENTRY_DEMOCRATIZED_12561497189609834727)],
-            &[(0b01001, &ENTRY_DEMOCRATIZES_9683541385378161525)],
-            &[(0b01001, &ENTRY_DEMOCRATIZING_17328231163322967219)],
-            &[(0b10010, &ENTRY_DEMONETIZATION_4518090358111490492)],
-            &[(0b10010, &ENTRY_DEMONETIZATIONS_5789055765366818676)],
-            &[(0b10010, &ENTRY_DEMONETIZE_13078441376893081927)],
-            &[(0b10010, &ENTRY_DEMONETIZED_9558772114869845360)],
-            &[(0b10010, &ENTRY_DEMONETIZES_11169810391799810472)],
-            &[(0b10010, &ENTRY_DEMONETIZING_17201412552660846011)],
-            &[(0b01001, &ENTRY_DEMONETIZATION_4518090358111490492)],
-            &[(0b01001, &ENTRY_DEMONETIZATIONS_5789055765366818676)],
-            &[(0b01001, &ENTRY_DEMONETIZE_13078441376893081927)],
-            &[(0b01001, &ENTRY_DEMONETIZED_9558772114869845360)],
-            &[(0b01001, &ENTRY_DEMONETIZES_11169810391799810472)],
-            &[(0b01001, &ENTRY_DEMONETIZING_17201412552660846011)],
-            &[(0b10010, &ENTRY_DEMONIZATION_435935988767727254)],
-            &[(0b10010, &ENTRY_DEMONIZE_13260611226384752739)],
-            &[(0b10010, &ENTRY_DEMONIZED_7711881396852229241)],
-            &[(0b10010, &ENTRY_DEMONIZES_6258438652449642743)],
-            &[(0b10010, &ENTRY_DEMONIZING_8343923659206792410)],
-            &[(0b01001, &ENTRY_DEMONIZATION_435935988767727254)],
-            &[(0b01001, &ENTRY_DEMONIZE_13260611226384752739)],
-            &[(0b01001, &ENTRY_DEMONIZED_7711881396852229241)],
-            &[(0b01001, &ENTRY_DEMONIZES_6258438652449642743)],
-            &[(0b01001, &ENTRY_DEMONIZING_8343923659206792410)],
-            &[(0b10010, &ENTRY_DEMORALIZATION_5556421705683237030)],
-            &[(0b10010, &ENTRY_DEMORALIZATIONS_9043499224356783699)],
-            &[(0b10010, &ENTRY_DEMORALIZE_6209215674833141288)],
-            &[(0b10010, &ENTRY_DEMORALIZED_11896518767543535927)],
-            &[(0b10010, &ENTRY_DEMORALIZES_17922317839176266819)],
-            &[(0b10010, &ENTRY_DEMORALIZING_7879881258206607673)],
-            &[(0b10010, &ENTRY_DEMORALIZINGLY_11418463351635146120)],
-            &[(0b01001, &ENTRY_DEMORALIZATION_5556421705683237030)],
-            &[(0b01001, &ENTRY_DEMORALIZATIONS_9043499224356783699)],
-            &[(0b01001, &ENTRY_DEMORALIZE_6209215674833141288)],
-            &[(0b01001, &ENTRY_DEMORALIZED_11896518767543535927)],
-            &[(0b01001, &ENTRY_DEMORALIZES_17922317839176266819)],
-            &[(0b01001, &ENTRY_DEMORALIZING_7879881258206607673)],
-            &[(0b01001, &ENTRY_DEMORALIZINGLY_11418463351635146120)],
-        ],
-        range: 4..=12,
-    };
+pub static VARS_DEMO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("bilisation"),
+        dictgen::InsensitiveStr::Ascii("bilisations"),
+        dictgen::InsensitiveStr::Ascii("bilise"),
+        dictgen::InsensitiveStr::Ascii("bilised"),
+        dictgen::InsensitiveStr::Ascii("bilises"),
+        dictgen::InsensitiveStr::Ascii("bilising"),
+        dictgen::InsensitiveStr::Ascii("bilization"),
+        dictgen::InsensitiveStr::Ascii("bilizations"),
+        dictgen::InsensitiveStr::Ascii("bilize"),
+        dictgen::InsensitiveStr::Ascii("bilized"),
+        dictgen::InsensitiveStr::Ascii("bilizes"),
+        dictgen::InsensitiveStr::Ascii("bilizing"),
+        dictgen::InsensitiveStr::Ascii("cratisation"),
+        dictgen::InsensitiveStr::Ascii("cratisations"),
+        dictgen::InsensitiveStr::Ascii("cratise"),
+        dictgen::InsensitiveStr::Ascii("cratised"),
+        dictgen::InsensitiveStr::Ascii("cratises"),
+        dictgen::InsensitiveStr::Ascii("cratising"),
+        dictgen::InsensitiveStr::Ascii("cratization"),
+        dictgen::InsensitiveStr::Ascii("cratizations"),
+        dictgen::InsensitiveStr::Ascii("cratize"),
+        dictgen::InsensitiveStr::Ascii("cratized"),
+        dictgen::InsensitiveStr::Ascii("cratizes"),
+        dictgen::InsensitiveStr::Ascii("cratizing"),
+        dictgen::InsensitiveStr::Ascii("netisation"),
+        dictgen::InsensitiveStr::Ascii("netisations"),
+        dictgen::InsensitiveStr::Ascii("netise"),
+        dictgen::InsensitiveStr::Ascii("netised"),
+        dictgen::InsensitiveStr::Ascii("netises"),
+        dictgen::InsensitiveStr::Ascii("netising"),
+        dictgen::InsensitiveStr::Ascii("netization"),
+        dictgen::InsensitiveStr::Ascii("netizations"),
+        dictgen::InsensitiveStr::Ascii("netize"),
+        dictgen::InsensitiveStr::Ascii("netized"),
+        dictgen::InsensitiveStr::Ascii("netizes"),
+        dictgen::InsensitiveStr::Ascii("netizing"),
+        dictgen::InsensitiveStr::Ascii("nisation"),
+        dictgen::InsensitiveStr::Ascii("nise"),
+        dictgen::InsensitiveStr::Ascii("nised"),
+        dictgen::InsensitiveStr::Ascii("nises"),
+        dictgen::InsensitiveStr::Ascii("nising"),
+        dictgen::InsensitiveStr::Ascii("nization"),
+        dictgen::InsensitiveStr::Ascii("nize"),
+        dictgen::InsensitiveStr::Ascii("nized"),
+        dictgen::InsensitiveStr::Ascii("nizes"),
+        dictgen::InsensitiveStr::Ascii("nizing"),
+        dictgen::InsensitiveStr::Ascii("ralisation"),
+        dictgen::InsensitiveStr::Ascii("ralisations"),
+        dictgen::InsensitiveStr::Ascii("ralise"),
+        dictgen::InsensitiveStr::Ascii("ralised"),
+        dictgen::InsensitiveStr::Ascii("ralises"),
+        dictgen::InsensitiveStr::Ascii("ralising"),
+        dictgen::InsensitiveStr::Ascii("ralisingly"),
+        dictgen::InsensitiveStr::Ascii("ralization"),
+        dictgen::InsensitiveStr::Ascii("ralizations"),
+        dictgen::InsensitiveStr::Ascii("ralize"),
+        dictgen::InsensitiveStr::Ascii("ralized"),
+        dictgen::InsensitiveStr::Ascii("ralizes"),
+        dictgen::InsensitiveStr::Ascii("ralizing"),
+        dictgen::InsensitiveStr::Ascii("ralizingly"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEMOBILIZATION_1049482128993581914)],
+        &[(0b10010, &ENTRY_DEMOBILIZATIONS_13060676951440773109)],
+        &[(0b10010, &ENTRY_DEMOBILIZE_14631658221062411664)],
+        &[(0b10010, &ENTRY_DEMOBILIZED_17675606354573049345)],
+        &[(0b10010, &ENTRY_DEMOBILIZES_10953083886563254885)],
+        &[(0b10010, &ENTRY_DEMOBILIZING_12570129016674680770)],
+        &[(0b01001, &ENTRY_DEMOBILIZATION_1049482128993581914)],
+        &[(0b01001, &ENTRY_DEMOBILIZATIONS_13060676951440773109)],
+        &[(0b01001, &ENTRY_DEMOBILIZE_14631658221062411664)],
+        &[(0b01001, &ENTRY_DEMOBILIZED_17675606354573049345)],
+        &[(0b01001, &ENTRY_DEMOBILIZES_10953083886563254885)],
+        &[(0b01001, &ENTRY_DEMOBILIZING_12570129016674680770)],
+        &[(0b10010, &ENTRY_DEMOCRATIZATION_14834678678990587615)],
+        &[(0b10010, &ENTRY_DEMOCRATIZATIONS_3121981811677706660)],
+        &[(0b10010, &ENTRY_DEMOCRATIZE_14651228604547676688)],
+        &[(0b10010, &ENTRY_DEMOCRATIZED_12561497189609834727)],
+        &[(0b10010, &ENTRY_DEMOCRATIZES_9683541385378161525)],
+        &[(0b10010, &ENTRY_DEMOCRATIZING_17328231163322967219)],
+        &[(0b01001, &ENTRY_DEMOCRATIZATION_14834678678990587615)],
+        &[(0b01001, &ENTRY_DEMOCRATIZATIONS_3121981811677706660)],
+        &[(0b01001, &ENTRY_DEMOCRATIZE_14651228604547676688)],
+        &[(0b01001, &ENTRY_DEMOCRATIZED_12561497189609834727)],
+        &[(0b01001, &ENTRY_DEMOCRATIZES_9683541385378161525)],
+        &[(0b01001, &ENTRY_DEMOCRATIZING_17328231163322967219)],
+        &[(0b10010, &ENTRY_DEMONETIZATION_4518090358111490492)],
+        &[(0b10010, &ENTRY_DEMONETIZATIONS_5789055765366818676)],
+        &[(0b10010, &ENTRY_DEMONETIZE_13078441376893081927)],
+        &[(0b10010, &ENTRY_DEMONETIZED_9558772114869845360)],
+        &[(0b10010, &ENTRY_DEMONETIZES_11169810391799810472)],
+        &[(0b10010, &ENTRY_DEMONETIZING_17201412552660846011)],
+        &[(0b01001, &ENTRY_DEMONETIZATION_4518090358111490492)],
+        &[(0b01001, &ENTRY_DEMONETIZATIONS_5789055765366818676)],
+        &[(0b01001, &ENTRY_DEMONETIZE_13078441376893081927)],
+        &[(0b01001, &ENTRY_DEMONETIZED_9558772114869845360)],
+        &[(0b01001, &ENTRY_DEMONETIZES_11169810391799810472)],
+        &[(0b01001, &ENTRY_DEMONETIZING_17201412552660846011)],
+        &[(0b10010, &ENTRY_DEMONIZATION_435935988767727254)],
+        &[(0b10010, &ENTRY_DEMONIZE_13260611226384752739)],
+        &[(0b10010, &ENTRY_DEMONIZED_7711881396852229241)],
+        &[(0b10010, &ENTRY_DEMONIZES_6258438652449642743)],
+        &[(0b10010, &ENTRY_DEMONIZING_8343923659206792410)],
+        &[(0b01001, &ENTRY_DEMONIZATION_435935988767727254)],
+        &[(0b01001, &ENTRY_DEMONIZE_13260611226384752739)],
+        &[(0b01001, &ENTRY_DEMONIZED_7711881396852229241)],
+        &[(0b01001, &ENTRY_DEMONIZES_6258438652449642743)],
+        &[(0b01001, &ENTRY_DEMONIZING_8343923659206792410)],
+        &[(0b10010, &ENTRY_DEMORALIZATION_5556421705683237030)],
+        &[(0b10010, &ENTRY_DEMORALIZATIONS_9043499224356783699)],
+        &[(0b10010, &ENTRY_DEMORALIZE_6209215674833141288)],
+        &[(0b10010, &ENTRY_DEMORALIZED_11896518767543535927)],
+        &[(0b10010, &ENTRY_DEMORALIZES_17922317839176266819)],
+        &[(0b10010, &ENTRY_DEMORALIZING_7879881258206607673)],
+        &[(0b10010, &ENTRY_DEMORALIZINGLY_11418463351635146120)],
+        &[(0b01001, &ENTRY_DEMORALIZATION_5556421705683237030)],
+        &[(0b01001, &ENTRY_DEMORALIZATIONS_9043499224356783699)],
+        &[(0b01001, &ENTRY_DEMORALIZE_6209215674833141288)],
+        &[(0b01001, &ENTRY_DEMORALIZED_11896518767543535927)],
+        &[(0b01001, &ENTRY_DEMORALIZES_17922317839176266819)],
+        &[(0b01001, &ENTRY_DEMORALIZING_7879881258206607673)],
+        &[(0b01001, &ENTRY_DEMORALIZINGLY_11418463351635146120)],
+    ],
+    range: 4..=12,
+};
 
-static VARS_TRIE_DEMI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEMI_CHILDREN),
+static VARS_DEMI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEMI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEMI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("litarisation"),
-            dictgen::InsensitiveStr::Ascii("litarisations"),
-            dictgen::InsensitiveStr::Ascii("litarise"),
-            dictgen::InsensitiveStr::Ascii("litarised"),
-            dictgen::InsensitiveStr::Ascii("litarises"),
-            dictgen::InsensitiveStr::Ascii("litarising"),
-            dictgen::InsensitiveStr::Ascii("litarization"),
-            dictgen::InsensitiveStr::Ascii("litarizations"),
-            dictgen::InsensitiveStr::Ascii("litarize"),
-            dictgen::InsensitiveStr::Ascii("litarized"),
-            dictgen::InsensitiveStr::Ascii("litarizes"),
-            dictgen::InsensitiveStr::Ascii("litarizing"),
-            dictgen::InsensitiveStr::Ascii("neralisation"),
-            dictgen::InsensitiveStr::Ascii("neralisations"),
-            dictgen::InsensitiveStr::Ascii("neralise"),
-            dictgen::InsensitiveStr::Ascii("neralised"),
-            dictgen::InsensitiveStr::Ascii("neralises"),
-            dictgen::InsensitiveStr::Ascii("neralising"),
-            dictgen::InsensitiveStr::Ascii("neralization"),
-            dictgen::InsensitiveStr::Ascii("neralizations"),
-            dictgen::InsensitiveStr::Ascii("neralize"),
-            dictgen::InsensitiveStr::Ascii("neralized"),
-            dictgen::InsensitiveStr::Ascii("neralizes"),
-            dictgen::InsensitiveStr::Ascii("neralizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEMILITARIZATION_8640733064988757472)],
-            &[(0b10010, &ENTRY_DEMILITARIZATIONS_13863377781587784313)],
-            &[(0b10010, &ENTRY_DEMILITARIZE_5838068700068012783)],
-            &[(0b10010, &ENTRY_DEMILITARIZED_4980413846043795380)],
-            &[(0b10010, &ENTRY_DEMILITARIZES_1164840116130396010)],
-            &[(0b10010, &ENTRY_DEMILITARIZING_994064454433057567)],
-            &[(0b01001, &ENTRY_DEMILITARIZATION_8640733064988757472)],
-            &[(0b01001, &ENTRY_DEMILITARIZATIONS_13863377781587784313)],
-            &[(0b01001, &ENTRY_DEMILITARIZE_5838068700068012783)],
-            &[(0b01001, &ENTRY_DEMILITARIZED_4980413846043795380)],
-            &[(0b01001, &ENTRY_DEMILITARIZES_1164840116130396010)],
-            &[(0b01001, &ENTRY_DEMILITARIZING_994064454433057567)],
-            &[(0b10010, &ENTRY_DEMINERALIZATION_3724123166587453242)],
-            &[(0b10010, &ENTRY_DEMINERALIZATIONS_3572117260520975819)],
-            &[(0b10010, &ENTRY_DEMINERALIZE_11805613081665284275)],
-            &[(0b10010, &ENTRY_DEMINERALIZED_5889760188783683563)],
-            &[(0b10010, &ENTRY_DEMINERALIZES_7031323467048546237)],
-            &[(0b10010, &ENTRY_DEMINERALIZING_17818456458860291247)],
-            &[(0b01001, &ENTRY_DEMINERALIZATION_3724123166587453242)],
-            &[(0b01001, &ENTRY_DEMINERALIZATIONS_3572117260520975819)],
-            &[(0b01001, &ENTRY_DEMINERALIZE_11805613081665284275)],
-            &[(0b01001, &ENTRY_DEMINERALIZED_5889760188783683563)],
-            &[(0b01001, &ENTRY_DEMINERALIZES_7031323467048546237)],
-            &[(0b01001, &ENTRY_DEMINERALIZING_17818456458860291247)],
-        ],
-        range: 8..=13,
-    };
+pub static VARS_DEMI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("litarisation"),
+        dictgen::InsensitiveStr::Ascii("litarisations"),
+        dictgen::InsensitiveStr::Ascii("litarise"),
+        dictgen::InsensitiveStr::Ascii("litarised"),
+        dictgen::InsensitiveStr::Ascii("litarises"),
+        dictgen::InsensitiveStr::Ascii("litarising"),
+        dictgen::InsensitiveStr::Ascii("litarization"),
+        dictgen::InsensitiveStr::Ascii("litarizations"),
+        dictgen::InsensitiveStr::Ascii("litarize"),
+        dictgen::InsensitiveStr::Ascii("litarized"),
+        dictgen::InsensitiveStr::Ascii("litarizes"),
+        dictgen::InsensitiveStr::Ascii("litarizing"),
+        dictgen::InsensitiveStr::Ascii("neralisation"),
+        dictgen::InsensitiveStr::Ascii("neralisations"),
+        dictgen::InsensitiveStr::Ascii("neralise"),
+        dictgen::InsensitiveStr::Ascii("neralised"),
+        dictgen::InsensitiveStr::Ascii("neralises"),
+        dictgen::InsensitiveStr::Ascii("neralising"),
+        dictgen::InsensitiveStr::Ascii("neralization"),
+        dictgen::InsensitiveStr::Ascii("neralizations"),
+        dictgen::InsensitiveStr::Ascii("neralize"),
+        dictgen::InsensitiveStr::Ascii("neralized"),
+        dictgen::InsensitiveStr::Ascii("neralizes"),
+        dictgen::InsensitiveStr::Ascii("neralizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEMILITARIZATION_8640733064988757472)],
+        &[(0b10010, &ENTRY_DEMILITARIZATIONS_13863377781587784313)],
+        &[(0b10010, &ENTRY_DEMILITARIZE_5838068700068012783)],
+        &[(0b10010, &ENTRY_DEMILITARIZED_4980413846043795380)],
+        &[(0b10010, &ENTRY_DEMILITARIZES_1164840116130396010)],
+        &[(0b10010, &ENTRY_DEMILITARIZING_994064454433057567)],
+        &[(0b01001, &ENTRY_DEMILITARIZATION_8640733064988757472)],
+        &[(0b01001, &ENTRY_DEMILITARIZATIONS_13863377781587784313)],
+        &[(0b01001, &ENTRY_DEMILITARIZE_5838068700068012783)],
+        &[(0b01001, &ENTRY_DEMILITARIZED_4980413846043795380)],
+        &[(0b01001, &ENTRY_DEMILITARIZES_1164840116130396010)],
+        &[(0b01001, &ENTRY_DEMILITARIZING_994064454433057567)],
+        &[(0b10010, &ENTRY_DEMINERALIZATION_3724123166587453242)],
+        &[(0b10010, &ENTRY_DEMINERALIZATIONS_3572117260520975819)],
+        &[(0b10010, &ENTRY_DEMINERALIZE_11805613081665284275)],
+        &[(0b10010, &ENTRY_DEMINERALIZED_5889760188783683563)],
+        &[(0b10010, &ENTRY_DEMINERALIZES_7031323467048546237)],
+        &[(0b10010, &ENTRY_DEMINERALIZING_17818456458860291247)],
+        &[(0b01001, &ENTRY_DEMINERALIZATION_3724123166587453242)],
+        &[(0b01001, &ENTRY_DEMINERALIZATIONS_3572117260520975819)],
+        &[(0b01001, &ENTRY_DEMINERALIZE_11805613081665284275)],
+        &[(0b01001, &ENTRY_DEMINERALIZED_5889760188783683563)],
+        &[(0b01001, &ENTRY_DEMINERALIZES_7031323467048546237)],
+        &[(0b01001, &ENTRY_DEMINERALIZING_17818456458860291247)],
+    ],
+    range: 8..=13,
+};
 
-static VARS_TRIE_DEME_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEME_CHILDREN),
+static VARS_DEME_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEME_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEME_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("anor"),
-            dictgen::InsensitiveStr::Ascii("anors"),
-            dictgen::InsensitiveStr::Ascii("anour"),
-            dictgen::InsensitiveStr::Ascii("anours"),
-        ],
-        values: &[
-            &[(0b11001, &ENTRY_DEMEANOR_16422703697064073325)],
-            &[(0b11001, &ENTRY_DEMEANORS_7209163777589536912)],
-            &[(0b11010, &ENTRY_DEMEANOR_16422703697064073325)],
-            &[(0b11010, &ENTRY_DEMEANORS_7209163777589536912)],
-        ],
-        range: 4..=6,
-    };
+pub static VARS_DEME_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("anor"),
+        dictgen::InsensitiveStr::Ascii("anors"),
+        dictgen::InsensitiveStr::Ascii("anour"),
+        dictgen::InsensitiveStr::Ascii("anours"),
+    ],
+    values: &[
+        &[(0b11001, &ENTRY_DEMEANOR_16422703697064073325)],
+        &[(0b11001, &ENTRY_DEMEANORS_7209163777589536912)],
+        &[(0b11010, &ENTRY_DEMEANOR_16422703697064073325)],
+        &[(0b11010, &ENTRY_DEMEANORS_7209163777589536912)],
+    ],
+    range: 4..=6,
+};
 
-static VARS_TRIE_DEMA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEMA_CHILDREN),
+static VARS_DEMA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEMA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEMA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("gnetisation"),
-            dictgen::InsensitiveStr::Ascii("gnetisations"),
-            dictgen::InsensitiveStr::Ascii("gnetise"),
-            dictgen::InsensitiveStr::Ascii("gnetised"),
-            dictgen::InsensitiveStr::Ascii("gnetiser"),
-            dictgen::InsensitiveStr::Ascii("gnetisers"),
-            dictgen::InsensitiveStr::Ascii("gnetises"),
-            dictgen::InsensitiveStr::Ascii("gnetising"),
-            dictgen::InsensitiveStr::Ascii("gnetization"),
-            dictgen::InsensitiveStr::Ascii("gnetizations"),
-            dictgen::InsensitiveStr::Ascii("gnetize"),
-            dictgen::InsensitiveStr::Ascii("gnetized"),
-            dictgen::InsensitiveStr::Ascii("gnetizer"),
-            dictgen::InsensitiveStr::Ascii("gnetizers"),
-            dictgen::InsensitiveStr::Ascii("gnetizes"),
-            dictgen::InsensitiveStr::Ascii("gnetizing"),
-            dictgen::InsensitiveStr::Ascii("gog"),
-            dictgen::InsensitiveStr::Ascii("goged"),
-            dictgen::InsensitiveStr::Ascii("goging"),
-            dictgen::InsensitiveStr::Ascii("gogry"),
-            dictgen::InsensitiveStr::Ascii("gogs"),
-            dictgen::InsensitiveStr::Ascii("terialisation"),
-            dictgen::InsensitiveStr::Ascii("terialisations"),
-            dictgen::InsensitiveStr::Ascii("terialise"),
-            dictgen::InsensitiveStr::Ascii("terialised"),
-            dictgen::InsensitiveStr::Ascii("terialises"),
-            dictgen::InsensitiveStr::Ascii("terialising"),
-            dictgen::InsensitiveStr::Ascii("terialization"),
-            dictgen::InsensitiveStr::Ascii("terializations"),
-            dictgen::InsensitiveStr::Ascii("terialize"),
-            dictgen::InsensitiveStr::Ascii("terialized"),
-            dictgen::InsensitiveStr::Ascii("terializes"),
-            dictgen::InsensitiveStr::Ascii("terializing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DEMAGNETIZATION_8660626408268068192)],
-            &[(0b10010, &ENTRY_DEMAGNETIZATIONS_6017739735415397589)],
-            &[(0b10010, &ENTRY_DEMAGNETIZE_14716676657435015384)],
-            &[(0b10010, &ENTRY_DEMAGNETIZED_16278014960965990808)],
-            &[(0b10010, &ENTRY_DEMAGNETIZER_4728434350800689036)],
-            &[(0b10010, &ENTRY_DEMAGNETIZERS_931034885365981384)],
-            &[(0b10010, &ENTRY_DEMAGNETIZES_677533597345689814)],
-            &[(0b10010, &ENTRY_DEMAGNETIZING_11214913343744584233)],
-            &[(0b01001, &ENTRY_DEMAGNETIZATION_8660626408268068192)],
-            &[(0b01001, &ENTRY_DEMAGNETIZATIONS_6017739735415397589)],
-            &[(0b01001, &ENTRY_DEMAGNETIZE_14716676657435015384)],
-            &[(0b01001, &ENTRY_DEMAGNETIZED_16278014960965990808)],
-            &[(0b01001, &ENTRY_DEMAGNETIZER_4728434350800689036)],
-            &[(0b01001, &ENTRY_DEMAGNETIZERS_931034885365981384)],
-            &[(0b01001, &ENTRY_DEMAGNETIZES_677533597345689814)],
-            &[(0b01001, &ENTRY_DEMAGNETIZING_11214913343744584233)],
-            &[(0b00001, &ENTRY_DEMAGOGUE_8651813563125313987)],
-            &[(0b00001, &ENTRY_DEMAGOGUED_3536597591189504210)],
-            &[(0b00001, &ENTRY_DEMAGOGUING_15979024284168235826)],
-            &[(0b00001, &ENTRY_DEMAGOGUERY_1494206203290122461)],
-            &[(0b00001, &ENTRY_DEMAGOGUES_15335780932382092242)],
-            &[(0b10010, &ENTRY_DEMATERIALIZATION_6643468176116888919)],
-            &[(0b10010, &ENTRY_DEMATERIALIZATIONS_9448622588126109210)],
-            &[(0b10010, &ENTRY_DEMATERIALIZE_5188464319891499632)],
-            &[(0b10010, &ENTRY_DEMATERIALIZED_13253413423231441157)],
-            &[(0b10010, &ENTRY_DEMATERIALIZES_5270284454646712513)],
-            &[(0b10010, &ENTRY_DEMATERIALIZING_4105956654256703819)],
-            &[(0b01001, &ENTRY_DEMATERIALIZATION_6643468176116888919)],
-            &[(0b01001, &ENTRY_DEMATERIALIZATIONS_9448622588126109210)],
-            &[(0b01001, &ENTRY_DEMATERIALIZE_5188464319891499632)],
-            &[(0b01001, &ENTRY_DEMATERIALIZED_13253413423231441157)],
-            &[(0b01001, &ENTRY_DEMATERIALIZES_5270284454646712513)],
-            &[(0b01001, &ENTRY_DEMATERIALIZING_4105956654256703819)],
-        ],
-        range: 3..=14,
-    };
+pub static VARS_DEMA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("gnetisation"),
+        dictgen::InsensitiveStr::Ascii("gnetisations"),
+        dictgen::InsensitiveStr::Ascii("gnetise"),
+        dictgen::InsensitiveStr::Ascii("gnetised"),
+        dictgen::InsensitiveStr::Ascii("gnetiser"),
+        dictgen::InsensitiveStr::Ascii("gnetisers"),
+        dictgen::InsensitiveStr::Ascii("gnetises"),
+        dictgen::InsensitiveStr::Ascii("gnetising"),
+        dictgen::InsensitiveStr::Ascii("gnetization"),
+        dictgen::InsensitiveStr::Ascii("gnetizations"),
+        dictgen::InsensitiveStr::Ascii("gnetize"),
+        dictgen::InsensitiveStr::Ascii("gnetized"),
+        dictgen::InsensitiveStr::Ascii("gnetizer"),
+        dictgen::InsensitiveStr::Ascii("gnetizers"),
+        dictgen::InsensitiveStr::Ascii("gnetizes"),
+        dictgen::InsensitiveStr::Ascii("gnetizing"),
+        dictgen::InsensitiveStr::Ascii("gog"),
+        dictgen::InsensitiveStr::Ascii("goged"),
+        dictgen::InsensitiveStr::Ascii("goging"),
+        dictgen::InsensitiveStr::Ascii("gogry"),
+        dictgen::InsensitiveStr::Ascii("gogs"),
+        dictgen::InsensitiveStr::Ascii("terialisation"),
+        dictgen::InsensitiveStr::Ascii("terialisations"),
+        dictgen::InsensitiveStr::Ascii("terialise"),
+        dictgen::InsensitiveStr::Ascii("terialised"),
+        dictgen::InsensitiveStr::Ascii("terialises"),
+        dictgen::InsensitiveStr::Ascii("terialising"),
+        dictgen::InsensitiveStr::Ascii("terialization"),
+        dictgen::InsensitiveStr::Ascii("terializations"),
+        dictgen::InsensitiveStr::Ascii("terialize"),
+        dictgen::InsensitiveStr::Ascii("terialized"),
+        dictgen::InsensitiveStr::Ascii("terializes"),
+        dictgen::InsensitiveStr::Ascii("terializing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DEMAGNETIZATION_8660626408268068192)],
+        &[(0b10010, &ENTRY_DEMAGNETIZATIONS_6017739735415397589)],
+        &[(0b10010, &ENTRY_DEMAGNETIZE_14716676657435015384)],
+        &[(0b10010, &ENTRY_DEMAGNETIZED_16278014960965990808)],
+        &[(0b10010, &ENTRY_DEMAGNETIZER_4728434350800689036)],
+        &[(0b10010, &ENTRY_DEMAGNETIZERS_931034885365981384)],
+        &[(0b10010, &ENTRY_DEMAGNETIZES_677533597345689814)],
+        &[(0b10010, &ENTRY_DEMAGNETIZING_11214913343744584233)],
+        &[(0b01001, &ENTRY_DEMAGNETIZATION_8660626408268068192)],
+        &[(0b01001, &ENTRY_DEMAGNETIZATIONS_6017739735415397589)],
+        &[(0b01001, &ENTRY_DEMAGNETIZE_14716676657435015384)],
+        &[(0b01001, &ENTRY_DEMAGNETIZED_16278014960965990808)],
+        &[(0b01001, &ENTRY_DEMAGNETIZER_4728434350800689036)],
+        &[(0b01001, &ENTRY_DEMAGNETIZERS_931034885365981384)],
+        &[(0b01001, &ENTRY_DEMAGNETIZES_677533597345689814)],
+        &[(0b01001, &ENTRY_DEMAGNETIZING_11214913343744584233)],
+        &[(0b00001, &ENTRY_DEMAGOGUE_8651813563125313987)],
+        &[(0b00001, &ENTRY_DEMAGOGUED_3536597591189504210)],
+        &[(0b00001, &ENTRY_DEMAGOGUING_15979024284168235826)],
+        &[(0b00001, &ENTRY_DEMAGOGUERY_1494206203290122461)],
+        &[(0b00001, &ENTRY_DEMAGOGUES_15335780932382092242)],
+        &[(0b10010, &ENTRY_DEMATERIALIZATION_6643468176116888919)],
+        &[(0b10010, &ENTRY_DEMATERIALIZATIONS_9448622588126109210)],
+        &[(0b10010, &ENTRY_DEMATERIALIZE_5188464319891499632)],
+        &[(0b10010, &ENTRY_DEMATERIALIZED_13253413423231441157)],
+        &[(0b10010, &ENTRY_DEMATERIALIZES_5270284454646712513)],
+        &[(0b10010, &ENTRY_DEMATERIALIZING_4105956654256703819)],
+        &[(0b01001, &ENTRY_DEMATERIALIZATION_6643468176116888919)],
+        &[(0b01001, &ENTRY_DEMATERIALIZATIONS_9448622588126109210)],
+        &[(0b01001, &ENTRY_DEMATERIALIZE_5188464319891499632)],
+        &[(0b01001, &ENTRY_DEMATERIALIZED_13253413423231441157)],
+        &[(0b01001, &ENTRY_DEMATERIALIZES_5270284454646712513)],
+        &[(0b01001, &ENTRY_DEMATERIALIZING_4105956654256703819)],
+    ],
+    range: 3..=14,
+};
 
-static VARS_TRIE_DEL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEL_CHILDREN),
+static VARS_DEL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ocalisation"),
         dictgen::InsensitiveStr::Ascii("ocalisations"),
@@ -17041,12 +17018,12 @@ pub static VARS_TRIE_DEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_DEI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEI_CHILDREN),
+static VARS_DEI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("onisation"),
         dictgen::InsensitiveStr::Ascii("onise"),
@@ -17074,12 +17051,12 @@ pub static VARS_TRIE_DEI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=9,
 };
 
-static VARS_TRIE_DEH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEH_CHILDREN),
+static VARS_DEH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DEH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("umanisation"),
         dictgen::InsensitiveStr::Ascii("umanisations"),
@@ -17111,12 +17088,12 @@ pub static VARS_TRIE_DEH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=12,
 };
 
-static VARS_TRIE_DEF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DEF_CHILDREN),
+static VARS_DEF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DEF_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DEF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_DEF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ence"),
         dictgen::InsensitiveStr::Ascii("enced"),
@@ -17160,30 +17137,30 @@ pub static VARS_TRIE_DEF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=14,
 };
 
-static VARS_TRIE_DEC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_DEC_CHILDREN),
+static VARS_DEC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_DEC_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_DEC_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_DECA_NODE),
+static VARS_DEC_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_DECA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DECE_NODE),
+    Some(&VARS_DECE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_DECI_NODE),
+    Some(&VARS_DECI_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_DECO_NODE),
+    Some(&VARS_DECO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_DECR_NODE),
+    Some(&VARS_DECR_NODE),
     None,
     None,
     None,
@@ -17194,239 +17171,234 @@ static VARS_TRIE_DEC_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
 ];
 
-static VARS_TRIE_DECR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DECR_CHILDREN),
+static VARS_DECR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DECR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DECR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("iminalisation"),
-            dictgen::InsensitiveStr::Ascii("iminalisations"),
-            dictgen::InsensitiveStr::Ascii("iminalise"),
-            dictgen::InsensitiveStr::Ascii("iminalised"),
-            dictgen::InsensitiveStr::Ascii("iminalises"),
-            dictgen::InsensitiveStr::Ascii("iminalising"),
-            dictgen::InsensitiveStr::Ascii("iminalization"),
-            dictgen::InsensitiveStr::Ascii("iminalizations"),
-            dictgen::InsensitiveStr::Ascii("iminalize"),
-            dictgen::InsensitiveStr::Ascii("iminalized"),
-            dictgen::InsensitiveStr::Ascii("iminalizes"),
-            dictgen::InsensitiveStr::Ascii("iminalizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DECRIMINALIZATION_10972189705541961663)],
-            &[(0b10010, &ENTRY_DECRIMINALIZATIONS_12268289228613201569)],
-            &[(0b10010, &ENTRY_DECRIMINALIZE_6677799413626987625)],
-            &[(0b10010, &ENTRY_DECRIMINALIZED_5536378597888996415)],
-            &[(0b10010, &ENTRY_DECRIMINALIZES_6555315341160373102)],
-            &[(0b10010, &ENTRY_DECRIMINALIZING_6483531696781808568)],
-            &[(0b01001, &ENTRY_DECRIMINALIZATION_10972189705541961663)],
-            &[(0b01001, &ENTRY_DECRIMINALIZATIONS_12268289228613201569)],
-            &[(0b01001, &ENTRY_DECRIMINALIZE_6677799413626987625)],
-            &[(0b01001, &ENTRY_DECRIMINALIZED_5536378597888996415)],
-            &[(0b01001, &ENTRY_DECRIMINALIZES_6555315341160373102)],
-            &[(0b01001, &ENTRY_DECRIMINALIZING_6483531696781808568)],
-        ],
-        range: 9..=14,
-    };
+pub static VARS_DECR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("iminalisation"),
+        dictgen::InsensitiveStr::Ascii("iminalisations"),
+        dictgen::InsensitiveStr::Ascii("iminalise"),
+        dictgen::InsensitiveStr::Ascii("iminalised"),
+        dictgen::InsensitiveStr::Ascii("iminalises"),
+        dictgen::InsensitiveStr::Ascii("iminalising"),
+        dictgen::InsensitiveStr::Ascii("iminalization"),
+        dictgen::InsensitiveStr::Ascii("iminalizations"),
+        dictgen::InsensitiveStr::Ascii("iminalize"),
+        dictgen::InsensitiveStr::Ascii("iminalized"),
+        dictgen::InsensitiveStr::Ascii("iminalizes"),
+        dictgen::InsensitiveStr::Ascii("iminalizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DECRIMINALIZATION_10972189705541961663)],
+        &[(0b10010, &ENTRY_DECRIMINALIZATIONS_12268289228613201569)],
+        &[(0b10010, &ENTRY_DECRIMINALIZE_6677799413626987625)],
+        &[(0b10010, &ENTRY_DECRIMINALIZED_5536378597888996415)],
+        &[(0b10010, &ENTRY_DECRIMINALIZES_6555315341160373102)],
+        &[(0b10010, &ENTRY_DECRIMINALIZING_6483531696781808568)],
+        &[(0b01001, &ENTRY_DECRIMINALIZATION_10972189705541961663)],
+        &[(0b01001, &ENTRY_DECRIMINALIZATIONS_12268289228613201569)],
+        &[(0b01001, &ENTRY_DECRIMINALIZE_6677799413626987625)],
+        &[(0b01001, &ENTRY_DECRIMINALIZED_5536378597888996415)],
+        &[(0b01001, &ENTRY_DECRIMINALIZES_6555315341160373102)],
+        &[(0b01001, &ENTRY_DECRIMINALIZING_6483531696781808568)],
+    ],
+    range: 9..=14,
+};
 
-static VARS_TRIE_DECO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DECO_CHILDREN),
+static VARS_DECO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DECO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DECO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("lonisation"),
-            dictgen::InsensitiveStr::Ascii("lonisations"),
-            dictgen::InsensitiveStr::Ascii("lonise"),
-            dictgen::InsensitiveStr::Ascii("lonised"),
-            dictgen::InsensitiveStr::Ascii("lonises"),
-            dictgen::InsensitiveStr::Ascii("lonising"),
-            dictgen::InsensitiveStr::Ascii("lonization"),
-            dictgen::InsensitiveStr::Ascii("lonizations"),
-            dictgen::InsensitiveStr::Ascii("lonize"),
-            dictgen::InsensitiveStr::Ascii("lonized"),
-            dictgen::InsensitiveStr::Ascii("lonizes"),
-            dictgen::InsensitiveStr::Ascii("lonizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DECOLONIZATION_1486129639809542135)],
-            &[(0b10010, &ENTRY_DECOLONIZATIONS_15958442548094153342)],
-            &[(0b10010, &ENTRY_DECOLONIZE_8186463036478425034)],
-            &[(0b10010, &ENTRY_DECOLONIZED_4107643671609353888)],
-            &[(0b10010, &ENTRY_DECOLONIZES_2371774017479885060)],
-            &[(0b10010, &ENTRY_DECOLONIZING_9800590501891725470)],
-            &[(0b01001, &ENTRY_DECOLONIZATION_1486129639809542135)],
-            &[(0b01001, &ENTRY_DECOLONIZATIONS_15958442548094153342)],
-            &[(0b01001, &ENTRY_DECOLONIZE_8186463036478425034)],
-            &[(0b01001, &ENTRY_DECOLONIZED_4107643671609353888)],
-            &[(0b01001, &ENTRY_DECOLONIZES_2371774017479885060)],
-            &[(0b01001, &ENTRY_DECOLONIZING_9800590501891725470)],
-        ],
-        range: 6..=11,
-    };
+pub static VARS_DECO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("lonisation"),
+        dictgen::InsensitiveStr::Ascii("lonisations"),
+        dictgen::InsensitiveStr::Ascii("lonise"),
+        dictgen::InsensitiveStr::Ascii("lonised"),
+        dictgen::InsensitiveStr::Ascii("lonises"),
+        dictgen::InsensitiveStr::Ascii("lonising"),
+        dictgen::InsensitiveStr::Ascii("lonization"),
+        dictgen::InsensitiveStr::Ascii("lonizations"),
+        dictgen::InsensitiveStr::Ascii("lonize"),
+        dictgen::InsensitiveStr::Ascii("lonized"),
+        dictgen::InsensitiveStr::Ascii("lonizes"),
+        dictgen::InsensitiveStr::Ascii("lonizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DECOLONIZATION_1486129639809542135)],
+        &[(0b10010, &ENTRY_DECOLONIZATIONS_15958442548094153342)],
+        &[(0b10010, &ENTRY_DECOLONIZE_8186463036478425034)],
+        &[(0b10010, &ENTRY_DECOLONIZED_4107643671609353888)],
+        &[(0b10010, &ENTRY_DECOLONIZES_2371774017479885060)],
+        &[(0b10010, &ENTRY_DECOLONIZING_9800590501891725470)],
+        &[(0b01001, &ENTRY_DECOLONIZATION_1486129639809542135)],
+        &[(0b01001, &ENTRY_DECOLONIZATIONS_15958442548094153342)],
+        &[(0b01001, &ENTRY_DECOLONIZE_8186463036478425034)],
+        &[(0b01001, &ENTRY_DECOLONIZED_4107643671609353888)],
+        &[(0b01001, &ENTRY_DECOLONIZES_2371774017479885060)],
+        &[(0b01001, &ENTRY_DECOLONIZING_9800590501891725470)],
+    ],
+    range: 6..=11,
+};
 
-static VARS_TRIE_DECI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DECI_CHILDREN),
+static VARS_DECI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DECI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DECI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("liter"),
-            dictgen::InsensitiveStr::Ascii("liters"),
-            dictgen::InsensitiveStr::Ascii("litre"),
-            dictgen::InsensitiveStr::Ascii("litres"),
-            dictgen::InsensitiveStr::Ascii("malisation"),
-            dictgen::InsensitiveStr::Ascii("malisations"),
-            dictgen::InsensitiveStr::Ascii("malise"),
-            dictgen::InsensitiveStr::Ascii("malised"),
-            dictgen::InsensitiveStr::Ascii("malises"),
-            dictgen::InsensitiveStr::Ascii("malising"),
-            dictgen::InsensitiveStr::Ascii("malization"),
-            dictgen::InsensitiveStr::Ascii("malizations"),
-            dictgen::InsensitiveStr::Ascii("malize"),
-            dictgen::InsensitiveStr::Ascii("malized"),
-            dictgen::InsensitiveStr::Ascii("malizes"),
-            dictgen::InsensitiveStr::Ascii("malizing"),
-            dictgen::InsensitiveStr::Ascii("meter"),
-            dictgen::InsensitiveStr::Ascii("meters"),
-            dictgen::InsensitiveStr::Ascii("metre"),
-            dictgen::InsensitiveStr::Ascii("metres"),
-        ],
-        values: &[
-            &[(0b00001, &ENTRY_DECILITER_16596592820215375084)],
-            &[(0b00001, &ENTRY_DECILITERS_151708397377325111)],
-            &[(0b11010, &ENTRY_DECILITER_16596592820215375084)],
-            &[(0b11010, &ENTRY_DECILITERS_151708397377325111)],
-            &[(0b10010, &ENTRY_DECIMALIZATION_6585979287053082594)],
-            &[(0b10010, &ENTRY_DECIMALIZATIONS_14219964716573449259)],
-            &[(0b10010, &ENTRY_DECIMALIZE_6260219389368908768)],
-            &[(0b10010, &ENTRY_DECIMALIZED_8364548564908015686)],
-            &[(0b10010, &ENTRY_DECIMALIZES_15979587779699755101)],
-            &[(0b10010, &ENTRY_DECIMALIZING_17193949793978263746)],
-            &[(0b01001, &ENTRY_DECIMALIZATION_6585979287053082594)],
-            &[(0b01001, &ENTRY_DECIMALIZATIONS_14219964716573449259)],
-            &[(0b01001, &ENTRY_DECIMALIZE_6260219389368908768)],
-            &[(0b01001, &ENTRY_DECIMALIZED_8364548564908015686)],
-            &[(0b01001, &ENTRY_DECIMALIZES_15979587779699755101)],
-            &[(0b01001, &ENTRY_DECIMALIZING_17193949793978263746)],
-            &[(0b01001, &ENTRY_DECIMETER_5877956144268963607)],
-            &[(0b01001, &ENTRY_DECIMETERS_10623100407909187264)],
-            &[(0b11010, &ENTRY_DECIMETER_5877956144268963607)],
-            &[(0b11010, &ENTRY_DECIMETERS_10623100407909187264)],
-        ],
-        range: 5..=11,
-    };
+pub static VARS_DECI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("liter"),
+        dictgen::InsensitiveStr::Ascii("liters"),
+        dictgen::InsensitiveStr::Ascii("litre"),
+        dictgen::InsensitiveStr::Ascii("litres"),
+        dictgen::InsensitiveStr::Ascii("malisation"),
+        dictgen::InsensitiveStr::Ascii("malisations"),
+        dictgen::InsensitiveStr::Ascii("malise"),
+        dictgen::InsensitiveStr::Ascii("malised"),
+        dictgen::InsensitiveStr::Ascii("malises"),
+        dictgen::InsensitiveStr::Ascii("malising"),
+        dictgen::InsensitiveStr::Ascii("malization"),
+        dictgen::InsensitiveStr::Ascii("malizations"),
+        dictgen::InsensitiveStr::Ascii("malize"),
+        dictgen::InsensitiveStr::Ascii("malized"),
+        dictgen::InsensitiveStr::Ascii("malizes"),
+        dictgen::InsensitiveStr::Ascii("malizing"),
+        dictgen::InsensitiveStr::Ascii("meter"),
+        dictgen::InsensitiveStr::Ascii("meters"),
+        dictgen::InsensitiveStr::Ascii("metre"),
+        dictgen::InsensitiveStr::Ascii("metres"),
+    ],
+    values: &[
+        &[(0b00001, &ENTRY_DECILITER_16596592820215375084)],
+        &[(0b00001, &ENTRY_DECILITERS_151708397377325111)],
+        &[(0b11010, &ENTRY_DECILITER_16596592820215375084)],
+        &[(0b11010, &ENTRY_DECILITERS_151708397377325111)],
+        &[(0b10010, &ENTRY_DECIMALIZATION_6585979287053082594)],
+        &[(0b10010, &ENTRY_DECIMALIZATIONS_14219964716573449259)],
+        &[(0b10010, &ENTRY_DECIMALIZE_6260219389368908768)],
+        &[(0b10010, &ENTRY_DECIMALIZED_8364548564908015686)],
+        &[(0b10010, &ENTRY_DECIMALIZES_15979587779699755101)],
+        &[(0b10010, &ENTRY_DECIMALIZING_17193949793978263746)],
+        &[(0b01001, &ENTRY_DECIMALIZATION_6585979287053082594)],
+        &[(0b01001, &ENTRY_DECIMALIZATIONS_14219964716573449259)],
+        &[(0b01001, &ENTRY_DECIMALIZE_6260219389368908768)],
+        &[(0b01001, &ENTRY_DECIMALIZED_8364548564908015686)],
+        &[(0b01001, &ENTRY_DECIMALIZES_15979587779699755101)],
+        &[(0b01001, &ENTRY_DECIMALIZING_17193949793978263746)],
+        &[(0b01001, &ENTRY_DECIMETER_5877956144268963607)],
+        &[(0b01001, &ENTRY_DECIMETERS_10623100407909187264)],
+        &[(0b11010, &ENTRY_DECIMETER_5877956144268963607)],
+        &[(0b11010, &ENTRY_DECIMETERS_10623100407909187264)],
+    ],
+    range: 5..=11,
+};
 
-static VARS_TRIE_DECE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DECE_CHILDREN),
+static VARS_DECE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DECE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DECE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("ntralisation"),
-            dictgen::InsensitiveStr::Ascii("ntralisations"),
-            dictgen::InsensitiveStr::Ascii("ntralise"),
-            dictgen::InsensitiveStr::Ascii("ntralised"),
-            dictgen::InsensitiveStr::Ascii("ntralises"),
-            dictgen::InsensitiveStr::Ascii("ntralising"),
-            dictgen::InsensitiveStr::Ascii("ntralization"),
-            dictgen::InsensitiveStr::Ascii("ntralizations"),
-            dictgen::InsensitiveStr::Ascii("ntralize"),
-            dictgen::InsensitiveStr::Ascii("ntralized"),
-            dictgen::InsensitiveStr::Ascii("ntralizes"),
-            dictgen::InsensitiveStr::Ascii("ntralizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DECENTRALIZATION_14989034485163734668)],
-            &[(0b10010, &ENTRY_DECENTRALIZATIONS_15028307675843910435)],
-            &[(0b10010, &ENTRY_DECENTRALIZE_17306384894132674147)],
-            &[(0b10010, &ENTRY_DECENTRALIZED_15938901073912000317)],
-            &[(0b10010, &ENTRY_DECENTRALIZES_8990159632087872438)],
-            &[(0b10010, &ENTRY_DECENTRALIZING_11771308820494191656)],
-            &[(0b01001, &ENTRY_DECENTRALIZATION_14989034485163734668)],
-            &[(0b01001, &ENTRY_DECENTRALIZATIONS_15028307675843910435)],
-            &[(0b01001, &ENTRY_DECENTRALIZE_17306384894132674147)],
-            &[(0b01001, &ENTRY_DECENTRALIZED_15938901073912000317)],
-            &[(0b01001, &ENTRY_DECENTRALIZES_8990159632087872438)],
-            &[(0b01001, &ENTRY_DECENTRALIZING_11771308820494191656)],
-        ],
-        range: 8..=13,
-    };
+pub static VARS_DECE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("ntralisation"),
+        dictgen::InsensitiveStr::Ascii("ntralisations"),
+        dictgen::InsensitiveStr::Ascii("ntralise"),
+        dictgen::InsensitiveStr::Ascii("ntralised"),
+        dictgen::InsensitiveStr::Ascii("ntralises"),
+        dictgen::InsensitiveStr::Ascii("ntralising"),
+        dictgen::InsensitiveStr::Ascii("ntralization"),
+        dictgen::InsensitiveStr::Ascii("ntralizations"),
+        dictgen::InsensitiveStr::Ascii("ntralize"),
+        dictgen::InsensitiveStr::Ascii("ntralized"),
+        dictgen::InsensitiveStr::Ascii("ntralizes"),
+        dictgen::InsensitiveStr::Ascii("ntralizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DECENTRALIZATION_14989034485163734668)],
+        &[(0b10010, &ENTRY_DECENTRALIZATIONS_15028307675843910435)],
+        &[(0b10010, &ENTRY_DECENTRALIZE_17306384894132674147)],
+        &[(0b10010, &ENTRY_DECENTRALIZED_15938901073912000317)],
+        &[(0b10010, &ENTRY_DECENTRALIZES_8990159632087872438)],
+        &[(0b10010, &ENTRY_DECENTRALIZING_11771308820494191656)],
+        &[(0b01001, &ENTRY_DECENTRALIZATION_14989034485163734668)],
+        &[(0b01001, &ENTRY_DECENTRALIZATIONS_15028307675843910435)],
+        &[(0b01001, &ENTRY_DECENTRALIZE_17306384894132674147)],
+        &[(0b01001, &ENTRY_DECENTRALIZED_15938901073912000317)],
+        &[(0b01001, &ENTRY_DECENTRALIZES_8990159632087872438)],
+        &[(0b01001, &ENTRY_DECENTRALIZING_11771308820494191656)],
+    ],
+    range: 8..=13,
+};
 
-static VARS_TRIE_DECA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_DECA_CHILDREN),
+static VARS_DECA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_DECA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_DECA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("rbonisation"),
-            dictgen::InsensitiveStr::Ascii("rbonisations"),
-            dictgen::InsensitiveStr::Ascii("rbonise"),
-            dictgen::InsensitiveStr::Ascii("rbonised"),
-            dictgen::InsensitiveStr::Ascii("rbonises"),
-            dictgen::InsensitiveStr::Ascii("rbonising"),
-            dictgen::InsensitiveStr::Ascii("rbonization"),
-            dictgen::InsensitiveStr::Ascii("rbonizations"),
-            dictgen::InsensitiveStr::Ascii("rbonize"),
-            dictgen::InsensitiveStr::Ascii("rbonized"),
-            dictgen::InsensitiveStr::Ascii("rbonizes"),
-            dictgen::InsensitiveStr::Ascii("rbonizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_DECARBONIZATION_11478706021702952565)],
-            &[(0b10010, &ENTRY_DECARBONIZATIONS_16017243127754390829)],
-            &[(0b10010, &ENTRY_DECARBONIZE_17211928749740566614)],
-            &[(0b10010, &ENTRY_DECARBONIZED_10394178489330721396)],
-            &[(0b10010, &ENTRY_DECARBONIZES_11122308997566756604)],
-            &[(0b10010, &ENTRY_DECARBONIZING_5775070557566850865)],
-            &[(0b01001, &ENTRY_DECARBONIZATION_11478706021702952565)],
-            &[(0b01001, &ENTRY_DECARBONIZATIONS_16017243127754390829)],
-            &[(0b01001, &ENTRY_DECARBONIZE_17211928749740566614)],
-            &[(0b01001, &ENTRY_DECARBONIZED_10394178489330721396)],
-            &[(0b01001, &ENTRY_DECARBONIZES_11122308997566756604)],
-            &[(0b01001, &ENTRY_DECARBONIZING_5775070557566850865)],
-        ],
-        range: 7..=12,
-    };
+pub static VARS_DECA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("rbonisation"),
+        dictgen::InsensitiveStr::Ascii("rbonisations"),
+        dictgen::InsensitiveStr::Ascii("rbonise"),
+        dictgen::InsensitiveStr::Ascii("rbonised"),
+        dictgen::InsensitiveStr::Ascii("rbonises"),
+        dictgen::InsensitiveStr::Ascii("rbonising"),
+        dictgen::InsensitiveStr::Ascii("rbonization"),
+        dictgen::InsensitiveStr::Ascii("rbonizations"),
+        dictgen::InsensitiveStr::Ascii("rbonize"),
+        dictgen::InsensitiveStr::Ascii("rbonized"),
+        dictgen::InsensitiveStr::Ascii("rbonizes"),
+        dictgen::InsensitiveStr::Ascii("rbonizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_DECARBONIZATION_11478706021702952565)],
+        &[(0b10010, &ENTRY_DECARBONIZATIONS_16017243127754390829)],
+        &[(0b10010, &ENTRY_DECARBONIZE_17211928749740566614)],
+        &[(0b10010, &ENTRY_DECARBONIZED_10394178489330721396)],
+        &[(0b10010, &ENTRY_DECARBONIZES_11122308997566756604)],
+        &[(0b10010, &ENTRY_DECARBONIZING_5775070557566850865)],
+        &[(0b01001, &ENTRY_DECARBONIZATION_11478706021702952565)],
+        &[(0b01001, &ENTRY_DECARBONIZATIONS_16017243127754390829)],
+        &[(0b01001, &ENTRY_DECARBONIZE_17211928749740566614)],
+        &[(0b01001, &ENTRY_DECARBONIZED_10394178489330721396)],
+        &[(0b01001, &ENTRY_DECARBONIZES_11122308997566756604)],
+        &[(0b01001, &ENTRY_DECARBONIZING_5775070557566850865)],
+    ],
+    range: 7..=12,
+};
 
-static VARS_TRIE_C_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_C_CHILDREN),
+static VARS_C_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_C_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_C_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_CA_NODE),
+static VARS_C_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_CA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_CE_NODE),
+    Some(&VARS_CE_NODE),
     None,
     None,
-    Some(&VARS_TRIE_CH_NODE),
-    Some(&VARS_TRIE_CI_NODE),
+    Some(&VARS_CH_NODE),
+    Some(&VARS_CI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_CL_NODE),
+    Some(&VARS_CL_NODE),
     None,
     None,
-    Some(&VARS_TRIE_CO_NODE),
+    Some(&VARS_CO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_CR_NODE),
+    Some(&VARS_CR_NODE),
     None,
     None,
-    Some(&VARS_TRIE_CU_NODE),
+    Some(&VARS_CU_NODE),
     None,
     None,
     None,
@@ -17434,12 +17406,12 @@ static VARS_TRIE_C_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_CU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CU_CHILDREN),
+static VARS_CU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dgeled"),
         dictgen::InsensitiveStr::Ascii("dgeling"),
@@ -17491,46 +17463,46 @@ pub static VARS_TRIE_CU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=12,
 };
 
-static VARS_TRIE_CR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_CR_CHILDREN),
+static VARS_CR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_CR_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_CR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_CR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_CRE_NODE),
+    Some(&VARS_CRE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_CRI_NODE),
-    None,
-    None,
-    None,
-    None,
-    None,
+    Some(&VARS_CRI_NODE),
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_CRU_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_CRY_NODE),
+    None,
+    None,
+    Some(&VARS_CRU_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_CRY_NODE),
     None,
 ];
 
-static VARS_TRIE_CRY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CRY_CHILDREN),
+static VARS_CRY_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CRY_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CRY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CRY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("stalize"),
         dictgen::InsensitiveStr::Ascii("stalized"),
@@ -17586,12 +17558,12 @@ pub static VARS_TRIE_CRY_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=13,
 };
 
-static VARS_TRIE_CRU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CRU_CHILDREN),
+static VARS_CRU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CRU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CRU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CRU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eler"),
         dictgen::InsensitiveStr::Ascii("elest"),
@@ -17607,12 +17579,12 @@ pub static VARS_TRIE_CRU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=6,
 };
 
-static VARS_TRIE_CRI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CRI_CHILDREN),
+static VARS_CRI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CRI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("minalisation"),
         dictgen::InsensitiveStr::Ascii("minalisations"),
@@ -17684,12 +17656,12 @@ pub static VARS_TRIE_CRI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=13,
 };
 
-static VARS_TRIE_CRE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CRE_CHILDREN),
+static VARS_CRE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CRE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CRE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CRE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nellate"),
         dictgen::InsensitiveStr::Ascii("nellated"),
@@ -17733,46 +17705,46 @@ pub static VARS_TRIE_CRE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_CO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_CO_CHILDREN),
+static VARS_CO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_CO_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_CO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_CO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_COE_NODE),
+    Some(&VARS_COE_NODE),
     None,
-    Some(&VARS_TRIE_COG_NODE),
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_COL_NODE),
-    Some(&VARS_TRIE_COM_NODE),
-    Some(&VARS_TRIE_CON_NODE),
-    Some(&VARS_TRIE_COO_NODE),
-    Some(&VARS_TRIE_COP_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_COS_NODE),
-    None,
-    Some(&VARS_TRIE_COU_NODE),
+    Some(&VARS_COG_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_COZ_NODE),
+    Some(&VARS_COL_NODE),
+    Some(&VARS_COM_NODE),
+    Some(&VARS_CON_NODE),
+    Some(&VARS_COO_NODE),
+    Some(&VARS_COP_NODE),
+    None,
+    None,
+    Some(&VARS_COS_NODE),
+    None,
+    Some(&VARS_COU_NODE),
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_COZ_NODE),
 ];
 
-static VARS_TRIE_COZ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COZ_CHILDREN),
+static VARS_COZ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COZ_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COZ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COZ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ied"),
         dictgen::InsensitiveStr::Ascii("ier"),
@@ -17796,12 +17768,12 @@ pub static VARS_TRIE_COZ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 1..=5,
 };
 
-static VARS_TRIE_COU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COU_CHILDREN),
+static VARS_COU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ncillor"),
         dictgen::InsensitiveStr::Ascii("ncillors"),
@@ -17841,12 +17813,12 @@ pub static VARS_TRIE_COU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=12,
 };
 
-static VARS_TRIE_COS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COS_CHILDREN),
+static VARS_COS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ied"),
         dictgen::InsensitiveStr::Ascii("ier"),
@@ -17886,12 +17858,12 @@ pub static VARS_TRIE_COS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 1..=14,
 };
 
-static VARS_TRIE_COP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COP_CHILDREN),
+static VARS_COP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("olymerise"),
         dictgen::InsensitiveStr::Ascii("olymerised"),
@@ -17915,23 +17887,23 @@ pub static VARS_TRIE_COP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 9..=11,
 };
 
-static VARS_TRIE_COO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COO_CHILDREN),
+static VARS_COO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("ky")],
     values: &[&[(0b00001, &ENTRY_COOKIE_9287663065088073450)]],
     range: 2..=2,
 };
 
-static VARS_TRIE_CON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CON_CHILDREN),
+static VARS_CON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CON_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ceptualisation"),
         dictgen::InsensitiveStr::Ascii("ceptualisations"),
@@ -18071,12 +18043,12 @@ pub static VARS_TRIE_CON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=15,
 };
 
-static VARS_TRIE_COM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COM_CHILDREN),
+static VARS_COM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mercialisation"),
         dictgen::InsensitiveStr::Ascii("mercialisations"),
@@ -18156,12 +18128,12 @@ pub static VARS_TRIE_COM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 8..=18,
 };
 
-static VARS_TRIE_COL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_COL_CHILDREN),
+static VARS_COL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_COL_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_COL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_COL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
@@ -18173,10 +18145,10 @@ static VARS_TRIE_COL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
     None,
     None,
-    Some(&VARS_TRIE_COLL_NODE),
+    Some(&VARS_COLL_NODE),
     None,
     None,
-    Some(&VARS_TRIE_COLO_NODE),
+    Some(&VARS_COLO_NODE),
     None,
     None,
     None,
@@ -18190,12 +18162,12 @@ static VARS_TRIE_COL_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
 ];
 
-static VARS_TRIE_COLO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_COLO_CHILDREN),
+static VARS_COLO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_COLO_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_COLO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_COLO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
@@ -18209,14 +18181,14 @@ static VARS_TRIE_COLO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsM
     None,
     None,
     None,
-    Some(&VARS_TRIE_COLON_NODE),
+    Some(&VARS_COLON_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_COLOR_NODE),
+    Some(&VARS_COLOR_NODE),
     None,
     None,
-    Some(&VARS_TRIE_COLOU_NODE),
+    Some(&VARS_COLOU_NODE),
     None,
     None,
     None,
@@ -18224,274 +18196,270 @@ static VARS_TRIE_COLO_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsM
     None,
 ];
 
-static VARS_TRIE_COLOU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COLOU_CHILDREN),
+static VARS_COLOU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COLOU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COLOU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("r"),
-            dictgen::InsensitiveStr::Ascii("rable"),
-            dictgen::InsensitiveStr::Ascii("rabler"),
-            dictgen::InsensitiveStr::Ascii("rables"),
-            dictgen::InsensitiveStr::Ascii("rablest"),
-            dictgen::InsensitiveStr::Ascii("rant"),
-            dictgen::InsensitiveStr::Ascii("rants"),
-            dictgen::InsensitiveStr::Ascii("ration"),
-            dictgen::InsensitiveStr::Ascii("rations"),
-            dictgen::InsensitiveStr::Ascii("red"),
-            dictgen::InsensitiveStr::Ascii("reds"),
-            dictgen::InsensitiveStr::Ascii("rer"),
-            dictgen::InsensitiveStr::Ascii("rers"),
-            dictgen::InsensitiveStr::Ascii("rest"),
-            dictgen::InsensitiveStr::Ascii("rful"),
-            dictgen::InsensitiveStr::Ascii("rfuler"),
-            dictgen::InsensitiveStr::Ascii("rfulest"),
-            dictgen::InsensitiveStr::Ascii("rfullier"),
-            dictgen::InsensitiveStr::Ascii("rfulliest"),
-            dictgen::InsensitiveStr::Ascii("rfully"),
-            dictgen::InsensitiveStr::Ascii("rfulness"),
-            dictgen::InsensitiveStr::Ascii("rfulnesses"),
-            dictgen::InsensitiveStr::Ascii("rimeter"),
-            dictgen::InsensitiveStr::Ascii("rimeters"),
-            dictgen::InsensitiveStr::Ascii("rimetric"),
-            dictgen::InsensitiveStr::Ascii("rimetrics"),
-            dictgen::InsensitiveStr::Ascii("rimetries"),
-            dictgen::InsensitiveStr::Ascii("rimetry"),
-            dictgen::InsensitiveStr::Ascii("ring"),
-            dictgen::InsensitiveStr::Ascii("rings"),
-            dictgen::InsensitiveStr::Ascii("rist"),
-            dictgen::InsensitiveStr::Ascii("rists"),
-            dictgen::InsensitiveStr::Ascii("rless"),
-            dictgen::InsensitiveStr::Ascii("rlesser"),
-            dictgen::InsensitiveStr::Ascii("rlessest"),
-            dictgen::InsensitiveStr::Ascii("rlesslier"),
-            dictgen::InsensitiveStr::Ascii("rlessliest"),
-            dictgen::InsensitiveStr::Ascii("rlessly"),
-            dictgen::InsensitiveStr::Ascii("rs"),
-            dictgen::InsensitiveStr::Ascii("rway"),
-            dictgen::InsensitiveStr::Ascii("rways"),
-        ],
-        values: &[
-            &[(0b11010, &ENTRY_COLOR_4390088940109675041)],
-            &[(0b11010, &ENTRY_COLORABLE_7050710397577980432)],
-            &[(0b11010, &ENTRY_COLORABLER_9668141786678165672)],
-            &[(0b11010, &ENTRY_COLORABLES_9835654246095695799)],
-            &[(0b11010, &ENTRY_COLORABLEST_7942972157513237380)],
-            &[(0b11010, &ENTRY_COLORANT_8508078357677443619)],
-            &[(0b11010, &ENTRY_COLORANTS_5504580436166605292)],
-            &[(0b11010, &ENTRY_COLORATION_16722034247789816535)],
-            &[(0b11010, &ENTRY_COLORATIONS_10032620475490215127)],
-            &[(0b11010, &ENTRY_COLORED_16993799574214757686)],
-            &[(0b11010, &ENTRY_COLOREDS_3930825355719143828)],
-            &[(0b11010, &ENTRY_COLORER_14593090349752845026)],
-            &[(0b11010, &ENTRY_COLORERS_13681356278503403951)],
-            &[(0b11010, &ENTRY_COLORREST_13441910764710538786)],
-            &[(0b11010, &ENTRY_COLORFUL_4806683583475489506)],
-            &[(0b11010, &ENTRY_COLORFULER_4366882207953732907)],
-            &[(0b11010, &ENTRY_COLORFULEST_15151264088558637473)],
-            &[(0b11010, &ENTRY_COLORFULLIER_12948386305746310089)],
-            &[(0b11010, &ENTRY_COLORFULLIEST_14305289677627923994)],
-            &[(0b11010, &ENTRY_COLORFULLY_12792342106302406309)],
-            &[(0b11010, &ENTRY_COLORFULNESS_15839726768009061296)],
-            &[(0b11010, &ENTRY_COLORFULNESSES_12191353247710978564)],
-            &[(0b11010, &ENTRY_COLORIMETER_7886930247663758657)],
-            &[(0b11010, &ENTRY_COLORIMETERS_11304231755461980338)],
-            &[(0b11010, &ENTRY_COLORIMETRIC_7191450808866389504)],
-            &[(0b11010, &ENTRY_COLORIMETRICS_7899060896503658636)],
-            &[(0b11010, &ENTRY_COLORIMETRIES_4002895138139503597)],
-            &[(0b11010, &ENTRY_COLORIMETRY_17653132236103689829)],
-            &[(0b11010, &ENTRY_COLORING_1146707622868481032)],
-            &[(0b11010, &ENTRY_COLORINGS_7915048393125592470)],
-            &[(0b11010, &ENTRY_COLORIST_17294665081422796979)],
-            &[(0b11010, &ENTRY_COLORISTS_12579547357893269970)],
-            &[(0b11010, &ENTRY_COLORLESS_79666121160281791)],
-            &[(0b11010, &ENTRY_COLORLESSER_14130375164463853792)],
-            &[(0b11010, &ENTRY_COLORLESSEST_14480954022966990260)],
-            &[(0b11010, &ENTRY_COLORLESSLIER_4162646048805483531)],
-            &[(0b11010, &ENTRY_COLORLESSLIEST_12869681984000132288)],
-            &[(0b11010, &ENTRY_COLORLESSLY_13297396459356641001)],
-            &[(0b11010, &ENTRY_COLORS_11482118763257927768)],
-            &[(0b11010, &ENTRY_COLORWAY_17470413378276487899)],
-            &[(0b11010, &ENTRY_COLORWAYS_4628145222031734139)],
-        ],
-        range: 1..=10,
-    };
+pub static VARS_COLOU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("r"),
+        dictgen::InsensitiveStr::Ascii("rable"),
+        dictgen::InsensitiveStr::Ascii("rabler"),
+        dictgen::InsensitiveStr::Ascii("rables"),
+        dictgen::InsensitiveStr::Ascii("rablest"),
+        dictgen::InsensitiveStr::Ascii("rant"),
+        dictgen::InsensitiveStr::Ascii("rants"),
+        dictgen::InsensitiveStr::Ascii("ration"),
+        dictgen::InsensitiveStr::Ascii("rations"),
+        dictgen::InsensitiveStr::Ascii("red"),
+        dictgen::InsensitiveStr::Ascii("reds"),
+        dictgen::InsensitiveStr::Ascii("rer"),
+        dictgen::InsensitiveStr::Ascii("rers"),
+        dictgen::InsensitiveStr::Ascii("rest"),
+        dictgen::InsensitiveStr::Ascii("rful"),
+        dictgen::InsensitiveStr::Ascii("rfuler"),
+        dictgen::InsensitiveStr::Ascii("rfulest"),
+        dictgen::InsensitiveStr::Ascii("rfullier"),
+        dictgen::InsensitiveStr::Ascii("rfulliest"),
+        dictgen::InsensitiveStr::Ascii("rfully"),
+        dictgen::InsensitiveStr::Ascii("rfulness"),
+        dictgen::InsensitiveStr::Ascii("rfulnesses"),
+        dictgen::InsensitiveStr::Ascii("rimeter"),
+        dictgen::InsensitiveStr::Ascii("rimeters"),
+        dictgen::InsensitiveStr::Ascii("rimetric"),
+        dictgen::InsensitiveStr::Ascii("rimetrics"),
+        dictgen::InsensitiveStr::Ascii("rimetries"),
+        dictgen::InsensitiveStr::Ascii("rimetry"),
+        dictgen::InsensitiveStr::Ascii("ring"),
+        dictgen::InsensitiveStr::Ascii("rings"),
+        dictgen::InsensitiveStr::Ascii("rist"),
+        dictgen::InsensitiveStr::Ascii("rists"),
+        dictgen::InsensitiveStr::Ascii("rless"),
+        dictgen::InsensitiveStr::Ascii("rlesser"),
+        dictgen::InsensitiveStr::Ascii("rlessest"),
+        dictgen::InsensitiveStr::Ascii("rlesslier"),
+        dictgen::InsensitiveStr::Ascii("rlessliest"),
+        dictgen::InsensitiveStr::Ascii("rlessly"),
+        dictgen::InsensitiveStr::Ascii("rs"),
+        dictgen::InsensitiveStr::Ascii("rway"),
+        dictgen::InsensitiveStr::Ascii("rways"),
+    ],
+    values: &[
+        &[(0b11010, &ENTRY_COLOR_4390088940109675041)],
+        &[(0b11010, &ENTRY_COLORABLE_7050710397577980432)],
+        &[(0b11010, &ENTRY_COLORABLER_9668141786678165672)],
+        &[(0b11010, &ENTRY_COLORABLES_9835654246095695799)],
+        &[(0b11010, &ENTRY_COLORABLEST_7942972157513237380)],
+        &[(0b11010, &ENTRY_COLORANT_8508078357677443619)],
+        &[(0b11010, &ENTRY_COLORANTS_5504580436166605292)],
+        &[(0b11010, &ENTRY_COLORATION_16722034247789816535)],
+        &[(0b11010, &ENTRY_COLORATIONS_10032620475490215127)],
+        &[(0b11010, &ENTRY_COLORED_16993799574214757686)],
+        &[(0b11010, &ENTRY_COLOREDS_3930825355719143828)],
+        &[(0b11010, &ENTRY_COLORER_14593090349752845026)],
+        &[(0b11010, &ENTRY_COLORERS_13681356278503403951)],
+        &[(0b11010, &ENTRY_COLORREST_13441910764710538786)],
+        &[(0b11010, &ENTRY_COLORFUL_4806683583475489506)],
+        &[(0b11010, &ENTRY_COLORFULER_4366882207953732907)],
+        &[(0b11010, &ENTRY_COLORFULEST_15151264088558637473)],
+        &[(0b11010, &ENTRY_COLORFULLIER_12948386305746310089)],
+        &[(0b11010, &ENTRY_COLORFULLIEST_14305289677627923994)],
+        &[(0b11010, &ENTRY_COLORFULLY_12792342106302406309)],
+        &[(0b11010, &ENTRY_COLORFULNESS_15839726768009061296)],
+        &[(0b11010, &ENTRY_COLORFULNESSES_12191353247710978564)],
+        &[(0b11010, &ENTRY_COLORIMETER_7886930247663758657)],
+        &[(0b11010, &ENTRY_COLORIMETERS_11304231755461980338)],
+        &[(0b11010, &ENTRY_COLORIMETRIC_7191450808866389504)],
+        &[(0b11010, &ENTRY_COLORIMETRICS_7899060896503658636)],
+        &[(0b11010, &ENTRY_COLORIMETRIES_4002895138139503597)],
+        &[(0b11010, &ENTRY_COLORIMETRY_17653132236103689829)],
+        &[(0b11010, &ENTRY_COLORING_1146707622868481032)],
+        &[(0b11010, &ENTRY_COLORINGS_7915048393125592470)],
+        &[(0b11010, &ENTRY_COLORIST_17294665081422796979)],
+        &[(0b11010, &ENTRY_COLORISTS_12579547357893269970)],
+        &[(0b11010, &ENTRY_COLORLESS_79666121160281791)],
+        &[(0b11010, &ENTRY_COLORLESSER_14130375164463853792)],
+        &[(0b11010, &ENTRY_COLORLESSEST_14480954022966990260)],
+        &[(0b11010, &ENTRY_COLORLESSLIER_4162646048805483531)],
+        &[(0b11010, &ENTRY_COLORLESSLIEST_12869681984000132288)],
+        &[(0b11010, &ENTRY_COLORLESSLY_13297396459356641001)],
+        &[(0b11010, &ENTRY_COLORS_11482118763257927768)],
+        &[(0b11010, &ENTRY_COLORWAY_17470413378276487899)],
+        &[(0b11010, &ENTRY_COLORWAYS_4628145222031734139)],
+    ],
+    range: 1..=10,
+};
 
-static VARS_TRIE_COLOR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COLOR_CHILDREN),
+static VARS_COLOR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COLOR_CHILDREN),
     value: Some(&[(0b11001, &ENTRY_COLOR_4390088940109675041)]),
 };
 
-pub static VARS_TRIE_COLOR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("able"),
-            dictgen::InsensitiveStr::Ascii("abler"),
-            dictgen::InsensitiveStr::Ascii("ables"),
-            dictgen::InsensitiveStr::Ascii("ablest"),
-            dictgen::InsensitiveStr::Ascii("ant"),
-            dictgen::InsensitiveStr::Ascii("ants"),
-            dictgen::InsensitiveStr::Ascii("ed"),
-            dictgen::InsensitiveStr::Ascii("eds"),
-            dictgen::InsensitiveStr::Ascii("er"),
-            dictgen::InsensitiveStr::Ascii("ers"),
-            dictgen::InsensitiveStr::Ascii("ful"),
-            dictgen::InsensitiveStr::Ascii("fuler"),
-            dictgen::InsensitiveStr::Ascii("fulest"),
-            dictgen::InsensitiveStr::Ascii("fullier"),
-            dictgen::InsensitiveStr::Ascii("fulliest"),
-            dictgen::InsensitiveStr::Ascii("fully"),
-            dictgen::InsensitiveStr::Ascii("fulness"),
-            dictgen::InsensitiveStr::Ascii("fulnesses"),
-            dictgen::InsensitiveStr::Ascii("ing"),
-            dictgen::InsensitiveStr::Ascii("ings"),
-            dictgen::InsensitiveStr::Ascii("ist"),
-            dictgen::InsensitiveStr::Ascii("ists"),
-            dictgen::InsensitiveStr::Ascii("less"),
-            dictgen::InsensitiveStr::Ascii("lesser"),
-            dictgen::InsensitiveStr::Ascii("lessest"),
-            dictgen::InsensitiveStr::Ascii("lesslier"),
-            dictgen::InsensitiveStr::Ascii("lessliest"),
-            dictgen::InsensitiveStr::Ascii("lessly"),
-            dictgen::InsensitiveStr::Ascii("rest"),
-            dictgen::InsensitiveStr::Ascii("s"),
-            dictgen::InsensitiveStr::Ascii("way"),
-            dictgen::InsensitiveStr::Ascii("ways"),
-        ],
-        values: &[
-            &[(0b11001, &ENTRY_COLORABLE_7050710397577980432)],
-            &[(0b11001, &ENTRY_COLORABLER_9668141786678165672)],
-            &[(0b11001, &ENTRY_COLORABLES_9835654246095695799)],
-            &[(0b11001, &ENTRY_COLORABLEST_7942972157513237380)],
-            &[(0b11001, &ENTRY_COLORANT_8508078357677443619)],
-            &[(0b11001, &ENTRY_COLORANTS_5504580436166605292)],
-            &[(0b11001, &ENTRY_COLORED_16993799574214757686)],
-            &[(0b11001, &ENTRY_COLOREDS_3930825355719143828)],
-            &[(0b11001, &ENTRY_COLORER_14593090349752845026)],
-            &[(0b11001, &ENTRY_COLORERS_13681356278503403951)],
-            &[(0b11001, &ENTRY_COLORFUL_4806683583475489506)],
-            &[(0b11001, &ENTRY_COLORFULER_4366882207953732907)],
-            &[(0b11001, &ENTRY_COLORFULEST_15151264088558637473)],
-            &[(0b11001, &ENTRY_COLORFULLIER_12948386305746310089)],
-            &[(0b11001, &ENTRY_COLORFULLIEST_14305289677627923994)],
-            &[(0b11001, &ENTRY_COLORFULLY_12792342106302406309)],
-            &[(0b11001, &ENTRY_COLORFULNESS_15839726768009061296)],
-            &[(0b11001, &ENTRY_COLORFULNESSES_12191353247710978564)],
-            &[(0b11001, &ENTRY_COLORING_1146707622868481032)],
-            &[(0b11001, &ENTRY_COLORINGS_7915048393125592470)],
-            &[(0b01001, &ENTRY_COLORIST_17294665081422796979)],
-            &[(0b01001, &ENTRY_COLORISTS_12579547357893269970)],
-            &[(0b11001, &ENTRY_COLORLESS_79666121160281791)],
-            &[(0b11001, &ENTRY_COLORLESSER_14130375164463853792)],
-            &[(0b11001, &ENTRY_COLORLESSEST_14480954022966990260)],
-            &[(0b11001, &ENTRY_COLORLESSLIER_4162646048805483531)],
-            &[(0b11001, &ENTRY_COLORLESSLIEST_12869681984000132288)],
-            &[(0b11001, &ENTRY_COLORLESSLY_13297396459356641001)],
-            &[(0b11001, &ENTRY_COLORREST_13441910764710538786)],
-            &[(0b11001, &ENTRY_COLORS_11482118763257927768)],
-            &[(0b11001, &ENTRY_COLORWAY_17470413378276487899)],
-            &[(0b11001, &ENTRY_COLORWAYS_4628145222031734139)],
-        ],
-        range: 1..=9,
-    };
+pub static VARS_COLOR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("able"),
+        dictgen::InsensitiveStr::Ascii("abler"),
+        dictgen::InsensitiveStr::Ascii("ables"),
+        dictgen::InsensitiveStr::Ascii("ablest"),
+        dictgen::InsensitiveStr::Ascii("ant"),
+        dictgen::InsensitiveStr::Ascii("ants"),
+        dictgen::InsensitiveStr::Ascii("ed"),
+        dictgen::InsensitiveStr::Ascii("eds"),
+        dictgen::InsensitiveStr::Ascii("er"),
+        dictgen::InsensitiveStr::Ascii("ers"),
+        dictgen::InsensitiveStr::Ascii("ful"),
+        dictgen::InsensitiveStr::Ascii("fuler"),
+        dictgen::InsensitiveStr::Ascii("fulest"),
+        dictgen::InsensitiveStr::Ascii("fullier"),
+        dictgen::InsensitiveStr::Ascii("fulliest"),
+        dictgen::InsensitiveStr::Ascii("fully"),
+        dictgen::InsensitiveStr::Ascii("fulness"),
+        dictgen::InsensitiveStr::Ascii("fulnesses"),
+        dictgen::InsensitiveStr::Ascii("ing"),
+        dictgen::InsensitiveStr::Ascii("ings"),
+        dictgen::InsensitiveStr::Ascii("ist"),
+        dictgen::InsensitiveStr::Ascii("ists"),
+        dictgen::InsensitiveStr::Ascii("less"),
+        dictgen::InsensitiveStr::Ascii("lesser"),
+        dictgen::InsensitiveStr::Ascii("lessest"),
+        dictgen::InsensitiveStr::Ascii("lesslier"),
+        dictgen::InsensitiveStr::Ascii("lessliest"),
+        dictgen::InsensitiveStr::Ascii("lessly"),
+        dictgen::InsensitiveStr::Ascii("rest"),
+        dictgen::InsensitiveStr::Ascii("s"),
+        dictgen::InsensitiveStr::Ascii("way"),
+        dictgen::InsensitiveStr::Ascii("ways"),
+    ],
+    values: &[
+        &[(0b11001, &ENTRY_COLORABLE_7050710397577980432)],
+        &[(0b11001, &ENTRY_COLORABLER_9668141786678165672)],
+        &[(0b11001, &ENTRY_COLORABLES_9835654246095695799)],
+        &[(0b11001, &ENTRY_COLORABLEST_7942972157513237380)],
+        &[(0b11001, &ENTRY_COLORANT_8508078357677443619)],
+        &[(0b11001, &ENTRY_COLORANTS_5504580436166605292)],
+        &[(0b11001, &ENTRY_COLORED_16993799574214757686)],
+        &[(0b11001, &ENTRY_COLOREDS_3930825355719143828)],
+        &[(0b11001, &ENTRY_COLORER_14593090349752845026)],
+        &[(0b11001, &ENTRY_COLORERS_13681356278503403951)],
+        &[(0b11001, &ENTRY_COLORFUL_4806683583475489506)],
+        &[(0b11001, &ENTRY_COLORFULER_4366882207953732907)],
+        &[(0b11001, &ENTRY_COLORFULEST_15151264088558637473)],
+        &[(0b11001, &ENTRY_COLORFULLIER_12948386305746310089)],
+        &[(0b11001, &ENTRY_COLORFULLIEST_14305289677627923994)],
+        &[(0b11001, &ENTRY_COLORFULLY_12792342106302406309)],
+        &[(0b11001, &ENTRY_COLORFULNESS_15839726768009061296)],
+        &[(0b11001, &ENTRY_COLORFULNESSES_12191353247710978564)],
+        &[(0b11001, &ENTRY_COLORING_1146707622868481032)],
+        &[(0b11001, &ENTRY_COLORINGS_7915048393125592470)],
+        &[(0b01001, &ENTRY_COLORIST_17294665081422796979)],
+        &[(0b01001, &ENTRY_COLORISTS_12579547357893269970)],
+        &[(0b11001, &ENTRY_COLORLESS_79666121160281791)],
+        &[(0b11001, &ENTRY_COLORLESSER_14130375164463853792)],
+        &[(0b11001, &ENTRY_COLORLESSEST_14480954022966990260)],
+        &[(0b11001, &ENTRY_COLORLESSLIER_4162646048805483531)],
+        &[(0b11001, &ENTRY_COLORLESSLIEST_12869681984000132288)],
+        &[(0b11001, &ENTRY_COLORLESSLY_13297396459356641001)],
+        &[(0b11001, &ENTRY_COLORREST_13441910764710538786)],
+        &[(0b11001, &ENTRY_COLORS_11482118763257927768)],
+        &[(0b11001, &ENTRY_COLORWAY_17470413378276487899)],
+        &[(0b11001, &ENTRY_COLORWAYS_4628145222031734139)],
+    ],
+    range: 1..=9,
+};
 
-static VARS_TRIE_COLON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COLON_CHILDREN),
+static VARS_COLON_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COLON_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COLON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("isation"),
-            dictgen::InsensitiveStr::Ascii("isations"),
-            dictgen::InsensitiveStr::Ascii("ise"),
-            dictgen::InsensitiveStr::Ascii("ised"),
-            dictgen::InsensitiveStr::Ascii("iser"),
-            dictgen::InsensitiveStr::Ascii("isers"),
-            dictgen::InsensitiveStr::Ascii("ises"),
-            dictgen::InsensitiveStr::Ascii("ising"),
-            dictgen::InsensitiveStr::Ascii("ization"),
-            dictgen::InsensitiveStr::Ascii("izations"),
-            dictgen::InsensitiveStr::Ascii("ize"),
-            dictgen::InsensitiveStr::Ascii("ized"),
-            dictgen::InsensitiveStr::Ascii("izer"),
-            dictgen::InsensitiveStr::Ascii("izers"),
-            dictgen::InsensitiveStr::Ascii("izes"),
-            dictgen::InsensitiveStr::Ascii("izing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_COLONIZATION_5170205300413493772)],
-            &[(0b10010, &ENTRY_COLONIZATIONS_5914393406246107629)],
-            &[(0b10010, &ENTRY_COLONIZE_15736921118583985460)],
-            &[(0b10010, &ENTRY_COLONIZED_1613678129917812032)],
-            &[(0b10010, &ENTRY_COLONIZER_12757929901281569170)],
-            &[(0b10010, &ENTRY_COLONIZERS_8168468522547534282)],
-            &[(0b10010, &ENTRY_COLONIZES_12944167433051970340)],
-            &[(0b10010, &ENTRY_COLONIZING_10333921368822957164)],
-            &[(0b01001, &ENTRY_COLONIZATION_5170205300413493772)],
-            &[(0b01001, &ENTRY_COLONIZATIONS_5914393406246107629)],
-            &[(0b01001, &ENTRY_COLONIZE_15736921118583985460)],
-            &[(0b01001, &ENTRY_COLONIZED_1613678129917812032)],
-            &[(0b01001, &ENTRY_COLONIZER_12757929901281569170)],
-            &[(0b01001, &ENTRY_COLONIZERS_8168468522547534282)],
-            &[(0b01001, &ENTRY_COLONIZES_12944167433051970340)],
-            &[(0b01001, &ENTRY_COLONIZING_10333921368822957164)],
-        ],
-        range: 3..=8,
-    };
+pub static VARS_COLON_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("isation"),
+        dictgen::InsensitiveStr::Ascii("isations"),
+        dictgen::InsensitiveStr::Ascii("ise"),
+        dictgen::InsensitiveStr::Ascii("ised"),
+        dictgen::InsensitiveStr::Ascii("iser"),
+        dictgen::InsensitiveStr::Ascii("isers"),
+        dictgen::InsensitiveStr::Ascii("ises"),
+        dictgen::InsensitiveStr::Ascii("ising"),
+        dictgen::InsensitiveStr::Ascii("ization"),
+        dictgen::InsensitiveStr::Ascii("izations"),
+        dictgen::InsensitiveStr::Ascii("ize"),
+        dictgen::InsensitiveStr::Ascii("ized"),
+        dictgen::InsensitiveStr::Ascii("izer"),
+        dictgen::InsensitiveStr::Ascii("izers"),
+        dictgen::InsensitiveStr::Ascii("izes"),
+        dictgen::InsensitiveStr::Ascii("izing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_COLONIZATION_5170205300413493772)],
+        &[(0b10010, &ENTRY_COLONIZATIONS_5914393406246107629)],
+        &[(0b10010, &ENTRY_COLONIZE_15736921118583985460)],
+        &[(0b10010, &ENTRY_COLONIZED_1613678129917812032)],
+        &[(0b10010, &ENTRY_COLONIZER_12757929901281569170)],
+        &[(0b10010, &ENTRY_COLONIZERS_8168468522547534282)],
+        &[(0b10010, &ENTRY_COLONIZES_12944167433051970340)],
+        &[(0b10010, &ENTRY_COLONIZING_10333921368822957164)],
+        &[(0b01001, &ENTRY_COLONIZATION_5170205300413493772)],
+        &[(0b01001, &ENTRY_COLONIZATIONS_5914393406246107629)],
+        &[(0b01001, &ENTRY_COLONIZE_15736921118583985460)],
+        &[(0b01001, &ENTRY_COLONIZED_1613678129917812032)],
+        &[(0b01001, &ENTRY_COLONIZER_12757929901281569170)],
+        &[(0b01001, &ENTRY_COLONIZERS_8168468522547534282)],
+        &[(0b01001, &ENTRY_COLONIZES_12944167433051970340)],
+        &[(0b01001, &ENTRY_COLONIZING_10333921368822957164)],
+    ],
+    range: 3..=8,
+};
 
-static VARS_TRIE_COLL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COLL_CHILDREN),
+static VARS_COLL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COLL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COLL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("ectable"),
-            dictgen::InsensitiveStr::Ascii("ectables"),
-            dictgen::InsensitiveStr::Ascii("ectivisation"),
-            dictgen::InsensitiveStr::Ascii("ectivisations"),
-            dictgen::InsensitiveStr::Ascii("ectivise"),
-            dictgen::InsensitiveStr::Ascii("ectivised"),
-            dictgen::InsensitiveStr::Ascii("ectivises"),
-            dictgen::InsensitiveStr::Ascii("ectivising"),
-            dictgen::InsensitiveStr::Ascii("ectivization"),
-            dictgen::InsensitiveStr::Ascii("ectivizations"),
-            dictgen::InsensitiveStr::Ascii("ectivize"),
-            dictgen::InsensitiveStr::Ascii("ectivized"),
-            dictgen::InsensitiveStr::Ascii("ectivizes"),
-            dictgen::InsensitiveStr::Ascii("ectivizing"),
-        ],
-        values: &[
-            &[(0b10011, &ENTRY_COLLECTIBLE_1730285011498072035)],
-            &[(0b10011, &ENTRY_COLLECTIBLES_7358720680663200346)],
-            &[(0b10010, &ENTRY_COLLECTIVIZATION_1362380877833359975)],
-            &[(0b10010, &ENTRY_COLLECTIVIZATIONS_6195427118788754823)],
-            &[(0b10010, &ENTRY_COLLECTIVIZE_12809074466084828054)],
-            &[(0b10010, &ENTRY_COLLECTIVIZED_6132833186626165249)],
-            &[(0b10010, &ENTRY_COLLECTIVIZES_10627545540156031817)],
-            &[(0b10010, &ENTRY_COLLECTIVIZING_7798244009757756216)],
-            &[(0b01001, &ENTRY_COLLECTIVIZATION_1362380877833359975)],
-            &[(0b01001, &ENTRY_COLLECTIVIZATIONS_6195427118788754823)],
-            &[(0b01001, &ENTRY_COLLECTIVIZE_12809074466084828054)],
-            &[(0b01001, &ENTRY_COLLECTIVIZED_6132833186626165249)],
-            &[(0b01001, &ENTRY_COLLECTIVIZES_10627545540156031817)],
-            &[(0b01001, &ENTRY_COLLECTIVIZING_7798244009757756216)],
-        ],
-        range: 7..=13,
-    };
+pub static VARS_COLL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("ectable"),
+        dictgen::InsensitiveStr::Ascii("ectables"),
+        dictgen::InsensitiveStr::Ascii("ectivisation"),
+        dictgen::InsensitiveStr::Ascii("ectivisations"),
+        dictgen::InsensitiveStr::Ascii("ectivise"),
+        dictgen::InsensitiveStr::Ascii("ectivised"),
+        dictgen::InsensitiveStr::Ascii("ectivises"),
+        dictgen::InsensitiveStr::Ascii("ectivising"),
+        dictgen::InsensitiveStr::Ascii("ectivization"),
+        dictgen::InsensitiveStr::Ascii("ectivizations"),
+        dictgen::InsensitiveStr::Ascii("ectivize"),
+        dictgen::InsensitiveStr::Ascii("ectivized"),
+        dictgen::InsensitiveStr::Ascii("ectivizes"),
+        dictgen::InsensitiveStr::Ascii("ectivizing"),
+    ],
+    values: &[
+        &[(0b10011, &ENTRY_COLLECTIBLE_1730285011498072035)],
+        &[(0b10011, &ENTRY_COLLECTIBLES_7358720680663200346)],
+        &[(0b10010, &ENTRY_COLLECTIVIZATION_1362380877833359975)],
+        &[(0b10010, &ENTRY_COLLECTIVIZATIONS_6195427118788754823)],
+        &[(0b10010, &ENTRY_COLLECTIVIZE_12809074466084828054)],
+        &[(0b10010, &ENTRY_COLLECTIVIZED_6132833186626165249)],
+        &[(0b10010, &ENTRY_COLLECTIVIZES_10627545540156031817)],
+        &[(0b10010, &ENTRY_COLLECTIVIZING_7798244009757756216)],
+        &[(0b01001, &ENTRY_COLLECTIVIZATION_1362380877833359975)],
+        &[(0b01001, &ENTRY_COLLECTIVIZATIONS_6195427118788754823)],
+        &[(0b01001, &ENTRY_COLLECTIVIZE_12809074466084828054)],
+        &[(0b01001, &ENTRY_COLLECTIVIZED_6132833186626165249)],
+        &[(0b01001, &ENTRY_COLLECTIVIZES_10627545540156031817)],
+        &[(0b01001, &ENTRY_COLLECTIVIZING_7798244009757756216)],
+    ],
+    range: 7..=13,
+};
 
-static VARS_TRIE_COG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COG_CHILDREN),
+static VARS_COG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nisable"),
         dictgen::InsensitiveStr::Ascii("nisabler"),
@@ -18531,12 +18499,12 @@ pub static VARS_TRIE_COG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=9,
 };
 
-static VARS_TRIE_COE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_COE_CHILDREN),
+static VARS_COE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_COE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_COE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_COE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lom"),
         dictgen::InsensitiveStr::Ascii("lomata"),
@@ -18558,12 +18526,12 @@ pub static VARS_TRIE_COE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=9,
 };
 
-static VARS_TRIE_CL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CL_CHILDREN),
+static VARS_CL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("amor"),
         dictgen::InsensitiveStr::Ascii("amored"),
@@ -18627,12 +18595,12 @@ pub static VARS_TRIE_CL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=11,
 };
 
-static VARS_TRIE_CI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CI_CHILDREN),
+static VARS_CI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("catrisation"),
         dictgen::InsensitiveStr::Ascii("catrisations"),
@@ -18702,30 +18670,30 @@ pub static VARS_TRIE_CI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=12,
 };
 
-static VARS_TRIE_CH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_CH_CHILDREN),
+static VARS_CH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_CH_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_CH_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_CHA_NODE),
+static VARS_CH_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_CHA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_CHE_NODE),
+    Some(&VARS_CHE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_CHI_NODE),
-    None,
-    None,
-    None,
-    None,
+    Some(&VARS_CHI_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_CHR_NODE),
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_CHR_NODE),
     None,
     None,
     None,
@@ -18736,12 +18704,12 @@ static VARS_TRIE_CH_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_CHR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CHR_CHILDREN),
+static VARS_CHR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CHR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CHR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CHR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("istianisation"),
         dictgen::InsensitiveStr::Ascii("istianisations"),
@@ -18773,12 +18741,12 @@ pub static VARS_TRIE_CHR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 9..=14,
 };
 
-static VARS_TRIE_CHI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CHI_CHILDREN),
+static VARS_CHI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CHI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CHI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CHI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("le"),
         dictgen::InsensitiveStr::Ascii("les"),
@@ -18808,12 +18776,12 @@ pub static VARS_TRIE_CHI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=6,
 };
 
-static VARS_TRIE_CHE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CHE_CHILDREN),
+static VARS_CHE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CHE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CHE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CHE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ckbook"),
         dictgen::InsensitiveStr::Ascii("ckbooks"),
@@ -18857,12 +18825,12 @@ pub static VARS_TRIE_CHE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=10,
 };
 
-static VARS_TRIE_CHA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CHA_CHILDREN),
+static VARS_CHA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CHA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CHA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CHA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nneled"),
         dictgen::InsensitiveStr::Ascii("nneling"),
@@ -18918,12 +18886,12 @@ pub static VARS_TRIE_CHA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=14,
 };
 
-static VARS_TRIE_CE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CE_CHILDREN),
+static VARS_CE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lom"),
         dictgen::InsensitiveStr::Ascii("loms"),
@@ -19029,46 +18997,46 @@ pub static VARS_TRIE_CE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=13,
 };
 
-static VARS_TRIE_CA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_CA_CHILDREN),
+static VARS_CA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_CA_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_CA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_CA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_CAE_NODE),
+    Some(&VARS_CAE_NODE),
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_CAL_NODE),
+    Some(&VARS_CAL_NODE),
     None,
-    Some(&VARS_TRIE_CAN_NODE),
+    Some(&VARS_CAN_NODE),
     None,
-    Some(&VARS_TRIE_CAP_NODE),
+    Some(&VARS_CAP_NODE),
     None,
-    Some(&VARS_TRIE_CAR_NODE),
+    Some(&VARS_CAR_NODE),
     None,
-    Some(&VARS_TRIE_CAT_NODE),
-    Some(&VARS_TRIE_CAU_NODE),
-    Some(&VARS_TRIE_CAV_NODE),
+    Some(&VARS_CAT_NODE),
+    Some(&VARS_CAU_NODE),
+    Some(&VARS_CAV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_CAV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAV_CHILDREN),
+static VARS_CAV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iare"),
         dictgen::InsensitiveStr::Ascii("iares"),
@@ -19100,12 +19068,12 @@ pub static VARS_TRIE_CAV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=7,
 };
 
-static VARS_TRIE_CAU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAU_CHILDREN),
+static VARS_CAU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("terisation"),
         dictgen::InsensitiveStr::Ascii("terisations"),
@@ -19137,12 +19105,12 @@ pub static VARS_TRIE_CAU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_CAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAT_CHILDREN),
+static VARS_CAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alog"),
         dictgen::InsensitiveStr::Ascii("aloged"),
@@ -19256,12 +19224,12 @@ pub static VARS_TRIE_CAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=13,
 };
 
-static VARS_TRIE_CAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAR_CHILDREN),
+static VARS_CAR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("amelisation"),
         dictgen::InsensitiveStr::Ascii("amelisations"),
@@ -19349,12 +19317,12 @@ pub static VARS_TRIE_CAR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=12,
 };
 
-static VARS_TRIE_CAP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAP_CHILDREN),
+static VARS_CAP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("italisation"),
         dictgen::InsensitiveStr::Ascii("italisations"),
@@ -19418,12 +19386,12 @@ pub static VARS_TRIE_CAP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=12,
 };
 
-static VARS_TRIE_CAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAN_CHILDREN),
+static VARS_CAN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alisation"),
         dictgen::InsensitiveStr::Ascii("alisations"),
@@ -19529,12 +19497,12 @@ pub static VARS_TRIE_CAN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=13,
 };
 
-static VARS_TRIE_CAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAL_CHILDREN),
+static VARS_CAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dron"),
         dictgen::InsensitiveStr::Ascii("drons"),
@@ -19587,12 +19555,12 @@ pub static VARS_TRIE_CAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 1..=8,
 };
 
-static VARS_TRIE_CAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_CAE_CHILDREN),
+static VARS_CAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_CAE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_CAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_CAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sium"),
         dictgen::InsensitiveStr::Ascii("siums"),
@@ -19606,33 +19574,33 @@ pub static VARS_TRIE_CAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=5,
 };
 
-static VARS_TRIE_B_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_B_CHILDREN),
+static VARS_B_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_B_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_B_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_BA_NODE),
+static VARS_B_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_BA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_BE_NODE),
+    Some(&VARS_BE_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_BI_NODE),
+    Some(&VARS_BI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_BL_NODE),
+    Some(&VARS_BL_NODE),
     None,
     None,
-    Some(&VARS_TRIE_BO_NODE),
+    Some(&VARS_BO_NODE),
     None,
     None,
-    Some(&VARS_TRIE_BR_NODE),
+    Some(&VARS_BR_NODE),
     None,
     None,
-    Some(&VARS_TRIE_BU_NODE),
+    Some(&VARS_BU_NODE),
     None,
     None,
     None,
@@ -19640,12 +19608,12 @@ static VARS_TRIE_B_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)
     None,
 ];
 
-static VARS_TRIE_BU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BU_CHILDREN),
+static VARS_BU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("reaucratisation"),
         dictgen::InsensitiveStr::Ascii("reaucratisations"),
@@ -19695,12 +19663,12 @@ pub static VARS_TRIE_BU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=16,
 };
 
-static VARS_TRIE_BR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BR_CHILDREN),
+static VARS_BR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BR_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eathalyse"),
         dictgen::InsensitiveStr::Ascii("eathalysed"),
@@ -19754,12 +19722,12 @@ pub static VARS_TRIE_BR_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=12,
 };
 
-static VARS_TRIE_BO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BO_CHILDREN),
+static VARS_BO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tanise"),
         dictgen::InsensitiveStr::Ascii("tanised"),
@@ -19811,23 +19779,23 @@ pub static VARS_TRIE_BO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=13,
 };
 
-static VARS_TRIE_BL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BL_CHILDREN),
+static VARS_BL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("amable")],
     values: &[&[(0b01001, &ENTRY_BLAMABLE_2805926222821580419)]],
     range: 6..=6,
 };
 
-static VARS_TRIE_BI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BI_CHILDREN),
+static VARS_BI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("assed"),
         dictgen::InsensitiveStr::Ascii("assing"),
@@ -19849,46 +19817,46 @@ pub static VARS_TRIE_BI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 4..=6,
 };
 
-static VARS_TRIE_BE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_BE_CHILDREN),
+static VARS_BE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_BE_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_BE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_BE_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
-    Some(&VARS_TRIE_BED_NODE),
+    Some(&VARS_BED_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_BEH_NODE),
+    Some(&VARS_BEH_NODE),
     None,
-    Some(&VARS_TRIE_BEJ_NODE),
+    Some(&VARS_BEJ_NODE),
     None,
-    Some(&VARS_TRIE_BEL_NODE),
-    None,
-    None,
-    None,
-    None,
+    Some(&VARS_BEL_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_BEV_NODE),
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_BEV_NODE),
     None,
     None,
     None,
     None,
 ];
 
-static VARS_TRIE_BEV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BEV_CHILDREN),
+static VARS_BEV_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BEV_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BEV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BEV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -19916,12 +19884,12 @@ pub static VARS_TRIE_BEV_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=7,
 };
 
-static VARS_TRIE_BEL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BEL_CHILDREN),
+static VARS_BEL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BEL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abor"),
         dictgen::InsensitiveStr::Ascii("abored"),
@@ -19945,12 +19913,12 @@ pub static VARS_TRIE_BEL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=8,
 };
 
-static VARS_TRIE_BEJ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BEJ_CHILDREN),
+static VARS_BEJ_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BEJ_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BEJ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BEJ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eweled"),
         dictgen::InsensitiveStr::Ascii("eweling"),
@@ -19966,12 +19934,12 @@ pub static VARS_TRIE_BEJ_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_BEH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BEH_CHILDREN),
+static VARS_BEH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BEH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BEH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BEH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("avior"),
         dictgen::InsensitiveStr::Ascii("avioral"),
@@ -20055,12 +20023,12 @@ pub static VARS_TRIE_BEH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=14,
 };
 
-static VARS_TRIE_BED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BED_CHILDREN),
+static VARS_BED_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BED_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eviled"),
         dictgen::InsensitiveStr::Ascii("eviling"),
@@ -20076,12 +20044,12 @@ pub static VARS_TRIE_BED_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_BA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_BA_CHILDREN),
+static VARS_BA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_BA_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_BA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_BA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cterias"),
         dictgen::InsensitiveStr::Ascii("lkanisation"),
@@ -20201,57 +20169,57 @@ pub static VARS_TRIE_BA_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=13,
 };
 
-static VARS_TRIE_A_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_A_CHILDREN),
+static VARS_A_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_A_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_A_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_A_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_AB_NODE),
-    Some(&VARS_TRIE_AC_NODE),
-    Some(&VARS_TRIE_AD_NODE),
-    Some(&VARS_TRIE_AE_NODE),
-    Some(&VARS_TRIE_AF_NODE),
-    Some(&VARS_TRIE_AG_NODE),
+    Some(&VARS_AB_NODE),
+    Some(&VARS_AC_NODE),
+    Some(&VARS_AD_NODE),
+    Some(&VARS_AE_NODE),
+    Some(&VARS_AF_NODE),
+    Some(&VARS_AG_NODE),
     None,
-    Some(&VARS_TRIE_AI_NODE),
-    None,
-    None,
-    Some(&VARS_TRIE_AL_NODE),
-    Some(&VARS_TRIE_AM_NODE),
-    Some(&VARS_TRIE_AN_NODE),
-    None,
-    Some(&VARS_TRIE_AP_NODE),
-    None,
-    Some(&VARS_TRIE_AR_NODE),
-    Some(&VARS_TRIE_AS_NODE),
-    Some(&VARS_TRIE_AT_NODE),
-    Some(&VARS_TRIE_AU_NODE),
+    Some(&VARS_AI_NODE),
     None,
     None,
-    Some(&VARS_TRIE_AX_NODE),
+    Some(&VARS_AL_NODE),
+    Some(&VARS_AM_NODE),
+    Some(&VARS_AN_NODE),
+    None,
+    Some(&VARS_AP_NODE),
+    None,
+    Some(&VARS_AR_NODE),
+    Some(&VARS_AS_NODE),
+    Some(&VARS_AT_NODE),
+    Some(&VARS_AU_NODE),
+    None,
+    None,
+    Some(&VARS_AX_NODE),
     None,
     None,
 ];
 
-static VARS_TRIE_AX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AX_CHILDREN),
+static VARS_AX_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AX_CHILDREN),
     value: Some(&[(0b00001, &ENTRY_AX_8791902263575839056)]),
 };
 
-pub static VARS_TRIE_AX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AX_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[dictgen::InsensitiveStr::Ascii("e")],
     values: &[&[(0b11010, &ENTRY_AX_8791902263575839056)]],
     range: 1..=1,
 };
 
-static VARS_TRIE_AU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AU_CHILDREN),
+static VARS_AU_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AU_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("thorisation"),
         dictgen::InsensitiveStr::Ascii("thorisations"),
@@ -20307,12 +20275,12 @@ pub static VARS_TRIE_AU_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=13,
 };
 
-static VARS_TRIE_AT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AT_CHILDREN),
+static VARS_AT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("omisation"),
         dictgen::InsensitiveStr::Ascii("omisations"),
@@ -20372,12 +20340,12 @@ pub static VARS_TRIE_AT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=13,
 };
 
-static VARS_TRIE_AS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AS_CHILDREN),
+static VARS_AS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("afetida"),
         dictgen::InsensitiveStr::Ascii("afetidas"),
@@ -20403,32 +20371,32 @@ pub static VARS_TRIE_AS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=9,
 };
 
-static VARS_TRIE_AR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_AR_CHILDREN),
+static VARS_AR_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_AR_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_AR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_AR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
-    Some(&VARS_TRIE_ARB_NODE),
-    Some(&VARS_TRIE_ARC_NODE),
-    Some(&VARS_TRIE_ARD_NODE),
-    None,
-    None,
+    Some(&VARS_ARB_NODE),
+    Some(&VARS_ARC_NODE),
+    Some(&VARS_ARD_NODE),
     None,
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_ARM_NODE),
-    None,
-    Some(&VARS_TRIE_ARO_NODE),
     None,
     None,
+    Some(&VARS_ARM_NODE),
     None,
-    Some(&VARS_TRIE_ARS_NODE),
-    Some(&VARS_TRIE_ART_NODE),
+    Some(&VARS_ARO_NODE),
+    None,
+    None,
+    None,
+    Some(&VARS_ARS_NODE),
+    Some(&VARS_ART_NODE),
     None,
     None,
     None,
@@ -20437,12 +20405,12 @@ static VARS_TRIE_AR_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_ART_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ART_CHILDREN),
+static VARS_ART_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ART_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ART_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ART_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("efact"),
         dictgen::InsensitiveStr::Ascii("efacts"),
@@ -20482,12 +20450,12 @@ pub static VARS_TRIE_ART_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=13,
 };
 
-static VARS_TRIE_ARS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ARS_CHILDREN),
+static VARS_ARS_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ARS_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ARS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ARS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("e"),
         dictgen::InsensitiveStr::Ascii("ehole"),
@@ -20503,12 +20471,12 @@ pub static VARS_TRIE_ARS_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 1..=6,
 };
 
-static VARS_TRIE_ARO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ARO_CHILDREN),
+static VARS_ARO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ARO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ARO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ARO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("matisation"),
         dictgen::InsensitiveStr::Ascii("matise"),
@@ -20536,12 +20504,12 @@ pub static VARS_TRIE_ARO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=10,
 };
 
-static VARS_TRIE_ARM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ARM_CHILDREN),
+static VARS_ARM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ARM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ARM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ARM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ored"),
@@ -20581,12 +20549,12 @@ pub static VARS_TRIE_ARM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=6,
 };
 
-static VARS_TRIE_ARD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ARD_CHILDREN),
+static VARS_ARD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ARD_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ARD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ARD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ors"),
@@ -20602,12 +20570,12 @@ pub static VARS_TRIE_ARD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=4,
 };
 
-static VARS_TRIE_ARC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ARC_CHILDREN),
+static VARS_ARC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ARC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ARC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ARC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("haise"),
         dictgen::InsensitiveStr::Ascii("haised"),
@@ -20643,12 +20611,12 @@ pub static VARS_TRIE_ARC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=10,
 };
 
-static VARS_TRIE_ARB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ARB_CHILDREN),
+static VARS_ARB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ARB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ARB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ARB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ored"),
@@ -20680,12 +20648,12 @@ pub static VARS_TRIE_ARB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=10,
 };
 
-static VARS_TRIE_AP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_AP_CHILDREN),
+static VARS_AP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_AP_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_AP_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_AP_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
@@ -20693,15 +20661,15 @@ static VARS_TRIE_AP_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
     None,
     None,
-    Some(&VARS_TRIE_APH_NODE),
+    Some(&VARS_APH_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_APN_NODE),
-    Some(&VARS_TRIE_APO_NODE),
-    Some(&VARS_TRIE_APP_NODE),
+    Some(&VARS_APN_NODE),
+    Some(&VARS_APO_NODE),
+    Some(&VARS_APP_NODE),
     None,
     None,
     None,
@@ -20714,12 +20682,12 @@ static VARS_TRIE_AP_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_APP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_APP_CHILDREN),
+static VARS_APP_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_APP_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_APP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_APP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("al"),
         dictgen::InsensitiveStr::Ascii("all"),
@@ -20771,12 +20739,12 @@ pub static VARS_TRIE_APP_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=9,
 };
 
-static VARS_TRIE_APO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_APO_CHILDREN),
+static VARS_APO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_APO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_APO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_APO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("logise"),
         dictgen::InsensitiveStr::Ascii("logised"),
@@ -20848,12 +20816,12 @@ pub static VARS_TRIE_APO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_APN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_APN_CHILDREN),
+static VARS_APN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_APN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_APN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_APN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ea"),
         dictgen::InsensitiveStr::Ascii("eas"),
@@ -20869,12 +20837,12 @@ pub static VARS_TRIE_APN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 2..=4,
 };
 
-static VARS_TRIE_APH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_APH_CHILDREN),
+static VARS_APH_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_APH_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_APH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_APH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orise"),
         dictgen::InsensitiveStr::Ascii("orised"),
@@ -20898,32 +20866,32 @@ pub static VARS_TRIE_APH_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 5..=7,
 };
 
-static VARS_TRIE_AN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_AN_CHILDREN),
+static VARS_AN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_AN_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_AN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
-    Some(&VARS_TRIE_ANA_NODE),
+static VARS_AN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+    Some(&VARS_ANA_NODE),
     None,
     None,
     None,
-    Some(&VARS_TRIE_ANE_NODE),
+    Some(&VARS_ANE_NODE),
     None,
-    Some(&VARS_TRIE_ANG_NODE),
+    Some(&VARS_ANG_NODE),
     None,
-    Some(&VARS_TRIE_ANI_NODE),
-    None,
-    None,
-    None,
-    None,
-    Some(&VARS_TRIE_ANN_NODE),
-    Some(&VARS_TRIE_ANO_NODE),
+    Some(&VARS_ANI_NODE),
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_ANT_NODE),
+    Some(&VARS_ANN_NODE),
+    Some(&VARS_ANO_NODE),
+    None,
+    None,
+    None,
+    None,
+    Some(&VARS_ANT_NODE),
     None,
     None,
     None,
@@ -20932,12 +20900,12 @@ static VARS_TRIE_AN_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap
     None,
 ];
 
-static VARS_TRIE_ANT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANT_CHILDREN),
+static VARS_ANT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ANT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("agonise"),
         dictgen::InsensitiveStr::Ascii("agonised"),
@@ -20993,12 +20961,12 @@ pub static VARS_TRIE_ANT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 7..=15,
 };
 
-static VARS_TRIE_ANO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANO_CHILDREN),
+static VARS_ANO_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANO_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ANO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dise"),
         dictgen::InsensitiveStr::Ascii("dised"),
@@ -21022,12 +20990,12 @@ pub static VARS_TRIE_ANO_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 4..=6,
 };
 
-static VARS_TRIE_ANN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANN_CHILDREN),
+static VARS_ANN_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANN_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ANN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ualise"),
         dictgen::InsensitiveStr::Ascii("ualised"),
@@ -21051,12 +21019,12 @@ pub static VARS_TRIE_ANN_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=8,
 };
 
-static VARS_TRIE_ANI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANI_CHILDREN),
+static VARS_ANI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ANI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("malisation"),
         dictgen::InsensitiveStr::Ascii("malisations"),
@@ -21088,12 +21056,12 @@ pub static VARS_TRIE_ANI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_ANG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANG_CHILDREN),
+static VARS_ANG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ANG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("licisation"),
         dictgen::InsensitiveStr::Ascii("licisations"),
@@ -21125,12 +21093,12 @@ pub static VARS_TRIE_ANG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 6..=11,
 };
 
-static VARS_TRIE_ANE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANE_CHILDREN),
+static VARS_ANE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_ANE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mia"),
         dictgen::InsensitiveStr::Ascii("mias"),
@@ -21198,32 +21166,32 @@ pub static VARS_TRIE_ANE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = d
     range: 3..=14,
 };
 
-static VARS_TRIE_ANA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Nested(&VARS_TRIE_ANA_CHILDREN),
+static VARS_ANA_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Nested(&VARS_ANA_CHILDREN),
     value: None,
 };
 
-static VARS_TRIE_ANA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
+static VARS_ANA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMap)]>>; 26] = [
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_ANAE_NODE),
+    Some(&VARS_ANAE_NODE),
     None,
-    Some(&VARS_TRIE_ANAG_NODE),
-    None,
-    None,
+    Some(&VARS_ANAG_NODE),
     None,
     None,
-    Some(&VARS_TRIE_ANAL_NODE),
     None,
     None,
+    Some(&VARS_ANAL_NODE),
     None,
     None,
     None,
     None,
     None,
-    Some(&VARS_TRIE_ANAT_NODE),
+    None,
+    None,
+    Some(&VARS_ANAT_NODE),
     None,
     None,
     None,
@@ -21232,226 +21200,222 @@ static VARS_TRIE_ANA_CHILDREN: [Option<&dictgen::DictTrieNode<&[(u8, &VariantsMa
     None,
 ];
 
-static VARS_TRIE_ANAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANAT_CHILDREN),
+static VARS_ANAT_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANAT_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("hematise"),
-            dictgen::InsensitiveStr::Ascii("hematised"),
-            dictgen::InsensitiveStr::Ascii("hematises"),
-            dictgen::InsensitiveStr::Ascii("hematising"),
-            dictgen::InsensitiveStr::Ascii("hematize"),
-            dictgen::InsensitiveStr::Ascii("hematized"),
-            dictgen::InsensitiveStr::Ascii("hematizes"),
-            dictgen::InsensitiveStr::Ascii("hematizing"),
-            dictgen::InsensitiveStr::Ascii("omise"),
-            dictgen::InsensitiveStr::Ascii("omised"),
-            dictgen::InsensitiveStr::Ascii("omises"),
-            dictgen::InsensitiveStr::Ascii("omising"),
-            dictgen::InsensitiveStr::Ascii("omize"),
-            dictgen::InsensitiveStr::Ascii("omized"),
-            dictgen::InsensitiveStr::Ascii("omizes"),
-            dictgen::InsensitiveStr::Ascii("omizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_ANATHEMATIZE_8985478249302198786)],
-            &[(0b10010, &ENTRY_ANATHEMATIZED_14882382556399376184)],
-            &[(0b10010, &ENTRY_ANATHEMATIZES_1397436506406873414)],
-            &[(0b10010, &ENTRY_ANATHEMATIZING_3364254909178814387)],
-            &[(0b01001, &ENTRY_ANATHEMATIZE_8985478249302198786)],
-            &[(0b01001, &ENTRY_ANATHEMATIZED_14882382556399376184)],
-            &[(0b01001, &ENTRY_ANATHEMATIZES_1397436506406873414)],
-            &[(0b01001, &ENTRY_ANATHEMATIZING_3364254909178814387)],
-            &[(0b10010, &ENTRY_ANATOMIZE_5992811181160301723)],
-            &[(0b10010, &ENTRY_ANATOMIZED_15278909516951232818)],
-            &[(0b10010, &ENTRY_ANATOMIZES_9984137617813051385)],
-            &[(0b10010, &ENTRY_ANATOMIZING_16127461066028765958)],
-            &[(0b01001, &ENTRY_ANATOMIZE_5992811181160301723)],
-            &[(0b01001, &ENTRY_ANATOMIZED_15278909516951232818)],
-            &[(0b01001, &ENTRY_ANATOMIZES_9984137617813051385)],
-            &[(0b01001, &ENTRY_ANATOMIZING_16127461066028765958)],
-        ],
-        range: 5..=10,
-    };
+pub static VARS_ANAT_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("hematise"),
+        dictgen::InsensitiveStr::Ascii("hematised"),
+        dictgen::InsensitiveStr::Ascii("hematises"),
+        dictgen::InsensitiveStr::Ascii("hematising"),
+        dictgen::InsensitiveStr::Ascii("hematize"),
+        dictgen::InsensitiveStr::Ascii("hematized"),
+        dictgen::InsensitiveStr::Ascii("hematizes"),
+        dictgen::InsensitiveStr::Ascii("hematizing"),
+        dictgen::InsensitiveStr::Ascii("omise"),
+        dictgen::InsensitiveStr::Ascii("omised"),
+        dictgen::InsensitiveStr::Ascii("omises"),
+        dictgen::InsensitiveStr::Ascii("omising"),
+        dictgen::InsensitiveStr::Ascii("omize"),
+        dictgen::InsensitiveStr::Ascii("omized"),
+        dictgen::InsensitiveStr::Ascii("omizes"),
+        dictgen::InsensitiveStr::Ascii("omizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_ANATHEMATIZE_8985478249302198786)],
+        &[(0b10010, &ENTRY_ANATHEMATIZED_14882382556399376184)],
+        &[(0b10010, &ENTRY_ANATHEMATIZES_1397436506406873414)],
+        &[(0b10010, &ENTRY_ANATHEMATIZING_3364254909178814387)],
+        &[(0b01001, &ENTRY_ANATHEMATIZE_8985478249302198786)],
+        &[(0b01001, &ENTRY_ANATHEMATIZED_14882382556399376184)],
+        &[(0b01001, &ENTRY_ANATHEMATIZES_1397436506406873414)],
+        &[(0b01001, &ENTRY_ANATHEMATIZING_3364254909178814387)],
+        &[(0b10010, &ENTRY_ANATOMIZE_5992811181160301723)],
+        &[(0b10010, &ENTRY_ANATOMIZED_15278909516951232818)],
+        &[(0b10010, &ENTRY_ANATOMIZES_9984137617813051385)],
+        &[(0b10010, &ENTRY_ANATOMIZING_16127461066028765958)],
+        &[(0b01001, &ENTRY_ANATOMIZE_5992811181160301723)],
+        &[(0b01001, &ENTRY_ANATOMIZED_15278909516951232818)],
+        &[(0b01001, &ENTRY_ANATOMIZES_9984137617813051385)],
+        &[(0b01001, &ENTRY_ANATOMIZING_16127461066028765958)],
+    ],
+    range: 5..=10,
+};
 
-static VARS_TRIE_ANAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANAL_CHILDREN),
+static VARS_ANAL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANAL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("ogise"),
-            dictgen::InsensitiveStr::Ascii("ogised"),
-            dictgen::InsensitiveStr::Ascii("ogises"),
-            dictgen::InsensitiveStr::Ascii("ogising"),
-            dictgen::InsensitiveStr::Ascii("ogize"),
-            dictgen::InsensitiveStr::Ascii("ogized"),
-            dictgen::InsensitiveStr::Ascii("ogizes"),
-            dictgen::InsensitiveStr::Ascii("ogizing"),
-            dictgen::InsensitiveStr::Ascii("ysable"),
-            dictgen::InsensitiveStr::Ascii("ysabler"),
-            dictgen::InsensitiveStr::Ascii("ysablest"),
-            dictgen::InsensitiveStr::Ascii("yse"),
-            dictgen::InsensitiveStr::Ascii("ysed"),
-            dictgen::InsensitiveStr::Ascii("yser"),
-            dictgen::InsensitiveStr::Ascii("ysers"),
-            dictgen::InsensitiveStr::Ascii("ysing"),
-            dictgen::InsensitiveStr::Ascii("yzable"),
-            dictgen::InsensitiveStr::Ascii("yzabler"),
-            dictgen::InsensitiveStr::Ascii("yzablest"),
-            dictgen::InsensitiveStr::Ascii("yze"),
-            dictgen::InsensitiveStr::Ascii("yzed"),
-            dictgen::InsensitiveStr::Ascii("yzer"),
-            dictgen::InsensitiveStr::Ascii("yzers"),
-            dictgen::InsensitiveStr::Ascii("yzes"),
-            dictgen::InsensitiveStr::Ascii("yzing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_ANALOGIZE_3496372555061910029)],
-            &[(0b10010, &ENTRY_ANALOGIZED_7650212126382953539)],
-            &[(0b10010, &ENTRY_ANALOGIZES_13569410805636149254)],
-            &[(0b10010, &ENTRY_ANALOGIZING_5745351008205937159)],
-            &[(0b01001, &ENTRY_ANALOGIZE_3496372555061910029)],
-            &[(0b01001, &ENTRY_ANALOGIZED_7650212126382953539)],
-            &[(0b01001, &ENTRY_ANALOGIZES_13569410805636149254)],
-            &[(0b01001, &ENTRY_ANALOGIZING_5745351008205937159)],
-            &[(0b10010, &ENTRY_ANALYZABLE_6620659606031844316)],
-            &[(0b10010, &ENTRY_ANALYZABLER_1175108799224565364)],
-            &[(0b10010, &ENTRY_ANALYZABLEST_6927325114662775659)],
-            &[(0b11010, &ENTRY_ANALYZE_12128484930486970639)],
-            &[(0b11010, &ENTRY_ANALYZED_15674848014505848991)],
-            &[(0b10010, &ENTRY_ANALYZER_5869658529883306960)],
-            &[(0b10010, &ENTRY_ANALYZERS_1666949323375308230)],
-            &[(0b11010, &ENTRY_ANALYZING_15099411830060036147)],
-            &[(0b01001, &ENTRY_ANALYZABLE_6620659606031844316)],
-            &[(0b01001, &ENTRY_ANALYZABLER_1175108799224565364)],
-            &[(0b01001, &ENTRY_ANALYZABLEST_6927325114662775659)],
-            &[(0b01001, &ENTRY_ANALYZE_12128484930486970639)],
-            &[(0b01001, &ENTRY_ANALYZED_15674848014505848991)],
-            &[(0b01001, &ENTRY_ANALYZER_5869658529883306960)],
-            &[(0b01001, &ENTRY_ANALYZERS_1666949323375308230)],
-            &[(0b01001, &ENTRY_ANALYZES_2322356799829770580)],
-            &[(0b01001, &ENTRY_ANALYZING_15099411830060036147)],
-        ],
-        range: 3..=8,
-    };
+pub static VARS_ANAL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("ogise"),
+        dictgen::InsensitiveStr::Ascii("ogised"),
+        dictgen::InsensitiveStr::Ascii("ogises"),
+        dictgen::InsensitiveStr::Ascii("ogising"),
+        dictgen::InsensitiveStr::Ascii("ogize"),
+        dictgen::InsensitiveStr::Ascii("ogized"),
+        dictgen::InsensitiveStr::Ascii("ogizes"),
+        dictgen::InsensitiveStr::Ascii("ogizing"),
+        dictgen::InsensitiveStr::Ascii("ysable"),
+        dictgen::InsensitiveStr::Ascii("ysabler"),
+        dictgen::InsensitiveStr::Ascii("ysablest"),
+        dictgen::InsensitiveStr::Ascii("yse"),
+        dictgen::InsensitiveStr::Ascii("ysed"),
+        dictgen::InsensitiveStr::Ascii("yser"),
+        dictgen::InsensitiveStr::Ascii("ysers"),
+        dictgen::InsensitiveStr::Ascii("ysing"),
+        dictgen::InsensitiveStr::Ascii("yzable"),
+        dictgen::InsensitiveStr::Ascii("yzabler"),
+        dictgen::InsensitiveStr::Ascii("yzablest"),
+        dictgen::InsensitiveStr::Ascii("yze"),
+        dictgen::InsensitiveStr::Ascii("yzed"),
+        dictgen::InsensitiveStr::Ascii("yzer"),
+        dictgen::InsensitiveStr::Ascii("yzers"),
+        dictgen::InsensitiveStr::Ascii("yzes"),
+        dictgen::InsensitiveStr::Ascii("yzing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_ANALOGIZE_3496372555061910029)],
+        &[(0b10010, &ENTRY_ANALOGIZED_7650212126382953539)],
+        &[(0b10010, &ENTRY_ANALOGIZES_13569410805636149254)],
+        &[(0b10010, &ENTRY_ANALOGIZING_5745351008205937159)],
+        &[(0b01001, &ENTRY_ANALOGIZE_3496372555061910029)],
+        &[(0b01001, &ENTRY_ANALOGIZED_7650212126382953539)],
+        &[(0b01001, &ENTRY_ANALOGIZES_13569410805636149254)],
+        &[(0b01001, &ENTRY_ANALOGIZING_5745351008205937159)],
+        &[(0b10010, &ENTRY_ANALYZABLE_6620659606031844316)],
+        &[(0b10010, &ENTRY_ANALYZABLER_1175108799224565364)],
+        &[(0b10010, &ENTRY_ANALYZABLEST_6927325114662775659)],
+        &[(0b11010, &ENTRY_ANALYZE_12128484930486970639)],
+        &[(0b11010, &ENTRY_ANALYZED_15674848014505848991)],
+        &[(0b10010, &ENTRY_ANALYZER_5869658529883306960)],
+        &[(0b10010, &ENTRY_ANALYZERS_1666949323375308230)],
+        &[(0b11010, &ENTRY_ANALYZING_15099411830060036147)],
+        &[(0b01001, &ENTRY_ANALYZABLE_6620659606031844316)],
+        &[(0b01001, &ENTRY_ANALYZABLER_1175108799224565364)],
+        &[(0b01001, &ENTRY_ANALYZABLEST_6927325114662775659)],
+        &[(0b01001, &ENTRY_ANALYZE_12128484930486970639)],
+        &[(0b01001, &ENTRY_ANALYZED_15674848014505848991)],
+        &[(0b01001, &ENTRY_ANALYZER_5869658529883306960)],
+        &[(0b01001, &ENTRY_ANALYZERS_1666949323375308230)],
+        &[(0b01001, &ENTRY_ANALYZES_2322356799829770580)],
+        &[(0b01001, &ENTRY_ANALYZING_15099411830060036147)],
+    ],
+    range: 3..=8,
+};
 
-static VARS_TRIE_ANAG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANAG_CHILDREN),
+static VARS_ANAG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANAG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("rammatise"),
-            dictgen::InsensitiveStr::Ascii("rammatised"),
-            dictgen::InsensitiveStr::Ascii("rammatises"),
-            dictgen::InsensitiveStr::Ascii("rammatising"),
-            dictgen::InsensitiveStr::Ascii("rammatize"),
-            dictgen::InsensitiveStr::Ascii("rammatized"),
-            dictgen::InsensitiveStr::Ascii("rammatizes"),
-            dictgen::InsensitiveStr::Ascii("rammatizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_ANAGRAMMATIZE_5529917246968520880)],
-            &[(0b10010, &ENTRY_ANAGRAMMATIZED_12777276468218717735)],
-            &[(0b10010, &ENTRY_ANAGRAMMATIZES_13672255743930960739)],
-            &[(0b10010, &ENTRY_ANAGRAMMATIZING_9269936032771734368)],
-            &[(0b01001, &ENTRY_ANAGRAMMATIZE_5529917246968520880)],
-            &[(0b01001, &ENTRY_ANAGRAMMATIZED_12777276468218717735)],
-            &[(0b01001, &ENTRY_ANAGRAMMATIZES_13672255743930960739)],
-            &[(0b01001, &ENTRY_ANAGRAMMATIZING_9269936032771734368)],
-        ],
-        range: 9..=11,
-    };
+pub static VARS_ANAG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("rammatise"),
+        dictgen::InsensitiveStr::Ascii("rammatised"),
+        dictgen::InsensitiveStr::Ascii("rammatises"),
+        dictgen::InsensitiveStr::Ascii("rammatising"),
+        dictgen::InsensitiveStr::Ascii("rammatize"),
+        dictgen::InsensitiveStr::Ascii("rammatized"),
+        dictgen::InsensitiveStr::Ascii("rammatizes"),
+        dictgen::InsensitiveStr::Ascii("rammatizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_ANAGRAMMATIZE_5529917246968520880)],
+        &[(0b10010, &ENTRY_ANAGRAMMATIZED_12777276468218717735)],
+        &[(0b10010, &ENTRY_ANAGRAMMATIZES_13672255743930960739)],
+        &[(0b10010, &ENTRY_ANAGRAMMATIZING_9269936032771734368)],
+        &[(0b01001, &ENTRY_ANAGRAMMATIZE_5529917246968520880)],
+        &[(0b01001, &ENTRY_ANAGRAMMATIZED_12777276468218717735)],
+        &[(0b01001, &ENTRY_ANAGRAMMATIZES_13672255743930960739)],
+        &[(0b01001, &ENTRY_ANAGRAMMATIZING_9269936032771734368)],
+    ],
+    range: 9..=11,
+};
 
-static VARS_TRIE_ANAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_ANAE_CHILDREN),
+static VARS_ANAE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_ANAE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_ANAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> =
-    dictgen::DictTable {
-        keys: &[
-            dictgen::InsensitiveStr::Ascii("mia"),
-            dictgen::InsensitiveStr::Ascii("mias"),
-            dictgen::InsensitiveStr::Ascii("mic"),
-            dictgen::InsensitiveStr::Ascii("micer"),
-            dictgen::InsensitiveStr::Ascii("micest"),
-            dictgen::InsensitiveStr::Ascii("mics"),
-            dictgen::InsensitiveStr::Ascii("sthesia"),
-            dictgen::InsensitiveStr::Ascii("sthesias"),
-            dictgen::InsensitiveStr::Ascii("sthesiologies"),
-            dictgen::InsensitiveStr::Ascii("sthesiologist"),
-            dictgen::InsensitiveStr::Ascii("sthesiologists"),
-            dictgen::InsensitiveStr::Ascii("sthesiology"),
-            dictgen::InsensitiveStr::Ascii("sthetic"),
-            dictgen::InsensitiveStr::Ascii("stheticer"),
-            dictgen::InsensitiveStr::Ascii("stheticest"),
-            dictgen::InsensitiveStr::Ascii("sthetics"),
-            dictgen::InsensitiveStr::Ascii("sthetisation"),
-            dictgen::InsensitiveStr::Ascii("sthetisations"),
-            dictgen::InsensitiveStr::Ascii("sthetise"),
-            dictgen::InsensitiveStr::Ascii("sthetised"),
-            dictgen::InsensitiveStr::Ascii("sthetises"),
-            dictgen::InsensitiveStr::Ascii("sthetising"),
-            dictgen::InsensitiveStr::Ascii("sthetist"),
-            dictgen::InsensitiveStr::Ascii("sthetists"),
-            dictgen::InsensitiveStr::Ascii("sthetization"),
-            dictgen::InsensitiveStr::Ascii("sthetizations"),
-            dictgen::InsensitiveStr::Ascii("sthetize"),
-            dictgen::InsensitiveStr::Ascii("sthetized"),
-            dictgen::InsensitiveStr::Ascii("sthetizes"),
-            dictgen::InsensitiveStr::Ascii("sthetizing"),
-        ],
-        values: &[
-            &[(0b10010, &ENTRY_ANEMIA_17351338060107863650)],
-            &[(0b10010, &ENTRY_ANEMIAS_9703736074959593780)],
-            &[(0b10010, &ENTRY_ANEMIC_110986479873166850)],
-            &[(0b10010, &ENTRY_ANEMICER_10489187624102082516)],
-            &[(0b10010, &ENTRY_ANEMICEST_16912294123173826264)],
-            &[(0b10010, &ENTRY_ANEMICS_16585338697348245033)],
-            &[(0b11010, &ENTRY_ANESTHESIA_7949842536189154112)],
-            &[(0b11010, &ENTRY_ANESTHESIAS_4599764321131919802)],
-            &[(0b10010, &ENTRY_ANESTHESIOLOGIES_140878230116787033)],
-            &[(0b10010, &ENTRY_ANESTHESIOLOGIST_11739214388783841528)],
-            &[(0b10010, &ENTRY_ANESTHESIOLOGISTS_5917925088694288121)],
-            &[(0b10010, &ENTRY_ANESTHESIOLOGY_17372491589772115476)],
-            &[(0b11010, &ENTRY_ANESTHETIC_14288529759943853831)],
-            &[(0b11010, &ENTRY_ANESTHETICER_2077884160248687026)],
-            &[(0b11010, &ENTRY_ANESTHETICEST_9846998351210964261)],
-            &[(0b11010, &ENTRY_ANESTHETICS_14641815304467888505)],
-            &[(0b10010, &ENTRY_ANESTHETIZATION_16202486391697802084)],
-            &[(0b10010, &ENTRY_ANESTHETIZATIONS_12188987204886505606)],
-            &[(0b10010, &ENTRY_ANESTHETIZE_14671518822963641349)],
-            &[(0b10010, &ENTRY_ANESTHETIZED_16430560117590162734)],
-            &[(0b10010, &ENTRY_ANESTHETIZES_6012915426134202133)],
-            &[(0b10010, &ENTRY_ANESTHETIZING_9434687273852626047)],
-            &[(0b11010, &ENTRY_ANESTHETIST_11538281420926207852)],
-            &[(0b11010, &ENTRY_ANESTHETISTS_8704279203965849778)],
-            &[(0b01000, &ENTRY_ANESTHETIZATION_16202486391697802084)],
-            &[(0b01000, &ENTRY_ANESTHETIZATIONS_12188987204886505606)],
-            &[(0b01000, &ENTRY_ANESTHETIZE_14671518822963641349)],
-            &[(0b01000, &ENTRY_ANESTHETIZED_16430560117590162734)],
-            &[(0b01000, &ENTRY_ANESTHETIZES_6012915426134202133)],
-            &[(0b01000, &ENTRY_ANESTHETIZING_9434687273852626047)],
-        ],
-        range: 3..=14,
-    };
+pub static VARS_ANAE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+    keys: &[
+        dictgen::InsensitiveStr::Ascii("mia"),
+        dictgen::InsensitiveStr::Ascii("mias"),
+        dictgen::InsensitiveStr::Ascii("mic"),
+        dictgen::InsensitiveStr::Ascii("micer"),
+        dictgen::InsensitiveStr::Ascii("micest"),
+        dictgen::InsensitiveStr::Ascii("mics"),
+        dictgen::InsensitiveStr::Ascii("sthesia"),
+        dictgen::InsensitiveStr::Ascii("sthesias"),
+        dictgen::InsensitiveStr::Ascii("sthesiologies"),
+        dictgen::InsensitiveStr::Ascii("sthesiologist"),
+        dictgen::InsensitiveStr::Ascii("sthesiologists"),
+        dictgen::InsensitiveStr::Ascii("sthesiology"),
+        dictgen::InsensitiveStr::Ascii("sthetic"),
+        dictgen::InsensitiveStr::Ascii("stheticer"),
+        dictgen::InsensitiveStr::Ascii("stheticest"),
+        dictgen::InsensitiveStr::Ascii("sthetics"),
+        dictgen::InsensitiveStr::Ascii("sthetisation"),
+        dictgen::InsensitiveStr::Ascii("sthetisations"),
+        dictgen::InsensitiveStr::Ascii("sthetise"),
+        dictgen::InsensitiveStr::Ascii("sthetised"),
+        dictgen::InsensitiveStr::Ascii("sthetises"),
+        dictgen::InsensitiveStr::Ascii("sthetising"),
+        dictgen::InsensitiveStr::Ascii("sthetist"),
+        dictgen::InsensitiveStr::Ascii("sthetists"),
+        dictgen::InsensitiveStr::Ascii("sthetization"),
+        dictgen::InsensitiveStr::Ascii("sthetizations"),
+        dictgen::InsensitiveStr::Ascii("sthetize"),
+        dictgen::InsensitiveStr::Ascii("sthetized"),
+        dictgen::InsensitiveStr::Ascii("sthetizes"),
+        dictgen::InsensitiveStr::Ascii("sthetizing"),
+    ],
+    values: &[
+        &[(0b10010, &ENTRY_ANEMIA_17351338060107863650)],
+        &[(0b10010, &ENTRY_ANEMIAS_9703736074959593780)],
+        &[(0b10010, &ENTRY_ANEMIC_110986479873166850)],
+        &[(0b10010, &ENTRY_ANEMICER_10489187624102082516)],
+        &[(0b10010, &ENTRY_ANEMICEST_16912294123173826264)],
+        &[(0b10010, &ENTRY_ANEMICS_16585338697348245033)],
+        &[(0b11010, &ENTRY_ANESTHESIA_7949842536189154112)],
+        &[(0b11010, &ENTRY_ANESTHESIAS_4599764321131919802)],
+        &[(0b10010, &ENTRY_ANESTHESIOLOGIES_140878230116787033)],
+        &[(0b10010, &ENTRY_ANESTHESIOLOGIST_11739214388783841528)],
+        &[(0b10010, &ENTRY_ANESTHESIOLOGISTS_5917925088694288121)],
+        &[(0b10010, &ENTRY_ANESTHESIOLOGY_17372491589772115476)],
+        &[(0b11010, &ENTRY_ANESTHETIC_14288529759943853831)],
+        &[(0b11010, &ENTRY_ANESTHETICER_2077884160248687026)],
+        &[(0b11010, &ENTRY_ANESTHETICEST_9846998351210964261)],
+        &[(0b11010, &ENTRY_ANESTHETICS_14641815304467888505)],
+        &[(0b10010, &ENTRY_ANESTHETIZATION_16202486391697802084)],
+        &[(0b10010, &ENTRY_ANESTHETIZATIONS_12188987204886505606)],
+        &[(0b10010, &ENTRY_ANESTHETIZE_14671518822963641349)],
+        &[(0b10010, &ENTRY_ANESTHETIZED_16430560117590162734)],
+        &[(0b10010, &ENTRY_ANESTHETIZES_6012915426134202133)],
+        &[(0b10010, &ENTRY_ANESTHETIZING_9434687273852626047)],
+        &[(0b11010, &ENTRY_ANESTHETIST_11538281420926207852)],
+        &[(0b11010, &ENTRY_ANESTHETISTS_8704279203965849778)],
+        &[(0b01000, &ENTRY_ANESTHETIZATION_16202486391697802084)],
+        &[(0b01000, &ENTRY_ANESTHETIZATIONS_12188987204886505606)],
+        &[(0b01000, &ENTRY_ANESTHETIZE_14671518822963641349)],
+        &[(0b01000, &ENTRY_ANESTHETIZED_16430560117590162734)],
+        &[(0b01000, &ENTRY_ANESTHETIZES_6012915426134202133)],
+        &[(0b01000, &ENTRY_ANESTHETIZING_9434687273852626047)],
+    ],
+    range: 3..=14,
+};
 
-static VARS_TRIE_AM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AM_CHILDREN),
+static VARS_AM_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AM_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eba"),
         dictgen::InsensitiveStr::Ascii("ebae"),
@@ -21533,12 +21497,12 @@ pub static VARS_TRIE_AM_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=14,
 };
 
-static VARS_TRIE_AL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AL_CHILDREN),
+static VARS_AL_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AL_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("chemise"),
         dictgen::InsensitiveStr::Ascii("chemised"),
@@ -21652,12 +21616,12 @@ pub static VARS_TRIE_AL_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 3..=14,
 };
 
-static VARS_TRIE_AI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AI_CHILDREN),
+static VARS_AI_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AI_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rfoil"),
         dictgen::InsensitiveStr::Ascii("rfoils"),
@@ -21673,12 +21637,12 @@ pub static VARS_TRIE_AI_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=7,
 };
 
-static VARS_TRIE_AG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AG_CHILDREN),
+static VARS_AG_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AG_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("grandise"),
         dictgen::InsensitiveStr::Ascii("grandised"),
@@ -21746,12 +21710,12 @@ pub static VARS_TRIE_AG_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 5..=13,
 };
 
-static VARS_TRIE_AF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AF_CHILDREN),
+static VARS_AF_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AF_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ricanise"),
         dictgen::InsensitiveStr::Ascii("ricanised"),
@@ -21777,12 +21741,12 @@ pub static VARS_TRIE_AF_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 7..=10,
 };
 
-static VARS_TRIE_AE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AE_CHILDREN),
+static VARS_AE_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AE_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rofoil"),
         dictgen::InsensitiveStr::Ascii("rofoils"),
@@ -21818,12 +21782,12 @@ pub static VARS_TRIE_AE_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=12,
 };
 
-static VARS_TRIE_AD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AD_CHILDREN),
+static VARS_AD_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AD_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("vertize"),
         dictgen::InsensitiveStr::Ascii("vertized"),
@@ -21845,12 +21809,12 @@ pub static VARS_TRIE_AD_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 1..=12,
 };
 
-static VARS_TRIE_AC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AC_CHILDREN),
+static VARS_AC_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AC_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cessorise"),
         dictgen::InsensitiveStr::Ascii("cessorised"),
@@ -21934,12 +21898,12 @@ pub static VARS_TRIE_AC_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = di
     range: 6..=13,
 };
 
-static VARS_TRIE_AB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
-    children: dictgen::DictTrieChild::Flat(&VARS_TRIE_AB_CHILDREN),
+static VARS_AB_NODE: dictgen::DictTrieNode<&[(u8, &VariantsMap)]> = dictgen::DictTrieNode {
+    children: dictgen::DictTrieChild::Flat(&VARS_AB_CHILDREN),
     value: None,
 };
 
-pub static VARS_TRIE_AB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
+pub static VARS_AB_CHILDREN: dictgen::DictTable<&[(u8, &VariantsMap)]> = dictgen::DictTable {
     keys: &[
         dictgen::InsensitiveStr::Ascii("etter"),
         dictgen::InsensitiveStr::Ascii("etters"),

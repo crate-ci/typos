@@ -85,7 +85,7 @@ fn generate_variations<W: Write>(file: &mut W) {
     let entry_sets = entry_sets(entries.iter());
     let mut referenced_symbols: HashSet<&str> = HashSet::new();
     dictgen::DictGen::new()
-        .name("VARS_TRIE")
+        .name("VARS")
         .value_type("&[(u8, &VariantsMap)]")
         .trie()
         .write(
