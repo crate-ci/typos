@@ -16,7 +16,7 @@ mod miss {
 
     #[divan::bench(args = [unicase::UniCase::new(MISS)])]
     fn trie(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
-        trie_codegen::WORD_TRIE.find(&word)
+        trie_codegen::WORD.find(&word)
     }
 
     #[divan::bench(args = [unicase::UniCase::new(MISS)])]
@@ -37,7 +37,7 @@ mod hit {
 
     #[divan::bench(args = [unicase::UniCase::new(HIT)])]
     fn trie(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
-        trie_codegen::WORD_TRIE.find(&word)
+        trie_codegen::WORD.find(&word)
     }
 
     #[divan::bench(args = [unicase::UniCase::new(HIT)])]

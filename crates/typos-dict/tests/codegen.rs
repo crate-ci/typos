@@ -3,7 +3,7 @@ fn codegen() {
     const DICT: &[u8] = include_bytes!("../assets/words.csv");
 
     let mut trie_content = vec![];
-    generate_trie(&mut trie_content, "WORD_TRIE", DICT);
+    generate_trie(&mut trie_content, "WORD", DICT);
     let trie_content = String::from_utf8(trie_content).unwrap();
     let trie_content = codegenrs::rustfmt(&trie_content, None).unwrap();
     snapbox::assert_data_eq!(

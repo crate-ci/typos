@@ -61,7 +61,7 @@ impl BuiltIn {
 
     // Not using `Status` to avoid the allocations
     fn correct_word_with_dict(&self, word: UniCase<&str>) -> Option<&'static [&'static str]> {
-        typos_dict::WORD_TRIE.find(&word).copied()
+        typos_dict::WORD.find(&word).copied()
     }
 }
 
