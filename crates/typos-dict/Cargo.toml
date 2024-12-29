@@ -24,10 +24,15 @@ itertools = "0.13"
 edit-distance = "2.1"
 unicase = "2.7"
 codegenrs = "3.0"
-dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
+dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen", "map"] }
 varcon = { version = "^1.0", path = "../varcon" }
 snapbox = "0.6.5"
 indexmap = "2.2.6"
+divan = "0.1.16"
 
 [lints]
 workspace = true
+
+[[bench]]
+name = "benches"
+harness = false
