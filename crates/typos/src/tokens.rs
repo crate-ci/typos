@@ -1,7 +1,7 @@
 use bstr::ByteSlice;
 use winnow::BStr;
 
-/// Define rules for tokenizaing a buffer.
+/// Define rules for tokenizing a buffer.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TokenizerBuilder {
     unicode: bool,
