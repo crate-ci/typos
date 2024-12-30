@@ -36,7 +36,11 @@ impl<'g> DictGen<'g> {
 
     #[cfg(feature = "map")]
     pub fn map(self) -> crate::MapGen<'g> {
-        crate::MapGen { gen: self }
+        crate::MapGen {
+            gen: self,
+            unicode: true,
+            unicase: true,
+        }
     }
 
     pub fn ordered_map(self) -> crate::OrderedMapGen<'g> {

@@ -1,10 +1,22 @@
 #[cfg(feature = "codegen")]
 pub struct MapGen<'g> {
     pub(crate) gen: crate::DictGen<'g>,
+    pub(crate) unicase: bool,
+    pub(crate) unicode: bool,
 }
 
 #[cfg(feature = "codegen")]
 impl MapGen<'_> {
+    pub fn unicase(mut self, yes: bool) -> Self {
+        self.unicase = yes;
+        self
+    }
+
+    pub fn unicode(mut self, yes: bool) -> Self {
+        self.unicode = yes;
+        self
+    }
+
     pub fn write<'d, W: std::io::Write, V: std::fmt::Display>(
         &self,
         file: &mut W,
@@ -14,7 +26,7 @@ impl MapGen<'_> {
         data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0));
 
         let name = self.gen.name;
-        let key_type = "dictgen::InsensitiveStr<'static>";
+        let key_type = self.key_type();
         let value_type = self.gen.value_type;
 
         let mut smallest = usize::MAX;
@@ -32,30 +44,66 @@ impl MapGen<'_> {
             "pub static {name}: dictgen::Map<{key_type}, {value_type}> = dictgen::Map {{"
         )?;
 
-        let mut builder = phf_codegen::Map::new();
-        let data = data
-            .iter()
-            .map(|(key, value)| {
-                (
-                    if key.is_ascii() {
-                        crate::InsensitiveStr::Ascii(key)
-                    } else {
-                        crate::InsensitiveStr::Unicode(key)
-                    },
-                    value.to_string(),
-                )
-            })
-            .collect::<Vec<_>>();
-        for (key, value) in data.iter() {
-            builder.entry(key, value.as_str());
+        match (self.unicase, self.unicode) {
+            (true, true) => {
+                let mut builder = phf_codegen::Map::new();
+                let data = data
+                    .iter()
+                    .map(|(key, value)| {
+                        (
+                            if key.is_ascii() {
+                                crate::InsensitiveStr::Ascii(key)
+                            } else {
+                                crate::InsensitiveStr::Unicode(key)
+                            },
+                            value.to_string(),
+                        )
+                    })
+                    .collect::<Vec<_>>();
+                for (key, value) in data.iter() {
+                    builder.entry(key, value.as_str());
+                }
+                let builder = builder.build();
+                writeln!(file, "    map: {builder},")?;
+            }
+            (true, false) => {
+                let mut builder = phf_codegen::Map::new();
+                let data = data
+                    .iter()
+                    .map(|(key, value)| (crate::InsensitiveAscii(key), value.to_string()))
+                    .collect::<Vec<_>>();
+                for (key, value) in data.iter() {
+                    builder.entry(key, value.as_str());
+                }
+                let builder = builder.build();
+                writeln!(file, "    map: {builder},")?;
+            }
+            (false, _) => {
+                let mut builder = phf_codegen::Map::new();
+                let data = data
+                    .iter()
+                    .map(|(key, value)| (key, value.to_string()))
+                    .collect::<Vec<_>>();
+                for (key, value) in data.iter() {
+                    builder.entry(key, value.as_str());
+                }
+                let builder = builder.build();
+                writeln!(file, "    map: {builder},")?;
+            }
         }
-        let builder = builder.build();
-        writeln!(file, "    map: {builder},")?;
 
         writeln!(file, "    range: {smallest}..={largest},")?;
         writeln!(file, "}};")?;
 
         Ok(())
+    }
+
+    fn key_type(&self) -> &'static str {
+        match (self.unicase, self.unicode) {
+            (true, true) => "dictgen::InsensitiveStr<'static>",
+            (true, false) => "dictgen::InsensitiveAscii<'static>",
+            (false, _) => "&'static str",
+        }
     }
 }
 
