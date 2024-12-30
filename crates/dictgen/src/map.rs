@@ -18,33 +18,35 @@ impl DictMapGen<'_> {
 
         let mut smallest = usize::MAX;
         let mut largest = usize::MIN;
-
-        writeln!(
-            file,
-            "pub static {name}: dictgen::DictTable<{value_type}> = dictgen::DictTable {{"
-        )?;
-        writeln!(file, "    keys: &[")?;
-        for (key, _value) in data.iter() {
+        let mut builder = phf_codegen::Map::new();
+        let data = data
+            .iter()
+            .map(|(key, value)| {
+                (
+                    if key.is_ascii() {
+                        crate::InsensitiveStr::Ascii(key)
+                    } else {
+                        crate::InsensitiveStr::Unicode(key)
+                    },
+                    value.to_string(),
+                )
+            })
+            .collect::<Vec<_>>();
+        for (key, value) in data.iter() {
             smallest = std::cmp::min(smallest, key.len());
             largest = std::cmp::max(largest, key.len());
-
-            let key = if key.is_ascii() {
-                format!("dictgen::InsensitiveStr::Ascii({key:?})")
-            } else {
-                format!("dictgen::InsensitiveStr::Unicode({key:?})")
-            };
-
-            writeln!(file, "      {key},")?;
+            builder.entry(key, value.as_str());
         }
+        let builder = builder.build();
         if largest == 0 {
             smallest = 0;
         }
-        writeln!(file, "    ],")?;
-        writeln!(file, "    values: &[")?;
-        for (_key, value) in data.iter() {
-            writeln!(file, "      {value},")?;
-        }
-        writeln!(file, "    ],")?;
+
+        writeln!(
+            file,
+            "pub static {name}: dictgen::DictMap<{value_type}> = dictgen::DictMap {{"
+        )?;
+        writeln!(file, "    map: {builder},")?;
         writeln!(file, "    range: {smallest}..={largest},")?;
         writeln!(file, "}};")?;
 

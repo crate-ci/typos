@@ -18,6 +18,18 @@ impl<'s> InsensitiveStr<'s> {
             InsensitiveStr::Unicode(s) | InsensitiveStr::Ascii(s) => s,
         }
     }
+
+    pub fn is_empty(self) -> bool {
+        match self {
+            InsensitiveStr::Unicode(s) | InsensitiveStr::Ascii(s) => s.is_empty(),
+        }
+    }
+
+    pub fn len(self) -> usize {
+        match self {
+            InsensitiveStr::Unicode(s) | InsensitiveStr::Ascii(s) => s.len(),
+        }
+    }
 }
 
 impl<'s> From<unicase::UniCase<&'s str>> for InsensitiveStr<'s> {
