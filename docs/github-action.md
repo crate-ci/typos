@@ -1,8 +1,24 @@
 # GitHub Action
 
 If you want an easy way to test your repository spelling (or a subset of files)
-you can use the Typos Action! It is served from this repository, and can
-easily be used as follows:
+you can use the Typos Action!
+
+## Input
+
+| Name               | Description                                                     | Required | Default                                              |
+| ------------------ | --------------------------------------------------------------- | -------- | ---------------------------------------------------- |
+| files              | Files or patterns to check                                      | false    | If not defined, the default set of files are checked |
+| extend_identifiers | Comma separated list of extend identifiers, like someone's name | false    | not set                                              |
+| extend_words       | Comma separated list of extend words.                           | false    | not set                                              |
+| isolated           | Ignore implicit configuration files                             | false    | false                                                |
+| write_changes      | Writes changes on the Action's local checkout                   | false    | false                                                |
+| config             | Use a custom config file (must exist)                           | false    | not set                                              |
+
+`write_changes`: doesn't commit or push anything to the branch. It only writes the changes locally
+to disk, and this can be combined with other actions, for instance that will [submit code
+suggestions based on that local diff](https://github.com/getsentry/action-git-diff-suggestions).
+
+### Examples
 
 ```yaml
 name: Test GitHub Action
@@ -38,18 +54,3 @@ jobs:
       with:
         write_changes: true
 ```
-
-## Input
-
-| Name               | Description                                                     | Required | Default                                              |
-| ------------------ | --------------------------------------------------------------- | -------- | ---------------------------------------------------- |
-| files              | Files or patterns to check                                      | false    | If not defined, the default set of files are checked |
-| extend_identifiers | Comma separated list of extend identifiers, like someone's name | false    | not set                                              |
-| extend_words       | Comma separated list of extend words.                           | false    | not set                                              |
-| isolated           | Ignore implicit configuration files                             | false    | false                                                |
-| write_changes      | Writes changes on the Action's local checkout                   | false    | false                                                |
-| config             | Use a custom config file (must exist)                           | false    | not set                                              |
-
-`write_changes`: doesn't commit or push anything to the branch. It only writes the changes locally
-to disk, and this can be combined with other actions, for instance that will [submit code
-suggestions based on that local diff](https://github.com/getsentry/action-git-diff-suggestions).
