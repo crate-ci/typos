@@ -32,48 +32,50 @@ pub struct DictTrie<V: 'static> {
 }
 
 impl<V> DictTrie<V> {
+    #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&'static V> {
-        if self.range.contains(&word.len()) {
-            let bytes = word.as_bytes();
+        if word.is_ascii() {
+            if self.range.contains(&word.len()) {
+                self.find_ascii(word.as_bytes())
+            } else {
+                None
+            }
+        } else {
+            self.unicode.find(word)
+        }
+    }
 
-            let mut child = &self.root;
-            for i in 0..bytes.len() {
-                match child.children {
-                    DictTrieChild::Nested(n) => {
-                        let byte = bytes[i];
-                        let index = if byte.is_ascii_lowercase() {
-                            byte - b'a'
-                        } else if byte.is_ascii_uppercase() {
-                            byte - b'A'
-                        } else {
-                            return self.unicode.find(word);
-                        };
-                        debug_assert!(index < 26);
-                        if let Some(next) = n[index as usize].as_ref() {
-                            child = next;
-                        } else {
-                            return None;
-                        }
-                    }
-                    DictTrieChild::Flat(t) => {
-                        let remaining = &bytes[i..bytes.len()];
-                        // Unsafe: Everything before has been proven to be ASCII, so this should be
-                        // safe.
-                        let remaining = unsafe { core::str::from_utf8_unchecked(remaining) };
-                        // Reuse the prior ascii check, rather than doing it again
-                        let remaining = if word.is_ascii() {
-                            unicase::UniCase::ascii(remaining)
-                        } else {
-                            unicase::UniCase::unicode(remaining)
-                        };
-                        return t.find(&remaining);
+    fn find_ascii(&self, word: &[u8]) -> Option<&'static V> {
+        let mut child = &self.root;
+        for i in 0..word.len() {
+            match child.children {
+                DictTrieChild::Nested(n) => {
+                    let byte = word[i];
+                    let index = if byte.is_ascii_lowercase() {
+                        byte - b'a'
+                    } else if byte.is_ascii_uppercase() {
+                        byte - b'A'
+                    } else {
+                        return None;
+                    };
+                    debug_assert!(index < 26);
+                    if let Some(next) = n[index as usize].as_ref() {
+                        child = next;
+                    } else {
+                        return None;
                     }
                 }
+                DictTrieChild::Flat(t) => {
+                    let remaining = &word[i..word.len()];
+                    // Unsafe: Everything before has been proven to be ASCII, so this should be
+                    // safe.
+                    let remaining = unsafe { core::str::from_utf8_unchecked(remaining) };
+                    let remaining = unicase::UniCase::ascii(remaining);
+                    return t.find(&remaining);
+                }
             }
-            child.value.as_ref()
-        } else {
-            None
         }
+        child.value.as_ref()
     }
 }
 

@@ -18,33 +18,35 @@ impl DictMapGen<'_> {
 
         let mut smallest = usize::MAX;
         let mut largest = usize::MIN;
-
-        writeln!(
-            file,
-            "pub static {name}: dictgen::DictTable<{value_type}> = dictgen::DictTable {{"
-        )?;
-        writeln!(file, "    keys: &[")?;
-        for (key, _value) in data.iter() {
+        let mut builder = phf_codegen::Map::new();
+        let data = data
+            .iter()
+            .map(|(key, value)| {
+                (
+                    if key.is_ascii() {
+                        crate::InsensitiveStr::Ascii(key)
+                    } else {
+                        crate::InsensitiveStr::Unicode(key)
+                    },
+                    value.to_string(),
+                )
+            })
+            .collect::<Vec<_>>();
+        for (key, value) in data.iter() {
             smallest = std::cmp::min(smallest, key.len());
             largest = std::cmp::max(largest, key.len());
-
-            let key = if key.is_ascii() {
-                format!("dictgen::InsensitiveStr::Ascii({key:?})")
-            } else {
-                format!("dictgen::InsensitiveStr::Unicode({key:?})")
-            };
-
-            writeln!(file, "      {key},")?;
+            builder.entry(key, value.as_str());
         }
+        let builder = builder.build();
         if largest == 0 {
             smallest = 0;
         }
-        writeln!(file, "    ],")?;
-        writeln!(file, "    values: &[")?;
-        for (_key, value) in data.iter() {
-            writeln!(file, "      {value},")?;
-        }
-        writeln!(file, "    ],")?;
+
+        writeln!(
+            file,
+            "pub static {name}: dictgen::DictMap<{value_type}> = dictgen::DictMap {{"
+        )?;
+        writeln!(file, "    map: {builder},")?;
         writeln!(file, "    range: {smallest}..={largest},")?;
         writeln!(file, "}};")?;
 
@@ -58,42 +60,12 @@ pub struct DictMap<V: 'static> {
 }
 
 impl<V> DictMap<V> {
+    #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&V> {
         if self.range.contains(&word.len()) {
             self.map.get(&(*word).into())
         } else {
             None
         }
-    }
-
-    pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&str>, &V)> + '_ {
-        self.map.entries().map(|(k, v)| (k.convert(), v))
-    }
-}
-
-impl phf_shared::PhfHash for crate::InsensitiveStr<'_> {
-    #[inline]
-    fn phf_hash<H: core::hash::Hasher>(&self, state: &mut H) {
-        core::hash::Hash::hash(self, state);
-    }
-}
-
-impl phf_shared::FmtConst for crate::InsensitiveStr<'_> {
-    fn fmt_const(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        match self {
-            crate::InsensitiveStr::Ascii(_) => f.write_str("dictgen::InsensitiveStr::Ascii(")?,
-            crate::InsensitiveStr::Unicode(_) => {
-                f.write_str("dictgen::InsensitiveStr::Unicode(")?;
-            }
-        }
-
-        self.into_inner().fmt_const(f)?;
-        f.write_str(")")
-    }
-}
-
-impl<'b, 'a: 'b> phf_shared::PhfBorrow<crate::InsensitiveStr<'b>> for crate::InsensitiveStr<'a> {
-    fn borrow(&self) -> &crate::InsensitiveStr<'b> {
-        self
     }
 }
