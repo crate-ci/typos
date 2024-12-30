@@ -14,6 +14,7 @@ impl MapGen<'_> {
         data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0));
 
         let name = self.gen.name;
+        let key_type = "dictgen::InsensitiveStr<'static>";
         let value_type = self.gen.value_type;
 
         let mut smallest = usize::MAX;
@@ -44,7 +45,7 @@ impl MapGen<'_> {
 
         writeln!(
             file,
-            "pub static {name}: dictgen::Map<{value_type}> = dictgen::Map {{"
+            "pub static {name}: dictgen::Map<{key_type}, {value_type}> = dictgen::Map {{"
         )?;
         writeln!(file, "    map: {builder},")?;
         writeln!(file, "    range: {smallest}..={largest},")?;
@@ -54,16 +55,38 @@ impl MapGen<'_> {
     }
 }
 
-pub struct Map<V: 'static> {
-    pub map: phf::Map<crate::InsensitiveStr<'static>, V>,
+pub struct Map<K: 'static, V: 'static> {
+    pub map: phf::Map<K, V>,
     pub range: std::ops::RangeInclusive<usize>,
 }
 
-impl<V> Map<V> {
+impl<V> Map<crate::InsensitiveStr<'_>, V> {
     #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&V> {
         if self.range.contains(&word.len()) {
             self.map.get(&(*word).into())
+        } else {
+            None
+        }
+    }
+}
+
+impl<V> Map<crate::InsensitiveAscii<'_>, V> {
+    #[inline]
+    pub fn find(&self, word: &'_ unicase::Ascii<&str>) -> Option<&V> {
+        if self.range.contains(&word.len()) {
+            self.map.get(&(*word).into())
+        } else {
+            None
+        }
+    }
+}
+
+impl<V> Map<&str, V> {
+    #[inline]
+    pub fn find(&self, word: &'_ &str) -> Option<&V> {
+        if self.range.contains(&word.len()) {
+            self.map.get(word)
         } else {
             None
         }
