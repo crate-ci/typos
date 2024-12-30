@@ -17,13 +17,13 @@ impl OrderedMapGen<'_> {
         self
     }
 
-    pub fn write<'d, W: std::io::Write, V: std::fmt::Display>(
+    pub fn write<W: std::io::Write, V: std::fmt::Display>(
         &self,
         file: &mut W,
-        data: impl Iterator<Item = (&'d str, V)>,
+        data: impl Iterator<Item = (impl AsRef<str>, V)>,
     ) -> Result<(), std::io::Error> {
         let mut data: Vec<_> = data.collect();
-        data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0));
+        data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0.as_ref().to_owned()));
 
         let name = self.gen.name;
         let key_type = self.key_type();
@@ -38,6 +38,7 @@ impl OrderedMapGen<'_> {
         )?;
         writeln!(file, "    keys: &[")?;
         for (key, _value) in data.iter() {
+            let key = key.as_ref();
             smallest = std::cmp::min(smallest, key.len());
             largest = std::cmp::max(largest, key.len());
 

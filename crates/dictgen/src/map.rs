@@ -17,13 +17,13 @@ impl MapGen<'_> {
         self
     }
 
-    pub fn write<'d, W: std::io::Write, V: std::fmt::Display>(
+    pub fn write<W: std::io::Write, V: std::fmt::Display>(
         &self,
         file: &mut W,
-        data: impl Iterator<Item = (&'d str, V)>,
+        data: impl Iterator<Item = (impl AsRef<str>, V)>,
     ) -> Result<(), std::io::Error> {
         let mut data: Vec<_> = data.collect();
-        data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0));
+        data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0.as_ref().to_owned()));
 
         let name = self.gen.name;
         let key_type = self.key_type();
@@ -32,6 +32,7 @@ impl MapGen<'_> {
         let mut smallest = usize::MAX;
         let mut largest = usize::MIN;
         for (key, _) in data.iter() {
+            let key = key.as_ref();
             smallest = std::cmp::min(smallest, key.len());
             largest = std::cmp::max(largest, key.len());
         }
@@ -50,6 +51,7 @@ impl MapGen<'_> {
                 let data = data
                     .iter()
                     .map(|(key, value)| {
+                        let key = key.as_ref();
                         (
                             if key.is_ascii() {
                                 crate::InsensitiveStr::Ascii(key)
@@ -70,7 +72,7 @@ impl MapGen<'_> {
                 let mut builder = phf_codegen::Map::new();
                 let data = data
                     .iter()
-                    .map(|(key, value)| (crate::InsensitiveAscii(key), value.to_string()))
+                    .map(|(key, value)| (crate::InsensitiveAscii(key.as_ref()), value.to_string()))
                     .collect::<Vec<_>>();
                 for (key, value) in data.iter() {
                     builder.entry(key, value.as_str());
@@ -85,7 +87,7 @@ impl MapGen<'_> {
                     .map(|(key, value)| (key, value.to_string()))
                     .collect::<Vec<_>>();
                 for (key, value) in data.iter() {
-                    builder.entry(key, value.as_str());
+                    builder.entry(key.as_ref(), value.as_str());
                 }
                 let builder = builder.build();
                 writeln!(file, "    map: {builder},")?;
