@@ -61,7 +61,7 @@ impl BuiltIn {
 
     // Not using `Status` to avoid the allocations
     fn correct_word_with_dict(&self, word: UniCase<&str>) -> Option<&'static [&'static str]> {
-        typos_dict::WORD_TRIE.find(&word).copied()
+        typos_dict::WORD.find(&word).copied()
     }
 }
 
@@ -106,7 +106,7 @@ impl BuiltIn {
 
     fn correct_with_vars(&self, word: UniCase<&str>) -> Option<Status<'static>> {
         if self.is_vars_enabled() {
-            typos_vars::VARS_TRIE
+            typos_vars::VARS
                 .find(&word)
                 .map(|variants| self.select_variant(variants))
         } else {

@@ -27,31 +27,37 @@ fn generate<W: std::io::Write>(file: &mut W) {
         british,
     } = parse_dict(DICT);
 
-    dictgen::generate_table(
-        file,
-        "MAIN_DICTIONARY",
-        "&[&str]",
-        main.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),
-    )
-    .unwrap();
+    dictgen::DictGen::new()
+        .name("MAIN_DICTIONARY")
+        .value_type("&[&str]")
+        .table()
+        .write(
+            file,
+            main.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),
+        )
+        .unwrap();
 
-    dictgen::generate_table(
-        file,
-        "AMERICAN_DICTIONARY",
-        "&[&str]",
-        american
-            .into_iter()
-            .map(|kv| (kv.0, format!("&{:?}", kv.1))),
-    )
-    .unwrap();
+    dictgen::DictGen::new()
+        .name("AMERICAN_DICTIONARY")
+        .value_type("&[&str]")
+        .table()
+        .write(
+            file,
+            american
+                .into_iter()
+                .map(|kv| (kv.0, format!("&{:?}", kv.1))),
+        )
+        .unwrap();
 
-    dictgen::generate_table(
-        file,
-        "BRITISH_DICTIONARY",
-        "&[&str]",
-        british.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),
-    )
-    .unwrap();
+    dictgen::DictGen::new()
+        .name("BRITISH_DICTIONARY")
+        .value_type("&[&str]")
+        .table()
+        .write(
+            file,
+            british.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),
+        )
+        .unwrap();
 }
 
 struct Words<'s> {

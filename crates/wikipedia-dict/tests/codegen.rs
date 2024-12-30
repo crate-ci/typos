@@ -21,13 +21,12 @@ fn generate<W: std::io::Write>(file: &mut W) {
 
     let dict = parse_dict(DICT);
 
-    dictgen::generate_table(
-        file,
-        "WORD_DICTIONARY",
-        "&[&str]",
-        dict.map(|kv| (kv.0, format!("&{:?}", kv.1))),
-    )
-    .unwrap();
+    dictgen::DictGen::new()
+        .name("WORD_DICTIONARY")
+        .value_type("&[&str]")
+        .table()
+        .write(file, dict.map(|kv| (kv.0, format!("&{:?}", kv.1))))
+        .unwrap();
 }
 
 fn parse_dict(raw: &str) -> impl Iterator<Item = (&str, Vec<&str>)> {

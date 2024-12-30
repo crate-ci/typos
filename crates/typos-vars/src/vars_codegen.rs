@@ -23,7 +23,7 @@ pub fn corrections(category: crate::Category, options: VariantsMap) -> &'static 
     }
 }
 
-pub static VARS_TRIE: dictgen::DictTrie<&[(u8, &VariantsMap)]> = dictgen::DictTrie {
+pub static VARS: dictgen::DictTrie<&[(u8, &VariantsMap)]> = dictgen::DictTrie {
     root: &VARS_NODE,
     unicode: &VARS_UNICODE_TABLE,
     range: 2..=21,
