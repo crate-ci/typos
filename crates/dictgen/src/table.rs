@@ -59,6 +59,7 @@ pub struct DictTable<V: 'static> {
 }
 
 impl<V> DictTable<V> {
+    #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&'static V> {
         if self.range.contains(&word.len()) {
             self.keys
@@ -70,6 +71,7 @@ impl<V> DictTable<V> {
         }
     }
 
+    #[inline]
     pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&'static str>, &'static V)> + '_ {
         (0..self.keys.len()).map(move |i| (self.keys[i].convert(), &self.values[i]))
     }

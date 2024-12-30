@@ -58,6 +58,7 @@ pub struct DictMap<V: 'static> {
 }
 
 impl<V> DictMap<V> {
+    #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&V> {
         if self.range.contains(&word.len()) {
             self.map.get(&(*word).into())
@@ -66,6 +67,7 @@ impl<V> DictMap<V> {
         }
     }
 
+    #[inline]
     pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&str>, &V)> + '_ {
         self.map.entries().map(|(k, v)| (k.convert(), v))
     }
