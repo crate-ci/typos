@@ -45,10 +45,6 @@ a release or commit as a version, and not a branch (which is a moving target).
 Also make sure when referencing relative file paths to use `./` (e.g., `./file.txt` instead of
 `file.txt`.
 
-`write_changes` doesn't commit or push anything to the branch. It only writes the changes locally
-to disk, and this can be combined with other actions, for instance that will [submit code
-suggestions based on that local diff](https://github.com/getsentry/action-git-diff-suggestions).
-
 ## Variables
 
 | Name               | Description                                                     | Required | Default                                              |
@@ -59,3 +55,7 @@ suggestions based on that local diff](https://github.com/getsentry/action-git-di
 | isolated           | Ignore implicit configuration files                             | false    | false                                                |
 | write_changes      | Writes changes on the Action's local checkout                   | false    | false                                                |
 | config             | Use a custom config file (must exist)                           | false    | not set                                              |
+
+`write_changes`: doesn't commit or push anything to the branch. It only writes the changes locally
+to disk, and this can be combined with other actions, for instance that will [submit code
+suggestions based on that local diff](https://github.com/getsentry/action-git-diff-suggestions).
