@@ -53,7 +53,7 @@ impl DictTableGen<'_> {
 }
 
 pub struct DictTable<V: 'static> {
-    pub keys: &'static [InsensitiveStr<'static>],
+    pub keys: &'static [crate::InsensitiveStr<'static>],
     pub values: &'static [V],
     pub range: core::ops::RangeInclusive<usize>,
 }
@@ -72,67 +72,5 @@ impl<V> DictTable<V> {
 
     pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&'static str>, &'static V)> + '_ {
         (0..self.keys.len()).map(move |i| (self.keys[i].convert(), &self.values[i]))
-    }
-}
-
-/// `UniCase` look-alike that avoids const-fn so large tables don't OOM
-#[derive(Copy, Clone)]
-pub enum InsensitiveStr<'s> {
-    Unicode(&'s str),
-    Ascii(&'s str),
-}
-
-impl<'s> InsensitiveStr<'s> {
-    pub fn convert(self) -> unicase::UniCase<&'s str> {
-        match self {
-            InsensitiveStr::Unicode(s) => unicase::UniCase::unicode(s),
-            InsensitiveStr::Ascii(s) => unicase::UniCase::ascii(s),
-        }
-    }
-
-    pub fn into_inner(self) -> &'s str {
-        match self {
-            InsensitiveStr::Unicode(s) | InsensitiveStr::Ascii(s) => s,
-        }
-    }
-}
-
-impl<'s> From<unicase::UniCase<&'s str>> for InsensitiveStr<'s> {
-    fn from(other: unicase::UniCase<&'s str>) -> Self {
-        if other.is_ascii() {
-            InsensitiveStr::Ascii(other.into_inner())
-        } else {
-            InsensitiveStr::Unicode(other.into_inner())
-        }
-    }
-}
-
-impl<'s2> PartialEq<InsensitiveStr<'s2>> for InsensitiveStr<'_> {
-    #[inline]
-    fn eq(&self, other: &InsensitiveStr<'s2>) -> bool {
-        self.convert() == other.convert()
-    }
-}
-
-impl Eq for InsensitiveStr<'_> {}
-
-impl core::hash::Hash for InsensitiveStr<'_> {
-    #[inline]
-    fn hash<H: core::hash::Hasher>(&self, hasher: &mut H) {
-        self.convert().hash(hasher);
-    }
-}
-
-impl core::fmt::Debug for InsensitiveStr<'_> {
-    #[inline]
-    fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        core::fmt::Debug::fmt(self.into_inner(), fmt)
-    }
-}
-
-impl core::fmt::Display for InsensitiveStr<'_> {
-    #[inline]
-    fn fmt(&self, fmt: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        core::fmt::Display::fmt(self.into_inner(), fmt)
     }
 }

@@ -70,30 +70,3 @@ impl<V> DictMap<V> {
         self.map.entries().map(|(k, v)| (k.convert(), v))
     }
 }
-
-impl phf_shared::PhfHash for crate::InsensitiveStr<'_> {
-    #[inline]
-    fn phf_hash<H: core::hash::Hasher>(&self, state: &mut H) {
-        core::hash::Hash::hash(self, state);
-    }
-}
-
-impl phf_shared::FmtConst for crate::InsensitiveStr<'_> {
-    fn fmt_const(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        match self {
-            crate::InsensitiveStr::Ascii(_) => f.write_str("dictgen::InsensitiveStr::Ascii(")?,
-            crate::InsensitiveStr::Unicode(_) => {
-                f.write_str("dictgen::InsensitiveStr::Unicode(")?;
-            }
-        }
-
-        self.into_inner().fmt_const(f)?;
-        f.write_str(")")
-    }
-}
-
-impl<'b, 'a: 'b> phf_shared::PhfBorrow<crate::InsensitiveStr<'b>> for crate::InsensitiveStr<'a> {
-    fn borrow(&self) -> &crate::InsensitiveStr<'b> {
-        self
-    }
-}
