@@ -29,7 +29,10 @@ pub static VARS: dictgen::Trie<&[(u8, &VariantsMap)]> = dictgen::Trie {
     range: 2..=21,
 };
 
-pub static VARS_UNICODE_TABLE: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNICODE_TABLE: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[],
     values: &[],
     range: 0..=0,
@@ -74,7 +77,10 @@ static VARS_Y_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNode
     value: None,
 };
 
-pub static VARS_Y_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_Y_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("odeled"),
         dictgen::InsensitiveStr::Ascii("odeler"),
@@ -149,7 +155,10 @@ static VARS_WO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_WO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_WO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("manise"),
         dictgen::InsensitiveStr::Ascii("manised"),
@@ -218,7 +227,10 @@ static VARS_WI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_WI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_WI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lfullier"),
         dictgen::InsensitiveStr::Ascii("lfulliest"),
@@ -275,7 +287,10 @@ static VARS_WH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_WH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_WH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("iskeys")],
     values: &[&[(0b01001, &ENTRY_WHISKEYS_7436468433370877238)]],
     range: 6..=6,
@@ -286,7 +301,10 @@ static VARS_WE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_WE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_WE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aseled"),
         dictgen::InsensitiveStr::Ascii("aseling"),
@@ -315,7 +333,10 @@ static VARS_WA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_WA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_WA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ggon"),
         dictgen::InsensitiveStr::Ascii("ggoned"),
@@ -402,7 +423,10 @@ static VARS_VU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_VU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lcanisation"),
         dictgen::InsensitiveStr::Ascii("lcanisations"),
@@ -471,7 +495,10 @@ static VARS_VO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_VO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("calisation"),
         dictgen::InsensitiveStr::Ascii("calisations"),
@@ -532,7 +559,10 @@ static VARS_VI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_VI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ctimisation"),
         dictgen::InsensitiveStr::Ascii("ctimisations"),
@@ -667,7 +697,10 @@ static VARS_VE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_VE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nder"),
         dictgen::InsensitiveStr::Ascii("nders"),
@@ -766,7 +799,10 @@ static VARS_VAS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_VAS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VAS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ectomise"),
         dictgen::InsensitiveStr::Ascii("ectomised"),
@@ -791,7 +827,10 @@ static VARS_VAR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_VAR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VAR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("icolored"),
         dictgen::InsensitiveStr::Ascii("icoloredder"),
@@ -820,7 +859,10 @@ static VARS_VAP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_VAP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VAP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ored"),
@@ -889,7 +931,10 @@ static VARS_VAN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_VAN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VAN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dalise"),
         dictgen::InsensitiveStr::Ascii("dalised"),
@@ -918,7 +963,10 @@ static VARS_VAL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_VAL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_VAL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orisation"),
@@ -997,7 +1045,10 @@ static VARS_UT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_UT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ilisable"),
         dictgen::InsensitiveStr::Ascii("ilisables"),
@@ -1042,7 +1093,10 @@ static VARS_US_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_US_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_US_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("eability")],
     values: &[&[(0b00001, &ENTRY_USABILITY_14697152389699662448)]],
     range: 8..=8,
@@ -1053,7 +1107,10 @@ static VARS_UR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_UR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aemia"),
         dictgen::InsensitiveStr::Ascii("aemias"),
@@ -1102,7 +1159,10 @@ static VARS_UP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_UP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("draft"),
         dictgen::InsensitiveStr::Ascii("drafts"),
@@ -1157,7 +1217,10 @@ static VARS_UNT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rammeled"),
         dictgen::InsensitiveStr::Ascii("rammeledder"),
@@ -1182,7 +1245,10 @@ static VARS_UNS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("avorier"),
         dictgen::InsensitiveStr::Ascii("avories"),
@@ -1231,7 +1297,10 @@ static VARS_UNR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aveled"),
         dictgen::InsensitiveStr::Ascii("aveling"),
@@ -1312,7 +1381,10 @@ static VARS_UNP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("asteurised"),
         dictgen::InsensitiveStr::Ascii("asteurized"),
@@ -1349,7 +1421,10 @@ static VARS_UNO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rganised"),
         dictgen::InsensitiveStr::Ascii("rganized"),
@@ -1366,7 +1441,10 @@ static VARS_UNL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abeled"),
         dictgen::InsensitiveStr::Ascii("abeledder"),
@@ -1393,7 +1471,10 @@ static VARS_UNI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("onisation"),
         dictgen::InsensitiveStr::Ascii("onisations"),
@@ -1454,7 +1535,10 @@ static VARS_UNG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("lamourous")],
     values: &[&[(0b11010, &ENTRY_UNGLAMOROUS_17159152581421977091)]],
     range: 9..=9,
@@ -1465,7 +1549,10 @@ static VARS_UNF_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNF_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNF_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("avorable"),
         dictgen::InsensitiveStr::Ascii("avorabler"),
@@ -1530,7 +1617,10 @@ static VARS_UNE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("qualed"),
         dictgen::InsensitiveStr::Ascii("qualedder"),
@@ -1555,7 +1645,10 @@ static VARS_UND_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UND_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UND_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eremphasise"),
         dictgen::InsensitiveStr::Ascii("eremphasised"),
@@ -1608,7 +1701,10 @@ static VARS_UNC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ivilised"),
         dictgen::InsensitiveStr::Ascii("ivilized"),
@@ -1641,7 +1737,10 @@ static VARS_UNA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_UNA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_UNA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ppetising"),
         dictgen::InsensitiveStr::Ascii("ppetisinger"),
@@ -1724,7 +1823,10 @@ static VARS_TZ_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TZ_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TZ_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ar"),
         dictgen::InsensitiveStr::Ascii("ars"),
@@ -1741,7 +1843,10 @@ static VARS_TY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rannise"),
         dictgen::InsensitiveStr::Ascii("rannised"),
@@ -1778,7 +1883,10 @@ static VARS_TU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("laraemia"),
         dictgen::InsensitiveStr::Ascii("laraemias"),
@@ -1861,7 +1969,10 @@ static VARS_TRO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_TRO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TRO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("llied"),
         dictgen::InsensitiveStr::Ascii("llies"),
@@ -1890,7 +2001,10 @@ static VARS_TRI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_TRI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TRI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aled"),
         dictgen::InsensitiveStr::Ascii("aling"),
@@ -1935,7 +2049,10 @@ static VARS_TRA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_TRA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TRA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mmeled"),
         dictgen::InsensitiveStr::Ascii("mmeling"),
@@ -2066,7 +2183,10 @@ static VARS_TO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("taled"),
         dictgen::InsensitiveStr::Ascii("taling"),
@@ -2135,7 +2255,10 @@ static VARS_TI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dbit"),
         dictgen::InsensitiveStr::Ascii("dbits"),
@@ -2172,7 +2295,10 @@ static VARS_TH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eater"),
         dictgen::InsensitiveStr::Ascii("eatergoer"),
@@ -2255,7 +2381,10 @@ static VARS_TE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aselled"),
         dictgen::InsensitiveStr::Ascii("aseller"),
@@ -2374,7 +2503,10 @@ static VARS_TA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_TA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_TA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mboura"),
         dictgen::InsensitiveStr::Ascii("mbouras"),
@@ -2537,7 +2669,10 @@ static VARS_SYS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SYS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SYS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tematisation"),
         dictgen::InsensitiveStr::Ascii("tematisations"),
@@ -2614,7 +2749,10 @@ static VARS_SYP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SYP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SYP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hon"),
         dictgen::InsensitiveStr::Ascii("honed"),
@@ -2635,7 +2773,10 @@ static VARS_SYN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SYN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SYN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("chronisation"),
         dictgen::InsensitiveStr::Ascii("chronisations"),
@@ -2740,7 +2881,10 @@ static VARS_SYM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SYM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SYM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bolisation"),
         dictgen::InsensitiveStr::Ascii("bolisations"),
@@ -2823,7 +2967,10 @@ static VARS_SYL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SYL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SYL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("labise"),
         dictgen::InsensitiveStr::Ascii("labised"),
@@ -2868,7 +3015,10 @@ static VARS_SW_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SW_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SW_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iveled"),
         dictgen::InsensitiveStr::Ascii("iveling"),
@@ -2889,7 +3039,10 @@ static VARS_SU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bsidisation"),
         dictgen::InsensitiveStr::Ascii("bsidisations"),
@@ -3056,7 +3209,10 @@ static VARS_STY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_STY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_STY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lisation"),
         dictgen::InsensitiveStr::Ascii("lisations"),
@@ -3093,7 +3249,10 @@ static VARS_STI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_STI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_STI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gmatisation"),
         dictgen::InsensitiveStr::Ascii("gmatisations"),
@@ -3130,7 +3289,10 @@ static VARS_STE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_STE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_STE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nciled"),
         dictgen::InsensitiveStr::Ascii("nciling"),
@@ -3199,7 +3361,10 @@ static VARS_STA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_STA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_STA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bilisation"),
         dictgen::InsensitiveStr::Ascii("bilisations"),
@@ -3268,7 +3433,10 @@ static VARS_SQ_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SQ_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SQ_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("uirreled"),
         dictgen::InsensitiveStr::Ascii("uirreling"),
@@ -3289,7 +3457,10 @@ static VARS_SP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ecialisation"),
         dictgen::InsensitiveStr::Ascii("ecialisations"),
@@ -3432,7 +3603,10 @@ static VARS_SOV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SOV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SOV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ietisation"),
         dictgen::InsensitiveStr::Ascii("ietisations"),
@@ -3469,7 +3643,10 @@ static VARS_SOM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SOM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SOM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ber"),
         dictgen::InsensitiveStr::Ascii("berer"),
@@ -3494,7 +3671,10 @@ static VARS_SOL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SOL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SOL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("arisation"),
         dictgen::InsensitiveStr::Ascii("arisations"),
@@ -3607,7 +3787,10 @@ static VARS_SOD_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SOD_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SOD_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("omise"),
         dictgen::InsensitiveStr::Ascii("omised"),
@@ -3636,7 +3819,10 @@ static VARS_SOC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SOC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SOC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ialisation"),
         dictgen::InsensitiveStr::Ascii("ialisations"),
@@ -3673,7 +3859,10 @@ static VARS_SN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iveled"),
         dictgen::InsensitiveStr::Ascii("iveler"),
@@ -3722,7 +3911,10 @@ static VARS_SM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("idge"),
         dictgen::InsensitiveStr::Ascii("idges"),
@@ -3747,7 +3939,10 @@ static VARS_SL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("enderise"),
         dictgen::InsensitiveStr::Ascii("enderised"),
@@ -3782,7 +3977,10 @@ static VARS_SK_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SK_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SK_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eptic"),
         dictgen::InsensitiveStr::Ascii("eptical"),
@@ -3815,7 +4013,10 @@ static VARS_SI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gnaled"),
         dictgen::InsensitiveStr::Ascii("gnaler"),
@@ -3876,7 +4077,10 @@ static VARS_SH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aikh"),
         dictgen::InsensitiveStr::Ascii("aikhs"),
@@ -3951,7 +4155,10 @@ static VARS_SER_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SER_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SER_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ialisation"),
         dictgen::InsensitiveStr::Ascii("ialisations"),
@@ -4012,7 +4219,10 @@ static VARS_SEP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SEP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SEP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ticaemia"),
         dictgen::InsensitiveStr::Ascii("ticaemias"),
@@ -4053,7 +4263,10 @@ static VARS_SEN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SEN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SEN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sationalise"),
         dictgen::InsensitiveStr::Ascii("sationalised"),
@@ -4154,7 +4367,10 @@ static VARS_SEI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SEI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SEI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ser"),
         dictgen::InsensitiveStr::Ascii("sers"),
@@ -4175,7 +4391,10 @@ static VARS_SEC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SEC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SEC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tionalise"),
         dictgen::InsensitiveStr::Ascii("tionalised"),
@@ -4228,7 +4447,10 @@ static VARS_SEB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SEB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SEB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orrhea"),
         dictgen::InsensitiveStr::Ascii("orrheas"),
@@ -4253,7 +4475,10 @@ static VARS_SC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_SC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("andalise"),
         dictgen::InsensitiveStr::Ascii("andalised"),
@@ -4400,7 +4625,10 @@ static VARS_SAV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SAV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SAV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ior"),
         dictgen::InsensitiveStr::Ascii("iors"),
@@ -4481,7 +4709,10 @@ static VARS_SAT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SAT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SAT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("irisation"),
         dictgen::InsensitiveStr::Ascii("irise"),
@@ -4514,7 +4745,10 @@ static VARS_SAN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SAN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SAN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("daled"),
         dictgen::InsensitiveStr::Ascii("daling"),
@@ -4567,7 +4801,10 @@ static VARS_SAL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SAL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SAL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("able"),
         dictgen::InsensitiveStr::Ascii("abler"),
@@ -4598,7 +4835,10 @@ static VARS_SAB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_SAB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_SAB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("ered"),
@@ -4653,7 +4893,10 @@ static VARS_RU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_RU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_RU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bberise"),
         dictgen::InsensitiveStr::Ascii("bberised"),
@@ -4722,7 +4965,10 @@ static VARS_RO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_RO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_RO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("botisation"),
         dictgen::InsensitiveStr::Ascii("botisations"),
@@ -4831,7 +5077,10 @@ static VARS_RI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_RI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_RI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gor"),
         dictgen::InsensitiveStr::Ascii("gors"),
@@ -4884,7 +5133,10 @@ static VARS_RH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_RH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_RH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("apsodise"),
         dictgen::InsensitiveStr::Ascii("apsodised"),
@@ -4947,7 +5199,10 @@ static VARS_REV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -5020,7 +5275,10 @@ static VARS_REP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rogramme"),
         dictgen::InsensitiveStr::Ascii("rogrammes"),
@@ -5037,7 +5295,10 @@ static VARS_REO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rganisation"),
         dictgen::InsensitiveStr::Ascii("rganisations"),
@@ -5082,7 +5343,10 @@ static VARS_REM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("odeled"),
         dictgen::InsensitiveStr::Ascii("odeling"),
@@ -5119,7 +5383,10 @@ static VARS_REL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ativisation"),
         dictgen::InsensitiveStr::Ascii("ativisations"),
@@ -5156,7 +5423,10 @@ static VARS_REG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ularisation"),
         dictgen::InsensitiveStr::Ascii("ularisations"),
@@ -5193,7 +5463,10 @@ static VARS_REF_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REF_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REF_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ueled"),
         dictgen::InsensitiveStr::Ascii("ueling"),
@@ -5214,7 +5487,10 @@ static VARS_REE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nforce"),
         dictgen::InsensitiveStr::Ascii("nforced"),
@@ -5235,7 +5511,10 @@ static VARS_RED_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_RED_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_RED_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ialed"),
         dictgen::InsensitiveStr::Ascii("ialing"),
@@ -5256,7 +5535,10 @@ static VARS_REC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("apitalisation"),
         dictgen::InsensitiveStr::Ascii("apitalisations"),
@@ -5385,7 +5667,10 @@ static VARS_REA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_REA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_REA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lisabilities"),
         dictgen::InsensitiveStr::Ascii("lisability"),
@@ -5472,7 +5757,10 @@ static VARS_RA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_RA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_RA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cialise"),
         dictgen::InsensitiveStr::Ascii("cialises"),
@@ -5599,7 +5887,10 @@ static VARS_Q_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNode
     value: None,
 };
 
-pub static VARS_Q_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_Q_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("uantisation"),
         dictgen::InsensitiveStr::Ascii("uantisations"),
@@ -5692,7 +5983,10 @@ static VARS_PY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_PY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("jama"),
         dictgen::InsensitiveStr::Ascii("jamas"),
@@ -5733,7 +6027,10 @@ static VARS_PU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_PU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("blicise"),
         dictgen::InsensitiveStr::Ascii("blicised"),
@@ -5802,7 +6099,10 @@ static VARS_PS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_PS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ychoanalyse"),
         dictgen::InsensitiveStr::Ascii("ychoanalysed"),
@@ -5879,7 +6179,10 @@ static VARS_PRO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PRO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PRO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("fessionalisation"),
         dictgen::InsensitiveStr::Ascii("fessionalisations"),
@@ -5986,7 +6289,10 @@ static VARS_PRI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PRI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PRI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("maeval"),
         dictgen::InsensitiveStr::Ascii("maevally"),
@@ -6067,7 +6373,10 @@ static VARS_PRE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PRE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PRE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("conise"),
         dictgen::InsensitiveStr::Ascii("conised"),
@@ -6146,7 +6455,10 @@ static VARS_PRA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PRA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PRA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cticed"),
         dictgen::InsensitiveStr::Ascii("cticer"),
@@ -6205,7 +6517,10 @@ static VARS_POU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_POU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_POU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rer"),
         dictgen::InsensitiveStr::Ascii("rers"),
@@ -6222,7 +6537,10 @@ static VARS_POR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_POR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_POR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("ers"),
@@ -6239,7 +6557,10 @@ static VARS_POP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_POP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_POP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ularisation"),
         dictgen::InsensitiveStr::Ascii("ularisations"),
@@ -6284,7 +6605,10 @@ static VARS_POM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_POM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_POM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("meled"),
         dictgen::InsensitiveStr::Ascii("meling"),
@@ -6305,7 +6629,10 @@ static VARS_POL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_POL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_POL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("arisable"),
         dictgen::InsensitiveStr::Ascii("arisables"),
@@ -6422,7 +6749,10 @@ static VARS_POE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_POE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_POE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ticise"),
         dictgen::InsensitiveStr::Ascii("ticised"),
@@ -6501,7 +6831,10 @@ static VARS_PLU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PLU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PLU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ralisation"),
         dictgen::InsensitiveStr::Ascii("ralisations"),
@@ -6538,7 +6871,10 @@ static VARS_PLO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PLO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PLO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ugh"),
         dictgen::InsensitiveStr::Ascii("ughable"),
@@ -6595,7 +6931,10 @@ static VARS_PLA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PLA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PLA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("giarise"),
         dictgen::InsensitiveStr::Ascii("giarised"),
@@ -6696,7 +7035,10 @@ static VARS_PI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_PI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aster"),
         dictgen::InsensitiveStr::Ascii("asters"),
@@ -6717,7 +7059,10 @@ static VARS_PH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_PH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ilosophise"),
         dictgen::InsensitiveStr::Ascii("ilosophised"),
@@ -6832,7 +7177,10 @@ static VARS_PER_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PER_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PER_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iled"),
         dictgen::InsensitiveStr::Ascii("iling"),
@@ -6885,7 +7233,10 @@ static VARS_PEN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PEN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PEN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alisation"),
         dictgen::InsensitiveStr::Ascii("alisations"),
@@ -6934,7 +7285,10 @@ static VARS_PED_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PED_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PED_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("agog"),
         dictgen::InsensitiveStr::Ascii("agogs"),
@@ -7049,7 +7403,10 @@ static VARS_PAU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("perisation"),
         dictgen::InsensitiveStr::Ascii("perisations"),
@@ -7086,7 +7443,10 @@ static VARS_PAT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ronise"),
         dictgen::InsensitiveStr::Ascii("ronised"),
@@ -7139,7 +7499,10 @@ static VARS_PAS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sivisation"),
         dictgen::InsensitiveStr::Ascii("sivization"),
@@ -7188,7 +7551,10 @@ static VARS_PAR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alyse"),
         dictgen::InsensitiveStr::Ascii("alysed"),
@@ -7303,7 +7669,10 @@ static VARS_PAN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("egyrise"),
         dictgen::InsensitiveStr::Ascii("egyrised"),
@@ -7352,7 +7721,10 @@ static VARS_PAL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aeoclimatologies"),
         dictgen::InsensitiveStr::Ascii("aeoclimatology"),
@@ -7433,7 +7805,10 @@ static VARS_PAJ_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAJ_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAJ_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ama"),
         dictgen::InsensitiveStr::Ascii("amas"),
@@ -7450,7 +7825,10 @@ static VARS_PAE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_PAE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_PAE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("derast"),
         dictgen::InsensitiveStr::Ascii("derasts"),
@@ -7517,7 +7895,10 @@ static VARS_OX_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OX_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OX_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("idisable"),
         dictgen::InsensitiveStr::Ascii("idisables"),
@@ -7574,7 +7955,10 @@ static VARS_OV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ercapitalise"),
         dictgen::InsensitiveStr::Ascii("ercapitalised"),
@@ -7675,7 +8059,10 @@ static VARS_OU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rang"),
         dictgen::InsensitiveStr::Ascii("rangs"),
@@ -7708,7 +8095,10 @@ static VARS_OS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tracise"),
         dictgen::InsensitiveStr::Ascii("tracised"),
@@ -7737,7 +8127,10 @@ static VARS_OR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gandie"),
         dictgen::InsensitiveStr::Ascii("gandy"),
@@ -7854,7 +8247,10 @@ static VARS_OP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("timisation"),
         dictgen::InsensitiveStr::Ascii("timisations"),
@@ -7899,7 +8295,10 @@ static VARS_OM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("elet"),
         dictgen::InsensitiveStr::Ascii("elets"),
@@ -7916,7 +8315,10 @@ static VARS_OF_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OF_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OF_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("fence"),
         dictgen::InsensitiveStr::Ascii("fences"),
@@ -7937,7 +8339,10 @@ static VARS_OE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cumenism"),
         dictgen::InsensitiveStr::Ascii("dema"),
@@ -7982,7 +8387,10 @@ static VARS_OD_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OD_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OD_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orless"),
@@ -8015,7 +8423,10 @@ static VARS_OC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("her"),
         dictgen::InsensitiveStr::Ascii("hered"),
@@ -8058,7 +8469,10 @@ static VARS_OB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_OB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_OB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("jectivise"),
         dictgen::InsensitiveStr::Ascii("jectivised"),
@@ -8121,7 +8535,10 @@ static VARS_NO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_NO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rmalisation"),
         dictgen::InsensitiveStr::Ascii("rmalisations"),
@@ -8210,7 +8627,10 @@ static VARS_NI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_NI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("te"),
         dictgen::InsensitiveStr::Ascii("ter"),
@@ -8273,7 +8693,10 @@ static VARS_NEU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_NEU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NEU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tralisation"),
         dictgen::InsensitiveStr::Ascii("tralisations"),
@@ -8318,7 +8741,10 @@ static VARS_NET_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_NET_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NET_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("t"),
         dictgen::InsensitiveStr::Ascii("ts"),
@@ -8335,7 +8761,10 @@ static VARS_NEO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_NEO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NEO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("logise"),
         dictgen::InsensitiveStr::Ascii("logised"),
@@ -8364,7 +8793,10 @@ static VARS_NEI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_NEI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NEI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ghbor"),
         dictgen::InsensitiveStr::Ascii("ghbored"),
@@ -8425,7 +8857,10 @@ static VARS_NEG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_NEG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NEG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lig"),
         dictgen::InsensitiveStr::Ascii("ligs"),
@@ -8442,7 +8877,10 @@ static VARS_NEB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_NEB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NEB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ulise"),
         dictgen::InsensitiveStr::Ascii("ulised"),
@@ -8479,7 +8917,10 @@ static VARS_NA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_NA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_NA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nometer"),
         dictgen::InsensitiveStr::Ascii("nometers"),
@@ -8622,7 +9063,10 @@ static VARS_MY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_MY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("thicise"),
         dictgen::InsensitiveStr::Ascii("thicised"),
@@ -8687,7 +9131,10 @@ static VARS_MU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_MU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("stache"),
         dictgen::InsensitiveStr::Ascii("stached"),
@@ -8740,7 +9187,10 @@ static VARS_MOV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("eability")],
     values: &[&[(0b00001, &ENTRY_MOVABILITY_2120736134131484989)]],
     range: 8..=8,
@@ -8751,7 +9201,10 @@ static VARS_MOU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ld"),
         dictgen::InsensitiveStr::Ascii("lded"),
@@ -8802,7 +9255,10 @@ static VARS_MOT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orisation"),
         dictgen::InsensitiveStr::Ascii("orisations"),
@@ -8839,7 +9295,10 @@ static VARS_MOR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alisation"),
         dictgen::InsensitiveStr::Ascii("alisations"),
@@ -8892,7 +9351,10 @@ static VARS_MON_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MON_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MON_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ecious"),
         dictgen::InsensitiveStr::Ascii("etisation"),
@@ -8991,7 +9453,10 @@ static VARS_MOL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("d"),
         dictgen::InsensitiveStr::Ascii("ded"),
@@ -9042,7 +9507,10 @@ static VARS_MOI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sturise"),
         dictgen::InsensitiveStr::Ascii("sturised"),
@@ -9079,7 +9547,10 @@ static VARS_MOG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("gy")],
     values: &[&[(0b10011, &ENTRY_MOGGY_7403358484289979778)]],
     range: 2..=2,
@@ -9090,7 +9561,10 @@ static VARS_MOD_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOD_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOD_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -9155,7 +9629,10 @@ static VARS_MOB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MOB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MOB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ilisable"),
         dictgen::InsensitiveStr::Ascii("ilisabler"),
@@ -9250,7 +9727,10 @@ static VARS_MIT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MIT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MIT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("ered"),
@@ -9279,7 +9759,10 @@ static VARS_MIS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MIS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MIS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("behavior"),
         dictgen::InsensitiveStr::Ascii("behaviors"),
@@ -9320,7 +9803,10 @@ static VARS_MIN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MIN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MIN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eralisation"),
         dictgen::InsensitiveStr::Ascii("eralisations"),
@@ -9415,7 +9901,10 @@ static VARS_MIL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MIL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MIL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("itarisation"),
         dictgen::InsensitiveStr::Ascii("itarisations"),
@@ -9472,7 +9961,10 @@ static VARS_MIC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MIC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MIC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rometre"),
         dictgen::InsensitiveStr::Ascii("rometres"),
@@ -9497,7 +9989,10 @@ static VARS_MIA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MIA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MIA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ow"),
         dictgen::InsensitiveStr::Ascii("owed"),
@@ -9552,7 +10047,10 @@ static VARS_MET_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MET_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MET_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abolisable"),
         dictgen::InsensitiveStr::Ascii("abolisables"),
@@ -9661,7 +10159,10 @@ static VARS_MES_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MES_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MES_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("merise"),
         dictgen::InsensitiveStr::Ascii("merised"),
@@ -9690,7 +10191,10 @@ static VARS_MER_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MER_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MER_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cerise"),
         dictgen::InsensitiveStr::Ascii("cerised"),
@@ -9719,7 +10223,10 @@ static VARS_MEN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MEN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MEN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ad"),
         dictgen::InsensitiveStr::Ascii("adic"),
@@ -9738,7 +10245,10 @@ static VARS_MEM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MEM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MEM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orialise"),
         dictgen::InsensitiveStr::Ascii("orialised"),
@@ -9799,7 +10309,10 @@ static VARS_MEL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MEL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MEL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("odise"),
         dictgen::InsensitiveStr::Ascii("odised"),
@@ -9844,7 +10357,10 @@ static VARS_MEG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MEG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MEG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("agramme"),
         dictgen::InsensitiveStr::Ascii("agrammes"),
@@ -9861,7 +10377,10 @@ static VARS_MED_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MED_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MED_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alist"),
         dictgen::InsensitiveStr::Ascii("alists"),
@@ -9886,7 +10405,10 @@ static VARS_MEC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MEC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MEC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hanisation"),
         dictgen::InsensitiveStr::Ascii("hanisations"),
@@ -9931,7 +10453,10 @@ static VARS_MEA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MEA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MEA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ger"),
         dictgen::InsensitiveStr::Ascii("gerrer"),
@@ -9990,7 +10515,10 @@ static VARS_MAX_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MAX_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MAX_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("imisation"),
         dictgen::InsensitiveStr::Ascii("imisations"),
@@ -10035,7 +10563,10 @@ static VARS_MAT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MAT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MAT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("erialisation"),
         dictgen::InsensitiveStr::Ascii("erialisations"),
@@ -10074,7 +10605,10 @@ static VARS_MAR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MAR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MAR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bleise"),
         dictgen::InsensitiveStr::Ascii("bleised"),
@@ -10171,7 +10705,10 @@ static VARS_MAN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MAN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MAN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("daean"),
         dictgen::InsensitiveStr::Ascii("daeans"),
@@ -10254,7 +10791,10 @@ static VARS_MAG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_MAG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_MAG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("netisation"),
         dictgen::InsensitiveStr::Ascii("netisations"),
@@ -10325,7 +10865,10 @@ static VARS_LY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_LY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ophilisation"),
         dictgen::InsensitiveStr::Ascii("ophilisations"),
@@ -10362,7 +10905,10 @@ static VARS_LU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_LU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("pines"),
         dictgen::InsensitiveStr::Ascii("ster"),
@@ -10409,7 +10955,10 @@ static VARS_LO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_LO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("botomise"),
         dictgen::InsensitiveStr::Ascii("botomised"),
@@ -10546,7 +11095,10 @@ static VARS_LIV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("able")],
     values: &[&[(0b11001, &ENTRY_LIVABLE_13408079841838673902)]],
     range: 4..=4,
@@ -10557,7 +11109,10 @@ static VARS_LIT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("er"),
         dictgen::InsensitiveStr::Ascii("eralise"),
@@ -10594,7 +11149,10 @@ static VARS_LIS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("someness"),
         dictgen::InsensitiveStr::Ascii("somenesses"),
@@ -10615,7 +11173,10 @@ static VARS_LIQ_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIQ_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIQ_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("uidise"),
         dictgen::InsensitiveStr::Ascii("uidised"),
@@ -10656,7 +11217,10 @@ static VARS_LIO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nisation"),
         dictgen::InsensitiveStr::Ascii("nisations"),
@@ -10701,7 +11265,10 @@ static VARS_LIN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("earise"),
         dictgen::InsensitiveStr::Ascii("earised"),
@@ -10730,7 +11297,10 @@ static VARS_LIK_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIK_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIK_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abilities"),
         dictgen::InsensitiveStr::Ascii("ability"),
@@ -10751,7 +11321,10 @@ static VARS_LIC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ence"),
         dictgen::InsensitiveStr::Ascii("enced"),
@@ -10778,7 +11351,10 @@ static VARS_LIB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_LIB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LIB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -10851,7 +11427,10 @@ static VARS_LE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_LE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("arnt"),
         dictgen::InsensitiveStr::Ascii("galisation"),
@@ -10946,7 +11525,10 @@ static VARS_LA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_LA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_LA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("beled"),
         dictgen::InsensitiveStr::Ascii("beler"),
@@ -11083,7 +11665,10 @@ static VARS_K_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNode
     value: None,
 };
 
-pub static VARS_K_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_K_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("enneled"),
         dictgen::InsensitiveStr::Ascii("enneling"),
@@ -11192,7 +11777,10 @@ static VARS_J_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNode
     value: None,
 };
 
-pub static VARS_J_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_J_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ailor"),
         dictgen::InsensitiveStr::Ascii("ailors"),
@@ -11317,7 +11905,10 @@ static VARS_IT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_IT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_IT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alicisation"),
         dictgen::InsensitiveStr::Ascii("alicisations"),
@@ -11378,7 +11969,10 @@ static VARS_IS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_IS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_IS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("chaemia"),
         dictgen::InsensitiveStr::Ascii("chaemias"),
@@ -11403,7 +11997,10 @@ static VARS_IO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_IO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_IO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dise"),
         dictgen::InsensitiveStr::Ascii("dised"),
@@ -11514,7 +12111,10 @@ static VARS_INT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_INT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_INT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ellectualise"),
         dictgen::InsensitiveStr::Ascii("ellectualised"),
@@ -11615,7 +12215,10 @@ static VARS_INS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_INS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_INS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tal"),
         dictgen::InsensitiveStr::Ascii("tallment"),
@@ -11668,7 +12271,10 @@ static VARS_INI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_INI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_INI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tialed"),
         dictgen::InsensitiveStr::Ascii("tialing"),
@@ -11713,7 +12319,10 @@ static VARS_INF_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_INF_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_INF_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lexion"),
         dictgen::InsensitiveStr::Ascii("lexions"),
@@ -11730,7 +12339,10 @@ static VARS_IND_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_IND_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_IND_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ianisation"),
         dictgen::InsensitiveStr::Ascii("ianise"),
@@ -11819,7 +12431,10 @@ static VARS_INC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_INC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_INC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("entivise"),
         dictgen::InsensitiveStr::Ascii("entivised"),
@@ -11860,7 +12475,10 @@ static VARS_IM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_IM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_IM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bedment"),
         dictgen::InsensitiveStr::Ascii("bedments"),
@@ -11977,7 +12595,10 @@ static VARS_ID_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_ID_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ID_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ealisation"),
         dictgen::InsensitiveStr::Ascii("ealisations"),
@@ -12080,7 +12701,10 @@ static VARS_HY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_HY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bridisable"),
         dictgen::InsensitiveStr::Ascii("bridisabler"),
@@ -12203,7 +12827,10 @@ static VARS_HU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_HU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("manisation"),
         dictgen::InsensitiveStr::Ascii("manisations"),
@@ -12312,7 +12939,10 @@ static VARS_HOS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_HOS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HOS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("pitalisation"),
         dictgen::InsensitiveStr::Ascii("pitalisations"),
@@ -12349,7 +12979,10 @@ static VARS_HOO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_HOO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HOO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rah"),
         dictgen::InsensitiveStr::Ascii("rahs"),
@@ -12366,7 +12999,10 @@ static VARS_HON_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_HON_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HON_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orable"),
@@ -12435,7 +13071,10 @@ static VARS_HOM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_HOM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HOM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("oeopath"),
         dictgen::InsensitiveStr::Ascii("oeopathic"),
@@ -12512,7 +13151,10 @@ static VARS_HI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_HI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ccupped"),
         dictgen::InsensitiveStr::Ascii("ccupping"),
@@ -12529,7 +13171,10 @@ static VARS_HE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_HE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("braise"),
         dictgen::InsensitiveStr::Ascii("braised"),
@@ -12658,7 +13303,10 @@ static VARS_HA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_HA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_HA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("emal"),
         dictgen::InsensitiveStr::Ascii("ematite"),
@@ -12809,7 +13457,10 @@ static VARS_GY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("naecological"),
         dictgen::InsensitiveStr::Ascii("naecologicaler"),
@@ -12862,7 +13513,10 @@ static VARS_GR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aecism"),
         dictgen::InsensitiveStr::Ascii("aecisms"),
@@ -12979,7 +13633,10 @@ static VARS_GO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iter"),
         dictgen::InsensitiveStr::Ascii("iters"),
@@ -13024,7 +13681,10 @@ static VARS_GL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("amor"),
         dictgen::InsensitiveStr::Ascii("amored"),
@@ -13111,7 +13771,10 @@ static VARS_GI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gagramme"),
         dictgen::InsensitiveStr::Ascii("gagrammes"),
@@ -13128,7 +13791,10 @@ static VARS_GH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ettoisation"),
         dictgen::InsensitiveStr::Ascii("ettoisations"),
@@ -13165,7 +13831,10 @@ static VARS_GE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("latinisation"),
         dictgen::InsensitiveStr::Ascii("latinisations"),
@@ -13262,7 +13931,10 @@ static VARS_GA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_GA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_GA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("llicise"),
         dictgen::InsensitiveStr::Ascii("llicised"),
@@ -13391,7 +14063,10 @@ static VARS_FU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_FU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eling"),
@@ -13452,7 +14127,10 @@ static VARS_FR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_FR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aternisation"),
         dictgen::InsensitiveStr::Ascii("aternisations"),
@@ -13489,7 +14167,10 @@ static VARS_FO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_FO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("calisation"),
         dictgen::InsensitiveStr::Ascii("calisations"),
@@ -13594,7 +14275,10 @@ static VARS_FL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_FL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("anneled"),
         dictgen::InsensitiveStr::Ascii("annelet"),
@@ -13709,7 +14393,10 @@ static VARS_FI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_FI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ber"),
         dictgen::InsensitiveStr::Ascii("berboard"),
@@ -13814,7 +14501,10 @@ static VARS_FE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_FE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cal"),
         dictgen::InsensitiveStr::Ascii("ces"),
@@ -13973,7 +14663,10 @@ static VARS_FAV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_FAV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FAV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("orable"),
@@ -14070,7 +14763,10 @@ static VARS_FAN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_FAN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FAN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tasise"),
         dictgen::InsensitiveStr::Ascii("tasised"),
@@ -14099,7 +14795,10 @@ static VARS_FAM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_FAM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FAM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iliarisation"),
         dictgen::InsensitiveStr::Ascii("iliarisations"),
@@ -14136,7 +14835,10 @@ static VARS_FAG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_FAG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FAG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ot"),
         dictgen::InsensitiveStr::Ascii("oted"),
@@ -14163,7 +14865,10 @@ static VARS_FAE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_FAE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FAE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cal"),
         dictgen::InsensitiveStr::Ascii("ces"),
@@ -14180,7 +14885,10 @@ static VARS_FAC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_FAC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_FAC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("torisation"),
         dictgen::InsensitiveStr::Ascii("torisations"),
@@ -14251,7 +14959,10 @@ static VARS_EY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rie"),
         dictgen::InsensitiveStr::Ascii("ry"),
@@ -14268,7 +14979,10 @@ static VARS_EX_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EX_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EX_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orcize"),
         dictgen::InsensitiveStr::Ascii("orcized"),
@@ -14363,7 +15077,10 @@ static VARS_EV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("angelisation"),
         dictgen::InsensitiveStr::Ascii("angelisations"),
@@ -14416,7 +15133,10 @@ static VARS_EU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("logise"),
         dictgen::InsensitiveStr::Ascii("logised"),
@@ -14485,7 +15205,10 @@ static VARS_ET_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_ET_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ET_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ernalise"),
         dictgen::InsensitiveStr::Ascii("ernalised"),
@@ -14550,7 +15273,10 @@ static VARS_ES_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_ES_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ES_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ophagi"),
         dictgen::InsensitiveStr::Ascii("ophagus"),
@@ -14609,7 +15335,10 @@ static VARS_EQ_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EQ_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EQ_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ualed"),
         dictgen::InsensitiveStr::Ascii("ualing"),
@@ -14666,7 +15395,10 @@ static VARS_EP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aulet"),
         dictgen::InsensitiveStr::Ascii("aulets"),
@@ -14719,7 +15451,10 @@ static VARS_EN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ameled"),
         dictgen::InsensitiveStr::Ascii("ameler"),
@@ -14866,7 +15601,10 @@ static VARS_EM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("blematise"),
         dictgen::InsensitiveStr::Ascii("blematised"),
@@ -14955,7 +15693,10 @@ static VARS_EL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("egise"),
         dictgen::InsensitiveStr::Ascii("egised"),
@@ -14984,7 +15725,10 @@ static VARS_EG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("is"),
         dictgen::InsensitiveStr::Ascii("ises"),
@@ -15001,7 +15745,10 @@ static VARS_ED_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_ED_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ED_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ema"),
         dictgen::InsensitiveStr::Ascii("emas"),
@@ -15040,7 +15787,10 @@ static VARS_EC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_EC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_EC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("onomise"),
         dictgen::InsensitiveStr::Ascii("onomised"),
@@ -15111,7 +15861,10 @@ static VARS_DY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_DY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("spnea"),
         dictgen::InsensitiveStr::Ascii("spneas"),
@@ -15132,7 +15885,10 @@ static VARS_DU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_DU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -15173,7 +15929,10 @@ static VARS_DR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_DR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("aftboard"),
         dictgen::InsensitiveStr::Ascii("aftboards"),
@@ -15288,7 +16047,10 @@ static VARS_DO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_DO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gmatise"),
         dictgen::InsensitiveStr::Ascii("gmatised"),
@@ -15367,7 +16129,10 @@ static VARS_DIV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DIV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("inise"),
         dictgen::InsensitiveStr::Ascii("inised"),
@@ -15430,7 +16195,10 @@ static VARS_DIST_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DIST_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIST_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ill"),
         dictgen::InsensitiveStr::Ascii("ills"),
@@ -15447,7 +16215,10 @@ static VARS_DISO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DISO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DISO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rganisation"),
         dictgen::InsensitiveStr::Ascii("rganisations"),
@@ -15484,7 +16255,10 @@ static VARS_DISH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DISH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DISH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eveled"),
         dictgen::InsensitiveStr::Ascii("eveling"),
@@ -15561,7 +16335,10 @@ static VARS_DISF_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DISF_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DISF_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("avor"),
         dictgen::InsensitiveStr::Ascii("avored"),
@@ -15590,7 +16367,10 @@ static VARS_DISE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DISE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DISE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mboweled"),
         dictgen::InsensitiveStr::Ascii("mboweling"),
@@ -15611,7 +16391,10 @@ static VARS_DISC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DISC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DISC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("olor"),
         dictgen::InsensitiveStr::Ascii("olored"),
@@ -15648,7 +16431,10 @@ static VARS_DIP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DIP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hthongisation"),
         dictgen::InsensitiveStr::Ascii("hthongisations"),
@@ -15685,7 +16471,10 @@ static VARS_DIO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DIO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("pter"),
         dictgen::InsensitiveStr::Ascii("pters"),
@@ -15706,7 +16495,10 @@ static VARS_DIG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DIG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("italise"),
         dictgen::InsensitiveStr::Ascii("italised"),
@@ -15765,7 +16557,10 @@ static VARS_DIE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DIE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("cious")],
     values: &[&[(0b00001, &ENTRY_DIOECIOUS_755179665025369568)]],
     range: 5..=5,
@@ -15776,7 +16571,10 @@ static VARS_DIC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DIC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hotomise"),
         dictgen::InsensitiveStr::Ascii("hotomised"),
@@ -15805,7 +16603,10 @@ static VARS_DIA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DIA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DIA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("led"),
         dictgen::InsensitiveStr::Ascii("ling"),
@@ -15904,7 +16705,10 @@ static VARS_DEV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DEV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iled"),
         dictgen::InsensitiveStr::Ascii("iling"),
@@ -15949,7 +16753,10 @@ static VARS_DET_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DET_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DET_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ribalisation"),
         dictgen::InsensitiveStr::Ascii("ribalisations"),
@@ -16020,7 +16827,10 @@ static VARS_DESU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DESU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DESU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lfurization"),
         dictgen::InsensitiveStr::Ascii("lfurizations"),
@@ -16069,7 +16879,10 @@ static VARS_DEST_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEST_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEST_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abilisation"),
         dictgen::InsensitiveStr::Ascii("abilise"),
@@ -16102,7 +16915,10 @@ static VARS_DESP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DESP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DESP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("atch"),
         dictgen::InsensitiveStr::Ascii("atched"),
@@ -16123,7 +16939,10 @@ static VARS_DESE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DESE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DESE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nsitisation"),
         dictgen::InsensitiveStr::Ascii("nsitisations"),
@@ -16184,7 +17003,10 @@ static VARS_DESC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DESC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DESC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("endents")],
     values: &[&[(0b00001, &ENTRY_DESCENDANTS_15651999902366879600)]],
     range: 7..=7,
@@ -16195,7 +17017,10 @@ static VARS_DESA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DESA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DESA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("linisation"),
         dictgen::InsensitiveStr::Ascii("linisations"),
@@ -16266,7 +17091,10 @@ static VARS_DEPU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEPU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEPU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tise"),
         dictgen::InsensitiveStr::Ascii("tised"),
@@ -16295,7 +17123,10 @@ static VARS_DEPR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEPR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEPR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("essurisation"),
         dictgen::InsensitiveStr::Ascii("essurisations"),
@@ -16332,7 +17163,10 @@ static VARS_DEPO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEPO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEPO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("larisation"),
         dictgen::InsensitiveStr::Ascii("larisations"),
@@ -16413,7 +17247,10 @@ static VARS_DEPE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEPE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEPE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ndance"),
         dictgen::InsensitiveStr::Ascii("ndances"),
@@ -16458,7 +17295,10 @@ static VARS_DEPA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEPA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEPA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rtmentalisation"),
         dictgen::InsensitiveStr::Ascii("rtmentalisations"),
@@ -16495,7 +17335,10 @@ static VARS_DEO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DEO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dorisation"),
         dictgen::InsensitiveStr::Ascii("dorisations"),
@@ -16540,7 +17383,10 @@ static VARS_DEN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DEN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ationalisation"),
         dictgen::InsensitiveStr::Ascii("ationalisations"),
@@ -16663,7 +17509,10 @@ static VARS_DEMY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEMY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEMY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("thologise"),
         dictgen::InsensitiveStr::Ascii("thologised"),
@@ -16692,7 +17541,10 @@ static VARS_DEMO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEMO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEMO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("bilisation"),
         dictgen::InsensitiveStr::Ascii("bilisations"),
@@ -16825,7 +17677,10 @@ static VARS_DEMI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEMI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEMI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("litarisation"),
         dictgen::InsensitiveStr::Ascii("litarisations"),
@@ -16886,7 +17741,10 @@ static VARS_DEME_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEME_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEME_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("anor"),
         dictgen::InsensitiveStr::Ascii("anors"),
@@ -16907,7 +17765,10 @@ static VARS_DEMA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DEMA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEMA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("gnetisation"),
         dictgen::InsensitiveStr::Ascii("gnetisations"),
@@ -16986,7 +17847,10 @@ static VARS_DEL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DEL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ocalisation"),
         dictgen::InsensitiveStr::Ascii("ocalisations"),
@@ -17023,7 +17887,10 @@ static VARS_DEI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DEI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("onisation"),
         dictgen::InsensitiveStr::Ascii("onise"),
@@ -17056,7 +17923,10 @@ static VARS_DEH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DEH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("umanisation"),
         dictgen::InsensitiveStr::Ascii("umanisations"),
@@ -17093,7 +17963,10 @@ static VARS_DEF_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_DEF_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DEF_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ence"),
         dictgen::InsensitiveStr::Ascii("enced"),
@@ -17176,7 +18049,10 @@ static VARS_DECR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DECR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DECR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iminalisation"),
         dictgen::InsensitiveStr::Ascii("iminalisations"),
@@ -17213,7 +18089,10 @@ static VARS_DECO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DECO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DECO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lonisation"),
         dictgen::InsensitiveStr::Ascii("lonisations"),
@@ -17250,7 +18129,10 @@ static VARS_DECI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DECI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DECI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("liter"),
         dictgen::InsensitiveStr::Ascii("liters"),
@@ -17303,7 +18185,10 @@ static VARS_DECE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DECE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DECE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ntralisation"),
         dictgen::InsensitiveStr::Ascii("ntralisations"),
@@ -17340,7 +18225,10 @@ static VARS_DECA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_DECA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_DECA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rbonisation"),
         dictgen::InsensitiveStr::Ascii("rbonisations"),
@@ -17411,7 +18299,10 @@ static VARS_CU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_CU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dgeled"),
         dictgen::InsensitiveStr::Ascii("dgeling"),
@@ -17502,7 +18393,10 @@ static VARS_CRY_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CRY_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CRY_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("stalize"),
         dictgen::InsensitiveStr::Ascii("stalized"),
@@ -17563,7 +18457,10 @@ static VARS_CRU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CRU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CRU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eler"),
         dictgen::InsensitiveStr::Ascii("elest"),
@@ -17584,7 +18481,10 @@ static VARS_CRI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CRI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CRI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("minalisation"),
         dictgen::InsensitiveStr::Ascii("minalisations"),
@@ -17661,7 +18561,10 @@ static VARS_CRE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CRE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CRE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nellate"),
         dictgen::InsensitiveStr::Ascii("nellated"),
@@ -17744,7 +18647,10 @@ static VARS_COZ_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COZ_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COZ_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ied"),
         dictgen::InsensitiveStr::Ascii("ier"),
@@ -17773,7 +18679,10 @@ static VARS_COU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ncillor"),
         dictgen::InsensitiveStr::Ascii("ncillors"),
@@ -17818,7 +18727,10 @@ static VARS_COS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ied"),
         dictgen::InsensitiveStr::Ascii("ier"),
@@ -17863,7 +18775,10 @@ static VARS_COP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("olymerise"),
         dictgen::InsensitiveStr::Ascii("olymerised"),
@@ -17892,7 +18807,10 @@ static VARS_COO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("ky")],
     values: &[&[(0b00001, &ENTRY_COOKIE_9287663065088073450)]],
     range: 2..=2,
@@ -17903,7 +18821,10 @@ static VARS_CON_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CON_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CON_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ceptualisation"),
         dictgen::InsensitiveStr::Ascii("ceptualisations"),
@@ -18048,7 +18969,10 @@ static VARS_COM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mercialisation"),
         dictgen::InsensitiveStr::Ascii("mercialisations"),
@@ -18201,7 +19125,10 @@ static VARS_COLOU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::Trie
     value: None,
 };
 
-pub static VARS_COLOU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COLOU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("r"),
         dictgen::InsensitiveStr::Ascii("rable"),
@@ -18296,7 +19223,10 @@ static VARS_COLOR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::Trie
     value: Some(&[(0b11001, &ENTRY_COLOR_4390088940109675041)]),
 };
 
-pub static VARS_COLOR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COLOR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("able"),
         dictgen::InsensitiveStr::Ascii("abler"),
@@ -18373,7 +19303,10 @@ static VARS_COLON_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::Trie
     value: None,
 };
 
-pub static VARS_COLON_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COLON_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("isation"),
         dictgen::InsensitiveStr::Ascii("isations"),
@@ -18418,7 +19351,10 @@ static VARS_COLL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_COLL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COLL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ectable"),
         dictgen::InsensitiveStr::Ascii("ectables"),
@@ -18459,7 +19395,10 @@ static VARS_COG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nisable"),
         dictgen::InsensitiveStr::Ascii("nisabler"),
@@ -18504,7 +19443,10 @@ static VARS_COE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_COE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_COE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lom"),
         dictgen::InsensitiveStr::Ascii("lomata"),
@@ -18531,7 +19473,10 @@ static VARS_CL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_CL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("amor"),
         dictgen::InsensitiveStr::Ascii("amored"),
@@ -18600,7 +19545,10 @@ static VARS_CI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_CI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("catrisation"),
         dictgen::InsensitiveStr::Ascii("catrisations"),
@@ -18709,7 +19657,10 @@ static VARS_CHR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CHR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CHR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("istianisation"),
         dictgen::InsensitiveStr::Ascii("istianisations"),
@@ -18746,7 +19697,10 @@ static VARS_CHI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CHI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CHI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("le"),
         dictgen::InsensitiveStr::Ascii("les"),
@@ -18781,7 +19735,10 @@ static VARS_CHE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CHE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CHE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ckbook"),
         dictgen::InsensitiveStr::Ascii("ckbooks"),
@@ -18830,7 +19787,10 @@ static VARS_CHA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CHA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CHA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("nneled"),
         dictgen::InsensitiveStr::Ascii("nneling"),
@@ -18891,7 +19851,10 @@ static VARS_CE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_CE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("lom"),
         dictgen::InsensitiveStr::Ascii("loms"),
@@ -19036,7 +19999,10 @@ static VARS_CAV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("iare"),
         dictgen::InsensitiveStr::Ascii("iares"),
@@ -19073,7 +20039,10 @@ static VARS_CAU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("terisation"),
         dictgen::InsensitiveStr::Ascii("terisations"),
@@ -19110,7 +20079,10 @@ static VARS_CAT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alog"),
         dictgen::InsensitiveStr::Ascii("aloged"),
@@ -19229,7 +20201,10 @@ static VARS_CAR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("amelisation"),
         dictgen::InsensitiveStr::Ascii("amelisations"),
@@ -19322,7 +20297,10 @@ static VARS_CAP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("italisation"),
         dictgen::InsensitiveStr::Ascii("italisations"),
@@ -19391,7 +20369,10 @@ static VARS_CAN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("alisation"),
         dictgen::InsensitiveStr::Ascii("alisations"),
@@ -19502,7 +20483,10 @@ static VARS_CAL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dron"),
         dictgen::InsensitiveStr::Ascii("drons"),
@@ -19560,7 +20544,10 @@ static VARS_CAE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_CAE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_CAE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("sium"),
         dictgen::InsensitiveStr::Ascii("siums"),
@@ -19613,7 +20600,10 @@ static VARS_BU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_BU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("reaucratisation"),
         dictgen::InsensitiveStr::Ascii("reaucratisations"),
@@ -19668,7 +20658,10 @@ static VARS_BR_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_BR_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BR_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eathalyse"),
         dictgen::InsensitiveStr::Ascii("eathalysed"),
@@ -19727,7 +20720,10 @@ static VARS_BO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_BO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("tanise"),
         dictgen::InsensitiveStr::Ascii("tanised"),
@@ -19784,7 +20780,10 @@ static VARS_BL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_BL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("amable")],
     values: &[&[(0b01001, &ENTRY_BLAMABLE_2805926222821580419)]],
     range: 6..=6,
@@ -19795,7 +20794,10 @@ static VARS_BI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_BI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("assed"),
         dictgen::InsensitiveStr::Ascii("assing"),
@@ -19856,7 +20858,10 @@ static VARS_BEV_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_BEV_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BEV_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eled"),
         dictgen::InsensitiveStr::Ascii("eler"),
@@ -19889,7 +20894,10 @@ static VARS_BEL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_BEL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BEL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("abor"),
         dictgen::InsensitiveStr::Ascii("abored"),
@@ -19918,7 +20926,10 @@ static VARS_BEJ_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_BEJ_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BEJ_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eweled"),
         dictgen::InsensitiveStr::Ascii("eweling"),
@@ -19939,7 +20950,10 @@ static VARS_BEH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_BEH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BEH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("avior"),
         dictgen::InsensitiveStr::Ascii("avioral"),
@@ -20028,7 +21042,10 @@ static VARS_BED_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_BED_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BED_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eviled"),
         dictgen::InsensitiveStr::Ascii("eviling"),
@@ -20049,7 +21066,10 @@ static VARS_BA_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_BA_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_BA_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cterias"),
         dictgen::InsensitiveStr::Ascii("lkanisation"),
@@ -20208,7 +21228,10 @@ static VARS_AX_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: Some(&[(0b00001, &ENTRY_AX_8791902263575839056)]),
 };
 
-pub static VARS_AX_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AX_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[dictgen::InsensitiveStr::Ascii("e")],
     values: &[&[(0b11010, &ENTRY_AX_8791902263575839056)]],
     range: 1..=1,
@@ -20219,7 +21242,10 @@ static VARS_AU_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AU_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AU_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("thorisation"),
         dictgen::InsensitiveStr::Ascii("thorisations"),
@@ -20280,7 +21306,10 @@ static VARS_AT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("omisation"),
         dictgen::InsensitiveStr::Ascii("omisations"),
@@ -20345,7 +21374,10 @@ static VARS_AS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("afetida"),
         dictgen::InsensitiveStr::Ascii("afetidas"),
@@ -20410,7 +21442,10 @@ static VARS_ART_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ART_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ART_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("efact"),
         dictgen::InsensitiveStr::Ascii("efacts"),
@@ -20455,7 +21490,10 @@ static VARS_ARS_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ARS_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ARS_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("e"),
         dictgen::InsensitiveStr::Ascii("ehole"),
@@ -20476,7 +21514,10 @@ static VARS_ARO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ARO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ARO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("matisation"),
         dictgen::InsensitiveStr::Ascii("matise"),
@@ -20509,7 +21550,10 @@ static VARS_ARM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ARM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ARM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ored"),
@@ -20554,7 +21598,10 @@ static VARS_ARD_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ARD_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ARD_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ors"),
@@ -20575,7 +21622,10 @@ static VARS_ARC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ARC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ARC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("haise"),
         dictgen::InsensitiveStr::Ascii("haised"),
@@ -20616,7 +21666,10 @@ static VARS_ARB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ARB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ARB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("or"),
         dictgen::InsensitiveStr::Ascii("ored"),
@@ -20687,7 +21740,10 @@ static VARS_APP_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_APP_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_APP_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("al"),
         dictgen::InsensitiveStr::Ascii("all"),
@@ -20744,7 +21800,10 @@ static VARS_APO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_APO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_APO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("logise"),
         dictgen::InsensitiveStr::Ascii("logised"),
@@ -20821,7 +21880,10 @@ static VARS_APN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_APN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_APN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ea"),
         dictgen::InsensitiveStr::Ascii("eas"),
@@ -20842,7 +21904,10 @@ static VARS_APH_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_APH_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_APH_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("orise"),
         dictgen::InsensitiveStr::Ascii("orised"),
@@ -20905,7 +21970,10 @@ static VARS_ANT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ANT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("agonise"),
         dictgen::InsensitiveStr::Ascii("agonised"),
@@ -20966,7 +22034,10 @@ static VARS_ANO_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ANO_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANO_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("dise"),
         dictgen::InsensitiveStr::Ascii("dised"),
@@ -20995,7 +22066,10 @@ static VARS_ANN_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ANN_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANN_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ualise"),
         dictgen::InsensitiveStr::Ascii("ualised"),
@@ -21024,7 +22098,10 @@ static VARS_ANI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ANI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("malisation"),
         dictgen::InsensitiveStr::Ascii("malisations"),
@@ -21061,7 +22138,10 @@ static VARS_ANG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ANG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("licisation"),
         dictgen::InsensitiveStr::Ascii("licisations"),
@@ -21098,7 +22178,10 @@ static VARS_ANE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNo
     value: None,
 };
 
-pub static VARS_ANE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mia"),
         dictgen::InsensitiveStr::Ascii("mias"),
@@ -21205,7 +22288,10 @@ static VARS_ANAT_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_ANAT_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANAT_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("hematise"),
         dictgen::InsensitiveStr::Ascii("hematised"),
@@ -21250,7 +22336,10 @@ static VARS_ANAL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_ANAL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANAL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ogise"),
         dictgen::InsensitiveStr::Ascii("ogised"),
@@ -21313,7 +22402,10 @@ static VARS_ANAG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_ANAG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANAG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rammatise"),
         dictgen::InsensitiveStr::Ascii("rammatised"),
@@ -21342,7 +22434,10 @@ static VARS_ANAE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieN
     value: None,
 };
 
-pub static VARS_ANAE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_ANAE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("mia"),
         dictgen::InsensitiveStr::Ascii("mias"),
@@ -21415,7 +22510,10 @@ static VARS_AM_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AM_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AM_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("eba"),
         dictgen::InsensitiveStr::Ascii("ebae"),
@@ -21502,7 +22600,10 @@ static VARS_AL_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AL_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AL_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("chemise"),
         dictgen::InsensitiveStr::Ascii("chemised"),
@@ -21621,7 +22722,10 @@ static VARS_AI_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AI_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AI_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rfoil"),
         dictgen::InsensitiveStr::Ascii("rfoils"),
@@ -21642,7 +22746,10 @@ static VARS_AG_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AG_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AG_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("grandise"),
         dictgen::InsensitiveStr::Ascii("grandised"),
@@ -21715,7 +22822,10 @@ static VARS_AF_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AF_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AF_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("ricanise"),
         dictgen::InsensitiveStr::Ascii("ricanised"),
@@ -21746,7 +22856,10 @@ static VARS_AE_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AE_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AE_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("rofoil"),
         dictgen::InsensitiveStr::Ascii("rofoils"),
@@ -21787,7 +22900,10 @@ static VARS_AD_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AD_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AD_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("vertize"),
         dictgen::InsensitiveStr::Ascii("vertized"),
@@ -21814,7 +22930,10 @@ static VARS_AC_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AC_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AC_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("cessorise"),
         dictgen::InsensitiveStr::Ascii("cessorised"),
@@ -21903,7 +23022,10 @@ static VARS_AB_NODE: dictgen::TrieNode<&[(u8, &VariantsMap)]> = dictgen::TrieNod
     value: None,
 };
 
-pub static VARS_AB_CHILDREN: dictgen::OrderedMap<&[(u8, &VariantsMap)]> = dictgen::OrderedMap {
+pub static VARS_AB_CHILDREN: dictgen::OrderedMap<
+    dictgen::InsensitiveStr<'static>,
+    &[(u8, &VariantsMap)],
+> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("etter"),
         dictgen::InsensitiveStr::Ascii("etters"),

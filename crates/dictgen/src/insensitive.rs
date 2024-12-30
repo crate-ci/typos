@@ -51,6 +51,18 @@ impl<'s2> PartialEq<InsensitiveStr<'s2>> for InsensitiveStr<'_> {
 
 impl Eq for InsensitiveStr<'_> {}
 
+impl PartialOrd for InsensitiveStr<'_> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for InsensitiveStr<'_> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.convert().cmp(&other.convert())
+    }
+}
+
 impl core::hash::Hash for InsensitiveStr<'_> {
     #[inline]
     fn hash<H: core::hash::Hasher>(&self, hasher: &mut H) {

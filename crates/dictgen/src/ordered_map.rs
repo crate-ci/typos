@@ -14,6 +14,7 @@ impl OrderedMapGen<'_> {
         data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0));
 
         let name = self.gen.name;
+        let key_type = "dictgen::InsensitiveStr<'static>";
         let value_type = self.gen.value_type;
 
         let mut smallest = usize::MAX;
@@ -21,7 +22,7 @@ impl OrderedMapGen<'_> {
 
         writeln!(
             file,
-            "pub static {name}: dictgen::OrderedMap<{value_type}> = dictgen::OrderedMap {{"
+            "pub static {name}: dictgen::OrderedMap<{key_type}, {value_type}> = dictgen::OrderedMap {{"
         )?;
         writeln!(file, "    keys: &[")?;
         for (key, _value) in data.iter() {
@@ -52,13 +53,13 @@ impl OrderedMapGen<'_> {
     }
 }
 
-pub struct OrderedMap<V: 'static> {
-    pub keys: &'static [crate::InsensitiveStr<'static>],
+pub struct OrderedMap<K: 'static, V: 'static> {
+    pub keys: &'static [K],
     pub values: &'static [V],
     pub range: core::ops::RangeInclusive<usize>,
 }
 
-impl<V> OrderedMap<V> {
+impl<V> OrderedMap<crate::InsensitiveStr<'_>, V> {
     #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&'static V> {
         if self.range.contains(&word.len()) {
@@ -66,6 +67,17 @@ impl<V> OrderedMap<V> {
                 .binary_search_by_key(word, |key| key.convert())
                 .map(|i| &self.values[i])
                 .ok()
+        } else {
+            None
+        }
+    }
+}
+
+impl<V> OrderedMap<&str, V> {
+    #[inline]
+    pub fn find(&self, word: &'_ &str) -> Option<&'static V> {
+        if self.range.contains(&word.len()) {
+            self.keys.binary_search(word).map(|i| &self.values[i]).ok()
         } else {
             None
         }

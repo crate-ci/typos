@@ -27,7 +27,7 @@ impl TrieGen<'_> {
 
 pub struct Trie<V: 'static> {
     pub root: &'static TrieNode<V>,
-    pub unicode: &'static crate::OrderedMap<V>,
+    pub unicode: &'static crate::OrderedMap<crate::InsensitiveStr<'static>, V>,
     pub range: core::ops::RangeInclusive<usize>,
 }
 
@@ -91,7 +91,7 @@ pub struct TrieNode<V: 'static> {
 
 pub enum TrieChild<V: 'static> {
     Nested(&'static [Option<&'static TrieNode<V>>; 26]),
-    Flat(&'static crate::OrderedMap<V>),
+    Flat(&'static crate::OrderedMap<crate::InsensitiveStr<'static>, V>),
 }
 
 #[cfg(feature = "codegen")]
