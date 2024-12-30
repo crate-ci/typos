@@ -25,6 +25,12 @@ jobs:
       uses: crate-ci/typos@v1.28.4
 ```
 
+**Requirements:** The runner must have `wget` installed
+(see
+[#769](https://github.com/crate-ci/typos/issues/769)
+[#1191](https://github.com/crate-ci/typos/issues/1191)
+).
+
 ## Input
 
 | Name               | Description                                                     | Required | Default                                              |
