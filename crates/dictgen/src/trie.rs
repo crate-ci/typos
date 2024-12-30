@@ -34,7 +34,12 @@ pub struct DictTrie<V: 'static> {
 impl<V> DictTrie<V> {
     #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&'static V> {
-        if word.is_ascii() {
+        if word
+            .into_inner()
+            .as_bytes()
+            .iter()
+            .all(|b| b.is_ascii_alphabetic())
+        {
             if self.range.contains(&word.len()) {
                 self.find_ascii(word.as_bytes())
             } else {
