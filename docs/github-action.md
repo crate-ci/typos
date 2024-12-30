@@ -42,9 +42,6 @@ jobs:
 **Important** for any of the examples above, make sure that you choose
 a release or commit as a version, and not a branch (which is a moving target).
 
-Also make sure when referencing relative file paths to use `./` (e.g., `./file.txt` instead of
-`file.txt`.
-
 ## Input
 
 | Name               | Description                                                     | Required | Default                                              |
