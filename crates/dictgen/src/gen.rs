@@ -40,7 +40,11 @@ impl<'g> DictGen<'g> {
     }
 
     pub fn ordered_map(self) -> crate::OrderedMapGen<'g> {
-        crate::OrderedMapGen { gen: self }
+        crate::OrderedMapGen {
+            gen: self,
+            unicode: true,
+            unicase: true,
+        }
     }
 
     pub fn trie(self) -> crate::TrieGen<'g> {
