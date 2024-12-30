@@ -70,9 +70,4 @@ impl<V> DictTable<V> {
             None
         }
     }
-
-    #[inline]
-    pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&'static str>, &'static V)> + '_ {
-        (0..self.keys.len()).map(move |i| (self.keys[i].convert(), &self.values[i]))
-    }
 }

@@ -68,9 +68,4 @@ impl<V> DictMap<V> {
             None
         }
     }
-
-    #[inline]
-    pub fn iter(&self) -> impl Iterator<Item = (unicase::UniCase<&str>, &V)> + '_ {
-        self.map.entries().map(|(k, v)| (k.convert(), v))
-    }
 }
