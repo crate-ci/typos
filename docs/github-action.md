@@ -3,6 +3,28 @@
 If you want an easy way to test your repository spelling (or a subset of files)
 you can use the Typos Action!
 
+```yaml
+name: Spelling
+
+permissions:
+  contents: read
+
+on: [pull_request]
+
+env:
+  CLICOLOR: 1
+
+jobs:
+  spelling:
+    name: Spell Check with Typos
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v4
+    - name: Spell Check Repo
+      uses: crate-ci/typos@v1.28.4
+```
+
 ## Input
 
 | Name               | Description                                                     | Required | Default                                              |
