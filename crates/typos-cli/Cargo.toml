@@ -25,6 +25,7 @@ pre-release-replacements = [
   {file="../../CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/crate-ci/typos/compare/{{tag_name}}...HEAD", exactly=1},
   {file="../../action/entrypoint.sh", search="VERSION=.*", replace="VERSION={{version}}", min=1},
   {file="../../docs/pre-commit.md", search="rev: .*", replace="rev: {{tag_name}}", exactly=1},
+  {file="../../docs/github-action.md", search="uses: crate-ci/typos@.*", replace="uses: crate-ci/typos@{{tag_name}}", min=1},
   {file="../../setup.py", search="TYPOS_VERSION = .*", replace="TYPOS_VERSION = '{{version}}'", exactly=1},
 ]
 

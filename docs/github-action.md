@@ -17,30 +17,27 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Check spelling of file.txt
-      uses: crate-ci/typos@master
+      uses: crate-ci/typos@v1.28.4
       with:
         files: ./file.txt
 
     - name: Use custom config file
-      uses: crate-ci/typos@master
+      uses: crate-ci/typos@v1.28.4
       with:
         files: ./file.txt
         config: ./myconfig.toml
 
     - name: Ignore implicit configuration file
-      uses: crate-ci/typos@master
+      uses: crate-ci/typos@v1.28.4
       with:
         files: ./file.txt
         isolated: true
 
     - name: Writes changes in the local checkout
-      uses: crate-ci/typos@master
+      uses: crate-ci/typos@v1.28.4
       with:
         write_changes: true
 ```
-
-**Important** for any of the examples above, make sure that you choose
-a release or commit as a version, and not a branch (which is a moving target).
 
 ## Input
 
