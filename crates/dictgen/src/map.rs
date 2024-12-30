@@ -19,6 +19,19 @@ impl MapGen<'_> {
 
         let mut smallest = usize::MAX;
         let mut largest = usize::MIN;
+        for (key, _) in data.iter() {
+            smallest = std::cmp::min(smallest, key.len());
+            largest = std::cmp::max(largest, key.len());
+        }
+        if largest == 0 {
+            smallest = 0;
+        }
+
+        writeln!(
+            file,
+            "pub static {name}: dictgen::Map<{key_type}, {value_type}> = dictgen::Map {{"
+        )?;
+
         let mut builder = phf_codegen::Map::new();
         let data = data
             .iter()
@@ -34,20 +47,11 @@ impl MapGen<'_> {
             })
             .collect::<Vec<_>>();
         for (key, value) in data.iter() {
-            smallest = std::cmp::min(smallest, key.len());
-            largest = std::cmp::max(largest, key.len());
             builder.entry(key, value.as_str());
         }
         let builder = builder.build();
-        if largest == 0 {
-            smallest = 0;
-        }
-
-        writeln!(
-            file,
-            "pub static {name}: dictgen::Map<{key_type}, {value_type}> = dictgen::Map {{"
-        )?;
         writeln!(file, "    map: {builder},")?;
+
         writeln!(file, "    range: {smallest}..={largest},")?;
         writeln!(file, "}};")?;
 
