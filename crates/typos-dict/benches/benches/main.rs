@@ -1,7 +1,7 @@
 #![allow(clippy::wildcard_imports)]
 
 mod map_codegen;
-mod table_codegen;
+mod ordered_map_codegen;
 mod trie_codegen;
 
 mod miss {
@@ -20,8 +20,8 @@ mod miss {
     }
 
     #[divan::bench(args = [unicase::UniCase::new(MISS)])]
-    fn table(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
-        table_codegen::WORD.find(&word)
+    fn ordered_map(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
+        ordered_map_codegen::WORD.find(&word)
     }
 }
 
@@ -41,8 +41,8 @@ mod hit {
     }
 
     #[divan::bench(args = [unicase::UniCase::new(HIT)])]
-    fn table(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
-        table_codegen::WORD.find(&word)
+    fn ordered_map(word: unicase::UniCase<&str>) -> Option<&'static &[&str]> {
+        ordered_map_codegen::WORD.find(&word)
     }
 }
 

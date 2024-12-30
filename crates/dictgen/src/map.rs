@@ -1,10 +1,10 @@
 #[cfg(feature = "codegen")]
-pub struct DictMapGen<'g> {
+pub struct MapGen<'g> {
     pub(crate) gen: crate::DictGen<'g>,
 }
 
 #[cfg(feature = "codegen")]
-impl DictMapGen<'_> {
+impl MapGen<'_> {
     pub fn write<'d, W: std::io::Write, V: std::fmt::Display>(
         &self,
         file: &mut W,
@@ -44,7 +44,7 @@ impl DictMapGen<'_> {
 
         writeln!(
             file,
-            "pub static {name}: dictgen::DictMap<{value_type}> = dictgen::DictMap {{"
+            "pub static {name}: dictgen::Map<{value_type}> = dictgen::Map {{"
         )?;
         writeln!(file, "    map: {builder},")?;
         writeln!(file, "    range: {smallest}..={largest},")?;
@@ -54,12 +54,12 @@ impl DictMapGen<'_> {
     }
 }
 
-pub struct DictMap<V: 'static> {
+pub struct Map<V: 'static> {
     pub map: phf::Map<crate::InsensitiveStr<'static>, V>,
     pub range: std::ops::RangeInclusive<usize>,
 }
 
-impl<V> DictMap<V> {
+impl<V> Map<V> {
     #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&V> {
         if self.range.contains(&word.len()) {

@@ -1,11 +1,11 @@
 #[cfg(feature = "codegen")]
-pub struct DictTrieGen<'g> {
+pub struct TrieGen<'g> {
     pub(crate) gen: crate::DictGen<'g>,
     pub(crate) limit: usize,
 }
 
 #[cfg(feature = "codegen")]
-impl DictTrieGen<'_> {
+impl TrieGen<'_> {
     pub fn limit(mut self, limit: usize) -> Self {
         self.limit = limit;
         self
@@ -25,13 +25,13 @@ impl DictTrieGen<'_> {
     }
 }
 
-pub struct DictTrie<V: 'static> {
-    pub root: &'static DictTrieNode<V>,
-    pub unicode: &'static crate::DictTable<V>,
+pub struct Trie<V: 'static> {
+    pub root: &'static TrieNode<V>,
+    pub unicode: &'static crate::OrderedMap<V>,
     pub range: core::ops::RangeInclusive<usize>,
 }
 
-impl<V> DictTrie<V> {
+impl<V> Trie<V> {
     #[inline]
     pub fn find(&self, word: &'_ unicase::UniCase<&str>) -> Option<&'static V> {
         if word
@@ -54,7 +54,7 @@ impl<V> DictTrie<V> {
         let mut child = &self.root;
         for i in 0..word.len() {
             match child.children {
-                DictTrieChild::Nested(n) => {
+                TrieChild::Nested(n) => {
                     let byte = word[i];
                     let index = if byte.is_ascii_lowercase() {
                         byte - b'a'
@@ -70,7 +70,7 @@ impl<V> DictTrie<V> {
                         return None;
                     }
                 }
-                DictTrieChild::Flat(t) => {
+                TrieChild::Flat(t) => {
                     let remaining = &word[i..word.len()];
                     // Unsafe: Everything before has been proven to be ASCII, so this should be
                     // safe.
@@ -84,14 +84,14 @@ impl<V> DictTrie<V> {
     }
 }
 
-pub struct DictTrieNode<V: 'static> {
-    pub children: DictTrieChild<V>,
+pub struct TrieNode<V: 'static> {
+    pub children: TrieChild<V>,
     pub value: Option<V>,
 }
 
-pub enum DictTrieChild<V: 'static> {
-    Nested(&'static [Option<&'static DictTrieNode<V>>; 26]),
-    Flat(&'static crate::DictTable<V>),
+pub enum TrieChild<V: 'static> {
+    Nested(&'static [Option<&'static TrieNode<V>>; 26]),
+    Flat(&'static crate::OrderedMap<V>),
 }
 
 #[cfg(feature = "codegen")]
@@ -110,7 +110,7 @@ mod codegen {
 
         writeln!(
             file,
-            "pub static {name}: dictgen::DictTrie<{value_type}> = dictgen::DictTrie {{"
+            "pub static {name}: dictgen::Trie<{value_type}> = dictgen::Trie {{"
         )?;
         writeln!(file, "    root: &{},", gen_node_name(name, ""))?;
         writeln!(file, "    unicode: &{},", &unicode_table_name)?;
@@ -126,7 +126,7 @@ mod codegen {
         crate::DictGen::new()
             .name(&unicode_table_name)
             .value_type(value_type)
-            .table()
+            .ordered_map()
             .write(file, root.unicode.into_iter())?;
         writeln!(file)?;
 
@@ -136,7 +136,7 @@ mod codegen {
             let children_name = gen_children_name(name, &start);
             writeln!(
                 file,
-                "static {node_name}: dictgen::DictTrieNode<{value_type}> = dictgen::DictTrieNode {{"
+                "static {node_name}: dictgen::TrieNode<{value_type}> = dictgen::TrieNode {{"
             )?;
             writeln!(
                 file,
@@ -156,7 +156,7 @@ mod codegen {
                 DynChild::Nested(n) => {
                     writeln!(
                         file,
-                        "static {children_name}: [Option<&dictgen::DictTrieNode<{value_type}>>; 26] = [",
+                        "static {children_name}: [Option<&dictgen::TrieNode<{value_type}>>; 26] = [",
                     )?;
                     for b in b'a'..=b'z' {
                         if let Some(child) = n.get(&b) {
@@ -178,7 +178,7 @@ mod codegen {
                     crate::DictGen::new()
                         .name(&children_name)
                         .value_type(value_type)
-                        .table()
+                        .ordered_map()
                         .write(file, table_input)?;
                 }
             }
@@ -211,8 +211,8 @@ mod codegen {
 
     fn gen_type_name<V>(leaf: &DynChild<'_, V>) -> &'static str {
         match leaf {
-            DynChild::Nested(_) => "dictgen::DictTrieChild::Nested",
-            DynChild::Flat(_) => "dictgen::DictTrieChild::Flat",
+            DynChild::Nested(_) => "dictgen::TrieChild::Nested",
+            DynChild::Flat(_) => "dictgen::TrieChild::Flat",
         }
     }
 

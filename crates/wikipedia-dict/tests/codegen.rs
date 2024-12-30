@@ -24,7 +24,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     dictgen::DictGen::new()
         .name("WORD_DICTIONARY")
         .value_type("&[&str]")
-        .table()
+        .ordered_map()
         .write(file, dict.map(|kv| (kv.0, format!("&{:?}", kv.1))))
         .unwrap();
 }
