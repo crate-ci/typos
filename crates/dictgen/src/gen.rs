@@ -35,16 +35,16 @@ impl<'g> DictGen<'g> {
     }
 
     #[cfg(feature = "map")]
-    pub fn map(self) -> crate::DictMapGen<'g> {
-        crate::DictMapGen { gen: self }
+    pub fn map(self) -> crate::MapGen<'g> {
+        crate::MapGen { gen: self }
     }
 
-    pub fn table(self) -> crate::DictTableGen<'g> {
-        crate::DictTableGen { gen: self }
+    pub fn ordered_map(self) -> crate::OrderedMapGen<'g> {
+        crate::OrderedMapGen { gen: self }
     }
 
-    pub fn trie(self) -> crate::DictTrieGen<'g> {
-        crate::DictTrieGen {
+    pub fn trie(self) -> crate::TrieGen<'g> {
+        crate::TrieGen {
             gen: self,
             limit: 64,
         }

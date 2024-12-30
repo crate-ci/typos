@@ -30,7 +30,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     dictgen::DictGen::new()
         .name("MAIN_DICTIONARY")
         .value_type("&[&str]")
-        .table()
+        .ordered_map()
         .write(
             file,
             main.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),
@@ -40,7 +40,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     dictgen::DictGen::new()
         .name("AMERICAN_DICTIONARY")
         .value_type("&[&str]")
-        .table()
+        .ordered_map()
         .write(
             file,
             american
@@ -52,7 +52,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
     dictgen::DictGen::new()
         .name("BRITISH_DICTIONARY")
         .value_type("&[&str]")
-        .table()
+        .ordered_map()
         .write(
             file,
             british.into_iter().map(|kv| (kv.0, format!("&{:?}", kv.1))),

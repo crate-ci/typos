@@ -1,6 +1,6 @@
 // This file is @generated crates/codespell-dict/tests/codegen.rs
 
-pub static WORD_DICTIONARY: dictgen::DictTable<&[&str]> = dictgen::DictTable {
+pub static WORD_DICTIONARY: dictgen::OrderedMap<&[&str]> = dictgen::OrderedMap {
     keys: &[
         dictgen::InsensitiveStr::Ascii("1nd"),
         dictgen::InsensitiveStr::Ascii("2rd"),
