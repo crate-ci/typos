@@ -61,6 +61,11 @@ impl<'g> DictGen<'g> {
     pub fn r#match(self) -> crate::MatchGen<'g> {
         crate::MatchGen { gen: self }
     }
+
+    #[cfg(feature = "aho-corasick")]
+    pub fn aho_corasick(self) -> crate::AhoCorasickGen<'g> {
+        crate::AhoCorasickGen { gen: self }
+    }
 }
 
 impl Default for DictGen<'static> {
