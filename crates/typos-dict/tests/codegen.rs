@@ -38,10 +38,7 @@ fn codegen() {
         snapbox::file!["../benches/benches/ordered_map_codegen.rs"].raw()
     );
 
-    snapbox::assert_data_eq!(
-        &trie_content,
-        snapbox::file!["../src/word_codegen.rs"].raw()
-    );
+    snapbox::assert_data_eq!(&map_content, snapbox::file!["../src/word_codegen.rs"].raw());
 }
 
 fn generate_trie<W: std::io::Write>(file: &mut W, name: &str, dict: &[u8]) {
