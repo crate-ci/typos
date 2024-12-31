@@ -27,7 +27,7 @@ impl TrieGen<'_> {
 
 pub struct Trie<V: 'static> {
     pub root: &'static TrieNode<V>,
-    pub unicode: &'static crate::OrderedMap<V>,
+    pub unicode: &'static crate::OrderedMap<crate::InsensitiveStr<'static>, V>,
     pub range: core::ops::RangeInclusive<usize>,
 }
 
@@ -75,7 +75,7 @@ impl<V> Trie<V> {
                     // Unsafe: Everything before has been proven to be ASCII, so this should be
                     // safe.
                     let remaining = unsafe { core::str::from_utf8_unchecked(remaining) };
-                    let remaining = unicase::UniCase::ascii(remaining);
+                    let remaining = unicase::Ascii::new(remaining);
                     return t.find(&remaining);
                 }
             }
@@ -91,7 +91,7 @@ pub struct TrieNode<V: 'static> {
 
 pub enum TrieChild<V: 'static> {
     Nested(&'static [Option<&'static TrieNode<V>>; 26]),
-    Flat(&'static crate::OrderedMap<V>),
+    Flat(&'static crate::OrderedMap<crate::InsensitiveAscii<'static>, V>),
 }
 
 #[cfg(feature = "codegen")]
@@ -179,6 +179,7 @@ mod codegen {
                         .name(&children_name)
                         .value_type(value_type)
                         .ordered_map()
+                        .unicode(false)
                         .write(file, table_input)?;
                 }
             }

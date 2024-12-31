@@ -1509,6 +1509,7 @@ dependencies = [
  "dictgen",
  "divan",
  "edit-distance",
+ "heck",
  "indexmap",
  "itertools 0.13.0",
  "phf",
