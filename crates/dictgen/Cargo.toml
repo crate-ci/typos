@@ -19,12 +19,14 @@ default = ["std"]
 std = []
 codegen = ["std", "dep:phf_codegen"]
 map = ["dep:phf", "dep:phf_shared"]
+aho-corasick = ["dep:aho-corasick"]
 
 [dependencies]
 unicase = "2.7"
 phf = { version = "0.11", features = ["unicase"], optional = true }
 phf_shared = { version = "0.11", optional = true }
 phf_codegen = { version = "0.11", optional = true }
+aho-corasick = { version = "1.1.3", optional = true }
 
 [lints]
 workspace = true
