@@ -447,7 +447,7 @@ dependencies = [
 
 [[package]]
 name = "dictgen"
-version = "0.2.11"
+version = "0.3.0"
 dependencies = [
  "aho-corasick",
  "phf",
@@ -1503,7 +1503,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.11.39"
+version = "0.12.0"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1521,7 +1521,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.8.24"
+version = "0.9.0"
 dependencies = [
  "codegenrs",
  "dictgen",

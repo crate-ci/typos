@@ -16,11 +16,11 @@ include.workspace = true
 release = false
 
 [dependencies]
-dictgen = { version = "^0.2", path = "../dictgen" }
+dictgen = { version = "^0.3", path = "../dictgen" }
 
 [dev-dependencies]
 codegenrs = "3.0"
-dictgen = { version = "^0.2", path = "../dictgen", features = ["codegen"] }
+dictgen = { version = "^0.3", path = "../dictgen", features = ["codegen"] }
 snapbox = "0.6.5"
 
 [lints]
