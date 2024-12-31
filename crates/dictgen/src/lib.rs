@@ -7,6 +7,8 @@ mod gen;
 mod insensitive;
 #[cfg(feature = "map")]
 mod map;
+#[cfg(feature = "codegen")]
+mod r#match;
 mod ordered_map;
 mod trie;
 
@@ -16,4 +18,6 @@ pub use insensitive::*;
 #[cfg(feature = "map")]
 pub use map::*;
 pub use ordered_map::*;
+#[cfg(feature = "codegen")]
+pub use r#match::*;
 pub use trie::*;

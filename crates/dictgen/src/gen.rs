@@ -57,6 +57,10 @@ impl<'g> DictGen<'g> {
             limit: 64,
         }
     }
+
+    pub fn r#match(self) -> crate::MatchGen<'g> {
+        crate::MatchGen { gen: self }
+    }
 }
 
 impl Default for DictGen<'static> {
