@@ -5,9 +5,7 @@ use std::sync::{atomic, Mutex};
 
 use anstream::stdout;
 use serde_sarif::sarif;
-use serde_sarif::sarif::{
-    ArtifactChangeBuilder, ArtifactContentBuilder, FixBuilder, ReplacementBuilder,
-};
+use serde_sarif::sarif::{ArtifactChange, ArtifactContent, Fix, Replacement};
 use typos_cli::report::{Context, Message, Report, Typo};
 use unicode_width::UnicodeWidthStr;
 
@@ -340,50 +338,46 @@ impl PrintSarif {
     }
 
     fn generate_final_result(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let mut sarif_builder = sarif::SarifBuilder::default();
-        sarif_builder
-            .version(sarif::Version::V2_1_0.to_string())
-            .schema(sarif::SCHEMA_URL);
-
-        let tool = sarif::ToolBuilder::default()
+        let tool = sarif::Tool::builder()
             .driver(
-                sarif::ToolComponentBuilder::default()
+                sarif::ToolComponent::builder()
                     .name("typos")
                     .information_uri(env!("CARGO_PKG_REPOSITORY"))
-                    .build()?,
+                    .build(),
             )
-            .build()?;
+            .build();
 
-        let mut run_builder = sarif::RunBuilder::default();
-        run_builder
+        let run_builder = sarif::Run::builder()
             .tool(tool)
             .column_kind(sarif::ResultColumnKind::UnicodeCodePoints.to_string())
             .results(self.results.lock().unwrap().clone());
 
-        if !self.error.lock().unwrap().is_empty() {
+        let run = if !self.error.lock().unwrap().is_empty() {
             let invocations = self
                 .error
                 .lock()
                 .unwrap()
                 .iter()
                 .map(|x| {
-                    sarif::InvocationBuilder::default()
+                    sarif::Invocation::builder()
+                        .execution_successful(false)
                         .process_start_failure_message(x.clone())
                         .build()
                 })
-                .collect::<Result<Vec<_>, _>>();
+                .collect::<Vec<_>>();
 
-            if let Err(e) = invocations {
-                return Err(e.into());
-            }
+            let run_builder = run_builder.invocations(invocations);
+            run_builder.build()
+        } else {
+            run_builder.build()
+        };
 
-            run_builder.invocations(invocations.unwrap());
-        }
+        let sarif_builder = sarif::Sarif::builder()
+            .version(sarif::Version::V2_1_0.to_string())
+            .schema(sarif::SCHEMA_URL)
+            .runs(vec![run]);
 
-        let run = run_builder.build()?;
-        sarif_builder.runs(vec![run]);
-
-        let sarif = sarif_builder.build()?;
+        let sarif = sarif_builder.build();
 
         serde_json::to_writer_pretty(stdout().lock(), &sarif)?;
 
@@ -401,13 +395,13 @@ fn sarif_error_mapper(error: impl std::fmt::Display) -> std::io::Error {
 fn typo_to_sarif_result(
     message: String,
     location: sarif::Location,
-    fix: Option<sarif::Fix>,
+    fix: Option<Fix>,
 ) -> Result<sarif::Result, Box<dyn std::error::Error>> {
-    let mut result = sarif::ResultBuilder::default()
+    let mut result = sarif::Result::builder()
         .level(sarif::ResultLevel::Error.to_string())
-        .message(sarif::MessageBuilder::default().markdown(message).build()?)
+        .message(sarif::Message::builder().markdown(message).build())
         .locations(vec![location])
-        .build()?;
+        .build();
     if let Some(fix) = fix {
         result.fixes = Some(vec![fix]);
     }
@@ -418,7 +412,7 @@ fn typo_to_sarif_fix(
     message: String,
     correct: typos::Status<'_>,
     location: sarif::Location,
-) -> Result<Option<sarif::Fix>, Box<dyn std::error::Error>> {
+) -> Result<Option<Fix>, Box<dyn std::error::Error>> {
     let physical_location = location.physical_location.unwrap();
     let Some(region) = physical_location.region else {
         return Ok(None);
@@ -430,31 +424,27 @@ fn typo_to_sarif_fix(
         typos::Status::Corrections(corrections) => {
             for correction in corrections.iter() {
                 replacements.push(
-                    ReplacementBuilder::default()
+                    Replacement::builder()
                         .deleted_region(region.clone())
                         .inserted_content(
-                            ArtifactContentBuilder::default()
-                                .text(correction.clone())
-                                .build()
-                                .unwrap(),
+                            ArtifactContent::builder().text(correction.clone()).build(),
                         )
-                        .build()
-                        .unwrap(),
+                        .build(),
                 );
             }
         }
         _ => return Ok(None),
     }
 
-    let change = ArtifactChangeBuilder::default()
+    let change = ArtifactChange::builder()
         .artifact_location(physical_location.artifact_location.unwrap())
         .replacements(replacements)
-        .build()?;
+        .build();
 
-    let fix = FixBuilder::default()
-        .description(sarif::MessageBuilder::default().markdown(message).build()?)
+    let fix = Fix::builder()
+        .description(sarif::Message::builder().markdown(message).build())
         .artifact_changes(vec![change])
-        .build()?;
+        .build();
 
     Ok(Some(fix))
 }
@@ -479,15 +469,14 @@ fn typo_to_sarif_location(msg: &Typo<'_>) -> Result<sarif::Location, Box<dyn std
         _ => unimplemented!("New context {:?}", msg),
     };
 
-    let artifact = sarif::ArtifactLocationBuilder::default()
+    let artifact = sarif::ArtifactLocation::builder()
         .uri(
             path.display()
                 .to_string()
                 .replace(std::path::MAIN_SEPARATOR, "/"),
         )
-        .build()?;
-    let mut physical = sarif::PhysicalLocationBuilder::default();
-    physical.artifact_location(artifact);
+        .build();
+    let physical = sarif::PhysicalLocation::builder().artifact_location(artifact);
 
     if let Some(Context::File(context)) = &msg.context {
         let start = String::from_utf8_lossy(&msg.buffer[0..msg.byte_offset]);
@@ -495,20 +484,24 @@ fn typo_to_sarif_location(msg: &Typo<'_>) -> Result<sarif::Location, Box<dyn std
         let column_end = msg.typo.chars().count() + column_start;
         let line_num = context.line_num;
 
-        physical.region(
-            sarif::RegionBuilder::default()
+        let physical = physical.region(
+            sarif::Region::builder()
                 .start_line(line_num as i64)
                 .end_line(line_num as i64)
                 .start_column(column_start as i64)
                 .end_column(column_end as i64)
-                .build()?,
+                .build(),
         );
+        let location = sarif::Location::builder()
+            .physical_location(physical.build())
+            .build();
+        Ok(location)
+    } else {
+        let location = sarif::Location::builder()
+            .physical_location(physical.build())
+            .build();
+        Ok(location)
     }
-
-    let location = sarif::LocationBuilder::default()
-        .physical_location(physical.build()?)
-        .build()?;
-    Ok(location)
 }
 
 #[cfg(test)]
