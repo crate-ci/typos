@@ -20,7 +20,7 @@ winnow = "0.6.7"
 unicode-xid = "0.2.4"
 serde = { version = "1.0", features = ["derive"] }
 simdutf8 = "0.1.4"
-itertools = "0.13"
+itertools = "0.14"
 bstr = "1.9"
 
 [lints]
