@@ -45,7 +45,7 @@ typos = { version = "^0.10", path = "../typos" }
 varcon-core = { version = "^5.0.1", path = "../varcon-core" }
 typos-dict = { version = "^0.12", path = "../typos-dict", optional = true }
 typos-vars = { version = "^0.9", path = "../typos-vars", optional = true }
-unicase = "2.7"
+unicase = "2.8.0"
 anyhow = "1.0"
 clap = { version = "4.5.4", features = ["derive"] }
 clap-verbosity-flag = "3.0"
