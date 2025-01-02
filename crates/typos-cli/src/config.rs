@@ -1,3 +1,5 @@
+#![allow(unused_qualifications)] // schemars
+
 use std::collections::HashMap;
 
 use kstring::KString;
@@ -19,6 +21,7 @@ const PYPROJECT_TOML: &str = "pyproject.toml";
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct Config {
     pub files: Walk,
     pub default: EngineConfig,
@@ -142,6 +145,7 @@ impl Config {
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct Walk {
     pub extend_exclude: Vec<String>,
     /// Skip hidden files and directories.
@@ -232,7 +236,12 @@ impl Walk {
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(transparent)]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct TypeEngineConfig {
+    #[cfg_attr(
+        feature = "unstable-schema",
+        schemars(schema_with = "hashmap_string_t::<GlobEngineConfig>")
+    )]
     pub patterns: HashMap<KString, GlobEngineConfig>,
 }
 
@@ -301,7 +310,9 @@ impl TypeEngineConfig {
 //#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct GlobEngineConfig {
+    #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_glob: Vec<KString>,
     #[serde(flatten)]
     pub engine: EngineConfig,
@@ -318,6 +329,7 @@ impl GlobEngineConfig {
 //#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct EngineConfig {
     /// Check binary files.
     pub binary: Option<bool>,
@@ -330,6 +342,7 @@ pub struct EngineConfig {
     #[serde(flatten)]
     pub dict: DictConfig,
     #[serde(with = "serde_regex")]
+    #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_ignore_re: Vec<regex::Regex>,
 }
 
@@ -400,6 +413,7 @@ impl Eq for EngineConfig {}
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct TokenizerConfig {
     /// Allow unicode characters in identifiers (and not just ASCII)
     pub unicode: Option<bool>,
@@ -448,13 +462,24 @@ impl TokenizerConfig {
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct DictConfig {
     pub locale: Option<Locale>,
     #[serde(with = "serde_regex")]
+    #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_ignore_identifiers_re: Vec<regex::Regex>,
+    #[cfg_attr(
+        feature = "unstable-schema",
+        schemars(schema_with = "hashmap_string_string")
+    )]
     pub extend_identifiers: HashMap<KString, KString>,
     #[serde(with = "serde_regex")]
+    #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_ignore_words_re: Vec<regex::Regex>,
+    #[cfg_attr(
+        feature = "unstable-schema",
+        schemars(schema_with = "hashmap_string_string")
+    )]
     pub extend_words: HashMap<KString, KString>,
 }
 
@@ -554,6 +579,7 @@ impl Eq for DictConfig {}
 #[derive(Debug, Copy, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[derive(Default)]
+#[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub enum Locale {
     #[default]
     En,
@@ -606,9 +632,37 @@ impl std::fmt::Display for Locale {
     }
 }
 
+#[cfg(feature = "unstable-schema")]
+fn vec_string(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+    type Type = Vec<String>;
+    <Type as schemars::JsonSchema>::json_schema(gen)
+}
+
+#[cfg(feature = "unstable-schema")]
+fn hashmap_string_string(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+    type Type = HashMap<String, String>;
+    <Type as schemars::JsonSchema>::json_schema(gen)
+}
+
+#[cfg(feature = "unstable-schema")]
+fn hashmap_string_t<T: schemars::JsonSchema>(
+    gen: &mut schemars::gen::SchemaGenerator,
+) -> schemars::schema::Schema {
+    type Type<T> = HashMap<String, T>;
+    <Type<T> as schemars::JsonSchema>::json_schema(gen)
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
+
+    #[cfg(feature = "unstable-schema")]
+    #[test]
+    fn dump_schema() {
+        let schema = schemars::schema_for!(Config);
+        let dump = serde_json::to_string_pretty(&schema).unwrap();
+        snapbox::assert_data_eq!(dump, snapbox::file!("../../../config.schema.json").raw());
+    }
 
     #[test]
     fn test_from_defaults() {
