@@ -23,7 +23,7 @@ dictgen = { version = "^0.3", path = "../dictgen", features = ["map"] }
 csv = "1.3"
 itertools = "0.14"
 edit-distance = "2.1"
-unicase = "2.7"
+unicase = "2.8.1"
 codegenrs = "3.0"
 dictgen = { version = "^0.3", path = "../dictgen", features = ["codegen", "map", "aho-corasick"] }
 varcon = { version = "^1.0", path = "../varcon" }
