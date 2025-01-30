@@ -140,12 +140,13 @@ mod parser {
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
     use winnow::token::{one_of, take_while};
+    use winnow::Result;
 
     /// Avoid worst-case parse times by limiting how much a `take_while` can take if something
     /// later may cause it to fail.
     const NON_TERMINATING_CAP: usize = 1024;
 
-    pub(crate) fn next_identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    pub(crate) fn next_identifier<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -155,7 +156,7 @@ mod parser {
         preceded(ignore, identifier).parse_next(input)
     }
 
-    fn identifier<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn identifier<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -173,7 +174,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ignore<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn ignore<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -204,7 +205,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn sep1<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn sep1<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -217,7 +218,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn other<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn other<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -234,7 +235,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ordinal_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn ordinal_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -260,7 +261,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn dec_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn dec_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -269,7 +270,7 @@ mod parser {
         trace("dec_literal", take_while(1.., is_dec_digit_with_sep)).parse_next(input)
     }
 
-    fn hex_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn hex_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -281,7 +282,7 @@ mod parser {
             .parse_next(input)
     }
 
-    fn css_color<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn css_color<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -302,7 +303,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn jwt<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn jwt<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -337,7 +338,7 @@ mod parser {
             || c == '-'
     }
 
-    fn uuid_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn uuid_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -375,7 +376,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn hash_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn hash_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -401,7 +402,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn base64_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn base64_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -425,10 +426,8 @@ mod parser {
                     .iter()
                     .all(|c| !['/', '+'].contains(&c.as_char()))
             {
-                return Err(winnow::error::ErrMode::from_error_kind(
-                    input,
-                    winnow::error::ErrorKind::Slice,
-                ));
+                #[allow(clippy::unit_arg)]
+                return Err(ParserError::from_input(input));
             }
 
             take_while(padding_len..=padding_len, is_base64_padding).parse_next(input)?;
@@ -440,7 +439,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn email_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn email_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -459,7 +458,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn url_literal<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn url_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -492,7 +491,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn url_userinfo<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn url_userinfo<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
@@ -510,7 +509,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn c_escape<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn c_escape<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -531,7 +530,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn printf<T>(input: &mut T) -> PResult<<T as Stream>::Slice, ()>
+    fn printf<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,

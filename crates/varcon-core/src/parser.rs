@@ -546,7 +546,7 @@ impl Cluster {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> PResult<Self, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("cluster", move |input: &mut &str| {
             let header = (
                 "#",
@@ -966,7 +966,7 @@ impl Entry {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> PResult<Self, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("entry", move |input: &mut &str| {
             let var_sep = (winnow::ascii::space0, '/', winnow::ascii::space0);
             let variants =
@@ -987,7 +987,7 @@ impl Entry {
         .parse_next(input)
     }
 
-    fn parse_description(input: &mut &str) -> PResult<Self, ()> {
+    fn parse_description(input: &mut &str) -> ModalResult<Self, ()> {
         trace("description", move |input: &mut &str| {
             let mut entry = Self {
                 variants: Vec::new(),
@@ -1023,18 +1023,18 @@ impl Entry {
     }
 }
 
-fn note(input: &mut &str) -> PResult<String, ()> {
+fn note(input: &mut &str) -> ModalResult<String, ()> {
     let (_, _, note) = (NOTE_PREFIX, space1, description).parse_next(input)?;
     Ok(note)
 }
 
 const NOTE_PREFIX: &str = "--";
 
-fn archaic(input: &mut &str) -> PResult<(), ()> {
+fn archaic(input: &mut &str) -> ModalResult<(), ()> {
     "(-)".void().parse_next(input)
 }
 
-fn description(input: &mut &str) -> PResult<String, ()> {
+fn description(input: &mut &str) -> ModalResult<String, ()> {
     let description = winnow::token::take_till(0.., ('\n', '\r', '#', '|')).parse_next(input)?;
     Ok(description.to_owned())
 }
@@ -1573,7 +1573,7 @@ impl Variant {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> PResult<Self, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("variant", move |input: &mut &str| {
             let types = winnow::combinator::separated(1.., Type::parse_, space1);
             let columns =
@@ -1592,7 +1592,7 @@ impl Variant {
     }
 }
 
-fn word(input: &mut &str) -> PResult<String, ()> {
+fn word(input: &mut &str) -> ModalResult<String, ()> {
     trace("word", move |input: &mut &str| {
         winnow::token::take_till(1.., |item: char| item.is_ascii_whitespace())
             .map(|s: &str| s.to_owned().replace('_', " "))
@@ -1734,7 +1734,7 @@ impl Type {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> PResult<Type, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Type, ()> {
         trace("type", move |input: &mut &str| {
             let category = Category::parse_(input)?;
             let tag = opt(Tag::parse_).parse_next(input)?;
@@ -1850,7 +1850,7 @@ impl Category {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> PResult<Self, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("category", move |input: &mut &str| {
             let symbols = one_of(['A', 'B', 'Z', 'C', 'D', '_']);
             symbols
@@ -1909,7 +1909,7 @@ impl Tag {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> PResult<Self, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("tag", move |input: &mut &str| {
             let symbols = one_of(['.', 'v', 'V', '-', 'x']);
             symbols
@@ -1967,7 +1967,7 @@ impl Pos {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> PResult<Self, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("pos", move |input: &mut &str| {
             alt((
                 "N".value(Pos::Noun),
