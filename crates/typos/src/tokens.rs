@@ -538,10 +538,10 @@ mod parser {
         trace("printf", ('%', take_while(1.., is_xid_continue)).take()).parse_next(input)
     }
 
-    fn take_many0<I, E, F>(mut f: F) -> impl Parser<I, <I as Stream>::Slice, E>
+    fn take_many0<I, E, F>(mut f: F) -> impl ModalParser<I, <I as Stream>::Slice, E>
     where
         I: Stream,
-        F: Parser<I, <I as Stream>::Slice, E>,
+        F: ModalParser<I, <I as Stream>::Slice, E>,
         E: ParserError<I>,
     {
         move |i: &mut I| repeat(0.., f.by_ref()).map(|()| ()).take().parse_next(i)
