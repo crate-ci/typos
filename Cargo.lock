@@ -1500,7 +1500,7 @@ dependencies = [
 
 [[package]]
 name = "typos"
-version = "0.10.33"
+version = "0.10.34"
 dependencies = [
  "bstr",
  "itertools 0.14.0",
@@ -1513,7 +1513,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.29.4"
+version = "1.29.5"
 dependencies = [
  "ahash",
  "anstream",
@@ -1698,7 +1698,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "5.0.1"
+version = "5.0.2"
 dependencies = [
  "enumflags2",
  "snapbox",

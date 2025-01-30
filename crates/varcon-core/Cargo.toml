@@ -1,6 +1,6 @@
 [package]
 name = "varcon-core"
-version = "5.0.1"
+version = "5.0.2"
 description = "Varcon-relevant data structures"
 readme = "../../README.md"
 categories = ["text-processing"]
