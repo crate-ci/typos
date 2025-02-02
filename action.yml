@@ -25,6 +25,11 @@ inputs:
     required: false
     default: false
 
+  force_exclude:
+    description: "Respect excluded files when passed explicitly"
+    required: false
+    default: false
+
   config:
     description: "Use a custom config file."
     required: false
@@ -42,6 +47,7 @@ runs:
         INPUT_EXTEND_WORDS: ${{ inputs.extend_words }}
         INPUT_ISOLATED: ${{ inputs.isolated }}
         INPUT_WRITE_CHANGES: ${{ inputs.write_changes }}
+        INPUT_FORCE_EXCLUDE: ${{ inputs.force_exclude}}
         INPUT_CONFIG: ${{ inputs.config }}
 
 branding:
