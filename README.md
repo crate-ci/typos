@@ -8,12 +8,12 @@ Finds and corrects spelling mistakes among source code:
 
 ![Screenshot](./docs/screenshot.png)
 
+
+[![Downloads](https://img.shields.io/github/downloads/crate-ci/typos/total.svg)](https://github.com/crate-ci/typos/releases)
 [![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
 ![License](https://img.shields.io/crates/l/typos.svg)
 [![Crates Status](https://img.shields.io/crates/v/typos.svg)][Crates.io]
-
-Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 
 ## Documentation
 
@@ -55,8 +55,8 @@ $ conda install typos
 ```
 
 Or use [Pacman](https://wiki.archlinux.org/title/pacman) to install:
-```
-sudo pacman -S typos
+```console
+$ sudo pacman -S typos
 ```
 
 ## Getting Started
@@ -185,3 +185,7 @@ For more on the trade offs of these approaches, see [Design](docs/design.md).
 
 [Crates.io]: https://crates.io/crates/typos-cli
 [Documentation]: https://docs.rs/typos
+
+## License
+Typos is available under the [MIT License](LICENSE-MIT) or the [Apache 2.0 License](LICENSE-APACHE).
+
