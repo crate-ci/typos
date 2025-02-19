@@ -24,7 +24,7 @@ jobs:
     permissions:
       contents: none
     name: CI
-    needs: [test, msrv, lockfile, docs, rustfmt, clippy]
+    needs: [test, wasm, msrv, lockfile, docs, rustfmt, clippy]
     runs-on: ubuntu-latest
     if: "always()"
     steps:
@@ -67,6 +67,28 @@ jobs:
     - uses: taiki-e/install-action@cargo-hack
     - name: Default features
       run: cargo hack check --feature-powerset --locked --rust-version --ignore-private --workspace --all-targets
+  wasm:
+    name: "Check wasm"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [wasm, wasm-wasi]
+        include:
+          - build: wasm
+            target: wasm32-unknown-unknown
+          - build: wasm-wasi
+            target: wasm32-wasip1
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: stable
+        targets: ${{ matrix.target }}
+    - name: Default features
+      run: cargo check -p typos -p typos-dict
   lockfile:
     runs-on: ubuntu-latest
     steps:
