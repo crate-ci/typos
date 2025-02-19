@@ -1,0 +1,26 @@
+name: False positive
+description: A valid english word is being corrected
+labels: 'S-triage,A-dict'
+body:
+  - type: input
+    attributes:
+      label: Valid word
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Incorrect correction
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Justification
+      description: Dictionaries, google trends, google ngram, etc
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Notes
+      description: Any other relevant information
+    validations:
+      required: false
