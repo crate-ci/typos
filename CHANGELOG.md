@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.29.8] - 2025-02-19
+
 ### Features
 
 - Attempt to build Linux aarch64 binaries
@@ -1421,7 +1423,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.29.7...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.29.8...HEAD
+[1.29.8]: https://github.com/crate-ci/typos/compare/v1.29.7...v1.29.8
 [1.29.7]: https://github.com/crate-ci/typos/compare/v1.29.6...v1.29.7
 [1.29.6]: https://github.com/crate-ci/typos/compare/v1.29.5...v1.29.6
 [1.29.5]: https://github.com/crate-ci/typos/compare/v1.29.4...v1.29.5
