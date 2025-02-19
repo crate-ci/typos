@@ -95,6 +95,7 @@ AttributeIDSupressMenu = "AttributeIDSupressMenu"
 # Don't correct the surname "Teh"
 teh = "teh"
 ```
+For more ways to ways to ignore or extend the dictionary with examples, see the [config reference](docs/reference.md).
 
 For cases like localized content, you can disable spell checking of file contents while still checking the file name:
 ```toml
