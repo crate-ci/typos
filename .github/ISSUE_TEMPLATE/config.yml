@@ -1,5 +1,7 @@
 blank_issues_enabled: false
 contact_links:
+  - name: For new corrections, see our monthly pinned issue
+    url: https://github.com/crate-ci/typos/issues
   - name: Ask a question
     about: For support or brainstorming
     url: https://github.com/crate-ci/typos/discussions
