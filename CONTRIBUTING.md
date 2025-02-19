@@ -29,6 +29,10 @@ to re-work some of it and the discouragement that goes along with that.
 
 ### Updating the Dictionary
 
+*For non-critical additions, please see our [monthly pinned issue](https://github.com/crate-ci/typos/issues).*
+
+*For false positives, please [open an issue](https://github.com/crate-ci/typos/issues) first to see if we have agreement.*
+
 `typos` dictionary is a mapping of typos to a list of possible corrections (see [Design](docs/design.md)).
 
 If you aren't in a hurry, [we have a pinned
