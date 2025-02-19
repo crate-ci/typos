@@ -1,0 +1,10 @@
+name: New Issue
+description: A blank issue
+labels: 'S-triage'
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: Type your description here...
+    validations:
+      required: true
