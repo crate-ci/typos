@@ -95,3 +95,4 @@ panic = "abort"
 panic = "abort"
 codegen-units = 1
 lto = true
+debug = "line-tables-only"
