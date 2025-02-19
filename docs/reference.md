@@ -37,7 +37,7 @@ Configuration is read from the following (in precedence order)
 | default.extend-words       | \-            | table of strings | \- | Corrections for [words](./design.md#identifiers-and-words). When the correction is blank, the word is never valid. When the correction is the key, the word is always valid. |
 | default.extend-ignore-words-re | \-        | list of [regexes](https://docs.rs/regex/latest/regex/index.html#syntax) | \- | Pattern-match always-valid words.  Note: you must handle case insensitivity yourself. |
 | type.\<name>.\<field>      | \<varied>     | \<varied> | \<varied> | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s. |
-| type.\<name>.extend-glob   | \-            | list of strings | \- | File globs for matching `<name>`. |
+| type.\<name>.extend-glob   | \-            | list of strings | \- | File globs for matching `<name>`. This is required when defining new file types. |
 
 ### Example configurations
 
