@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.29.9] - 2025-02-20
+
 ### Fixes
 
 - *(action)* Correctly get binary for some aarch64 systems
@@ -1427,7 +1429,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.29.8...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.29.9...HEAD
+[1.29.9]: https://github.com/crate-ci/typos/compare/v1.29.8...v1.29.9
 [1.29.8]: https://github.com/crate-ci/typos/compare/v1.29.7...v1.29.8
 [1.29.7]: https://github.com/crate-ci/typos/compare/v1.29.6...v1.29.7
 [1.29.6]: https://github.com/crate-ci/typos/compare/v1.29.5...v1.29.6
