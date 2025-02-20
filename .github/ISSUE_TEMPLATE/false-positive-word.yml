@@ -6,7 +6,7 @@ body:
     attributes:
       label: Please complete the following tasks
       options:
-        - label: I have searched the [open](https://github.com/clap-rs/clap/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-dict) and [rejected](https://github.com/crate-ci/typos/issues?q=is%3Aissue%20state%3Aclosed%20label%3AA-dict) issues
+        - label: I have searched the [open](https://github.com/crate-ci/typos/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-dict) and [rejected](https://github.com/crate-ci/typos/issues?q=is%3Aissue%20state%3Aclosed%20label%3AA-dict) issues
           required: true
   - type: input
     attributes:
