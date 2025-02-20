@@ -1,4 +1,4 @@
-name: False positive
+name: "False positive: valid word"
 description: A valid english word is being corrected
 labels: 'S-triage,A-dict'
 body:
