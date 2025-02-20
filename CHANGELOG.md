@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(action)* Correctly get binary for some aarch64 systems
+
 ## [1.29.8] - 2025-02-19
 
 ### Features
