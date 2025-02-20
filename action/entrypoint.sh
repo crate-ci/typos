@@ -19,7 +19,6 @@ if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
     exit 1
 fi
 
-
 if [[ ! -x ${COMMAND} ]]; then
     VERSION=1.29.9
     if [[ "$(uname -m)" == "arm64" || "$(uname -m)" == "aarch64" ]]; then
@@ -38,8 +37,8 @@ if [[ ! -x ${COMMAND} ]]; then
         TARGET_FILE="${ARCH}-unknown-linux-musl"
         FILE_EXT="tar.gz"
     fi
-    FILE_NAME="typos-v${VERSION}-${TARGET_FILE}.${FILE_EXT}"
-    log "Downloading 'typos' v${VERSION}"
+    FILE_NAME="${CMD_NAME}-v${VERSION}-${TARGET_FILE}.${FILE_EXT}"
+    log "Downloading '${CMD_NAME}' v${VERSION}"
     wget --progress=dot:mega "https://github.com/crate-ci/typos/releases/download/v${VERSION}/${FILE_NAME}"
     mkdir -p ${_INSTALL_DIR}
     if [[ "$FILE_EXT" == "zip" ]]; then
