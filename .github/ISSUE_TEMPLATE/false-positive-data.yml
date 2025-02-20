@@ -2,6 +2,12 @@ name: "False positive: data"
 description: Specially encoded data is being treated as a word
 labels: 'S-triage,A-exclude'
 body:
+  - type: checkboxes
+    attributes:
+      label: Please complete the following tasks
+      options:
+        - label: I have searched the [open](https://github.com/clap-rs/clap/issues?q=is%3Aissue state%3Aopen label%3AA-exclude) and [rejected](https://github.com/crate-ci/typos/issues?q=is%3Aissue%20state%3Aclosed%20label%3AA-exclude) issues
+          required: true
   - type: input
     attributes:
       label: Example data
