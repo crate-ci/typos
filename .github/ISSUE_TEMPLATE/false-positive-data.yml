@@ -1,0 +1,32 @@
+name: "False positive: data"
+description: Specially encoded data is being treated as a word
+labels: 'S-triage,A-exclude'
+body:
+  - type: input
+    attributes:
+      label: Example data
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Incorrect correction
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Description of data format
+      description: Sigils, length, allowed characters, etc
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Justification
+      description: Where all is this data format used
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Notes
+      description: Any other relevant information
+    validations:
+      required: false
