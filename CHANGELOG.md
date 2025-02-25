@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Also correct `contaminent` as `contaminant`
+
 ## [1.29.9] - 2025-02-20
 
 ### Fixes
