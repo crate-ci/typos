@@ -6,10 +6,8 @@ fn codegen() {
     generate_map(&mut map_content, "WORD", DICT);
     let map_content = String::from_utf8(map_content).unwrap();
     let map_content = codegenrs::rustfmt(&map_content, None).unwrap();
-    snapbox::assert_data_eq!(
-        &map_content,
-        snapbox::file!["../benches/benches/map_codegen.rs"].raw()
-    );
+    // Symlink handles `../benches/benches/map_codegen.rs`
+    snapbox::assert_data_eq!(&map_content, snapbox::file!["../src/word_codegen.rs"].raw());
 
     let mut aho_corasick_content = vec![];
     generate_aho_corasick(&mut aho_corasick_content, "Word", DICT);
@@ -19,8 +17,6 @@ fn codegen() {
         &aho_corasick_content,
         snapbox::file!["../benches/benches/aho_corasick_codegen.rs"].raw()
     );
-
-    snapbox::assert_data_eq!(&map_content, snapbox::file!["../src/word_codegen.rs"].raw());
 }
 
 fn generate_map<W: std::io::Write>(file: &mut W, name: &str, dict: &[u8]) {
