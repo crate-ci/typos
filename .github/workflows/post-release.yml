@@ -125,6 +125,10 @@ jobs:
       run: |
         tag="${{ needs.create-release.outputs.tag }}"
         gh release upload "$tag" ${{ env.ASSET }}
+    - name: Update major tag
+      uses: rickstaa/action-update-semver@v1
+      with:
+        major_version_tag_only: true
   publish-release:
     name: Publish Release
     needs: [create-release, build-release]
