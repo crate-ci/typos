@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Add `--highlight-words` and `--highlight-identifiers` for easier debugging of config
+
 ## [1.30.1] - 2025-03-04
 
 ### Features
