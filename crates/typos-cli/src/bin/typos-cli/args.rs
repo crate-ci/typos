@@ -77,9 +77,17 @@ pub(crate) struct Args {
     #[arg(long, group = "mode", help_heading = "Mode")]
     pub(crate) file_types: bool,
 
+    /// Debug: Print back out files, stylizing identifiers that would be spellchecked.
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) highlight_identifiers: bool,
+
     /// Debug: Print each identifier that would be spellchecked.
     #[arg(long, group = "mode", help_heading = "Mode")]
     pub(crate) identifiers: bool,
+
+    /// Debug: Print back out files, stylizing words that would be spellchecked.
+    #[arg(long, group = "mode", help_heading = "Mode")]
+    pub(crate) highlight_words: bool,
 
     /// Debug: Print each word that would be spellchecked.
     #[arg(long, group = "mode", help_heading = "Mode")]

@@ -246,6 +246,113 @@ impl FileChecker for DiffTypos {
 }
 
 #[derive(Debug, Clone, Copy)]
+pub struct HighlightIdentifiers;
+
+impl FileChecker for HighlightIdentifiers {
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        policy: &crate::policy::Policy<'_, '_, '_>,
+        reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        use std::fmt::Write as _;
+
+        let stdout = std::io::stdout();
+        let mut handle = stdout.lock();
+
+        let mut ignores: Option<Ignores> = None;
+        if policy.check_filenames {
+            if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let mut styled = String::new();
+                let mut prev_end = 0;
+                for (word, highlight) in policy
+                    .tokenizer
+                    .parse_str(file_name)
+                    .filter(|word| {
+                        !ignores
+                            .get_or_insert_with(|| {
+                                Ignores::new(file_name.as_bytes(), policy.ignore)
+                            })
+                            .is_ignored(word.span())
+                    })
+                    .zip(HIGHLIGHTS.iter().cycle())
+                {
+                    let start = word.offset();
+                    let end = word.offset() + word.token().len();
+                    if prev_end != start {
+                        let _ = write!(
+                            &mut styled,
+                            "{UNMATCHED}{}{UNMATCHED:#}",
+                            &file_name[prev_end..start]
+                        );
+                    }
+                    let _ = write!(&mut styled, "{highlight}{}{highlight:#}", word.token());
+                    prev_end = end;
+                }
+                let _ = write!(
+                    &mut styled,
+                    "{UNMATCHED}{}{UNMATCHED:#}",
+                    &file_name[prev_end..file_name.len()]
+                );
+
+                let parent_dir = path.parent().unwrap();
+                if !parent_dir.as_os_str().is_empty() {
+                    let parent_dir = parent_dir.display();
+                    write!(handle, "{UNMATCHED}{parent_dir}/")?;
+                }
+                writeln!(handle, "{styled}{UNMATCHED}:{UNMATCHED:#}")?;
+            } else {
+                writeln!(handle, "{UNMATCHED}{}:{UNMATCHED:#}", path.display())?;
+            }
+        } else {
+            writeln!(handle, "{UNMATCHED}{}:{UNMATCHED:#}", path.display())?;
+        }
+
+        if policy.check_files {
+            let (buffer, content_type) = read_file(path, reporter)?;
+            if !explicit && !policy.binary && content_type.is_binary() {
+                // nop
+            } else if let Ok(buffer) = buffer.to_str() {
+                let mut styled = String::new();
+                let mut prev_end = 0;
+                for (word, highlight) in policy
+                    .tokenizer
+                    .parse_bytes(buffer.as_bytes())
+                    .filter(|word| {
+                        !ignores
+                            .get_or_insert_with(|| Ignores::new(buffer.as_bytes(), policy.ignore))
+                            .is_ignored(word.span())
+                    })
+                    .zip(HIGHLIGHTS.iter().cycle())
+                {
+                    let start = word.offset();
+                    let end = word.offset() + word.token().len();
+                    if prev_end != start {
+                        let _ = write!(
+                            &mut styled,
+                            "{UNMATCHED}{}{UNMATCHED:#}",
+                            &buffer[prev_end..start]
+                        );
+                    }
+                    let _ = write!(&mut styled, "{highlight}{}{highlight:#}", word.token());
+                    prev_end = end;
+                }
+                let _ = write!(
+                    &mut styled,
+                    "{UNMATCHED}{}{UNMATCHED:#}",
+                    &buffer[prev_end..buffer.len()]
+                );
+
+                write!(handle, "{styled}")?;
+            }
+        }
+
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
 pub struct Identifiers;
 
 impl FileChecker for Identifiers {
@@ -306,6 +413,124 @@ impl FileChecker for Identifiers {
         Ok(())
     }
 }
+
+#[derive(Debug, Clone, Copy)]
+pub struct HighlightWords;
+
+impl FileChecker for HighlightWords {
+    fn check_file(
+        &self,
+        path: &std::path::Path,
+        explicit: bool,
+        policy: &crate::policy::Policy<'_, '_, '_>,
+        reporter: &dyn report::Report,
+    ) -> Result<(), std::io::Error> {
+        use std::fmt::Write as _;
+
+        let stdout = std::io::stdout();
+        let mut handle = stdout.lock();
+
+        let mut ignores: Option<Ignores> = None;
+        if policy.check_filenames {
+            if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let mut styled = String::new();
+                let mut prev_end = 0;
+                for (word, highlight) in policy
+                    .tokenizer
+                    .parse_str(file_name)
+                    .flat_map(|i| i.split())
+                    .filter(|word| {
+                        !ignores
+                            .get_or_insert_with(|| {
+                                Ignores::new(file_name.as_bytes(), policy.ignore)
+                            })
+                            .is_ignored(word.span())
+                    })
+                    .zip(HIGHLIGHTS.iter().cycle())
+                {
+                    let start = word.offset();
+                    let end = word.offset() + word.token().len();
+                    if prev_end != start {
+                        let _ = write!(
+                            &mut styled,
+                            "{UNMATCHED}{}{UNMATCHED:#}",
+                            &file_name[prev_end..start]
+                        );
+                    }
+                    let _ = write!(&mut styled, "{highlight}{}{highlight:#}", word.token());
+                    prev_end = end;
+                }
+                let _ = write!(
+                    &mut styled,
+                    "{UNMATCHED}{}{UNMATCHED:#}",
+                    &file_name[prev_end..file_name.len()]
+                );
+
+                let parent_dir = path.parent().unwrap();
+                if !parent_dir.as_os_str().is_empty() {
+                    let parent_dir = parent_dir.display();
+                    write!(handle, "{UNMATCHED}{parent_dir}/")?;
+                }
+                writeln!(handle, "{styled}{UNMATCHED}:{UNMATCHED:#}")?;
+            } else {
+                writeln!(handle, "{UNMATCHED}{}:{UNMATCHED:#}", path.display())?;
+            }
+        } else {
+            writeln!(handle, "{UNMATCHED}{}:{UNMATCHED:#}", path.display())?;
+        }
+
+        if policy.check_files {
+            let (buffer, content_type) = read_file(path, reporter)?;
+            if !explicit && !policy.binary && content_type.is_binary() {
+                // nop
+            } else if let Ok(buffer) = buffer.to_str() {
+                let mut styled = String::new();
+                let mut prev_end = 0;
+                for (word, highlight) in policy
+                    .tokenizer
+                    .parse_bytes(buffer.as_bytes())
+                    .flat_map(|i| i.split())
+                    .filter(|word| {
+                        !ignores
+                            .get_or_insert_with(|| Ignores::new(buffer.as_bytes(), policy.ignore))
+                            .is_ignored(word.span())
+                    })
+                    .zip(HIGHLIGHTS.iter().cycle())
+                {
+                    let start = word.offset();
+                    let end = word.offset() + word.token().len();
+                    if prev_end != start {
+                        let _ = write!(
+                            &mut styled,
+                            "{UNMATCHED}{}{UNMATCHED:#}",
+                            &buffer[prev_end..start]
+                        );
+                    }
+                    let _ = write!(&mut styled, "{highlight}{}{highlight:#}", word.token());
+                    prev_end = end;
+                }
+                let _ = write!(
+                    &mut styled,
+                    "{UNMATCHED}{}{UNMATCHED:#}",
+                    &buffer[prev_end..buffer.len()]
+                );
+
+                write!(handle, "{styled}")?;
+            }
+        }
+
+        Ok(())
+    }
+}
+
+static HIGHLIGHTS: &[anstyle::Style] = &[
+    anstyle::AnsiColor::Cyan.on_default(),
+    anstyle::AnsiColor::Cyan
+        .on_default()
+        .effects(anstyle::Effects::BOLD),
+];
+
+static UNMATCHED: anstyle::Style = anstyle::Style::new().effects(anstyle::Effects::DIMMED);
 
 #[derive(Debug, Clone, Copy)]
 pub struct Words;
