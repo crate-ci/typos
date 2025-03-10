@@ -288,8 +288,12 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             &typos_cli::file::FoundFiles
         } else if args.file_types {
             &typos_cli::file::FileTypes
+        } else if args.highlight_identifiers {
+            &typos_cli::file::HighlightIdentifiers
         } else if args.identifiers {
             &typos_cli::file::Identifiers
+        } else if args.highlight_words {
+            &typos_cli::file::HighlightWords
         } else if args.words {
             &typos_cli::file::Words
         } else if args.write_changes {

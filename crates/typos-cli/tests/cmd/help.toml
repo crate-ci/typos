@@ -38,7 +38,11 @@ Mode:
   -w, --write-changes              Write fixes out
       --files                      Debug: Print each file that would be spellchecked
       --file-types                 Debug: Print each file's type
+      --highlight-identifiers      Debug: Print back out files, stylizing identifiers that would be
+                                   spellchecked
       --identifiers                Debug: Print each identifier that would be spellchecked
+      --highlight-words            Debug: Print back out files, stylizing words that would be
+                                   spellchecked
       --words                      Debug: Print each word that would be spellchecked
       --dump-config <DUMP_CONFIG>  Write the current configuration to file with `-` for stdout
       --type-list                  Show all supported file types
