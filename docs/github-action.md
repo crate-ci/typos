@@ -31,6 +31,9 @@ jobs:
 [#1191](https://github.com/crate-ci/typos/issues/1191)
 ).
 
+**Notes:**
+- The tag `v1` is available but CI could fail when new releases find new typos
+
 ## Input
 
 | Name               | Description                                                     | Required | Default                                              |
