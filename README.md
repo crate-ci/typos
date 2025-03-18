@@ -79,7 +79,7 @@ If there is any ambiguity (multiple possible corrections), `typos` will just rep
 
 Sometimes, what looks like a typo is intentional, like with people's names, acronyms, or localized content.
 
-To mark a word or an identifier (grouping of words) as valid, add it your [`_typos.toml`](docs/reference.md) by declaring itself as the valid spelling:
+To mark a word or an identifier (grouping of words) as valid, add it to your [`_typos.toml`](docs/reference.md) by declaring itself as the valid spelling:
 ```toml
 [default]
 extend-ignore-identifiers-re = [
