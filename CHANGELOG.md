@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Support detecting `go.work` and `go.work.sum` files
+
 ## [1.30.2] - 2025-03-10
 
 ### Features
