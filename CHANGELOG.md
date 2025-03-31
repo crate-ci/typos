@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(dict)* Also correct `typ` to `type`
+
 ## [1.31.0] - 2025-03-28
 
 ### Features
