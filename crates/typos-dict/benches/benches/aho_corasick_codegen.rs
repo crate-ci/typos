@@ -138565,7 +138565,7 @@ impl Word {
             &["typos"],
             &["you"],
             &["your", "tour"],
-            &["typo"],
+            &["typo", "type"],
             &["typecast"],
             &["typecasting"],
             &["typecasts"],
