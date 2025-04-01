@@ -342,7 +342,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
 
     if let Err(err) = global_reporter.generate_final_result() {
         errors_found = true;
-        log::error!("could not render end-report: {}", err);
+        log::error!("could not render end-report: {err}");
     }
 
     if errors_found {
