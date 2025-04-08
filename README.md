@@ -19,22 +19,16 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 
 ## Documentation
 
-- [Installation](#install)
-- [Getting Started](#getting-started)
-  - [False Positives](#false-positives)
-  - [Integrations](#integrations)
-    - [GitHub Action](docs/github-action.md)
-    - [pre-commit](docs/pre-commit.md)
-    - [Custom](#custom)
-  - [Debugging](#debugging)
-- [Reference](docs/reference.md)
-- [FAQ](#faq)
-- [Comparison with other spell checkers](docs/comparison.md)
-- [Projects using typos](https://github.com/crate-ci/typos/wiki)
-- [Benchmarks](benchsuite/runs)
-- [Design](docs/design.md)
-- [Contribute](CONTRIBUTING.md)
-- [CHANGELOG](CHANGELOG.md)
+- [typos](#typos)
+  - [Documentation](#documentation)
+  - [Install](#install)
+  - [Getting Started](#getting-started)
+    - [False Positives](#false-positives)
+    - [Integrations](#integrations)
+      - [Custom](#custom)
+    - [Debugging](#debugging)
+  - [FAQ](#faq)
+    - [Why was ... not corrected?](#why-was--not-corrected)
 
 ## Install
 
