@@ -6,7 +6,7 @@ Source Code Spelling Correction
 Usage: typos[EXE] [OPTIONS] [PATH]...
 
 Arguments:
-  [PATH]...  Paths to check with `-` for stdin [default: .]
+  [PATH]...  Paths to check (`-` to check stdin) [default: .]
 
 Options:
       --file-list <FILE_LIST>  Read the list of newline separated paths from file or stdin (if `-`)
