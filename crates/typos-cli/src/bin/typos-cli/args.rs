@@ -30,7 +30,7 @@ impl Format {
 #[command(about, author, version)]
 #[command(group = clap::ArgGroup::new("mode").multiple(false))]
 pub(crate) struct Args {
-    /// Paths to check with `-` for stdin
+    /// Paths to check (`-` to check stdin)
     #[arg(default_value = ".", group = "source")]
     pub(crate) path: Vec<std::path::PathBuf>,
 
