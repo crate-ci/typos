@@ -27,7 +27,7 @@ body:
   - type: textarea
     attributes:
       label: Justification
-      description: Where all is this data format used
+      description: "Help us understand why this should be built-in (e.g. where all is this used? how often is it used?)"
     validations:
       required: true
   - type: textarea
