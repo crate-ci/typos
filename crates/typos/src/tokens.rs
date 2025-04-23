@@ -188,15 +188,15 @@ mod parser {
                 // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
                 // - Make sure you always consume it
                 terminated(uuid_literal, peek(sep1)),
-                terminated(hash_literal, peek(sep1)),
+                terminated(email_literal, peek(sep1)),
+                terminated(url_literal, peek(sep1)),
+                terminated(jwt, peek(sep1)),
                 terminated(base64_literal, peek(sep1)), // base64 should be quoted or something
+                terminated(hash_literal, peek(sep1)),
                 terminated(ordinal_literal, peek(sep1)),
                 terminated(hex_literal, peek(sep1)),
                 terminated(dec_literal, peek(sep1)), // Allow digit-prefixed words
-                terminated(email_literal, peek(sep1)),
-                terminated(url_literal, peek(sep1)),
                 terminated(css_color, peek(sep1)),
-                terminated(jwt, peek(sep1)),
                 c_escape,
                 printf,
                 other,
@@ -1665,11 +1665,6 @@ mod test {
         offset: 0,
     },
     Identifier {
-        token: "nam",
-        case: None,
-        offset: 38,
-    },
-    Identifier {
         token: "Bye",
         case: None,
         offset: 42,
@@ -1687,11 +1682,6 @@ mod test {
         token: "Good",
         case: None,
         offset: 0,
-    },
-    Identifier {
-        token: "nam",
-        case: None,
-        offset: 38,
     },
     Identifier {
         token: "Bye",
