@@ -185,20 +185,20 @@ mod parser {
             "ignore",
             take_many0(alt((
                 // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
-                // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
+                // - Update `is_ignore_char` to make sure `other` doesn't eat it all up
                 // - Make sure you always consume it
-                terminated(uuid_literal, peek(sep1)),
-                terminated(email_literal, peek(sep1)),
-                terminated(url_literal, peek(sep1)),
-                terminated(jwt, peek(sep1)),
-                terminated(base64_literal, peek(sep1)), // base64 should be quoted or something
-                terminated(hash_literal, peek(sep1)),
-                terminated(ordinal_literal, peek(sep1)),
-                terminated(hex_literal, peek(sep1)),
-                terminated(dec_literal, peek(sep1)), // Allow digit-prefixed words
-                terminated(css_color, peek(sep1)),
-                c_escape,
-                printf,
+                terminated(uuid_literal, sep1),
+                terminated(email_literal, sep1),
+                terminated(url_literal, sep1),
+                terminated(jwt, sep1),
+                terminated(base64_literal, sep1), // base64 should be quoted or something
+                terminated(hash_literal, sep1),
+                terminated(ordinal_literal, sep1),
+                terminated(hex_literal, sep1),
+                terminated(dec_literal, sep1), // Allow digit-prefixed words
+                terminated(css_color, sep1),
+                terminated(c_escape, sep1),
+                terminated(printf, sep1),
                 other,
             ))),
         )
@@ -212,7 +212,8 @@ mod parser {
         <T as Stream>::Token: AsChar + Copy,
     {
         alt((
-            one_of(|c| !is_xid_continue(c)).take(),
+            take_while(1.., is_ignore_char),
+            peek(one_of(|c| !is_xid_continue(c))).take(),
             eof.map(|_| <T as Stream>::Slice::default()),
         ))
         .parse_next(input)
@@ -647,11 +648,11 @@ mod parser {
     fn is_ignore_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         !unicode_xid::UnicodeXID::is_xid_continue(c) &&
-            // See c_escape
+            // See `c_escape`
             c != '\\' &&
-            // See printf
+            // See `printf`
             c != '%' &&
-            // See css_color
+            // See `css_color`
             c != '#'
     }
 
@@ -1440,6 +1441,11 @@ mod test {
         offset: 25,
     },
     Identifier {
+        token: "src",
+        case: None,
+        offset: 77,
+    },
+    Identifier {
         token: "rs",
         case: None,
         offset: 91,
@@ -1457,6 +1463,11 @@ mod test {
         token: "at",
         case: None,
         offset: 25,
+    },
+    Identifier {
+        token: "src",
+        case: None,
+        offset: 77,
     },
     Identifier {
         token: "rs",
