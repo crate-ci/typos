@@ -1653,7 +1653,7 @@ mod test {
     fn tokenize_ignore_email() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Good example@example.com Bye";
+        let input = "Good example@example.com if=@nam iff=@nam Bye";
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_data_eq!(
             actual.to_debug(),
@@ -1665,9 +1665,14 @@ mod test {
         offset: 0,
     },
     Identifier {
+        token: "nam",
+        case: None,
+        offset: 38,
+    },
+    Identifier {
         token: "Bye",
         case: None,
-        offset: 25,
+        offset: 42,
     },
 ]
 
@@ -1684,9 +1689,14 @@ mod test {
         offset: 0,
     },
     Identifier {
+        token: "nam",
+        case: None,
+        offset: 38,
+    },
+    Identifier {
         token: "Bye",
         case: None,
-        offset: 25,
+        offset: 42,
     },
 ]
 
