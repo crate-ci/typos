@@ -185,7 +185,7 @@ mod parser {
             "ignore",
             take_many0(alt((
                 // CAUTION: If adding an ignorable literal, if it doesn't start with `is_xid_continue`,
-                // - Update `is_ignore_char` to make sure `sep1` doesn't eat it all up
+                // - Update `is_ignore_char` to make sure `other` doesn't eat it all up
                 // - Make sure you always consume it
                 terminated(uuid_literal, peek(sep1)),
                 terminated(email_literal, peek(sep1)),
@@ -647,11 +647,11 @@ mod parser {
     fn is_ignore_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
         !unicode_xid::UnicodeXID::is_xid_continue(c) &&
-            // See c_escape
+            // See `c_escape`
             c != '\\' &&
-            // See printf
+            // See `printf`
             c != '%' &&
-            // See css_color
+            // See `css_color`
             c != '#'
     }
 
