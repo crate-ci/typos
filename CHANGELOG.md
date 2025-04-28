@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(exclusion)* Don't confused emails as base64
+- *(dict)* Correct `contamint` to `contaminant`, not `contaminat`
+- *(dict)* Correct `contamints` to `contaminants`, not `contaminats`
+
+### Performance
+
+- Improve tokenization performance
+
 ## [1.31.1] - 2025-03-31
 
 ### Fixes
