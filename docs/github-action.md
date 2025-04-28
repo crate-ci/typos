@@ -39,8 +39,6 @@ jobs:
 | Name               | Description                                                     | Required | Default                                              |
 | ------------------ | --------------------------------------------------------------- | -------- | ---------------------------------------------------- |
 | files              | Files or patterns to check                                      | false    | If not defined, the default set of files are checked |
-| extend_identifiers | Comma separated list of extend identifiers, like someone's name | false    | not set                                              |
-| extend_words       | Comma separated list of extend words.                           | false    | not set                                              |
 | isolated           | Ignore implicit configuration files                             | false    | false                                                |
 | write_changes      | Writes changes on the Action's local checkout                   | false    | false                                                |
 | config             | Use a custom config file (must exist)                           | false    | not set                                              |
