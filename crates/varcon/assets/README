@@ -36,7 +36,7 @@ indicated by the "A") of the word, and "acknowledgement" is the
 preferred Canadian and British spelling ("B" and "C").  However the
 American spelling is sometimes used in Canada (as indicated by "Cv",
 where the lowercase "v" indicated a variant form) and the British
-spelling is sometimes used in America (as indicated the "Av").
+spelling is sometimes used in America (as indicated by the "Av").
 
 More generally each tag consists of a spelling category (for example
 "A") followed possible by a variant indicator.  The spelling
@@ -64,8 +64,8 @@ dictionary is wrong.  The "v" indicator is used for most words marked
 as variants in the dictionary.  However, some variants will be demoted
 to a "V".  For example, if the variant is marked as "also" by
 Merriam-Webster, or also if only some dictionaries acknowledge the
-existence the variant.  "-" is used when the variant is generally not
-listed is the dictionary but I could find some evidence of its use, or
+existence of the variant.  "-" is used when the variant is generally not
+listed in the dictionary but I could find some evidence of its use, or
 when it is marked as an archaic spelling for the word.  The "x"
 is used when the spelling is almost generally considered a
 misspelling, and is only included for completeness.
@@ -119,7 +119,7 @@ Varcon Groups
 -------------
 
 Sometimes the spelling of a word depends on the usage in which case a
-cluster is split into multiple groups with each group represting one
+cluster is split into multiple groups with each group representing one
 usage of a word.  Usage annotations and/or pos tags are used to
 distinguish one group from another.
 
@@ -129,7 +129,7 @@ the cluster for prize:
   A B: prizes | reward
   A C: prize / B: prise | otherwise
   A C: prizes / B: prises | otherwise
-which indicated than the preferred spelling of prize is always with a
+which indicated that the preferred spelling of prize is always with a
 "z" when meaning a reward, but otherwise is spelled with a "s" is
 British English.  In the example above a brief definition of the word
 is given, but often no such attempt is made, and the definition simply
@@ -172,10 +172,10 @@ the same as the root word, for example:
   _ 1: yak's | :1
 
 A "| --" otherwise indicates a note which gives additional context but
-does not create it's own group like a definition does.
+does not create its own group like a definition does.
 
 A "#" after a line indicates a comment that is often used to indicate
-why.  A "##" after a cluster indicates the the comment applies to the
+why.  A "##" after a cluster indicates that the comment applies to the
 entire cluster, for example:
   # coloration <verified> (level 50)
   A B C: coloration / B. Cv: colouration
@@ -191,7 +191,7 @@ Dictionary of English, "Ox" is used for any Oxford dictionary, and
 Varcon Columns
 --------------
 
-Varcon does not directly expresses the relation of words within a
+Varcon does not directly express the relation of words within a
 group as it is normally easy to derive.  For example given a simple
 group of:
   A: acknowledgment / B: acknowledgement
@@ -205,7 +205,7 @@ is considered a row in a table and each entry within a line is considered
 a column.  Within this group the first column is the American spelling
 and the second is the British.
 
-Sometime the column assignment unclear, when they are explicit column
+Sometimes the column assignment unclear, when they are explicit column
 numbers may be given.  For example:
   A B: caulk / Av: calk / AV Bv 1: caulking / AV 2: calking | <N> :3
   A B: caulks / Av: calks / AV Bv 1: caulkings / AV 2: calkings | <N> :3
@@ -234,7 +234,7 @@ included the root form of the word.
 The file voc.tab is similar to varcon.txt but converts between
 vocabulary instead of spelling.  Unlike varcon.tab it is a simple tab
 separated file with the fields corresponding to the American, British,
-and Canadian words.  If more than one word if often used to describe
+and Canadian words.  If more than one word is often used to describe
 the same thing the words are separated with commas.  The last column
 contains additional notes on when the word is used.  Unlike varcon.txt
 it is generally not suitable for automatic conversion.
@@ -243,7 +243,7 @@ it is generally not suitable for automatic conversion.
 The "make-variant" Perl script will combine varcon.txt,
 variant-also.tab, and variant-infl.tab into one huge mapping and will
 output the result to "variant.tab".  If the "no-infl" option is given
-than variant-infl.tab will not be included.
+then variant-infl.tab will not be included.
 
 
 The "split" script will split out the information in varcon.txt into
@@ -315,7 +315,7 @@ created by Garst R. Reese <reese@isn.net>:
 Many other words have been added to abc.tab which were not in the
 original Ispell word lists.
 
-Many different web sources were consulted when crating the tables.  They
+Many different web sources were consulted when creating the tables.  They
 include:
 
   The American-British British-American Dictionary
@@ -335,14 +335,14 @@ include:
 
 As well as several online dictionaries:
 
-  Marriam-Webster: http://www.m-w.com/
+  Merriam-Webster: http://www.m-w.com/
   American Heritage: http://www.bartleby.com/61/
   Cambridge (ESL): http://dictionary.cambridge.org/
 
 In version 5.0 a massive effort to correct the numerous errors in
 VarCon was done.  The primary sources used for verification were:
 
-  Marriam-Webster: http://www.m-w.com/
+  Merriam-Webster: http://www.m-w.com/
   Free version of Oxford Dictionaries Online: 
     http://www.oxforddictionaries.com/
   Oxford dictionaries available via Oxford Reference Online
@@ -356,7 +356,7 @@ VarCon was done.  The primary sources used for verification were:
 I also used Tysto UK vs US spelling list available at:
   http://www.tysto.com/articles05/q1/20050324uk-us.shtml
 to make sure I didn't leave out any information in VarCon, however any
-additions from his lists where verified using the dictionaries
+additions from his lists were verified using the dictionaries
 mentioned above as his lists contained numerous errors (such as
 including archaic spellings of words)
 
