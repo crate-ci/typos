@@ -386,10 +386,7 @@ impl PrintSarif {
 }
 
 fn sarif_error_mapper(error: impl std::fmt::Display) -> std::io::Error {
-    std::io::Error::new(
-        std::io::ErrorKind::Other,
-        format!("failed to generate SARIF output: {error}"),
-    )
+    std::io::Error::other(format!("failed to generate SARIF output: {error}"))
 }
 
 fn typo_to_sarif_result(
