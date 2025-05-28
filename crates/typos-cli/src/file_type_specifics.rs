@@ -21,6 +21,7 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         StaticDictConfig {
             ignore_idents: &[
                 "nd", // CSS class used by pygments (see https://github.com/pygments/pygments/blob/2.16.1/pygments/token.py#L146)
+                "wdth", // Tag in OpenType 1.8 design-variation axes (see https://github.com/microsoft/OpenTypeDesignVariationAxisTags/blob/5ea229006014c614654242a29f49424c1d0659fa/BackgroundOnAxes.md?plain=1#L25)
             ],
             ignore_words: &[],
         },
@@ -35,6 +36,15 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         },
     ),
     (
+        "html",
+        StaticDictConfig {
+            ignore_idents: &[
+                "wdth", // Tag in OpenType design-variation axes, see "css" section for same entry
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "jl",
         StaticDictConfig {
             ignore_idents: &[],
@@ -44,6 +54,15 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
                 "modul", // stand-in for `module` when needing to avoid the keyword
                 "usig",  // stand-in for `using` when needing to avoid the keyword
             ],
+        },
+    ),
+    (
+        "less",
+        StaticDictConfig {
+            ignore_idents: &[
+                "wdth", // Tag in OpenType design-variation axes, see "css" section for same entry
+            ],
+            ignore_words: &[],
         },
     ),
     (
@@ -78,11 +97,29 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         },
     ),
     (
+        "sass",
+        StaticDictConfig {
+            ignore_idents: &[
+                "wdth", // Tag in OpenType design-variation axes, see "css" section for same entry
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "sh",
         StaticDictConfig {
             ignore_idents: &[
                 "ot", // the test command from GNU coreutils supports an -ot argument (see https://www.gnu.org/software/coreutils/manual/html_node/File-characteristic-tests.html)
                 "stap", // command from SystemTap (see https://sourceware.org/systemtap/man/stap.1.html)
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
+        "stylus",
+        StaticDictConfig {
+            ignore_idents: &[
+                "wdth", // Tag in OpenType design-variation axes, see "css" section for same entry
             ],
             ignore_words: &[],
         },
