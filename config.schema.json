@@ -1,112 +1,104 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Config",
   "type": "object",
   "properties": {
-    "files": {
-      "default": {
-        "extend-exclude": [],
-        "ignore-dot": null,
-        "ignore-files": null,
-        "ignore-global": null,
-        "ignore-hidden": null,
-        "ignore-parent": null,
-        "ignore-vcs": null
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/Walk"
-        }
-      ]
-    },
-    "default": {
-      "default": {
-        "binary": null,
-        "check-file": null,
-        "check-filename": null,
-        "extend-identifiers": {},
-        "extend-ignore-identifiers-re": [],
-        "extend-ignore-re": [],
-        "extend-ignore-words-re": [],
-        "extend-words": {},
-        "identifier-leading-digits": null,
-        "ignore-hex": null,
-        "locale": null,
-        "unicode": null
-      },
-      "allOf": [
-        {
-          "$ref": "#/definitions/EngineConfig"
-        }
-      ]
-    },
     "type": {
-      "default": {},
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/GlobEngineConfig"
+        "$ref": "#/$defs/GlobEngineConfig"
+      },
+      "default": {}
+    },
+    "files": {
+      "$ref": "#/$defs/Walk",
+      "default": {
+        "extend-exclude": [],
+        "ignore-hidden": null,
+        "ignore-files": null,
+        "ignore-dot": null,
+        "ignore-vcs": null,
+        "ignore-global": null,
+        "ignore-parent": null
+      }
+    },
+    "default": {
+      "$ref": "#/$defs/EngineConfig",
+      "default": {
+        "binary": null,
+        "check-filename": null,
+        "check-file": null,
+        "unicode": null,
+        "ignore-hex": null,
+        "identifier-leading-digits": null,
+        "locale": null,
+        "extend-ignore-identifiers-re": [],
+        "extend-identifiers": {},
+        "extend-ignore-words-re": [],
+        "extend-words": {},
+        "extend-ignore-re": []
       }
     }
   },
   "additionalProperties": false,
-  "definitions": {
+  "$defs": {
     "Walk": {
       "type": "object",
       "properties": {
         "extend-exclude": {
-          "default": [],
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "default": []
         },
         "ignore-hidden": {
           "description": "Skip hidden files and directories.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "ignore-files": {
           "description": "Respect ignore files.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "ignore-dot": {
           "description": "Respect .ignore files.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "ignore-vcs": {
           "description": "Respect ignore files in vcs directories.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "ignore-global": {
           "description": "Respect global ignore files.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "ignore-parent": {
           "description": "Respect ignore files in parent directories.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         }
       },
       "additionalProperties": false
@@ -116,97 +108,97 @@
       "properties": {
         "binary": {
           "description": "Check binary files.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "check-filename": {
           "description": "Verifying spelling in file names.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "check-file": {
           "description": "Verifying spelling in files.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
-        },
-        "extend-ignore-re": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+          ],
+          "default": null
         },
         "unicode": {
           "description": "Allow unicode characters in identifiers (and not just ASCII)",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "ignore-hex": {
           "description": "Do not check identifiers that appear to be hexadecimal values.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "identifier-leading-digits": {
           "description": "Allow identifiers to start with digits, in addition to letters.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "locale": {
-          "default": null,
           "anyOf": [
             {
-              "$ref": "#/definitions/Locale"
+              "$ref": "#/$defs/Locale"
             },
             {
               "type": "null"
             }
-          ]
+          ],
+          "default": null
         },
         "extend-ignore-identifiers-re": {
-          "default": [],
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "default": []
         },
         "extend-identifiers": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
+          },
+          "default": {}
         },
         "extend-ignore-words-re": {
-          "default": [],
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "default": []
         },
         "extend-words": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
+          },
+          "default": {}
+        },
+        "extend-ignore-re": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         }
       }
     },
@@ -224,105 +216,105 @@
       "type": "object",
       "properties": {
         "extend-glob": {
-          "default": [],
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "default": []
         },
         "binary": {
           "description": "Check binary files.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "check-filename": {
           "description": "Verifying spelling in file names.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "check-file": {
           "description": "Verifying spelling in files.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
-        },
-        "extend-ignore-re": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+          ],
+          "default": null
         },
         "unicode": {
           "description": "Allow unicode characters in identifiers (and not just ASCII)",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "ignore-hex": {
           "description": "Do not check identifiers that appear to be hexadecimal values.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "identifier-leading-digits": {
           "description": "Allow identifiers to start with digits, in addition to letters.",
-          "default": null,
           "type": [
             "boolean",
             "null"
-          ]
+          ],
+          "default": null
         },
         "locale": {
-          "default": null,
           "anyOf": [
             {
-              "$ref": "#/definitions/Locale"
+              "$ref": "#/$defs/Locale"
             },
             {
               "type": "null"
             }
-          ]
+          ],
+          "default": null
         },
         "extend-ignore-identifiers-re": {
-          "default": [],
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "default": []
         },
         "extend-identifiers": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
+          },
+          "default": {}
         },
         "extend-ignore-words-re": {
-          "default": [],
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "default": []
         },
         "extend-words": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
+          },
+          "default": {}
+        },
+        "extend-ignore-re": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         }
       }
     }
