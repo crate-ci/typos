@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(dict)* Don't correct `wasn't` to `wasm't`
+
 ## [1.33.0] - 2025-06-02
 
 ### Features
