@@ -1539,7 +1539,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.32.0"
+version = "1.33.0"
 dependencies = [
  "ahash",
  "anstream",
