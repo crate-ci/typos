@@ -633,21 +633,21 @@ impl std::fmt::Display for Locale {
 }
 
 #[cfg(feature = "unstable-schema")]
-fn vec_string(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+fn vec_string(gen: &mut schemars::SchemaGenerator) -> schemars::Schema {
     type Type = Vec<String>;
     <Type as schemars::JsonSchema>::json_schema(gen)
 }
 
 #[cfg(feature = "unstable-schema")]
-fn hashmap_string_string(gen: &mut schemars::gen::SchemaGenerator) -> schemars::schema::Schema {
+fn hashmap_string_string(gen: &mut schemars::SchemaGenerator) -> schemars::Schema {
     type Type = HashMap<String, String>;
     <Type as schemars::JsonSchema>::json_schema(gen)
 }
 
 #[cfg(feature = "unstable-schema")]
 fn hashmap_string_t<T: schemars::JsonSchema>(
-    gen: &mut schemars::gen::SchemaGenerator,
-) -> schemars::schema::Schema {
+    gen: &mut schemars::SchemaGenerator,
+) -> schemars::Schema {
     type Type<T> = HashMap<String, T>;
     <Type<T> as schemars::JsonSchema>::json_schema(gen)
 }
