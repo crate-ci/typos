@@ -9,6 +9,8 @@ mod parser;
 
 #[cfg(feature = "parser")]
 pub use crate::parser::ClusterIter;
+#[cfg(feature = "parser")]
+pub use crate::parser::ParseError;
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Cluster {
