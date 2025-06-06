@@ -6,6 +6,14 @@
 /// Set `check_file` to `false` for these types.
 pub(crate) const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
 
+const CSS_DICT: StaticDictConfig = StaticDictConfig {
+    ignore_idents: &[
+        "nd", // CSS class used by pygments (see https://github.com/pygments/pygments/blob/2.16.1/pygments/token.py#L146)
+        "wdth", // Tag in OpenType 1.8 design-variation axes (see https://github.com/microsoft/OpenTypeDesignVariationAxisTags/blob/5ea229006014c614654242a29f49424c1d0659fa/BackgroundOnAxes.md?plain=1#L25)
+    ],
+    ignore_words: &[],
+};
+
 pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
         "cpp",
@@ -16,15 +24,7 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
             ignore_words: &[],
         },
     ),
-    (
-        "css",
-        StaticDictConfig {
-            ignore_idents: &[
-                "nd", // CSS class used by pygments (see https://github.com/pygments/pygments/blob/2.16.1/pygments/token.py#L146)
-            ],
-            ignore_words: &[],
-        },
-    ),
+    ("css", CSS_DICT),
     (
         "go",
         StaticDictConfig {
@@ -32,6 +32,14 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
                 "flate", // https://pkg.go.dev/compress/flate
             ],
             ignore_words: &[],
+        },
+    ),
+    (
+        "html",
+        StaticDictConfig {
+            // Handle CSS embedded directly within HTML
+            ignore_idents: CSS_DICT.ignore_idents,
+            ignore_words: CSS_DICT.ignore_words,
         },
     ),
     (
@@ -46,6 +54,7 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
             ],
         },
     ),
+    ("less", CSS_DICT),
     (
         "man",
         StaticDictConfig {
@@ -77,6 +86,7 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
             ],
         },
     ),
+    ("sass", CSS_DICT),
     (
         "sh",
         StaticDictConfig {
@@ -87,6 +97,7 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
             ignore_words: &[],
         },
     ),
+    ("stylus", CSS_DICT),
     (
         "vimscript",
         StaticDictConfig {
