@@ -88,6 +88,15 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         },
     ),
     (
+        "typ", // Typst
+        StaticDictConfig {
+            ignore_idents: &[
+                "typ", // file extension
+            ],
+            ignore_words: &[],
+        },
+    ),
+    (
         "vimscript",
         StaticDictConfig {
             ignore_idents: &[
