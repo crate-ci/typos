@@ -27,6 +27,7 @@ impl FileChecker for Typos {
     ) -> Result<(), std::io::Error> {
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let file_name = policy.strip_file_extension(file_name);
                 for typo in check_str(file_name, policy) {
                     let msg = report::Typo {
                         context: Some(report::PathContext { path }.into()),
@@ -111,6 +112,7 @@ impl FileChecker for FixTypos {
         // Ensure the above write can happen before renaming the file.
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let file_name = policy.strip_file_extension(file_name);
                 let mut fixes = Vec::new();
                 for typo in check_str(file_name, policy) {
                     if is_fixable(&typo) {
@@ -264,6 +266,7 @@ impl FileChecker for HighlightIdentifiers {
         let mut ignores: Option<Ignores> = None;
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let file_name = policy.strip_file_extension(file_name);
                 let mut styled = String::new();
                 let mut prev_end = 0;
                 for (word, highlight) in policy
@@ -366,6 +369,7 @@ impl FileChecker for Identifiers {
         let mut ignores: Option<Ignores> = None;
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let file_name = policy.strip_file_extension(file_name);
                 for word in policy.tokenizer.parse_str(file_name) {
                     if ignores
                         .get_or_insert_with(|| Ignores::new(file_name.as_bytes(), policy.ignore))
@@ -546,6 +550,7 @@ impl FileChecker for Words {
         let mut ignores: Option<Ignores> = None;
         if policy.check_filenames {
             if let Some(file_name) = path.file_name().and_then(|s| s.to_str()) {
+                let file_name = policy.strip_file_extension(file_name);
                 for word in policy
                     .tokenizer
                     .parse_str(file_name)

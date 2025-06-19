@@ -1,0 +1,17 @@
+bin.name = "typos"
+args = ""
+stdin = ""
+# The file extension equals a known typo but it's not a typo because it matches a type glob pattern.
+# (The known file extension is stripped before checking the filename for typos.)
+stdout = """
+error: `foo` should be `fooo`
+  --> ./foo.boom:1
+error: `boom` should be `booom`
+  --> ./foo.boom:1:16
+  |
+1 | bada bing bada boom
+  |                ^^^^
+  |
+"""
+stderr = ""
+status.code = 2

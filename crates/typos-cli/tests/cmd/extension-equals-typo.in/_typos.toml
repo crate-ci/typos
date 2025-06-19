@@ -1,0 +1,6 @@
+[default.extend-words]
+boom = "booom"
+foo = "fooo"
+
+[type.some-type]
+extend-glob = ["*.boom"]

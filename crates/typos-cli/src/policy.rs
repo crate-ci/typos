@@ -94,8 +94,36 @@ impl<'s> ConfigEngine<'s> {
         debug_assert!(path.is_absolute(), "{} is not absolute", path.display());
         let dir = self.get_dir(path).expect("`walk()` should be called first");
         let (file_type, file_config) = dir.get_file_config(path);
+
+        let mut extension_regex = None;
+
+        if file_config.check_filenames {
+            if let Some(file_type) = file_type {
+                // File extensions can be in our typo dictionary.
+                // E.g. .typ is the file extension for Typst but we correct "typ" to (typo, type).
+                // Here we build a regex later used to ensure that we don't recognize file extensions
+                // we know (via the glob list of type definitions) in filenames as typos.
+                let mut extension_regex_str = String::new();
+                for pattern in &dir.type_matcher.definitions()[file_type] {
+                    if let Some(pattern) = pattern.strip_prefix("*.") {
+                        if !extension_regex_str.is_empty() {
+                            extension_regex_str.push('|');
+                        }
+                        let glob = globset::Glob::new(pattern).unwrap();
+                        if glob.regex().ends_with('$') {
+                            // Policy::strip_file_extension assumes the regex is $-anchored to avoid allocations.
+                            extension_regex_str
+                                .push_str(glob.regex().strip_prefix("(?-u)^").unwrap());
+                        }
+                    }
+                }
+                extension_regex = Some(regex::Regex::new(&extension_regex_str).unwrap());
+            }
+        }
+
         Policy {
             check_filenames: file_config.check_filenames,
+            extension_regex,
             check_files: file_config.check_files,
             file_type,
             binary: file_config.binary,
@@ -351,6 +379,7 @@ struct FileConfig {
 #[derive(derive_setters::Setters)]
 pub struct Policy<'t, 'd, 'i> {
     pub check_filenames: bool,
+    extension_regex: Option<regex::Regex>,
     pub check_files: bool,
     pub file_type: Option<&'d str>,
     pub binary: bool,
@@ -363,6 +392,15 @@ impl Policy<'_, '_, '_> {
     pub fn new() -> Self {
         Default::default()
     }
+
+    pub fn strip_file_extension<'a>(&self, filename: &'a str) -> &'a str {
+        if let Some(extension_regex) = &self.extension_regex {
+            if let Some(m) = extension_regex.find(filename) {
+                return &filename[..filename.len() - m.len()];
+            }
+        }
+        filename
+    }
 }
 
 static DEFAULT_TOKENIZER: typos::tokens::Tokenizer = typos::tokens::Tokenizer::new();
@@ -373,6 +411,7 @@ impl Default for Policy<'_, '_, '_> {
     fn default() -> Self {
         Self {
             check_filenames: true,
+            extension_regex: None,
             check_files: true,
             file_type: None,
             binary: false,
