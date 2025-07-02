@@ -315,6 +315,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("ts", &["*.ts", "*.tsx", "*.cts", "*.mts"]),
     ("twig", &["*.twig"]),
     ("txt", &["*.txt"]),
+    ("typ", &["*.typ"]),
     ("typoscript", &["*.typoscript"]),
     ("usd", &["*.usd", "*.usda", "*.usdc"]),
     ("v", &["*.v", "*.vsh"]),
