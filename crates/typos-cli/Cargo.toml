@@ -85,7 +85,7 @@ assert_fs = "1.1"
 divan = "0.1.14"
 maplit = "1.0"
 snapbox = "0.6.5"
-trycmd = "0.15.4"
+trycmd = "0.15.10"
 
 [[bench]]
 name = "check_file"
