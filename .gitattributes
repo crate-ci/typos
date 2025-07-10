@@ -1,0 +1,2 @@
+# force LF on checkout to avoid rustfmt messing up the EOL
+* text eol=lf
