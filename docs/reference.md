@@ -44,6 +44,7 @@ Configuration is read from the following (in precedence order)
 Common `extend-ignore-re`:
 - Line ignore with trailing `# spellchecker:disable-line`: `"(?Rm)^.*(#|//)\\s*spellchecker:disable-line$"`
 - Line block with `# spellchecker:<on|off>`: `"(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on"`
+- Next-line ignore `# spellchecker:ignore-next-line`: `(#|//)\\s*spellchecker:ignore-next-line\\n.*`
 - See also [ripsecret's regexes](https://github.com/sirwart/ripsecrets/blob/main/src/lib.rs)
 
 Common `extend-ignore-identifiers-re`:
