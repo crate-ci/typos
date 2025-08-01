@@ -16,7 +16,7 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs", "--generate-link-to-definition"]
 
 [dependencies]
-phf = "0.11.2"
+phf = "0.12.0"
 dictgen = { version = "^0.3", path = "../dictgen", features = ["map"] }
 
 [dev-dependencies]
