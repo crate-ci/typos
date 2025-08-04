@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix typo in correction to `apostroph`
+- Fix typo in correction to `cordinate`
+- Fix typo in correction to `reproduceability`
+- Fix typo in correction to `revolutionss`
+- Fix typo in correction to `transivity`
+
 ## [1.35.0] - 2025-08-04
 
 ### Features
