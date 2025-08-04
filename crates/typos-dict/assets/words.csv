@@ -4013,7 +4013,7 @@ aportionable,apportionable
 aposltes,apostles
 apostels,apostles
 aposthrophe,apostrophe
-apostorophe,apostroph
+apostorophe,apostrophe
 apostrafes,apostrophes
 apostrafies,apostrophes
 apostrafy,apostrophe
@@ -4026,6 +4026,7 @@ apostrofe,apostrophe
 apostrohpe,apostrophe
 apostrope,apostrophe
 apostropes,apostrophe
+apostroph,apostrophe
 apostrophei,apostrophe
 apostrophie,apostrophe
 apostrophied,apostrophe
@@ -16074,7 +16075,7 @@ cooporative,cooperative
 cooprative,cooperative
 coordanate,coordinate
 coordanates,coordinates
-coordate,cordinate
+coordate,coordinate
 coordenate,coordinate
 coordenated,coordinated
 coordenates,coordinates
@@ -16259,6 +16260,7 @@ coratia,croatia
 corcodile,crocodile
 cordiante,coordinate
 cordinade,coordinate
+cordinate,coordinate
 cordinates,coordinates
 cordinator,coordinator
 cordoroy,corduroy
@@ -55977,7 +55979,8 @@ reproducable,reproducible
 reproducablitity,reproducibility
 reproducably,reproducibly
 reproduccion,reproduction
-reproduciability,reproduceability
+reproduceability,reproducibility
+reproduciability,reproducibility
 reproduciable,reproduceable
 reproduciablity,reproducibility
 reproduciblility,reproducibility
@@ -57173,9 +57176,10 @@ revolutionens,revolutions
 revolutioners,revolutions
 revolutionnary,revolutionary
 revolutionos,revolutions
+revolutionss,revolutions
 revolutoin,revolutions
 revolutoinary,revolutionary
-revolutoins,revolutionss
+revolutoins,revolutions
 revoluttionary,revolutionary
 revoluutionary,revolutionary
 revolvr,revolver
@@ -66568,7 +66572,7 @@ trainngs,training
 trainning,training
 trainwreak,trainwreck
 trainwrek,trainwreck
-traisivity,transivity
+traisivity,transitivity
 traitoris,traitors
 traitorus,traitors
 traitour,traitor
@@ -66897,6 +66901,7 @@ transitoning,transitioning
 transitons,transitions
 transitor,transistor
 transitors,transistor,transistors
+transivity,transitivity
 transkript,transcript
 transkription,transcription
 translaction,translation
