@@ -20,7 +20,7 @@ if [[ -z $(ls ${TARGET} 2>/dev/null) ]]; then
 fi
 
 if [[ ! -x ${COMMAND} ]]; then
-    VERSION=1.35.2
+    VERSION=1.35.3
     if [[ "$(uname -m)" == "arm64" || "$(uname -m)" == "aarch64" ]]; then
         ARCH="aarch64"
     else
