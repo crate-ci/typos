@@ -70,7 +70,8 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         "rust",
         StaticDictConfig {
             ignore_idents: &[
-                "flate2", // https://crates.io/crates/flate2
+                "flate2",  // https://crates.io/crates/flate2
+                "ratatui", // https://crates.io/crates/ratatui
             ],
             ignore_words: &[
                 "ser", // serde::ser, serde_json::ser, etc.
