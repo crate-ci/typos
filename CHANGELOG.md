@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `ratatui` in Rust files
+
 ## [1.35.2] - 2025-08-07
 
 ### Fixes
