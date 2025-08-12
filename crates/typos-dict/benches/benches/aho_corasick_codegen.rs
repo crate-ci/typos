@@ -100290,7 +100290,7 @@ impl Word {
             &["extraterrestrial"],
             &["extraterrestrials"],
             &["extracts"],
-            &["exctracting", "extracting"],
+            &["extracting"],
             &["extraction"],
             &["extractor"],
             &["extractors"],
