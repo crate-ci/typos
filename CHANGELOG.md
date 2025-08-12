@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix typo in correction to `exctracting`
+
 ## [1.35.3] - 2025-08-08
 
 ### Fixes
