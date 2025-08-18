@@ -426,7 +426,7 @@ acccuracy,accuracy
 acccurate,accurate
 acccurately,accurately
 acccused,accused
-accdiently,accidently
+accdiently,accidentally
 accecess,access
 accecpt,accept
 accecpted,accepted
@@ -589,6 +589,7 @@ accidentlaly,accidentally
 accidentlay,accidentally
 accidentley,accidentally
 accidentlly,accidentally
+accidently,accidentally
 accidentually,accidentally
 accidenty,accidentally
 accideny,accidentally
@@ -23217,7 +23218,7 @@ dymanics,dynamics
 dymanite,dynamite
 dynamc,dynamic
 dynamcally,dynamically
-dynamcly,dynamincally,dynamically
+dynamcly,dynamically
 dynamcs,dynamics
 dynamicallly,dynamically
 dynamicaly,dynamically
@@ -23229,6 +23230,7 @@ dynamicpsf,dynamics
 dynamicus,dynamics
 dynaminc,dynamic
 dynamincal,dynamical
+dynamincally,dynamically
 dynamincs,dynamics
 dynamis,dynamics
 dynamitage,dynamite
@@ -36674,8 +36676,9 @@ interrup,interrupt
 interruped,interrupted
 interruping,interrupting
 interrups,interrupts
+interruptability,interruptibility
 interruptable,interruptible
-interruptablity,interruptability
+interruptablity,interruptibility
 interrupteds,interrupts
 interruptes,interrupts
 interruptis,interrupts
@@ -36738,7 +36741,7 @@ intertwinded,intertwined
 intertwinned,intertwined
 intertwyned,intertwined
 interupt,interrupt
-interuptability,interruptability
+interuptability,interruptibility
 interuptable,interruptible
 interupted,interrupted
 interupting,interrupting
@@ -37147,7 +37150,7 @@ intuituvely,intuitively
 inturpratasion,interpretation
 inturpratation,interpretation
 inturprett,interpret
-inturruptability,interruptability
+inturruptability,interruptibility
 inturrupting,interrupting
 intutive,intuitive
 intutively,intuitively
@@ -41041,7 +41044,8 @@ messagaes,messages
 messagd,messaged
 messagease,messages
 messagepad,messaged
-messagers,messages
+messager,massager,messenger,message
+messagers,messages,messengers
 messagess,messages
 messagetqueue,messagequeue
 messagge,message
@@ -41062,7 +41066,7 @@ messeges,messages
 messenging,messaging
 messgae,message
 messgaed,messaged
-messgaer,messager
+messgaer,messenger
 messgaes,messages
 messge,message
 messges,messages
@@ -50277,6 +50281,7 @@ prefences,preferences
 preferaable,preferable
 preferabbly,preferably
 preferabely,preferable
+preferables,preferable
 preferabley,preferably
 preferablly,preferably
 preferance,preference
@@ -50846,7 +50851,7 @@ prexixed,prefixed
 prezidential,presidential
 prfer,prefer
 prferable,preferable
-prferables,preferables,preferable
+prferables,preferable
 prference,preference
 prferred,preferred
 prgram,program
@@ -51311,12 +51316,13 @@ prodivded,provided
 prodiving,providing
 prodominantly,predominantly
 producable,producible
-producables,producibles,producible
+producables,producible
 produccion,production
 produceds,produces,produced
 produceras,produces
 producerats,producers
 produceres,produces
+producibles,producible
 producirse,producers
 produciton,production
 producitons,productions
@@ -56657,8 +56663,8 @@ restanti,restarting
 restarant,restaurant
 restarants,restaurants
 restaraunt,restaurant
-restaraunteur,restauranteur
-restaraunteurs,restauranteurs
+restaraunteur,restaurateur
+restaraunteurs,restaurateurs
 restaraunts,restaurants
 restartalbe,restartable
 restartarting,restarting
@@ -56667,6 +56673,8 @@ restaruants,restaurants
 restat,restart
 restatting,restarting,restating
 restaurantes,restaurants
+restauranteur,restaurateur
+restauranteurs,restaurateurs
 restauration,restoration
 restauraunt,restaurant
 restauraunts,restaurants
@@ -58435,6 +58443,7 @@ searchin,searching
 searchs,searches
 searh,search
 searhc,search
+searialize,serialize
 seatch,search
 sebasitan,sebastian
 sebastain,sebastian
@@ -59172,7 +59181,7 @@ sercives,services
 serciving,servicing
 sercret,secret
 sercurity,security
-serealize,searialize
+serealize,serialize
 serebral,cerebral
 serebrally,cerebrally
 serenitary,serenity
@@ -60757,7 +60766,7 @@ sodu,sod,soda,sods,sudo
 soecialize,specialized
 soem,some
 soemone,someone
-soemthin,somethin
+soemthin,something
 soemthing,something
 soemthings,somethings
 soemwhere,somewhere
@@ -60872,10 +60881,11 @@ somethigns,somethings
 somethihng,something
 somethiing,something
 somethijng,something
-somethikng,somethin
+somethikng,something
 somethimes,sometimes
 somethimg,something
 somethimng,something
+somethin,something
 somethinbg,somethings
 somethines,somethings
 somethinfg,somethings
@@ -67948,8 +67958,9 @@ unablet,unable
 unabnned,unbanned
 unaccaptable,unacceptable
 unacceptible,unacceptable
-unaccesible,unaccessible,inaccessible
+unaccesible,inaccessible
 unaccessable,inaccessible
+unaccessible,inaccessible
 unaccpetable,unacceptable
 unaccpeted,unaccepted
 unacknowleged,unacknowledged
@@ -68138,7 +68149,7 @@ uncertaity,uncertainty
 uncertanity,uncertainty
 uncertanty,uncertainty
 uncertianty,uncertainty
-uncesessarily,unnesessarily
+uncesessarily,unnecessarily
 uncesnored,uncensored
 uncessarily,unnecessarily
 uncessary,unnecessary
@@ -69038,6 +69049,7 @@ unneeeded,unneeded
 unnescessarily,unnecessarily
 unnescessary,unnecessary
 unnesesarily,unnecessarily
+unnesessarily,unnecessarily
 unnessarily,unnecessarily
 unnessary,unnecessary
 unnessasary,unnecessary
