@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix typo in correction to `accidently`
+- Fix typo in correction to `dynamincally`
+- Fix typo in correction to `interruptability`
+- Fix typo in correction to `interruptability`
+- Fix typo in correction to `messager`
+- Fix typo in correction to `preferables`
+- Fix typo in correction to `producibles`
+- Fix typo in correction to `restauranteur`
+- Fix typo in correction to `restauranteurs`
+- Fix typo in correction to `searialize`
+- Fix typo in correction to `somethin`
+- Fix typo in correction to `unaccessible`
+- Fix typo in correction to `unnesessarily`
+
 ## [1.35.4] - 2025-08-12
 
 ### Fixes
