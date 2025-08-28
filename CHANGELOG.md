@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Track `go.mod` as a golang file (regression from 1.13.21)
+
 ## [1.35.5] - 2025-08-18
 
 ### Fixes
