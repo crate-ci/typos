@@ -102,7 +102,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("fut", &["*.fut"]),
     ("gap", &["*.g", "*.gap", "*.gi", "*.gd", "*.tst"]),
     ("gn", &["*.gn", "*.gni"]),
-    ("go", &["*.go", "go.work"]),
+    ("go", &["*.go", "go.mod", "go.work"]),
     ("gprbuild", &["*.gpr"]),
     ("gradle", &[
         "*.gradle", "*.gradle.kts", "gradle.properties", "gradle-wrapper.*",
