@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.35.7] - 2025-08-29
+
+### Documentation
+
+- Expand PyPI metadata
+
+## [1.35.6] - 2025-08-28
+
+### Fixes
+
+- Track `go.mod` as a golang file (regression from 1.13.21)
+
 ## [1.35.5] - 2025-08-18
 
 ### Fixes
@@ -1559,7 +1571,9 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.35.5...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.35.7...HEAD
+[1.35.7]: https://github.com/crate-ci/typos/compare/v1.35.6...v1.35.7
+[1.35.6]: https://github.com/crate-ci/typos/compare/v1.35.5...v1.35.6
 [1.35.5]: https://github.com/crate-ci/typos/compare/v1.35.4...v1.35.5
 [1.35.4]: https://github.com/crate-ci/typos/compare/v1.35.3...v1.35.4
 [1.35.3]: https://github.com/crate-ci/typos/compare/v1.35.2...v1.35.3
