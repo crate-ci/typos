@@ -23,8 +23,6 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
-readme = "../../README.md"
-
 [project.urls]
 Repository = "https://github.com/crate-ci/typos"
 Documentation = "https://github.com/crate-ci/typos#typos"
