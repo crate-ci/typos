@@ -166,8 +166,7 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
             let snippet = Snippet::source(line)
                 .path(path)
                 .line_start(context.line_num);
-            let snippet = append_corrections(msg, 0, snippet);
-            group.element(snippet)
+            append_corrections(msg, 0, snippet, group)
         }
         Some(Context::Path(context)) => {
             let path = context
@@ -178,8 +177,7 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
             let path = path.as_os_str().to_string_lossy();
             let line = context.path.as_os_str().to_string_lossy();
             let snippet = Snippet::source(line);
-            let snippet = append_corrections(msg, path.len(), snippet);
-            group.element(snippet)
+            append_corrections(msg, path.len(), snippet, group)
         }
         Some(_) | None => group,
     };
@@ -190,11 +188,13 @@ fn append_corrections<'t>(
     msg: &'t Typo<'t>,
     offset: usize,
     snippet: Snippet<'t, Annotation<'t>>,
-) -> Snippet<'t, Annotation<'t>> {
+    group: Group<'t>,
+) -> Group<'t> {
     let span_start = msg.byte_offset + offset;
     let span_end = span_start + msg.typo.len();
     let span = span_start..span_end;
-    snippet.annotation(AnnotationKind::Primary.span(span))
+    let snippet = snippet.annotation(AnnotationKind::Primary.span(span));
+    group.element(snippet)
 }
 
 fn error_to_group<'e>(error: &'e Error<'e>) -> Group<'e> {
