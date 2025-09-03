@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Replaced the error rendering for various quality of life improvements
+
 ## [1.36.0] - 2025-09-02
 
 ### Features
