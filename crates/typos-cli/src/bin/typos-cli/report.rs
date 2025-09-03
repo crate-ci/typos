@@ -4,6 +4,7 @@ use std::borrow::Cow;
 use std::io::Write as _;
 use std::sync::{atomic, Mutex};
 
+use annotate_snippets::Annotation;
 use annotate_snippets::AnnotationKind;
 use annotate_snippets::Group;
 use annotate_snippets::Level;
@@ -162,15 +163,11 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
         Some(Context::File(context)) => {
             let path = context.path.as_os_str().to_string_lossy();
             let line = String::from_utf8_lossy(msg.buffer.as_ref());
-            let span_start = msg.byte_offset;
-            let span_end = span_start + msg.typo.len();
-            let span = span_start..span_end;
-            group.element(
-                Snippet::source(line)
-                    .path(path)
-                    .line_start(context.line_num)
-                    .annotation(AnnotationKind::Primary.span(span)),
-            )
+            let snippet = Snippet::source(line)
+                .path(path)
+                .line_start(context.line_num);
+            let snippet = append_corrections(msg, 0, snippet);
+            group.element(snippet)
         }
         Some(Context::Path(context)) => {
             let path = context
@@ -180,14 +177,24 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
                 .join("");
             let path = path.as_os_str().to_string_lossy();
             let line = context.path.as_os_str().to_string_lossy();
-            let span_start = msg.byte_offset + path.len();
-            let span_end = span_start + msg.typo.len();
-            let span = span_start..span_end;
-            group.element(Snippet::source(line).annotation(AnnotationKind::Primary.span(span)))
+            let snippet = Snippet::source(line);
+            let snippet = append_corrections(msg, path.len(), snippet);
+            group.element(snippet)
         }
         Some(_) | None => group,
     };
     group
+}
+
+fn append_corrections<'t>(
+    msg: &'t Typo<'t>,
+    offset: usize,
+    snippet: Snippet<'t, Annotation<'t>>,
+) -> Snippet<'t, Annotation<'t>> {
+    let span_start = msg.byte_offset + offset;
+    let span_end = span_start + msg.typo.len();
+    let span = span_start..span_end;
+    snippet.annotation(AnnotationKind::Primary.span(span))
 }
 
 fn error_to_group<'e>(error: &'e Error<'e>) -> Group<'e> {
