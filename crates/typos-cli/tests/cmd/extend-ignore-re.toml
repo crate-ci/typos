@@ -3,17 +3,15 @@ args = "--sort"
 stdin = ""
 stdout = """
 error: `hello` should be `goodbye`
-  --> ./file.ignore:1:1
-  |
-1 | hello `hello`
-  | ^^^^^
-  |
+  ╭▸ ./file.ignore:1:1
+  │
+1 │ hello `hello`
+  ╰╴━━━━━
 error: `olt` should be `old`
-  --> ./olt-manager.php:1:5
-  |
-1 | One olt two
-  |     ^^^
-  |
+  ╭▸ ./olt-manager.php:1:5
+  │
+1 │ One olt two
+  ╰╴    ━━━
 """
 stderr = ""
 status.code = 2

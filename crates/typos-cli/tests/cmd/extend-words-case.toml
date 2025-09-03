@@ -4,10 +4,9 @@ status.code = 2
 stdin = ""
 stdout = """
 error: `Trailling` should be `Trailing`
-  --> ./file.txt:1:26
-  |
-1 | public function noErrorOnTraillingSemicolonAndWhitespace(Connection $connection)
-  |                          ^^^^^^^^^
-  |
+  ╭▸ ./file.txt:1:26
+  │
+1 │ public function noErrorOnTraillingSemicolonAndWhitespace(Connection $connection)
+  ╰╴                         ━━━━━━━━━
 """
 stderr = ""
