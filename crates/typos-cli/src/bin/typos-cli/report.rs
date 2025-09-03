@@ -158,13 +158,13 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
         }
     };
     let group = Group::with_title(Level::ERROR.primary_title(Cow::Owned(title)));
-    let span_start = msg.byte_offset;
-    let span_end = span_start + msg.typo.len();
-    let span = span_start..span_end;
     let group = match &msg.context {
         Some(Context::File(context)) => {
             let path = context.path.as_os_str().to_string_lossy();
             let line = String::from_utf8_lossy(msg.buffer.as_ref());
+            let span_start = msg.byte_offset;
+            let span_end = span_start + msg.typo.len();
+            let span = span_start..span_end;
             group.element(
                 Snippet::source(line)
                     .path(path)
@@ -178,16 +178,12 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
                 .parent()
                 .unwrap_or(std::path::Path::new("."))
                 .join("");
-            let path = match path.into_os_string().into_string() {
-                Ok(path) => path,
-                Err(path) => path.to_string_lossy().into_owned(),
-            };
-            let line = context.path.file_name().unwrap().to_string_lossy();
-            group.element(
-                Snippet::source(line)
-                    .path(Cow::Owned(path))
-                    .annotation(AnnotationKind::Primary.span(span)),
-            )
+            let path = path.as_os_str().to_string_lossy();
+            let line = context.path.as_os_str().to_string_lossy();
+            let span_start = msg.byte_offset + path.len();
+            let span_end = span_start + msg.typo.len();
+            let span = span_start..span_end;
+            group.element(Snippet::source(line).annotation(AnnotationKind::Primary.span(span)))
         }
         Some(_) | None => group,
     };

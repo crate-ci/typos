@@ -2,10 +2,9 @@ bin.name = "typos"
 stdin = ""
 stdout = """
 error: `makro` should be `macro`
-  ╭▸ ./:1:1
-  │
-1 │ makro.rs
-  ╰╴━━━━━
+  ╭▸ 
+1 │ ./makro.rs
+  ╰╴  ━━━━━
 """
 stderr = ""
 status.code = 2
