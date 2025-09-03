@@ -1,0 +1,8 @@
+bin.name = "typos"
+stdin = ""
+stdout = """
+error: `makro` should be `macro`
+  --> ./makro.rs:1
+"""
+stderr = ""
+status.code = 2
