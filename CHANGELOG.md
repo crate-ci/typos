@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix regression from 1.36.1 when rendering an error for a line with invalid UTF-8
+
 ## [1.36.1] - 2025-09-03
 
 ### Fixes
