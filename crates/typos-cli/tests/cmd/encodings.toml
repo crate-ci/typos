@@ -1,0 +1,10 @@
+bin.name = "typos"
+status.code = 2
+stdout = """
+error: `ment` should be `meant`
+  ╭▸ ./invalid_utf8.txt:3:70
+  │
+3 │ vouloir lire la nouvelle page man mais ce qui suit vous aidera assur�ment :
+  ╰╴                                                                     ━━━━
+"""
+stderr = ""
