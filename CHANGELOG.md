@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.36.2] - 2025-09-04
+
 ### Fixes
 
 - Fix regression from 1.36.1 when rendering an error for a line with invalid UTF-8
@@ -1589,7 +1591,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.36.1...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.36.2...HEAD
+[1.36.2]: https://github.com/crate-ci/typos/compare/v1.36.1...v1.36.2
 [1.36.1]: https://github.com/crate-ci/typos/compare/v1.36.0...v1.36.1
 [1.36.0]: https://github.com/crate-ci/typos/compare/v1.35.8...v1.36.0
 [1.35.8]: https://github.com/crate-ci/typos/compare/v1.35.7...v1.35.8
