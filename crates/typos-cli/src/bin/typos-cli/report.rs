@@ -2,6 +2,7 @@
 
 use std::borrow::Cow;
 use std::io::Write as _;
+use std::ops::Range;
 use std::sync::{atomic, Mutex};
 
 use annotate_snippets::Annotation;
@@ -162,22 +163,24 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
     let group = match &msg.context {
         Some(Context::File(context)) => {
             let path = context.path.as_os_str().to_string_lossy();
-            let line = String::from_utf8_lossy(msg.buffer.as_ref());
+            let (line, span) = to_string(&msg.buffer, msg.byte_offset, msg.typo.len());
             let snippet = Snippet::source(line)
                 .path(path)
                 .line_start(context.line_num);
-            append_corrections(msg, 0, snippet, group)
+            append_corrections(span, snippet, group)
         }
         Some(Context::Path(context)) => {
-            let path = context
-                .path
-                .parent()
-                .unwrap_or(std::path::Path::new("."))
-                .join("");
-            let path = path.as_os_str().to_string_lossy();
-            let line = context.path.as_os_str().to_string_lossy();
+            let parent = context.path.parent().unwrap_or(std::path::Path::new("."));
+            let parent = parent.as_os_str().to_string_lossy();
+            let mut line = parent.into_owned();
+            line.push(std::path::MAIN_SEPARATOR);
+            let parent_len = line.len();
+            let mut line = line.into_bytes();
+            line.extend(msg.buffer.iter());
+            let (line, span) = to_string(&line, parent_len + msg.byte_offset, msg.typo.len());
+            let line = line.into_owned();
             let snippet = Snippet::source(line);
-            append_corrections(msg, path.len(), snippet, group)
+            append_corrections(span, snippet, group)
         }
         Some(_) | None => group,
     };
@@ -185,16 +188,37 @@ fn typo_to_group<'t>(msg: &'t Typo<'t>) -> Group<'t> {
 }
 
 fn append_corrections<'t>(
-    msg: &'t Typo<'t>,
-    offset: usize,
+    span: Range<usize>,
     snippet: Snippet<'t, Annotation<'t>>,
     group: Group<'t>,
 ) -> Group<'t> {
-    let span_start = msg.byte_offset + offset;
-    let span_end = span_start + msg.typo.len();
-    let span = span_start..span_end;
     let snippet = snippet.annotation(AnnotationKind::Primary.span(span));
     group.element(snippet)
+}
+
+fn to_string(line: &[u8], start: usize, len: usize) -> (Cow<'_, str>, Range<usize>) {
+    let end = start + len;
+
+    if let Ok(line) = std::str::from_utf8(line) {
+        return (Cow::Borrowed(line), start..end);
+    }
+
+    let prefix = &line[0..start];
+    let prefix = String::from_utf8_lossy(prefix);
+
+    let middle = &line[start..end];
+    let middle = String::from_utf8_lossy(middle);
+
+    let suffix = &line[end..];
+    let suffix = String::from_utf8_lossy(suffix);
+
+    let span_start = prefix.len();
+    let span_end = span_start + middle.len();
+
+    (
+        Cow::Owned(format!("{prefix}{middle}{suffix}")),
+        span_start..span_end,
+    )
 }
 
 fn error_to_group<'e>(error: &'e Error<'e>) -> Group<'e> {
