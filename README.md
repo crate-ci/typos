@@ -43,7 +43,7 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 
 Or use rust to install:
 ```console
-$ cargo install typos-cli
+$ cargo install typos-cli --locked
 ```
 
 Or use [Homebrew](https://brew.sh/) to install:
