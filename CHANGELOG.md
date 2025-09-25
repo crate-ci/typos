@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Fix typo in correction to `analysises`
+
 ## [1.36.2] - 2025-09-04
 
 ### Fixes
