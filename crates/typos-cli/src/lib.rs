@@ -1,7 +1,7 @@
 //! `typos_cli`'s API is unstable.  Open an issue for starting a discussion on getting a subset
 //! stabilized.
 
-#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
 
