@@ -46,9 +46,20 @@ then be split into words to be checked.
 Identifiers are defined using
 [unicode's `XID_Continue`](https://www.unicode.org/reports/tr31/#Table_Lexical_Classes_for_Identifiers)
 which includes `[a-zA-Z0-9_]`.
+Identifiers are case-sensitive.
 
 Words are split from identifiers on case changes as well as breaks in
-`[a-zA-Z]` with a special case to handle acronyms.  For example,
-`First10HTMLTokens` would be split as `first`, `html`, `tokens`.
+`[a-zA-Z]` with a special case to handle acronyms.
+Words are case-insensitive.
 
-To see this in action, run `typos --identifiers` or `typos --words`.
+Examples:
+
+| Identifier        | Words               |
+|-------------------|---------------------|
+| `snake_case`        | `snake`, `case`         |
+| `CamelCase`         | `Camel`, `Case`         |
+| `First10HTMLTokens` | `First`, `HTML`, `Tokens` |
+
+To see this in action,
+- run `typos --identifiers` or `typos --words`.
+- run `typos --highlight-identifiers` or `typos --highlight-words`.
