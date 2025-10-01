@@ -47,14 +47,14 @@ typos-dict = { version = "^0.13", path = "../typos-dict", optional = true }
 typos-vars = { version = "^0.10", path = "../typos-vars", optional = true }
 unicase = "2.8.1"
 anyhow = "1.0"
-clap = { version = "4.5.4", features = ["derive"] }
+clap = { version = "4.5.48", features = ["derive"] }
 clap-verbosity-flag = "3.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.9.1"
+toml = "0.9.7"
 log = "0.4"
 env_logger = { version = "0.11", default-features = false, features = ["auto-color"] }
-bstr = "1.9"
+bstr = "1.12"
 ahash = "0.8"
 difflib = "0.4"
 proc-exit = "2.0"
@@ -64,27 +64,27 @@ derive_more = { version = "2.0", features = ["from", "display"] }
 derive_setters = "0.1"
 itertools = "0.14"
 serde_json = "1.0"
-kstring = { version = "2.0.0", features = ["serde"] }
+kstring = { version = "2.0.2", features = ["serde"] }
 typed-arena = "2.0.2"
-thread_local = "1.1.8"
-globset = "0.4.14"
-anstyle = "1.0.6"
-anstream = "0.6.13"
-colorchoice-clap = "1.0.3"
+thread_local = "1.1.9"
+globset = "0.4.16"
+anstyle = "1.0.13"
+anstream = "0.6.20"
+colorchoice-clap = "1.0.7"
 serde_regex = "1.1.0"
-regex = "1.10.4"
-encoding_rs = "0.8.34"
-serde-sarif = "0.7.0"
-schemars = { version = "0.9.0", features = ["preserve_order","semver1"], optional = true }
-annotate-snippets = "0.12.2"
+regex = "1.11.3"
+encoding_rs = "0.8.35"
+serde-sarif = "0.8.0"
+schemars = { version = "1.0.4", features = ["preserve_order","semver1"], optional = true }
+annotate-snippets = "0.12.4"
 terminal_size = "0.4.3"
 supports-unicode = "3.0.0"
 
 [dev-dependencies]
 assert_fs = "1.1"
-divan = "0.1.14"
+divan = "0.1.21"
 maplit = "1.0"
-snapbox = "0.6.5"
+snapbox = "0.6.21"
 trycmd = "0.15.10"
 
 [[bench]]

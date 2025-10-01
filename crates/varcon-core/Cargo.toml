@@ -20,11 +20,11 @@ parser = ["dep:winnow"]
 flags = ["dep:enumflags2"]
 
 [dependencies]
-winnow = { version = "0.7.0", optional = true }
+winnow = { version = "0.7.13", optional = true }
 enumflags2 = { version = "0.7", optional = true }
 
 [lints]
 workspace = true
 
 [dev-dependencies]
-snapbox = "0.6.17"
+snapbox = "0.6.21"

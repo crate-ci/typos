@@ -3,13 +3,6 @@
   "title": "Config",
   "type": "object",
   "properties": {
-    "type": {
-      "type": "object",
-      "additionalProperties": {
-        "$ref": "#/$defs/GlobEngineConfig"
-      },
-      "default": {}
-    },
     "files": {
       "$ref": "#/$defs/Walk",
       "default": {
@@ -38,6 +31,10 @@
         "extend-words": {},
         "extend-ignore-re": []
       }
+    },
+    "type": {
+      "$ref": "#/$defs/TypeEngineConfig",
+      "default": {}
     }
   },
   "additionalProperties": false,
@@ -211,6 +208,12 @@
         "en-ca",
         "en-au"
       ]
+    },
+    "TypeEngineConfig": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/GlobEngineConfig"
+      }
     },
     "GlobEngineConfig": {
       "type": "object",

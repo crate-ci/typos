@@ -16,7 +16,7 @@ all-features = true
 rustdoc-args = ["--generate-link-to-definition"]
 
 [dependencies]
-phf = "0.12.0"
+phf = "0.13.1"
 dictgen = { version = "^0.4", path = "../dictgen", features = ["map"] }
 
 [dev-dependencies]
@@ -27,9 +27,9 @@ unicase = "2.8.1"
 codegenrs = "3.0"
 dictgen = { version = "^0.4", path = "../dictgen", features = ["codegen", "map", "aho-corasick"] }
 varcon = { version = "^1.0", path = "../varcon" }
-snapbox = "0.6.5"
-indexmap = "2.2.6"
-divan = "0.1.16"
+snapbox = "0.6.21"
+indexmap = "2.11.4"
+divan = "0.1.21"
 heck = "0.5.0"
 
 [lints]
