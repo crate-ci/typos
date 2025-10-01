@@ -108,6 +108,9 @@ fn process<S: Into<String>>(
         .map(|(typo, corrections)| {
             let mut new_corrections = IndexSet::new();
             for correction in corrections {
+                if correction.is_empty() {
+                    continue;
+                }
                 let correction = word_variants
                     .get(correction.as_str())
                     .and_then(|words| find_best_match(&typo, correction.as_str(), words))
