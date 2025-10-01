@@ -39,6 +39,9 @@ Configuration is read from the following (in precedence order)
 | type.\<name>.\<field>      | \<varied>     | \<varied> | \<varied> | See `default.` for child keys.  Run with `--type-list` to see available `<name>`s. |
 | type.\<name>.extend-glob   | \-            | list of strings | \- | File globs for matching `<name>`. This is required when defining new file types. |
 
+Notes:
+- For the distinction between "words" and "identifiers", see [design](design.md#identifiers-and-words)
+
 ### Example configurations
 
 Common `extend-ignore-re`:
