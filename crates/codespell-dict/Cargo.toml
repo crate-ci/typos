@@ -21,7 +21,7 @@ dictgen = { version = "^0.4", path = "../dictgen" }
 [dev-dependencies]
 codegenrs = "3.0"
 dictgen = { version = "^0.4", path = "../dictgen", features = ["codegen"] }
-snapbox = "0.6.5"
+snapbox = "0.6.21"
 typos = { path = "../typos" }
 
 [lints]

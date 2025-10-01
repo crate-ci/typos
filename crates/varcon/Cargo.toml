@@ -26,7 +26,7 @@ varcon-core = { version = "^5.0", path = "../varcon-core" }
 [dev-dependencies]
 codegenrs = "3.0"
 varcon-core = { version = "^5.0", path = "../varcon-core", features = ["parser"] }
-snapbox = "0.6.5"
+snapbox = "0.6.21"
 
 [lints]
 workspace = true
