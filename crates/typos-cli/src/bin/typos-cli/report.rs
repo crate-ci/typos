@@ -369,7 +369,7 @@ fn typo_to_sarif_result(
     fix: Option<Fix>,
 ) -> Result<sarif::Result, Box<dyn std::error::Error>> {
     let mut result = sarif::Result::builder()
-        .level(sarif::ResultLevel::Error.to_string())
+        .level(sarif::ResultLevel::Error)
         .message(sarif::Message::builder().markdown(message).build())
         .locations(vec![location])
         .build();
