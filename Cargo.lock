@@ -249,7 +249,7 @@ dependencies = [
 
 [[package]]
 name = "codespell-dict"
-version = "0.5.1"
+version = "0.5.2"
 dependencies = [
  "codegenrs",
  "dictgen",
@@ -1578,7 +1578,7 @@ dependencies = [
 
 [[package]]
 name = "typos"
-version = "0.10.36"
+version = "0.10.37"
 dependencies = [
  "bstr",
  "itertools",
@@ -1640,7 +1640,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.13.7"
+version = "0.13.8"
 dependencies = [
  "codegenrs",
  "csv",
@@ -1658,7 +1658,7 @@ dependencies = [
 
 [[package]]
 name = "typos-vars"
-version = "0.10.1"
+version = "0.10.2"
 dependencies = [
  "codegenrs",
  "dictgen",
@@ -1720,7 +1720,7 @@ dependencies = [
 
 [[package]]
 name = "varcon"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "codegenrs",
  "snapbox",
@@ -1729,7 +1729,7 @@ dependencies = [
 
 [[package]]
 name = "varcon-core"
-version = "5.0.4"
+version = "5.0.5"
 dependencies = [
  "enumflags2",
  "snapbox",
