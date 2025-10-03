@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't suggest `diagnostic` for `diagnotics`, preferring `diagnostics`
+
 ## [1.37.1] - 2025-10-01
 
 ### Fixes
