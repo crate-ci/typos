@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `PN` for `bitbake` file types
+
 ## [1.37.2] - 2025-10-03
 
 ### Fixes
