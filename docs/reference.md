@@ -175,6 +175,16 @@ Custom uncorrectable sections (e.g. markdown code fences, PGP signatures, etc)
 
 Corrections for [identifiers](./design.md#identifiers-and-words). When the correction is blank, the identifier is never valid. When the correction is the key, the identifier is always valid.
 
+Example:
+```toml
+[default.extend-identifiers]
+## Names
+Hte = "Hte"
+## External
+ERROR_FILENAME_EXCED_RANGE = "ERROR_FILENAME_EXCED_RANGE"
+ERROR_FILENAME_EXCEDE_RANGE = "ERROR_FILENAME_EXCED_RANGE"
+```
+
 #### `default.extend-ignore-identifiers-re`
 
 - Type: list of [regexes](https://docs.rs/regex/latest/regex/index.html#syntax)
@@ -186,6 +196,14 @@ Pattern-match always-valid identifiers.
 - Type: table of strings
 
 Corrections for [words](./design.md#identifiers-and-words). When the correction is blank, the word is never valid. When the correction is the key, the word is always valid.
+
+Example:
+```toml
+[default.extend-words]
+## Project-specific acronym
+taits = "taits"
+tais = "taits"
+```
 
 #### `default.extend-ignore-words-re`
 
