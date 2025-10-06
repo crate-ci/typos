@@ -39,6 +39,7 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         StaticDictConfig {
             ignore_idents: &[
                 "flate", // https://pkg.go.dev/compress/flate
+                "typ",   // type is a reserved word in Go, so typ is often used instead when handling types
             ],
             ignore_words: &[],
         },
