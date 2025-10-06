@@ -223,6 +223,9 @@ Pattern-match always-valid words.  Note: you must handle case insensitivity your
 
 File globs for matching `NAME`. This is required when defining new file types.
 
+When there are multiple globs that would match,
+the most specific glob is used.
+
 Run with `--type-list` to see available `NAME`s.
 
 ### Example configurations
