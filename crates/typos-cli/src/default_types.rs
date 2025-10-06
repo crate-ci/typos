@@ -27,9 +27,10 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("bat", &["*.bat", "*.cmd"]),
     ("bazel", &[
         "*.bazel", "*.bzl", "*.BUILD", "*.bazelrc", "BUILD", "MODULE.bazel",
-        "WORKSPACE", "WORKSPACE.bazel",
+        "WORKSPACE", "WORKSPACE.bazel", "WORKSPACE.bzlmod",
     ]),
     ("bitbake", &["*.bb", "*.bbappend", "*.bbclass", "*.conf", "*.inc"]),
+    ("boxlang", &["*.bx", "*.bxm", "*.bxs"]),
     ("brotli", &["*.br"]),
     ("buildstream", &["*.bst"]),
     ("bzip2", &["*.bz2", "*.tbz2"]),
@@ -56,6 +57,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
         "*.pem",
     ]),
     ("ceylon", &["*.ceylon"]),
+    ("cfml", &["*.cfc", "*.cfm"]),
     ("clojure", &["*.clj", "*.cljc", "*.cljs", "*.cljx"]),
     ("cmake", &["*.cmake", "CMakeLists.txt"]),
     ("cml", &["*.cml"]),
@@ -101,6 +103,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("fsharp", &["*.fs", "*.fsx", "*.fsi"]),
     ("fut", &["*.fut"]),
     ("gap", &["*.g", "*.gap", "*.gi", "*.gd", "*.tst"]),
+    ("gleam", &["*.gleam"]),
     ("gn", &["*.gn", "*.gni"]),
     ("go", &["*.go", "go.mod", "go.work"]),
     ("gprbuild", &["*.gpr"]),
@@ -124,10 +127,11 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("jinja", &["*.j2", "*.jinja", "*.jinja2"]),
     ("jl", &["*.jl"]),
     ("js", &["*.js", "*.jsx", "*.vue", "*.cjs", "*.mjs"]),
-    ("json", &["*.json"]),
+    ("json", &["*.json", "*.sarif"]),
     ("jsonl", &["*.jsonl"]),
     ("jupyter", &["*.ipynb", "*.jpynb"]),
     ("k", &["*.k"]),
+    ("kconfig", &["Kconfig", "Kconfig.*"]),
     ("kotlin", &["*.kt", "*.kts"]),
     ("lean", &["*.lean"]),
     ("less", &["*.less"]),
@@ -160,6 +164,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ]),
     ("lilypond", &["*.ly", "*.ily"]),
     ("lisp", &["*.el", "*.lisp", "*.lsp", "*.sc", "*.scm"]),
+    ("llvm", &["*.ll"]),
     ("lock", &[
         "*.lock",
         "package-lock.json", "pnpm-lock.yaml",
@@ -177,7 +182,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
         "[Gg][Nn][Uu]makefile", "[Mm]akefile",
         "[Gg][Nn][Uu]makefile.am", "[Mm]akefile.am",
         "[Gg][Nn][Uu]makefile.in", "[Mm]akefile.in",
-        "*.mk", "*.mak"
+        "*.mk", "*.mak", "Makefile.*"
     ]),
     ("mako", &["*.mako", "*.mao"]),
     ("man", &["*.[0-9lnpx]", "*.[0-9][cEFMmpSx]"]),
@@ -199,7 +204,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("motoko", &["*.mo"]),
     ("msbuild", &[
         "*.csproj", "*.fsproj", "*.vcxproj", "*.proj", "*.props", "*.targets",
-        "*.sln",
+        "*.sln", "*.slnf",
     ]),
     ("nim", &["*.nim", "*.nimf", "*.nimble", "*.nims"]),
     ("nix", &["*.nix"]),
@@ -249,7 +254,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
         // Idiomatic files
         "config.ru", "Gemfile", ".irbrc", "Rakefile",
         // Extensions
-        "*.gemspec", "*.rb", "*.rbw"
+        "*.gemspec", "*.rb", "*.rbw", "*.rake"
     ]),
     ("rust", &[
         "*.rs",
@@ -258,9 +263,11 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ]),
     ("sass", &["*.sass", "*.scss"]),
     ("scala", &["*.scala", "*.sbt"]),
+    ("scdoc", &["*.scd", "*.scdoc"]),
+    ("seed7", &["*.s7i", "*.sd7"]),
     ("sh", &[
         // Portable/misc. init files
-        ".login", ".logout", ".profile", "profile",
+        ".env", ".login", ".logout", ".profile", "profile",
         // bash-specific init files
         ".bash_login", "bash_login",
         ".bash_logout", "bash_logout",
@@ -279,7 +286,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
         ".zprofile", "zprofile",
         ".zshrc", "zshrc",
         // Extensions
-        "*.bash", "*.csh", "*.ksh", "*.sh", "*.tcsh", "*.zsh",
+        "*.bash", "*.env", "*.csh", "*.ksh", "*.sh", "*.tcsh", "*.zsh",
     ]),
     ("slim", &["*.skim", "*.slim", "*.slime"]),
     ("smarty", &["*.tpl"]),
@@ -306,9 +313,8 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("texinfo", &["*.texi"]),
     ("textile", &["*.textile"]),
     ("tf", &[
-        "*.tf", "*.auto.tfvars", "terraform.tfvars", "*.tf.json",
-        "*.auto.tfvars.json", "terraform.tfvars.json", "*.terraformrc",
-        "terraform.rc", "*.tfrc",
+        "*.tf", "*.tf.json", "*.tfvars", "*.tfvars.json",
+        "*.terraformrc", "terraform.rc", "*.tfrc",
     ]),
     ("thrift", &["*.thrift"]),
     ("toml", &["*.toml"]),
@@ -316,6 +322,7 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("twig", &["*.twig"]),
     ("txt", &["*.txt"]),
     ("typoscript", &["*.typoscript"]),
+    ("typst", &["*.typ"]),
     ("usd", &["*.usd", "*.usda", "*.usdc"]),
     ("v", &["*.v", "*.vsh"]),
     ("vala", &["*.vala"]),
