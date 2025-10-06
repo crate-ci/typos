@@ -1,4 +1,16 @@
 bin.name = "typos"
+status.code = 2
 stdin = ""
-stdout = ""
+stdout = """
+error: `PN` should be `ON`
+  ╭▸ ./foo.bb:1:11
+  │
+1 │ LICENSE:${PN} = "GPL-2.0.only"; FOO:pn-myrecipe = "myrecipe-specific value"
+  ╰╴          ━━
+error: `pn` should be `on`
+  ╭▸ ./foo.bb:1:37
+  │
+1 │ LICENSE:${PN} = "GPL-2.0.only"; FOO:pn-myrecipe = "myrecipe-specific value"
+  ╰╴                                    ━━
+"""
 stderr = ""
