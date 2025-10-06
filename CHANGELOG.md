@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.37.3] - 2025-10-06
+
 ### Fixes
 
 - Don't correct `PN` for `bitbake` file types
@@ -1620,7 +1622,8 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.37.2...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.37.3...HEAD
+[1.37.3]: https://github.com/crate-ci/typos/compare/v1.37.2...v1.37.3
 [1.37.2]: https://github.com/crate-ci/typos/compare/v1.37.1...v1.37.2
 [1.37.1]: https://github.com/crate-ci/typos/compare/v1.37.0...v1.37.1
 [1.37.0]: https://github.com/crate-ci/typos/compare/v1.36.3...v1.37.0
