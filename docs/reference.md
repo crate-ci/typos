@@ -69,6 +69,15 @@ Typos-specific ignore globs (gitignore syntax)
 Note: the command-line overrides this by default.
 See `--force-exclude` to ensure this field is always respected.
 
+Example of an include list:
+```toml
+[files]
+extend-exclude = [
+  "*",
+  "!something",
+]
+```
+
 #### `files.ignore-hidden`
 
 - Type: bool
