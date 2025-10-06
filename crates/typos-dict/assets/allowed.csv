@@ -63,3 +63,4 @@ unmarshalled,HACK: ideally get these in varcon / typos-vars see #1279
 unmarshaling,HACK: ideally get these in varcon / typos-vars see #1279
 unmarshalling,HACK: ideally get these in varcon / typos-vars see #1279
 childrens,common possessive with apostrophe removed for variable names
+typ,typst file type and common workaround to say type without hittin keywords
