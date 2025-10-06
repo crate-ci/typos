@@ -38,7 +38,15 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
         "go",
         StaticDictConfig {
             ignore_idents: &[
-                "flate", // https://pkg.go.dev/compress/flate
+                "flate",                               // https://pkg.go.dev/compress/flate
+                "Rela32",                              // https://pkg.go.dev/debug/elf#Rela32
+                "Rela64",                              // https://pkg.go.dev/debug/elf#Rela64
+                "NewCBCEncrypter", // https://pkg.go.dev/crypto/cipher#NewCBCEncrypter
+                "NewCFBEncrypter", // https://pkg.go.dev/crypto/cipher#NewCFBEncrypter
+                "O_WRONLY", // https://pkg.go.dev/os#O_WRONLY and https://pkg.go.dev/syscall#O_WRONLY
+                "NOTE_FFOR", // https://pkg.go.dev/syscall?GOOS=darwin#NOTE_FFOR
+                "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA", // https://pkg.go.dev/crypto/tls#TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA
+                "TLS_RSA_WITH_3DES_EDE_CBC_SHA", // https://pkg.go.dev/crypto/tls#TLS_RSA_WITH_3DES_EDE_CBC_SHA
             ],
             ignore_words: &[],
         },
