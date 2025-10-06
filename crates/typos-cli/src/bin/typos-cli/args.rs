@@ -169,6 +169,7 @@ impl FileArgs {
                 ..Default::default()
             },
             extend_ignore_re: Default::default(),
+            _unused: Default::default(),
         }
     }
 

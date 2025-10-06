@@ -17,7 +17,7 @@ pub const SUPPORTED_FILE_NAMES: &[&str] = &[
 const CARGO_TOML: &str = "Cargo.toml";
 const PYPROJECT_TOML: &str = "pyproject.toml";
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -31,7 +31,7 @@ pub struct Config {
     pub overrides: EngineConfig,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct CargoTomlConfig {
@@ -39,28 +39,28 @@ pub struct CargoTomlConfig {
     pub package: Option<CargoTomlPackage>,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct CargoTomlPackage {
     pub metadata: CargoTomlMetadata,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct CargoTomlMetadata {
     pub typos: Option<Config>,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct PyprojectTomlConfig {
     pub tool: PyprojectTomlTool,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct PyprojectTomlTool {
@@ -88,7 +88,7 @@ impl Config {
             )
         })?;
 
-        if path.file_name().unwrap() == CARGO_TOML {
+        let config = if path.file_name().unwrap() == CARGO_TOML {
             let config = toml::from_str::<CargoTomlConfig>(&s)?;
             let typos = config
                 .workspace
@@ -96,27 +96,32 @@ impl Config {
                 .or(config.package.and_then(|p| p.metadata.typos));
 
             if let Some(typos) = typos {
-                Ok(Some(typos))
+                typos
             } else {
                 log::debug!(
                     "No `package.metadata.typos` section found in `{CARGO_TOML}`, skipping"
                 );
 
-                Ok(None)
+                return Ok(None);
             }
         } else if path.file_name().unwrap() == PYPROJECT_TOML {
             let config = toml::from_str::<PyprojectTomlConfig>(&s)?;
 
             if let Some(typos) = config.tool.typos {
-                Ok(Some(typos))
+                typos
             } else {
                 log::debug!("No `tool.typos` section found in `{PYPROJECT_TOML}`, skipping");
 
-                Ok(None)
+                return Ok(None);
             }
         } else {
-            Self::from_toml(&s).map(Some)
+            Self::from_toml(&s)?
+        };
+        if let Some(key) = config.unused().next() {
+            anyhow::bail!("unknown key `{key}`");
         }
+
+        Ok(Some(config))
     }
 
     pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
@@ -139,9 +144,22 @@ impl Config {
         self.type_.update(&source.type_);
         self.overrides.update(&source.overrides);
     }
+
+    fn unused(&self) -> impl Iterator<Item = String> + '_ {
+        self.default
+            ._unused
+            .keys()
+            .map(|k| format!("default.{k}"))
+            .chain(self.type_.patterns.iter().flat_map(|(name, glob)| {
+                glob.engine._unused.keys().map(|k| {
+                    let name = name.clone();
+                    format!("type.{name}.{k}")
+                })
+            }))
+    }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -232,7 +250,7 @@ impl Walk {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(transparent)]
@@ -306,7 +324,7 @@ impl TypeEngineConfig {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 //#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -344,6 +362,9 @@ pub struct EngineConfig {
     #[serde(with = "serde_regex")]
     #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_ignore_re: Vec<regex::Regex>,
+    #[serde(flatten)]
+    #[cfg_attr(feature = "unstable-schema", schemars(skip))]
+    pub _unused: toml::Table,
 }
 
 impl EngineConfig {
@@ -356,6 +377,7 @@ impl EngineConfig {
             tokenizer: TokenizerConfig::from_defaults(),
             dict: DictConfig::from_defaults(),
             extend_ignore_re: Default::default(),
+            _unused: Default::default(),
         }
     }
 
@@ -373,6 +395,7 @@ impl EngineConfig {
         self.dict.update(&source.dict);
         self.extend_ignore_re
             .extend(source.extend_ignore_re.iter().cloned());
+        self._unused.extend(source._unused.clone());
     }
 
     pub fn binary(&self) -> bool {
@@ -392,24 +415,7 @@ impl EngineConfig {
     }
 }
 
-impl PartialEq for EngineConfig {
-    fn eq(&self, rhs: &Self) -> bool {
-        self.binary == rhs.binary
-            && self.check_filename == rhs.check_filename
-            && self.check_file == rhs.check_file
-            && self.tokenizer == rhs.tokenizer
-            && self.dict == rhs.dict
-            && self
-                .extend_ignore_re
-                .iter()
-                .map(|r| r.as_str())
-                .eq(rhs.extend_ignore_re.iter().map(|r| r.as_str()))
-    }
-}
-
-impl Eq for EngineConfig {}
-
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -556,27 +562,7 @@ fn find_project_files<'a>(
         .filter(|path| path.exists())
 }
 
-impl PartialEq for DictConfig {
-    fn eq(&self, rhs: &Self) -> bool {
-        self.locale == rhs.locale
-            && self
-                .extend_ignore_identifiers_re
-                .iter()
-                .map(|r| r.as_str())
-                .eq(rhs.extend_ignore_identifiers_re.iter().map(|r| r.as_str()))
-            && self.extend_identifiers == rhs.extend_identifiers
-            && self
-                .extend_ignore_words_re
-                .iter()
-                .map(|r| r.as_str())
-                .eq(rhs.extend_ignore_words_re.iter().map(|r| r.as_str()))
-            && self.extend_words == rhs.extend_words
-    }
-}
-
-impl Eq for DictConfig {}
-
-#[derive(Debug, Copy, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Copy, Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[derive(Default)]
 #[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
@@ -655,6 +641,8 @@ fn hashmap_string_t<T: schemars::JsonSchema>(
 #[cfg(test)]
 mod test {
     use super::*;
+    use snapbox::assert_data_eq;
+    use snapbox::prelude::*;
 
     #[cfg(feature = "unstable-schema")]
     #[test]
@@ -668,11 +656,23 @@ mod test {
     fn test_from_defaults() {
         let null = Config::default();
         let defaulted = Config::from_defaults();
-        assert_ne!(defaulted, null);
-        assert_ne!(defaulted.files, null.files);
-        assert_ne!(defaulted.default, null.default);
-        assert_ne!(defaulted.default.tokenizer, null.default.tokenizer);
-        assert_ne!(defaulted.default.dict, null.default.dict);
+        assert_ne!(defaulted.clone().into_json(), null.clone().into_json());
+        assert_ne!(
+            defaulted.files.clone().into_json(),
+            null.files.clone().into_json()
+        );
+        assert_ne!(
+            defaulted.default.clone().into_json(),
+            null.default.clone().into_json()
+        );
+        assert_ne!(
+            defaulted.default.tokenizer.clone().into_json(),
+            null.default.tokenizer.clone().into_json()
+        );
+        assert_ne!(
+            defaulted.default.dict.clone().into_json(),
+            null.default.dict.clone().into_json()
+        );
     }
 
     #[test]
@@ -683,7 +683,7 @@ mod test {
         let mut actual = defaulted.clone();
         actual.update(&null);
 
-        assert_eq!(actual, defaulted);
+        assert_data_eq!(actual.into_json(), defaulted.into_json());
     }
 
     #[test]
@@ -694,7 +694,7 @@ mod test {
         let mut actual = null;
         actual.update(&defaulted);
 
-        assert_eq!(actual, defaulted);
+        assert_data_eq!(actual.into_json(), defaulted.into_json());
     }
 
     #[test]
@@ -708,7 +708,7 @@ mod test {
         let mut actual = null;
         actual.update(&extended);
 
-        assert_eq!(actual, extended);
+        assert_data_eq!(actual.into_json(), extended.into_json());
     }
 
     #[test]
@@ -726,7 +726,7 @@ mod test {
         actual.update(&extended);
 
         let expected: Vec<KString> = vec!["*.foo".into(), "*.bar".into()];
-        assert_eq!(actual.extend_glob, expected);
+        assert_data_eq!(actual.extend_glob.into_json(), expected.into_json());
     }
 
     #[test]
@@ -749,7 +749,7 @@ check-file = true
             },
         );
         let actual = Config::from_toml(input).unwrap();
-        assert_eq!(actual, expected);
+        assert_data_eq!(actual.into_json(), expected.into_json());
     }
 
     #[test]
@@ -781,6 +781,6 @@ inout = "inout"
             },
         );
         let actual = Config::from_toml(input).unwrap();
-        assert_eq!(actual, expected);
+        assert_data_eq!(actual.into_json(), expected.into_json());
     }
 }

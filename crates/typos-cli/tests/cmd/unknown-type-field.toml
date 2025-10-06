@@ -1,0 +1,7 @@
+bin.name = "typos"
+stdin = ""
+stdout = ""
+stderr = """
+unknown key `type.rust.rust-field`
+"""
+status.code = 78
