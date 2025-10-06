@@ -17,7 +17,7 @@ pub const SUPPORTED_FILE_NAMES: &[&str] = &[
 const CARGO_TOML: &str = "Cargo.toml";
 const PYPROJECT_TOML: &str = "pyproject.toml";
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -31,7 +31,7 @@ pub struct Config {
     pub overrides: EngineConfig,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct CargoTomlConfig {
@@ -39,28 +39,28 @@ pub struct CargoTomlConfig {
     pub package: Option<CargoTomlPackage>,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct CargoTomlPackage {
     pub metadata: CargoTomlMetadata,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct CargoTomlMetadata {
     pub typos: Option<Config>,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct PyprojectTomlConfig {
     pub tool: PyprojectTomlTool,
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
 pub struct PyprojectTomlTool {
@@ -141,7 +141,7 @@ impl Config {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -232,7 +232,7 @@ impl Walk {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(transparent)]
@@ -306,7 +306,7 @@ impl TypeEngineConfig {
     }
 }
 
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 //#[serde(deny_unknown_fields)]  // Doesn't work with `flatten`
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -392,24 +392,7 @@ impl EngineConfig {
     }
 }
 
-impl PartialEq for EngineConfig {
-    fn eq(&self, rhs: &Self) -> bool {
-        self.binary == rhs.binary
-            && self.check_filename == rhs.check_filename
-            && self.check_file == rhs.check_file
-            && self.tokenizer == rhs.tokenizer
-            && self.dict == rhs.dict
-            && self
-                .extend_ignore_re
-                .iter()
-                .map(|r| r.as_str())
-                .eq(rhs.extend_ignore_re.iter().map(|r| r.as_str()))
-    }
-}
-
-impl Eq for EngineConfig {}
-
-#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 #[serde(default)]
 #[serde(rename_all = "kebab-case")]
@@ -556,27 +539,7 @@ fn find_project_files<'a>(
         .filter(|path| path.exists())
 }
 
-impl PartialEq for DictConfig {
-    fn eq(&self, rhs: &Self) -> bool {
-        self.locale == rhs.locale
-            && self
-                .extend_ignore_identifiers_re
-                .iter()
-                .map(|r| r.as_str())
-                .eq(rhs.extend_ignore_identifiers_re.iter().map(|r| r.as_str()))
-            && self.extend_identifiers == rhs.extend_identifiers
-            && self
-                .extend_ignore_words_re
-                .iter()
-                .map(|r| r.as_str())
-                .eq(rhs.extend_ignore_words_re.iter().map(|r| r.as_str()))
-            && self.extend_words == rhs.extend_words
-    }
-}
-
-impl Eq for DictConfig {}
-
-#[derive(Debug, Copy, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Copy, Clone, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[derive(Default)]
 #[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
