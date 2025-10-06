@@ -140,6 +140,8 @@ Check binary files as text.
 
 Verify spelling in file names.
 
+Directory names are not checked.
+
 #### `default.check-file`
 
 - Type: bool
