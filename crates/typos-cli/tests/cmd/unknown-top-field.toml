@@ -1,0 +1,12 @@
+bin.name = "typos"
+stdin = ""
+stdout = ""
+stderr = """
+TOML parse error at line 1, column 1
+  |
+1 | top-field = "foo"
+  | ^^^^^^^^^
+unknown field `top-field`, expected one of `files`, `default`, `type`
+
+"""
+status.code = 78

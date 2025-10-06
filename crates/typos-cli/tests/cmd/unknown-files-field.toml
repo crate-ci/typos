@@ -1,0 +1,12 @@
+bin.name = "typos"
+stdin = ""
+stdout = ""
+stderr = """
+TOML parse error at line 2, column 1
+  |
+2 | files-field = "foo"
+  | ^^^^^^^^^^^
+unknown field `files-field`, expected one of `extend-exclude`, `ignore-hidden`, `ignore-files`, `ignore-dot`, `ignore-vcs`, `ignore-global`, `ignore-parent`
+
+"""
+status.code = 78
