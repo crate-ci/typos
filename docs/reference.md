@@ -163,6 +163,10 @@ Allow unicode characters in identifiers (and not just ASCII).
 
 English dialect to correct to.
 
+If set to `en`,
+words will be corrected to the closest spelling,
+regardless of which dialect that correction is part of.
+
 #### `default.extend-ignore-re`
 
 - Type: list of [regexes](https://docs.rs/regex/latest/regex/index.html#syntax)
