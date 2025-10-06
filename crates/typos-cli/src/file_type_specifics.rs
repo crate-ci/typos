@@ -8,6 +8,15 @@ pub(crate) const NO_CHECK_TYPES: &[&str] = &["cert", "lock"];
 
 pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
     (
+        "bitbake",
+        StaticDictConfig {
+            ignore_idents: &[],
+            ignore_words: &[
+                "PN", // Package Name variable
+            ],
+        },
+    ),
+    (
         "cpp",
         StaticDictConfig {
             ignore_idents: &[
