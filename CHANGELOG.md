@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Update type list
+
+### Fixes
+
+- Don't correct `typ`
+- Consistently error on unused config fields
+
 ## [1.37.3] - 2025-10-06
 
 ### Fixes
