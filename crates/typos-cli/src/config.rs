@@ -655,6 +655,8 @@ fn hashmap_string_t<T: schemars::JsonSchema>(
 #[cfg(test)]
 mod test {
     use super::*;
+    use snapbox::assert_data_eq;
+    use snapbox::prelude::*;
 
     #[cfg(feature = "unstable-schema")]
     #[test]
@@ -668,11 +670,23 @@ mod test {
     fn test_from_defaults() {
         let null = Config::default();
         let defaulted = Config::from_defaults();
-        assert_ne!(defaulted, null);
-        assert_ne!(defaulted.files, null.files);
-        assert_ne!(defaulted.default, null.default);
-        assert_ne!(defaulted.default.tokenizer, null.default.tokenizer);
-        assert_ne!(defaulted.default.dict, null.default.dict);
+        assert_ne!(defaulted.clone().into_json(), null.clone().into_json());
+        assert_ne!(
+            defaulted.files.clone().into_json(),
+            null.files.clone().into_json()
+        );
+        assert_ne!(
+            defaulted.default.clone().into_json(),
+            null.default.clone().into_json()
+        );
+        assert_ne!(
+            defaulted.default.tokenizer.clone().into_json(),
+            null.default.tokenizer.clone().into_json()
+        );
+        assert_ne!(
+            defaulted.default.dict.clone().into_json(),
+            null.default.dict.clone().into_json()
+        );
     }
 
     #[test]
@@ -683,7 +697,7 @@ mod test {
         let mut actual = defaulted.clone();
         actual.update(&null);
 
-        assert_eq!(actual, defaulted);
+        assert_data_eq!(actual.into_json(), defaulted.into_json());
     }
 
     #[test]
@@ -694,7 +708,7 @@ mod test {
         let mut actual = null;
         actual.update(&defaulted);
 
-        assert_eq!(actual, defaulted);
+        assert_data_eq!(actual.into_json(), defaulted.into_json());
     }
 
     #[test]
@@ -708,7 +722,7 @@ mod test {
         let mut actual = null;
         actual.update(&extended);
 
-        assert_eq!(actual, extended);
+        assert_data_eq!(actual.into_json(), extended.into_json());
     }
 
     #[test]
@@ -726,7 +740,7 @@ mod test {
         actual.update(&extended);
 
         let expected: Vec<KString> = vec!["*.foo".into(), "*.bar".into()];
-        assert_eq!(actual.extend_glob, expected);
+        assert_data_eq!(actual.extend_glob.into_json(), expected.into_json());
     }
 
     #[test]
@@ -749,7 +763,7 @@ check-file = true
             },
         );
         let actual = Config::from_toml(input).unwrap();
-        assert_eq!(actual, expected);
+        assert_data_eq!(actual.into_json(), expected.into_json());
     }
 
     #[test]
@@ -781,6 +795,6 @@ inout = "inout"
             },
         );
         let actual = Config::from_toml(input).unwrap();
-        assert_eq!(actual, expected);
+        assert_data_eq!(actual.into_json(), expected.into_json());
     }
 }

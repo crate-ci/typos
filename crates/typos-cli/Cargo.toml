@@ -84,7 +84,7 @@ supports-unicode = "3.0.0"
 assert_fs = "1.1"
 divan = "0.1.21"
 maplit = "1.0"
-snapbox = "0.6.21"
+snapbox = { version = "0.6.21", features = ["json"] }
 trycmd = "0.15.10"
 
 [[bench]]
