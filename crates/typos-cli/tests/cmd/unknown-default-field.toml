@@ -1,4 +1,7 @@
 bin.name = "typos"
 stdin = ""
 stdout = ""
-stderr = ""
+stderr = """
+unknown key `default.default-field`
+"""
+status.code = 78

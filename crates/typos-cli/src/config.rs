@@ -88,7 +88,7 @@ impl Config {
             )
         })?;
 
-        if path.file_name().unwrap() == CARGO_TOML {
+        let config = if path.file_name().unwrap() == CARGO_TOML {
             let config = toml::from_str::<CargoTomlConfig>(&s)?;
             let typos = config
                 .workspace
@@ -96,27 +96,32 @@ impl Config {
                 .or(config.package.and_then(|p| p.metadata.typos));
 
             if let Some(typos) = typos {
-                Ok(Some(typos))
+                typos
             } else {
                 log::debug!(
                     "No `package.metadata.typos` section found in `{CARGO_TOML}`, skipping"
                 );
 
-                Ok(None)
+                return Ok(None);
             }
         } else if path.file_name().unwrap() == PYPROJECT_TOML {
             let config = toml::from_str::<PyprojectTomlConfig>(&s)?;
 
             if let Some(typos) = config.tool.typos {
-                Ok(Some(typos))
+                typos
             } else {
                 log::debug!("No `tool.typos` section found in `{PYPROJECT_TOML}`, skipping");
 
-                Ok(None)
+                return Ok(None);
             }
         } else {
-            Self::from_toml(&s).map(Some)
+            Self::from_toml(&s)?
+        };
+        if let Some(key) = config.unused().next() {
+            anyhow::bail!("unknown key `{key}`");
         }
+
+        Ok(Some(config))
     }
 
     pub fn from_toml(data: &str) -> Result<Self, anyhow::Error> {
@@ -138,6 +143,19 @@ impl Config {
         self.default.update(&source.default);
         self.type_.update(&source.type_);
         self.overrides.update(&source.overrides);
+    }
+
+    fn unused(&self) -> impl Iterator<Item = String> + '_ {
+        self.default
+            ._unused
+            .keys()
+            .map(|k| format!("default.{k}"))
+            .chain(self.type_.patterns.iter().flat_map(|(name, glob)| {
+                glob.engine._unused.keys().map(|k| {
+                    let name = name.clone();
+                    format!("type.{name}.{k}")
+                })
+            }))
     }
 }
 
@@ -344,6 +362,9 @@ pub struct EngineConfig {
     #[serde(with = "serde_regex")]
     #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_ignore_re: Vec<regex::Regex>,
+    #[serde(flatten)]
+    #[cfg_attr(feature = "unstable-schema", schemars(skip))]
+    pub _unused: toml::Table,
 }
 
 impl EngineConfig {
@@ -356,6 +377,7 @@ impl EngineConfig {
             tokenizer: TokenizerConfig::from_defaults(),
             dict: DictConfig::from_defaults(),
             extend_ignore_re: Default::default(),
+            _unused: Default::default(),
         }
     }
 
@@ -373,6 +395,7 @@ impl EngineConfig {
         self.dict.update(&source.dict);
         self.extend_ignore_re
             .extend(source.extend_ignore_re.iter().cloned());
+        self._unused.extend(source._unused.clone());
     }
 
     pub fn binary(&self) -> bool {
