@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Updated the dictionary with the [October 2025](https://github.com/crate-ci/typos/issues/1383) changes
+
+### Fixes
+
+- When a typo is pluralized, prefer pluralized corrections
+
 ## [1.38.1] - 2025-10-07
 
 ### Fixes
