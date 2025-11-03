@@ -8,7 +8,7 @@ resolver = "2"
 [workspace.package]
 repository = "https://github.com/crate-ci/typos"
 license = "MIT OR Apache-2.0"
-edition = "2021"
+edition = "2024"
 rust-version = "1.87"  # MSRV
 include = [
   "build.rs",
