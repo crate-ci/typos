@@ -1,6 +1,6 @@
 #[cfg(feature = "codegen")]
 pub struct TrieGen<'g> {
-    pub(crate) gen: crate::DictGen<'g>,
+    pub(crate) r#gen: crate::DictGen<'g>,
     pub(crate) limit: usize,
 }
 
@@ -19,8 +19,8 @@ impl TrieGen<'_> {
         file: &mut W,
         data: impl Iterator<Item = (&'d str, V)>,
     ) -> Result<(), std::io::Error> {
-        let name = self.gen.name;
-        let value_type = self.gen.value_type;
+        let name = self.r#gen.name;
+        let value_type = self.r#gen.value_type;
         codegen::generate_trie(file, name, value_type, data, self.limit)
     }
 }
@@ -310,7 +310,7 @@ mod codegen {
                                 DynChild::Nested(_) => {
                                     unreachable!("Only overflow at this point")
                                 }
-                                DynChild::Flat(ref mut v) => {
+                                DynChild::Flat(v) => {
                                     v.push((remaining, value));
                                 }
                             }

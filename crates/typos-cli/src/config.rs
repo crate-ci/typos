@@ -317,7 +317,7 @@ impl TypeEngineConfig {
         }
     }
 
-    pub fn patterns(&self) -> impl Iterator<Item = (KString, GlobEngineConfig)> {
+    pub fn patterns(&self) -> impl Iterator<Item = (KString, GlobEngineConfig)> + use<> {
         let mut engine = Self::from_defaults();
         engine.update(self);
         engine.patterns.into_iter()
@@ -619,23 +619,23 @@ impl std::fmt::Display for Locale {
 }
 
 #[cfg(feature = "unstable-schema")]
-fn vec_string(gen: &mut schemars::SchemaGenerator) -> schemars::Schema {
+fn vec_string(r#gen: &mut schemars::SchemaGenerator) -> schemars::Schema {
     type Type = Vec<String>;
-    <Type as schemars::JsonSchema>::json_schema(gen)
+    <Type as schemars::JsonSchema>::json_schema(r#gen)
 }
 
 #[cfg(feature = "unstable-schema")]
-fn hashmap_string_string(gen: &mut schemars::SchemaGenerator) -> schemars::Schema {
+fn hashmap_string_string(r#gen: &mut schemars::SchemaGenerator) -> schemars::Schema {
     type Type = HashMap<String, String>;
-    <Type as schemars::JsonSchema>::json_schema(gen)
+    <Type as schemars::JsonSchema>::json_schema(r#gen)
 }
 
 #[cfg(feature = "unstable-schema")]
 fn hashmap_string_t<T: schemars::JsonSchema>(
-    gen: &mut schemars::SchemaGenerator,
+    r#gen: &mut schemars::SchemaGenerator,
 ) -> schemars::Schema {
     type Type<T> = HashMap<String, T>;
-    <Type<T> as schemars::JsonSchema>::json_schema(gen)
+    <Type<T> as schemars::JsonSchema>::json_schema(r#gen)
 }
 
 #[cfg(test)]
