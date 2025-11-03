@@ -751,7 +751,7 @@ impl<'t> Identifier<'t> {
 
     /// Split into individual Words.
     #[inline]
-    pub fn split(&self) -> impl Iterator<Item = Word<'t>> {
+    pub fn split(&self) -> impl Iterator<Item = Word<'t>> + use<'t> {
         match self.case {
             Case::None => itertools::Either::Left(SplitIdent::new(self.token, self.offset)),
             _ => itertools::Either::Right(

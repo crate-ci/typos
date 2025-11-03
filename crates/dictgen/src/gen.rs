@@ -37,7 +37,7 @@ impl<'g> DictGen<'g> {
     #[cfg(feature = "map")]
     pub fn map(self) -> crate::MapGen<'g> {
         crate::MapGen {
-            gen: self,
+            r#gen: self,
             unicode: true,
             unicase: true,
         }
@@ -45,7 +45,7 @@ impl<'g> DictGen<'g> {
 
     pub fn ordered_map(self) -> crate::OrderedMapGen<'g> {
         crate::OrderedMapGen {
-            gen: self,
+            r#gen: self,
             unicode: true,
             unicase: true,
         }
@@ -53,18 +53,18 @@ impl<'g> DictGen<'g> {
 
     pub fn trie(self) -> crate::TrieGen<'g> {
         crate::TrieGen {
-            gen: self,
+            r#gen: self,
             limit: 64,
         }
     }
 
     pub fn r#match(self) -> crate::MatchGen<'g> {
-        crate::MatchGen { gen: self }
+        crate::MatchGen { r#gen: self }
     }
 
     #[cfg(feature = "aho-corasick")]
     pub fn aho_corasick(self) -> crate::AhoCorasickGen<'g> {
-        crate::AhoCorasickGen { gen: self }
+        crate::AhoCorasickGen { r#gen: self }
     }
 }
 

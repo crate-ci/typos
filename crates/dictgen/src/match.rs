@@ -1,6 +1,6 @@
 #[cfg(feature = "codegen")]
 pub struct MatchGen<'g> {
-    pub(crate) gen: crate::DictGen<'g>,
+    pub(crate) r#gen: crate::DictGen<'g>,
 }
 
 #[cfg(feature = "codegen")]
@@ -13,8 +13,8 @@ impl MatchGen<'_> {
         let mut data: Vec<_> = data.collect();
         data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0.as_ref().to_owned()));
 
-        let name = self.gen.name;
-        let value_type = self.gen.value_type;
+        let name = self.r#gen.name;
+        let value_type = self.r#gen.value_type;
 
         writeln!(file, "pub struct {name};")?;
         writeln!(file, "impl {name} {{")?;

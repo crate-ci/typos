@@ -1,6 +1,6 @@
 #[cfg(feature = "codegen")]
 pub struct MapGen<'g> {
-    pub(crate) gen: crate::DictGen<'g>,
+    pub(crate) r#gen: crate::DictGen<'g>,
     pub(crate) unicase: bool,
     pub(crate) unicode: bool,
 }
@@ -25,9 +25,9 @@ impl MapGen<'_> {
         let mut data: Vec<_> = data.collect();
         data.sort_unstable_by_key(|v| unicase::UniCase::new(v.0.as_ref().to_owned()));
 
-        let name = self.gen.name;
+        let name = self.r#gen.name;
         let key_type = self.key_type();
-        let value_type = self.gen.value_type;
+        let value_type = self.r#gen.value_type;
 
         let mut smallest = usize::MAX;
         let mut largest = usize::MIN;

@@ -250,7 +250,7 @@ impl<'i, 'w, D: typos::Dictionary> Override<'i, 'w, D> {
 
     fn interpret<'z, I: Iterator<Item = (&'z str, &'z str)>>(
         cases: I,
-    ) -> impl Iterator<Item = (&'z str, Status<'z>)> {
+    ) -> impl Iterator<Item = (&'z str, Status<'z>)> + use<'z, I, D> {
         cases.map(|(typo, correction)| {
             let correction = if typo == correction {
                 Status::Valid
