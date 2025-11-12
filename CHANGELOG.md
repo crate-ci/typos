@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Make `--help` more vibrant
+
 ## [1.39.0] - 2025-10-31
 
 ### Features
