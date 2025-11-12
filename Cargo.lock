@@ -423,7 +423,7 @@ dependencies = [
 
 [[package]]
 name = "dictgen"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "aho-corasick",
  "phf",
@@ -1590,7 +1590,7 @@ dependencies = [
 
 [[package]]
 name = "typos"
-version = "0.10.37"
+version = "0.10.38"
 dependencies = [
  "bstr",
  "itertools",
@@ -1603,7 +1603,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.39.0"
+version = "1.39.1"
 dependencies = [
  "ahash",
  "annotate-snippets",
