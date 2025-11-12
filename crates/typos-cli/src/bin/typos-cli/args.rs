@@ -29,6 +29,7 @@ impl Format {
 #[command(rename_all = "kebab-case")]
 #[command(about, author, version)]
 #[command(group = clap::ArgGroup::new("mode").multiple(false))]
+#[command(styles = clap_cargo::style::CLAP_STYLING)]
 pub(crate) struct Args {
     /// Paths to check (`-` to check stdin)
     #[arg(default_value = ".", group = "source")]
