@@ -48,6 +48,7 @@ typos-vars = { version = "^0.10", path = "../typos-vars", optional = true }
 unicase = "2.8.1"
 anyhow = "1.0"
 clap = { version = "4.5.48", features = ["derive"] }
+clap-cargo = "0.18.3"
 clap-verbosity-flag = "3.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
