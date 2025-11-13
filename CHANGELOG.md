@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't offer `entry` as a correction for `entrys`
+
 ## [1.39.1] - 2025-11-12
 
 ### Features
