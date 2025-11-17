@@ -288,6 +288,11 @@ impl PrintGitHub {
     }
 
     fn report_typo(&self, typo: &Typo<'_>) -> Result<(), std::io::Error> {
+        let typo_title = match &typo.context {
+            Some(Context::Path(_)) => "File Name Typo",
+            _ => "Typo",
+        };
+
         let path_params = match &typo.context {
             Some(Context::File(file)) => {
                 let file_path = self.stip_path_prefix(file.path);
@@ -335,7 +340,8 @@ impl PrintGitHub {
 
         writeln!(
             stdout().lock(),
-            "::warning title=Typo{}::{}",
+            "::warning title={}{}::{}",
+            typo_title,
             path_params.unwrap_or("".to_owned()),
             typo_message
         )?;
