@@ -1,5 +1,5 @@
-use clap::builder::TypedValueParser;
 use clap::Parser;
+use clap::builder::TypedValueParser;
 
 use typos_cli::config;
 
@@ -11,6 +11,8 @@ pub(crate) enum Format {
     Long,
     Json,
     Sarif,
+    #[value(name = "github")]
+    GitHub,
 }
 
 impl Format {
@@ -21,6 +23,7 @@ impl Format {
             Format::Long => Box::new(crate::report::PrintLong),
             Format::Json => Box::new(crate::report::PrintJson),
             Format::Sarif => Box::new(crate::report::PrintSarif::default()),
+            Format::GitHub => Box::new(crate::report::PrintGitHub),
         }
     }
 }

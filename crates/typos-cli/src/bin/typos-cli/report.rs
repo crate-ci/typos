@@ -3,7 +3,7 @@
 use std::borrow::Cow;
 use std::io::Write as _;
 use std::ops::Range;
-use std::sync::{atomic, Mutex};
+use std::sync::{Mutex, atomic};
 
 use annotate_snippets::Annotation;
 use annotate_snippets::AnnotationKind;
@@ -255,6 +255,90 @@ pub(crate) struct PrintJson;
 impl Report for PrintJson {
     fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
         writeln!(stdout().lock(), "{}", serde_json::to_string(&msg).unwrap())?;
+        Ok(())
+    }
+}
+
+#[derive(Copy, Clone, Debug)]
+pub(crate) struct PrintGitHub;
+
+impl Report for PrintGitHub {
+    fn report(&self, msg: Message<'_>) -> Result<(), std::io::Error> {
+        match &msg {
+            Message::Typo(msg) => self.report_typo(msg)?,
+            Message::Error(msg) => {
+                writeln!(stdout().lock(), "::error ::{}", msg.msg)?;
+            }
+            Message::BinaryFile(_) => {}
+            Message::Parse(_) | Message::FileType(_) | Message::File(_) => {}
+            _ => unimplemented!("New message {:?}", msg),
+        }
+        Ok(())
+    }
+}
+
+impl PrintGitHub {
+    fn stip_path_prefix<'a>(&self, path: &'a std::path::Path) -> &'a std::path::Path {
+        if path.starts_with(".") {
+            path.strip_prefix(".")
+                .expect("Error guarded against via `starts_with`")
+        } else {
+            path
+        }
+    }
+
+    fn report_typo(&self, typo: &Typo<'_>) -> Result<(), std::io::Error> {
+        let path_params = match &typo.context {
+            Some(Context::File(file)) => {
+                let file_path = self.stip_path_prefix(file.path);
+                file_path.to_str().map(|file_path| {
+                    format!(
+                        ",path={},line={},endLine={}",
+                        file_path,
+                        file.line_num,
+                        file.line_num + 1
+                    )
+                })
+            }
+            Some(Context::Path(path)) => self
+                .stip_path_prefix(path.path)
+                .to_str()
+                .map(|path| format!(",path={}", path)),
+            Some(_) => unimplemented!("New context {:?}", typo.context),
+            None => None,
+        };
+
+        let typo_message = match &typo.corrections {
+            typos::Status::Valid => unimplemented!("never report valid words"),
+            typos::Status::Invalid => format!("`{}` is disallowed", typo.typo),
+            typos::Status::Corrections(corrections) => {
+                let one_of_str = if corrections.len() == 1 {
+                    ""
+                } else {
+                    "one of "
+                };
+
+                let markdown_corrections = corrections.iter().enumerate().map(|(idx, s)| {
+                    if idx + 1 == corrections.len() && corrections.len() != 1 {
+                        format!("or `{s}`")
+                    } else {
+                        format!("`{s}`")
+                    }
+                });
+                let correction_list = itertools::join(markdown_corrections, ", ");
+                format!(
+                    "`{}` should be {}{}",
+                    typo.typo, one_of_str, correction_list
+                )
+            }
+        };
+
+        writeln!(
+            stdout().lock(),
+            "::warning title=Typo{}::{}",
+            path_params.unwrap_or("".to_owned()),
+            typo_message
+        )?;
         Ok(())
     }
 }

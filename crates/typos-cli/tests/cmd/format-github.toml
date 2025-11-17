@@ -1,0 +1,13 @@
+bin.name = "typos"
+args = "--format github"
+stdin = ""
+stdout = """
+::warning title=Typo,path=bad_file_naem.txt::`naem` should be `name`
+::warning title=Typo,path=file.txt,line=1,endLine=2::`hte` should be `the`
+::warning title=Typo,path=file.txt,line=2,endLine=3::`wtih` should be `with`
+::warning title=Typo,path=file.txt,line=2,endLine=3::`muliple` should be `multiple`
+::warning title=Typo,path=file.txt,line=2,endLine=3::`tpyo` should be `typo`
+::warning title=Typo,path=file.txt,line=3,endLine=4::`stip` should be one of `stop`, or `strip`
+"""
+stderr = ""
+status.code = 2

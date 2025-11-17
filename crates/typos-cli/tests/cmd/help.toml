@@ -49,7 +49,7 @@ Mode:
 
 Output:
       --format <FORMAT>  Render style for messages [default: long] [possible values: silent, brief,
-                         long, json, sarif]
+                         long, json, sarif, github]
       --color <WHEN>     Controls when to use color [default: auto] [possible values: auto, always,
                          never]
   -v, --verbose...       Increase logging verbosity
