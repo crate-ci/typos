@@ -38,8 +38,10 @@ extend-ignore-identifiers-re = []
 extend-ignore-words = []
 
 [default.extend-words]
+# <typo> = "<correction>"
 
 [default.extend-identifiers]
+# <typo> = "<correction>"
 
 [type.NAME]
 extend-glob = []
@@ -179,7 +181,9 @@ Custom uncorrectable sections (e.g. markdown code fences, PGP signatures, etc)
 
 - Type: table of strings
 
-Corrections for [identifiers](./design.md#identifiers-and-words). When the correction is blank, the identifier is never valid. When the correction is the key, the identifier is always valid.
+Map [identifier](./design.md#identifiers-and-words) typos to their corrections.
+When the correction is blank, the identifier is never valid.
+When the correction is the key, the identifier is always valid.
 
 Example:
 ```toml
@@ -201,7 +205,9 @@ Pattern-match always-valid identifiers.
 
 - Type: table of strings
 
-Corrections for [words](./design.md#identifiers-and-words). When the correction is blank, the word is never valid. When the correction is the key, the word is always valid.
+Map [word](./design.md#identifiers-and-words) typos to their corrections.
+When the correction is blank, the word is never valid.
+When the correction is the key, the word is always valid.
 
 Example:
 ```toml
