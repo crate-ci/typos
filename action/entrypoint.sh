@@ -68,5 +68,5 @@ if [[ -n "${INPUT_CONFIG:-}" ]]; then
 fi
 
 log "$ ${COMMAND} ${ARGS}"
-${COMMAND} ${ARGS} --format json | ${SOURCE_DIR}/format_gh.sh || true
+${COMMAND} ${ARGS} --format github  || true
 ${COMMAND} ${ARGS}
