@@ -26,7 +26,7 @@
 
 See also [benchmarks](../benchsuite/runs).
 
-[JSON Lines]: http://jsonlines.org/
+[JSON Lines]: https://jsonlines.org/
 [scspell3k]: https://github.com/myint/scspell
 [misspell-go]: https://github.com/client9/misspell
 [codespell]: https://github.com/codespell-project/codespell
