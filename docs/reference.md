@@ -18,7 +18,6 @@ Configuration is read from the following (in precedence order)
 Summary of configuration (see below for details)
 ```toml
 [files]
-binary = false
 extend-exclude = []
 ignore-hidden = true
 ignore-files = true
@@ -52,14 +51,6 @@ Notes:
 - For the distinction between "words" and "identifiers", see [design](design.md#identifiers-and-words)
 
 ### Configuration keys
-
-#### `files.binary`
-
-- Type: `bool`
-- Default: `false`
-- CLI: `--binary`
-
-Check binary files as text.
 
 #### `files.extend-exclude`
 
