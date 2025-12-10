@@ -34,7 +34,7 @@ unicode=true
 locale = "en"
 extend-ignore-re = []
 extend-ignore-identifiers-re = []
-extend-ignore-words = []
+extend-ignore-words-re = []
 
 [default.extend-words]
 # <typo> = "<correction>"
