@@ -348,7 +348,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     if errors_found {
         proc_exit::Code::FAILURE.ok()
     } else if typos_found {
-        // Can;'t use `Failure` since its so prevalent, it could be easy to get a
+        // Can't use `Failure` since its so prevalent, it could be easy to get a
         // `Failure` from something else and get it mixed up with typos.
         //
         // Can't use DataErr or anything else an std::io::ErrorKind might map to.
