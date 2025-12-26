@@ -1,2 +1,4 @@
 # force LF on checkout to avoid rustfmt messing up the EOL
 crates/** text eol=lf
+crates/typos-*/src/*.rs linguist-generated=true
+crates/typos-dict/benches/benches/*_codegen.rs linguist-generated=true
