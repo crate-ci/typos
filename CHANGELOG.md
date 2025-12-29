@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixes
 
+- Treat `incrementer` and `incrementor` the same for now
+
+### Fixes
+
 - Don't correct ITerm2
 
 ## [1.40.0] - 2025-11-26
