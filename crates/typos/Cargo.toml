@@ -17,7 +17,7 @@ rustdoc-args = ["--generate-link-to-definition"]
 
 [dependencies]
 winnow = "0.7.13"
-unicode-ident = "1.0.19"
+unicode-ident = "1.0.22"
 serde = { version = "1.0", features = ["derive"] }
 simdutf8 = "0.1.5"
 itertools = "0.14"
