@@ -647,7 +647,7 @@ mod parser {
     #[inline]
     fn is_ignore_char(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        !unicode_xid::UnicodeXID::is_xid_continue(c) &&
+        !unicode_ident::is_xid_continue(c) &&
             // See `c_escape`
             c != '\\' &&
             // See `printf`
@@ -659,7 +659,7 @@ mod parser {
     #[inline]
     fn is_xid_continue(i: impl AsChar + Copy) -> bool {
         let c = i.as_char();
-        unicode_xid::UnicodeXID::is_xid_continue(c)
+        unicode_ident::is_xid_continue(c)
     }
 
     #[inline]

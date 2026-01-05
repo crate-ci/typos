@@ -1597,7 +1597,7 @@ dependencies = [
  "serde",
  "simdutf8",
  "snapbox",
- "unicode-xid",
+ "unicode-ident",
  "winnow",
 ]
 
