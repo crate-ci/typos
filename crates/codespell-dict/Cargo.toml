@@ -1,6 +1,6 @@
 [package]
 name = "codespell-dict"
-version = "0.5.2"
+version = "0.5.3"
 description = "Source Code Spelling Correction"
 categories = ["development-tools", "text-processing"]
 keywords = ["development", "spelling"]

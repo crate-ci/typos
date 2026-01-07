@@ -259,7 +259,7 @@ dependencies = [
 
 [[package]]
 name = "codespell-dict"
-version = "0.5.2"
+version = "0.5.3"
 dependencies = [
  "codegenrs",
  "dictgen",
@@ -1592,7 +1592,7 @@ dependencies = [
 
 [[package]]
 name = "typos"
-version = "0.10.38"
+version = "0.10.39"
 dependencies = [
  "bstr",
  "itertools",
@@ -1655,7 +1655,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.13.15"
+version = "0.13.16"
 dependencies = [
  "codegenrs",
  "csv",
