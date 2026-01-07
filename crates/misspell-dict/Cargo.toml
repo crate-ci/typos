@@ -21,6 +21,7 @@ codegenrs = "3.0"
 regex = "1"
 dictgen = { version = "^0.5", path = "../dictgen", features = ["codegen"] }
 snapbox = "0.6.21"
+serde_json = "1.0.149"
 
 [lints]
 workspace = true
