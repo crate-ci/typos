@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 
 pub const MAIN: &str = include_str!("../assets/internal/gen/sources/main.json");
@@ -12,6 +13,47 @@ fn codegen() {
     let content = String::from_utf8(content).unwrap();
     let content = codegenrs::rustfmt(&content, None).unwrap();
     snapbox::assert_data_eq!(content, snapbox::file!["../src/dict_codegen.rs"].raw());
+}
+
+#[test]
+fn compat() {
+    use std::fmt::Write as _;
+
+    let mut content = String::new();
+    let words = parse_dict();
+    let mut inverted_words = BTreeMap::new();
+    for (good, bads) in words.main {
+        for bad in bads {
+            inverted_words
+                .entry(bad)
+                .or_insert_with(Vec::new)
+                .push(good.clone());
+        }
+    }
+    for (bad, mut good) in inverted_words {
+        if !is_word(&bad) {
+            continue;
+        }
+        if !good.iter().all(|s| is_word(s)) {
+            continue;
+        }
+        good.sort();
+        let bad = bad.to_lowercase();
+        write!(content, "{bad}").unwrap();
+        for good in good {
+            let good = good.to_lowercase();
+            write!(content, ",{good}").unwrap();
+        }
+        writeln!(content).unwrap();
+    }
+
+    snapbox::assert_data_eq!(content, snapbox::file!["../assets/compatible.csv"].raw());
+}
+
+fn is_word(word: &str) -> bool {
+    let tokenizer = typos::tokens::Tokenizer::new();
+
+    tokenizer.parse_str(word).flat_map(|t| t.split()).count() == 1 && !word.contains('_')
 }
 
 fn generate<W: std::io::Write>(file: &mut W) {
