@@ -247,6 +247,7 @@ alltogether->altogether
 almsot->almost
 alochol->alcohol
 alomst->almost
+alos->also
 alot->a lot, allot
 alotted->allotted
 alowed->allowed
@@ -1822,6 +1823,7 @@ guranteed->guaranteed
 gurantees->guarantees
 guttaral->guttural
 gutteral->guttural
+gya->gay
 habaeus->habeas
 habeus->habeas
 Habsbourg->Habsburg
@@ -2236,6 +2238,7 @@ lazyness->laziness
 leage->league
 leanr->lean, learn, leaner
 leathal->lethal
+lebsian->lesbian
 lefted->left
 legitamate->legitimate
 legitmate->legitimate
@@ -2243,12 +2246,17 @@ leibnitz->leibniz
 lenght->length
 leran->learn
 lerans->learns
+lesban->lesbian
+lesbain->lesbian
+lesbina->lesbian
 leutenant->lieutenant
+leval->level
 levetate->levitate
 levetated->levitated
 levetates->levitates
 levetating->levitating
 levle->level
+liad->laid
 liasion->liaison
 liason->liaison
 liasons->liaisons
@@ -3500,12 +3508,18 @@ sepina->subpoena
 sepulchure->sepulchre, sepulcher
 sepulcre->sepulchre, sepulcher
 sergent->sergeant
+sernedipity->serendipity
+serendipiyt->serendipity
 settelement->settlement
 settlment->settlement
+sevral->several
+sevreal->several
 severeal->several
 severley->severely
 severly->severely
 sevice->service
+sexaul->sexual
+sexaully->sexually
 shadasloo->shadaloo
 shaddow->shadow
 shadoloo->shadaloo
@@ -3654,6 +3668,8 @@ stoyr->story
 stpo->stop
 stradegies->strategies
 stradegy->strategy
+straght->straight
+stragiht->straight
 strat->start, strata
 stratagically->strategically
 streemlining->streamlining
@@ -3667,11 +3683,13 @@ strenghtened->strengthened
 strenghtening->strengthening
 strengtened->strengthened
 strenous->strenuous
+strenuos->strenuous
 strictist->strictest
 strikely->strikingly
 strnad->strand
 stroy->story, destroy
 structual->structural
+structuer->structure
 stubborness->stubbornness
 stucture->structure
 stuctured->structured
@@ -3679,6 +3697,7 @@ studdy->study
 studing->studying
 stuggling->struggling
 sturcture->structure
+sturctural->structural
 subcatagories->subcategories
 subcatagory->subcategory
 subconsiously->subconsciously
