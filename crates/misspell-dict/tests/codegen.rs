@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-pub const DICT: &str = include_str!("../assets/words.go");
+pub const MAIN: &str = include_str!("../assets/internal/gen/sources/main.json");
+pub const US: &str = include_str!("../assets/internal/gen/sources/us.json");
+pub const UK: &str = include_str!("../assets/internal/gen/sources/uk.json");
 
 #[test]
 fn codegen() {
@@ -25,7 +27,7 @@ fn generate<W: std::io::Write>(file: &mut W) {
         main,
         american,
         british,
-    } = parse_dict(DICT);
+    } = parse_dict();
 
     dictgen::DictGen::new()
         .name("MAIN_DICTIONARY")
@@ -60,53 +62,16 @@ fn generate<W: std::io::Write>(file: &mut W) {
         .unwrap();
 }
 
-struct Words<'s> {
-    main: HashMap<&'s str, Vec<&'s str>>,
-    american: HashMap<&'s str, Vec<&'s str>>,
-    british: HashMap<&'s str, Vec<&'s str>>,
+struct Words {
+    main: HashMap<String, Vec<String>>,
+    american: HashMap<String, Vec<String>>,
+    british: HashMap<String, Vec<String>>,
 }
 
-fn parse_dict(raw: &str) -> Words<'_> {
-    let mut bad = HashMap::new();
-    let mut main = HashMap::new();
-    let mut american = HashMap::new();
-    let mut british = HashMap::new();
-
-    let mapping = regex::Regex::new(r#"^"(.*)", "(.*)",$"#).unwrap();
-
-    let mut current = &mut bad;
-    for line in raw.lines() {
-        let line = line.split_once("//").map(|l| l.0).unwrap_or(line).trim();
-        if line.is_empty() || line.starts_with("package") {
-            continue;
-        } else if line.contains("DictMain") {
-            current = &mut main;
-        } else if line.contains("DictAmerican") {
-            current = &mut american;
-        } else if line.contains("DictBritish") {
-            current = &mut british;
-        } else if line.contains('}') {
-            current = &mut bad;
-        } else {
-            let captures = mapping.captures(line);
-            if let Some(captures) = captures {
-                current.insert(
-                    captures.get(1).unwrap().as_str(),
-                    vec![captures.get(2).unwrap().as_str()],
-                );
-            } else {
-                eprintln!("Unknown line: {line}");
-            }
-        }
-    }
-
-    if !bad.is_empty() {
-        panic!("Failed parsing; found extra words: {bad:#?}");
-    }
-
+fn parse_dict() -> Words {
     Words {
-        main,
-        american,
-        british,
+        main: serde_json::from_str(MAIN).unwrap(),
+        american: serde_json::from_str(US).unwrap(),
+        british: serde_json::from_str(UK).unwrap(),
     }
 }
