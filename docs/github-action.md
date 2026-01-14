@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Actions Repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Spell Check Repo
       uses: crate-ci/typos@v1.42.0
 ```
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Actions Repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Check spelling of file.txt
       uses: crate-ci/typos@v1.42.0
