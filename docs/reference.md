@@ -245,11 +245,22 @@ Run with `--type-list` to see available `NAME`s.
 
 ### Example configurations
 
-Common `extend-ignore-re`:
-- Line ignore with trailing `# spellchecker:disable-line`: `"(?Rm)^.*(#|//)\\s*spellchecker:disable-line$"`
-- Line block with `# spellchecker:<on|off>`: `"(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on"`
-- Next-line ignore `# spellchecker:ignore-next-line`: `(#|//)\\s*spellchecker:ignore-next-line\\n.*`
-- See also [ripsecret's regexes](https://github.com/sirwart/ripsecrets/blob/main/src/lib.rs)
+```toml
+[default]
+extend-ignore-re = [
+    # Ignore lines that end with `# spellchecker:disable-line`
+    "(?Rm)^.*(#|//)\\s*spellchecker:disable-line$",
+    # Ignore the line after `# spellchecker:ignore-next-line`:
+    "(#|//)\\s*spellchecker:ignore-next-line\\n.*",
+    # Ignore blocks between `# spellchecker:off` and `# spellchecker:on`
+    "(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on",
+]
+extend-ignore-identifiers-re = [
+    # Ignore identifiers that look like SSL cipher suites:
+    "\\bTLS_[A-Z0-9_]+(_anon_[A-Z0-9_]+)?\\b",
+]
+```
 
-Common `extend-ignore-identifiers-re`:
-- SSL Cipher suites: `"\\bTLS_[A-Z0-9_]+(_anon_[A-Z0-9_]+)?\\b"`
+You may also find the [regexes in
+ripscret](https://github.com/sirwart/ripsecrets/blob/main/src/lib.rs)
+useful as examples for patterns to ignore.
