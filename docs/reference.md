@@ -192,6 +192,15 @@ ERROR_FILENAME_EXCEDE_RANGE = "ERROR_FILENAME_EXCED_RANGE"
 
 Pattern-match always-valid identifiers.
 
+Example:
+```toml
+[default]
+extend-ignore-identifiers-re = [
+    # identifiers with length <= 4 chars is likely noise
+    "^[a-zA-Z]{1,4}$",
+]
+```
+
 #### `default.extend-words`
 
 - Type: table of strings
@@ -213,6 +222,15 @@ tais = "taits"
 - Type: list of [regexes](https://docs.rs/regex/latest/regex/index.html#syntax)
 
 Pattern-match always-valid words.  Note: you must handle case insensitivity yourself.
+
+Example:
+```toml
+[default]
+extend-ignore-words-re = [
+    # words with length <= 4 chars is likely noise
+    "^[a-zA-Z]{1,4}$",
+]
+```
 
 #### `type.NAME.extend-glob`
 
