@@ -262,5 +262,5 @@ extend-ignore-identifiers-re = [
 ```
 
 You may also find the [regexes in
-ripscret](https://github.com/sirwart/ripsecrets/blob/main/src/lib.rs)
+ripsecrets](https://github.com/sirwart/ripsecrets/blob/main/src/lib.rs)
 useful as examples for patterns to ignore.
