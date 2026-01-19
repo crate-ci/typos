@@ -281,7 +281,13 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        ('0', alt(('x', 'X')), take_while(1.., is_hex_digit_with_sep))
+        (
+            '0',
+            alt(('x', 'X')),
+            take_while(1.., is_hex_digit_with_sep),
+            take_while(0.., is_xid_continue)
+                .verify(|s: &<T as Stream>::Slice| std::str::from_utf8(s.as_bstr()).is_ok()),
+        )
             .take()
             .parse_next(input)
     }
@@ -1271,11 +1277,6 @@ mod test {
         offset: 0,
     },
     Identifier {
-        token: "0x1afe23456UL",
-        case: None,
-        offset: 17,
-    },
-    Identifier {
         token: "World",
         case: None,
         offset: 31,
@@ -1293,11 +1294,6 @@ mod test {
         token: "Hello",
         case: None,
         offset: 0,
-    },
-    Identifier {
-        token: "0x1afe23456UL",
-        case: None,
-        offset: 17,
     },
     Identifier {
         token: "World",
