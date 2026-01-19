@@ -423,10 +423,7 @@ mod parser {
 
             if captured.slice_len() < 90
                 && padding_len == 0
-                && captured
-                    .as_bstr()
-                    .iter()
-                    .all(|c| !['/', '+'].contains(&c.as_char()))
+                && captured.as_bstr().iter().all(|c| ![b'/', b'+'].contains(c))
             {
                 #[allow(clippy::unit_arg)]
                 return Err(ParserError::from_input(input));
