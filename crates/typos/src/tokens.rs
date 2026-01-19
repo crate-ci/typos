@@ -1260,7 +1260,7 @@ mod test {
     fn tokenize_ignore_hex() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello 0xDEADBEEF World";
+        let input = "Hello 0xDEADBEEF 0x1afe23456UL World";
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_data_eq!(
             actual.to_debug(),
@@ -1272,9 +1272,14 @@ mod test {
         offset: 0,
     },
     Identifier {
-        token: "World",
+        token: "0x1afe23456UL",
         case: None,
         offset: 17,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 31,
     },
 ]
 
@@ -1291,9 +1296,14 @@ mod test {
         offset: 0,
     },
     Identifier {
-        token: "World",
+        token: "0x1afe23456UL",
         case: None,
         offset: 17,
+    },
+    Identifier {
+        token: "World",
+        case: None,
+        offset: 31,
     },
 ]
 

@@ -1,4 +1,11 @@
 bin.name = "typos"
 stdin = ""
-stdout = ""
+stdout = """
+error: `afe` should be `safe`
+  ╭▸ ./sample.cpp:2:18
+  │
+2 │     uint8 i = 0x1afe23456UL;
+  ╰╴                 ━━━
+"""
 stderr = ""
+status.code = 2
