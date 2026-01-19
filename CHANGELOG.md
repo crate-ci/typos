@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Ignore hex literals with suffixes (e.g. `0xffffUL`)
+
 ## [1.42.0] - 2026-01-07
 
 ### Features
