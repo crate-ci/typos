@@ -146,8 +146,9 @@ mod parser {
     /// later may cause it to fail.
     const NON_TERMINATING_CAP: usize = 1024;
 
-    pub(crate) fn next_identifier<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    pub(crate) fn next_identifier<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
+        T: Compare<&'i str>,
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -174,8 +175,9 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ignore<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn ignore<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
+        T: Compare<&'i str>,
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -236,9 +238,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ordinal_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn ordinal_literal<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -254,7 +257,7 @@ mod parser {
             (
                 take_while(0.., is_sep),
                 take_while(1.., is_dec_digit),
-                alt((('s', 't'), ('n', 'd'), ('r', 'd'), ('t', 'h'))),
+                alt((("st"), ("nd"), ("rd"), ("th"))),
                 take_while(0.., is_sep),
             )
                 .take(),
@@ -304,9 +307,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn jwt<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn jwt<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -314,12 +318,9 @@ mod parser {
         trace(
             "jwt",
             (
-                'e',
-                'y',
+                "ey",
                 take_while(20.., is_jwt_token),
-                '.',
-                'e',
-                'y',
+                ".ey",
                 take_while(20.., is_jwt_token),
                 '.',
                 take_while(20.., is_jwt_token),
@@ -459,9 +460,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn url_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn url_literal<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -473,7 +475,7 @@ mod parser {
                     take_while(1..NON_TERMINATING_CAP, is_scheme_char),
                     // HACK: Technically you can skip `//` if you don't have a domain but that would
                     // get messy to support.
-                    (':', '/', '/'),
+                    ("://"),
                 )),
                 (
                     opt((url_userinfo, '@')),
