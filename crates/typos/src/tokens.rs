@@ -146,8 +146,9 @@ mod parser {
     /// later may cause it to fail.
     const NON_TERMINATING_CAP: usize = 1024;
 
-    pub(crate) fn next_identifier<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    pub(crate) fn next_identifier<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
+        T: Compare<&'i str>,
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -174,8 +175,9 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ignore<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn ignore<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
+        T: Compare<&'i str>,
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -236,9 +238,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ordinal_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn ordinal_literal<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -254,7 +257,7 @@ mod parser {
             (
                 take_while(0.., is_sep),
                 take_while(1.., is_dec_digit),
-                alt((('s', 't'), ('n', 'd'), ('r', 'd'), ('t', 'h'))),
+                alt((("st"), ("nd"), ("rd"), ("th"))),
                 take_while(0.., is_sep),
             )
                 .take(),
@@ -278,7 +281,13 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        ('0', alt(('x', 'X')), take_while(1.., is_hex_digit_with_sep))
+        (
+            '0',
+            alt(('x', 'X')),
+            take_while(1.., is_hex_digit_with_sep),
+            take_while(0.., is_xid_continue)
+                .verify(|s: &<T as Stream>::Slice| std::str::from_utf8(s.as_bstr()).is_ok()),
+        )
             .take()
             .parse_next(input)
     }
@@ -304,9 +313,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn jwt<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn jwt<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -314,12 +324,9 @@ mod parser {
         trace(
             "jwt",
             (
-                'e',
-                'y',
+                "ey",
                 take_while(20.., is_jwt_token),
-                '.',
-                'e',
-                'y',
+                ".ey",
                 take_while(20.., is_jwt_token),
                 '.',
                 take_while(20.., is_jwt_token),
@@ -422,10 +429,7 @@ mod parser {
 
             if captured.slice_len() < 90
                 && padding_len == 0
-                && captured
-                    .as_bstr()
-                    .iter()
-                    .all(|c| !['/', '+'].contains(&c.as_char()))
+                && captured.as_bstr().iter().all(|c| ![b'/', b'+'].contains(c))
             {
                 #[allow(clippy::unit_arg)]
                 return Err(ParserError::from_input(input));
@@ -459,9 +463,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn url_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn url_literal<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -473,7 +478,7 @@ mod parser {
                     take_while(1..NON_TERMINATING_CAP, is_scheme_char),
                     // HACK: Technically you can skip `//` if you don't have a domain but that would
                     // get messy to support.
-                    (':', '/', '/'),
+                    ("://"),
                 )),
                 (
                     opt((url_userinfo, '@')),
@@ -1260,7 +1265,7 @@ mod test {
     fn tokenize_ignore_hex() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello 0xDEADBEEF World";
+        let input = "Hello 0xDEADBEEF 0x1afe23456UL World";
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_data_eq!(
             actual.to_debug(),
@@ -1274,7 +1279,7 @@ mod test {
     Identifier {
         token: "World",
         case: None,
-        offset: 17,
+        offset: 31,
     },
 ]
 
@@ -1293,7 +1298,7 @@ mod test {
     Identifier {
         token: "World",
         case: None,
-        offset: 17,
+        offset: 31,
     },
 ]
 
