@@ -3,8 +3,8 @@ use std::collections::HashMap;
 
 use unicase::UniCase;
 
-use typos::tokens::Case;
 use typos::Status;
+use typos::tokens::Case;
 
 #[derive(Default)]
 pub struct BuiltIn {

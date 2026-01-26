@@ -1,5 +1,5 @@
-use crate::tokens;
 use crate::Dictionary;
+use crate::tokens;
 use std::borrow::Cow;
 
 pub fn check_str<'b, 's: 'b>(

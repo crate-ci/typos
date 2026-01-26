@@ -69,11 +69,7 @@ fn parse_dict(raw: &str) -> impl Iterator<Item = (&str, Vec<&str>)> {
             .split(',')
             .filter_map(|c| {
                 let c = c.trim();
-                if c.is_empty() {
-                    None
-                } else {
-                    Some(c)
-                }
+                if c.is_empty() { None } else { Some(c) }
             })
             .collect();
         (typo, corrections)

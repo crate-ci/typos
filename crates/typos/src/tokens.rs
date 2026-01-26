@@ -129,6 +129,7 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 }
 
 mod parser {
+    use winnow::Result;
     use winnow::combinator::trace;
     use winnow::combinator::{alt, eof, opt, peek, preceded, repeat, terminated};
     use winnow::error::ParserError;
@@ -140,7 +141,6 @@ mod parser {
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
     use winnow::token::{one_of, take_while};
-    use winnow::Result;
 
     /// Avoid worst-case parse times by limiting how much a `take_while` can take if something
     /// later may cause it to fail.
@@ -1406,9 +1406,15 @@ mod test {
             // A SHA-1 output, in mixed case: Not a ignored.
             ("485865fd0412e40d041E861506BB3AC11A3A91E3", false),
             // A SHA-256 output, in upper case.
-            ("E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855", true),
+            (
+                "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+                true,
+            ),
             // A SHA-512 output, in lower case.
-            ("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e", true),
+            (
+                "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
+                true,
+            ),
             // An MD5 (deprecated) output, in upper case.
             ("D41D8CD98F00B204E9800998ECF8427E", true),
             // A 31-character hexadecimal string: too short to be a hash.
@@ -1417,9 +1423,9 @@ mod test {
             let input = format!("Hello {hashlike} World");
             let mut expected: Vec<Identifier<'_>> = vec![
                 Identifier::new_unchecked("Hello", Case::None, 0),
-                Identifier::new_unchecked("World", Case::None, 7+hashlike.len()),
+                Identifier::new_unchecked("World", Case::None, 7 + hashlike.len()),
             ];
-            if ! is_ignored {
+            if !is_ignored {
                 expected.insert(1, Identifier::new_unchecked(hashlike, Case::None, 6));
             }
             let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
@@ -1759,8 +1765,7 @@ mod test {
     fn tokenize_ignore_max_url() {
         let parser = TokenizerBuilder::new().build();
 
-        let input =
-            "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment,split Bye";
+        let input = "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment,split Bye";
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_data_eq!(
             actual.to_debug(),

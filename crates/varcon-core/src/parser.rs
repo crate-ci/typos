@@ -35,9 +35,9 @@ impl Iterator for ClusterIter<'_> {
 mod test_cluster_iter {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_single() {
@@ -593,9 +593,9 @@ impl Cluster {
 mod test_cluster {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_basic() {
@@ -1044,9 +1044,9 @@ mod test_entry {
     #![allow(clippy::bool_assert_comparison)]
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_variant_only() {
@@ -1605,9 +1605,9 @@ fn word(input: &mut &str) -> ModalResult<String, ()> {
 mod test_variant {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1751,9 +1751,9 @@ impl Type {
 mod test_type {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1873,9 +1873,9 @@ impl Category {
 mod test_category {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1931,9 +1931,9 @@ impl Tag {
 mod test_tag {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1988,9 +1988,9 @@ impl Pos {
 mod test_pos {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
