@@ -1,5 +1,5 @@
-use clap::builder::TypedValueParser;
 use clap::Parser;
+use clap::builder::TypedValueParser;
 
 use typos_cli::config;
 

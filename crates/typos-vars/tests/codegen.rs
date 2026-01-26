@@ -254,11 +254,7 @@ fn collect_correct(entry: &varcon_core::Entry, category: varcon::Category) -> Ha
         }
     }
 
-    if primary.len() == 1 {
-        primary
-    } else {
-        backup
-    }
+    if primary.len() == 1 { primary } else { backup }
 }
 
 fn ignore_variant(variant: &varcon_core::Variant) -> bool {

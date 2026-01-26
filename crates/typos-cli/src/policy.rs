@@ -193,7 +193,9 @@ impl<'s> ConfigEngine<'s> {
         for (type_name, type_engine) in type_.patterns() {
             if type_engine.extend_glob.is_empty() {
                 if !type_matcher.contains_name(&type_name) {
-                    anyhow::bail!("Unknown type definition `{type_name}`, pass `--type-list` to see valid names or set `extend-glob` to add a new one.");
+                    anyhow::bail!(
+                        "Unknown type definition `{type_name}`, pass `--type-list` to see valid names or set `extend-glob` to add a new one."
+                    );
                 }
             } else {
                 for glob in type_engine.extend_glob.iter() {
