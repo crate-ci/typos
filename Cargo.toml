@@ -9,7 +9,7 @@ resolver = "2"
 repository = "https://github.com/crate-ci/typos"
 license = "MIT OR Apache-2.0"
 edition = "2024"
-rust-version = "1.87"  # MSRV
+rust-version = "1.91"  # MSRV
 include = [
   "build.rs",
   "src/**/*",
