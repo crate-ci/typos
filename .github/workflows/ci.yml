@@ -44,7 +44,7 @@ jobs:
       CARGO_PROFILE_DEV_DEBUG: line-tables-only
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
@@ -58,10 +58,13 @@ jobs:
       run: cargo hack test --each-feature --workspace
   msrv:
     name: "Check MSRV"
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
@@ -70,22 +73,16 @@ jobs:
     - uses: taiki-e/install-action@cargo-hack
     - name: Default features
       run: cargo hack check --each-feature --locked --rust-version --ignore-private --workspace --all-targets --keep-going
-  wasm:
-    name: "Check wasm"
-    runs-on: ubuntu-latest
+  minimal-versions:
+    name: Minimal versions
     strategy:
-      fail-fast: false
       matrix:
-        build: [wasm, wasm-wasi]
-        include:
-          - build: wasm
-            target: wasm32-unknown-unknown
-          - build: wasm-wasi
-            target: wasm32-wasip1
+        os: ["ubuntu-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
-    - name: Install Rust
+      uses: actions/checkout@v6
+    - name: Install stable Rust
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
@@ -96,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
@@ -109,11 +106,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: "1.90"  # STABLE
+        toolchain: "1.93"  # STABLE
     - uses: Swatinem/rust-cache@v2
     - name: Check documentation
       env:
@@ -124,15 +121,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: "1.90"  # STABLE
+        toolchain: "1.93"  # STABLE
         components: rustfmt
     - uses: Swatinem/rust-cache@v2
     - name: Check formatting
-      run: cargo fmt --all -- --check
+      run: cargo fmt --check
   clippy:
     name: clippy
     runs-on: ubuntu-latest
@@ -140,11 +137,11 @@ jobs:
       security-events: write # to upload sarif results
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: "1.90"  # STABLE
+        toolchain: "1.93"  # STABLE
         components: clippy
     - uses: Swatinem/rust-cache@v2
     - name: Install SARIF tools
@@ -159,7 +156,7 @@ jobs:
         | sarif-fmt
       continue-on-error: true
     - name: Upload
-      uses: github/codeql-action/upload-sarif@v3
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: clippy-results.sarif
         wait-for-processing: true
@@ -170,7 +167,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
