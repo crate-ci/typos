@@ -73,16 +73,22 @@ jobs:
     - uses: taiki-e/install-action@cargo-hack
     - name: Default features
       run: cargo hack check --each-feature --locked --rust-version --ignore-private --workspace --all-targets --keep-going
-  minimal-versions:
-    name: Minimal versions
+  wasm:
+    name: "Check wasm"
     strategy:
+      fail-fast: false
       matrix:
-        os: ["ubuntu-latest"]
-    runs-on: ${{ matrix.os }}
+        build: [wasm, wasm-wasi]
+        include:
+          - build: wasm
+            target: wasm32-unknown-unknown
+          - build: wasm-wasi
+            target: wasm32-wasip1
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
-    - name: Install stable Rust
+    - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
