@@ -2,6 +2,7 @@
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
 
+#[rustfmt::skip]
 mod vars_codegen;
 
 pub use crate::vars_codegen::*;

@@ -2,12 +2,10 @@
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
 
+#[rustfmt::skip]
 mod codegen;
 
 pub use codegen::*;
-pub use varcon_core::borrowed::Cluster;
-pub use varcon_core::borrowed::Entry;
-pub use varcon_core::borrowed::Variant;
 pub use varcon_core::Category;
 #[cfg(feature = "flags")]
 pub use varcon_core::CategorySet;
@@ -18,3 +16,6 @@ pub use varcon_core::Tag;
 #[cfg(feature = "flags")]
 pub use varcon_core::TagSet;
 pub use varcon_core::Type;
+pub use varcon_core::borrowed::Cluster;
+pub use varcon_core::borrowed::Entry;
+pub use varcon_core::borrowed::Variant;
