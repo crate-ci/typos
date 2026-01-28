@@ -1,10 +1,10 @@
-pub use ::aho_corasick::automaton::Automaton;
-pub use ::aho_corasick::dfa::Builder;
-pub use ::aho_corasick::dfa::DFA;
 pub use ::aho_corasick::Anchored;
 pub use ::aho_corasick::Input;
 pub use ::aho_corasick::MatchKind;
 pub use ::aho_corasick::StartKind;
+pub use ::aho_corasick::automaton::Automaton;
+pub use ::aho_corasick::dfa::Builder;
+pub use ::aho_corasick::dfa::DFA;
 
 #[cfg(feature = "codegen")]
 pub struct AhoCorasickGen<'g> {
@@ -26,7 +26,10 @@ impl AhoCorasickGen<'_> {
 
         writeln!(file, "pub struct {name} {{")?;
         writeln!(file, "    dfa: dictgen::aho_corasick::DFA,")?;
-        writeln!(file, "    unicode: &'static dictgen::OrderedMap<dictgen::InsensitiveStr<'static>, {value_type}>,")?;
+        writeln!(
+            file,
+            "    unicode: &'static dictgen::OrderedMap<dictgen::InsensitiveStr<'static>, {value_type}>,"
+        )?;
         writeln!(file, "}}")?;
         writeln!(file)?;
         writeln!(file, "impl {name} {{")?;
@@ -89,7 +92,10 @@ impl AhoCorasickGen<'_> {
             file,
             "            use dictgen::aho_corasick::Automaton as _;"
         )?;
-        writeln!(file, "            let input = dictgen::aho_corasick::Input::new(word.into_inner().as_bytes()).anchored(dictgen::aho_corasick::Anchored::Yes);")?;
+        writeln!(
+            file,
+            "            let input = dictgen::aho_corasick::Input::new(word.into_inner().as_bytes()).anchored(dictgen::aho_corasick::Anchored::Yes);"
+        )?;
         writeln!(
             file,
             "            let mat = self.dfa.try_find(&input).unwrap()?;"

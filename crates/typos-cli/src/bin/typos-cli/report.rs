@@ -3,7 +3,7 @@
 use std::borrow::Cow;
 use std::io::Write as _;
 use std::ops::Range;
-use std::sync::{atomic, Mutex};
+use std::sync::{Mutex, atomic};
 
 use annotate_snippets::Annotation;
 use annotate_snippets::AnnotationKind;
