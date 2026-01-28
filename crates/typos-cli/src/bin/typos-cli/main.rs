@@ -172,7 +172,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     let mut errors_found = false;
 
     let file_list = match args.file_list.as_deref() {
-        Some(dash) if dash == PathBuf::from("-") => Some(
+        Some(dash) if dash == "-" => Some(
             std::io::stdin()
                 .lines()
                 .map(|res| res.map(PathBuf::from))
