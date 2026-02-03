@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [1.43.0] - 2026-02-02
 
+### Compatibility
+
+- Bumped MSRV to 1.91
+
 ### Features
 
 - Updated the dictionary with the [January 2026](https://github.com/crate-ci/typos/issues/1453) changes
