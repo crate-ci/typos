@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(action)* Adjust how typos are reported to github
+
 ## [1.43.2] - 2026-02-05
 
 ### Fixes
