@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- *(pypi)* Hopefully fix the sdist build
+
 ## [1.43.4] - 2026-02-09
 
 ### Fixes
