@@ -22,6 +22,7 @@ on:
 
 env:
   BIN_NAME: typos
+  DIST_NAME: typos-cli
 
 # We need this to be able to create releases.
 permissions:
@@ -102,7 +103,7 @@ jobs:
       shell: bash
       run: |
         outdir="./target/${{ matrix.target }}/release"
-        staging="${{ env.BIN_NAME }}-${{ needs.create-release.outputs.tag }}-${{ matrix.target }}"
+        staging="${{ env.DIST_NAME }}-${{ needs.create-release.outputs.tag }}-${{ matrix.target }}"
         mkdir -p "$staging"/doc
         cp {README.md,LICENSE-*} "$staging/"
         cp {CHANGELOG.md,docs/*} "$staging/doc/"
