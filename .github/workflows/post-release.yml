@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: [linux, macos, win-msvc]
+        build: [linux, linux-aarch64, macos, macos-aarch64, win-msvc]
         include:
         - build: linux
           os: ubuntu-22.04
@@ -87,7 +87,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install packages (Ubuntu)
-      if: matrix.os == 'ubuntu-22.04'
+      if: matrix.build == 'linux' || matrix.build == 'linux-aarch64'
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends xz-utils liblz4-tool musl-tools
