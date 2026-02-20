@@ -33,6 +33,9 @@ if [[ ! -x ${COMMAND} ]]; then
     elif [[ "$UNAME" == CYGWIN* || "$UNAME" == MINGW* || "$UNAME" == MSYS* ]] ; then
         TARGET_FILE="${ARCH}-pc-windows-msvc"
         FILE_EXT="zip"
+        if [[ ! -x $(command -v wget) ]] && [[ -x $(command -v choco) ]]; then
+            choco install wget --no-progress
+        fi
     else
         TARGET_FILE="${ARCH}-unknown-linux-musl"
         FILE_EXT="tar.gz"
