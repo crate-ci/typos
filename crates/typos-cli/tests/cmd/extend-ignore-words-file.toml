@@ -1,0 +1,17 @@
+bin.name = "typos"
+args = "--ignore-words-file ignore.txt file.txt"
+status.code = 2
+stdin = ""
+stdout = """
+error: `differentiatiations` should be `differentiations`
+  ╭▸ file.txt:1:8
+  │
+1 │ testng differentiatiations
+  ╰╴       ━━━━━━━━━━━━━━━━━━━
+error: `microtransactional` should be `microtransactions`
+  ╭▸ file.txt:2:14
+  │
+2 │ ratatui aand microtransactional
+  ╰╴             ━━━━━━━━━━━━━━━━━━
+"""
+stderr = ""
