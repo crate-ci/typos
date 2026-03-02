@@ -3,7 +3,7 @@ members = [
     "crates/*",
 ]
 default-members = ["crates/typos-cli"]
-resolver = "2"
+resolver = "3"
 
 [workspace.package]
 repository = "https://github.com/crate-ci/typos"
