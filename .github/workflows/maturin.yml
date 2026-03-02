@@ -35,7 +35,7 @@ jobs:
           sccache: 'true'
           manylinux: auto
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-linux-${{ matrix.target }}
           path: dist
@@ -59,7 +59,7 @@ jobs:
           sccache: 'true'
           manylinux: musllinux_1_2
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-musllinux-${{ matrix.target }}
           path: dist
@@ -82,7 +82,7 @@ jobs:
           args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
           sccache: 'true'
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-windows-${{ matrix.target }}
           path: dist
@@ -105,7 +105,7 @@ jobs:
           args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
           sccache: 'true'
       - name: Upload wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-macos-${{ matrix.target }}
           path: dist
@@ -120,7 +120,7 @@ jobs:
           command: sdist
           args: --manifest-path crates/typos-cli/Cargo.toml --out dist
       - name: Upload sdist
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wheels-sdist
           path: dist
