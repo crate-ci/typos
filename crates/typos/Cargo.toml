@@ -27,4 +27,4 @@ bstr = "1.12"
 workspace = true
 
 [dev-dependencies]
-snapbox = "0.6.21"
+snapbox = "1.0.0"
