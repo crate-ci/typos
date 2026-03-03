@@ -27,4 +27,4 @@ enumflags2 = { version = "0.7", optional = true }
 workspace = true
 
 [dev-dependencies]
-snapbox = "0.6.24"
+snapbox = "1.0.1"

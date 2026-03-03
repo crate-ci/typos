@@ -52,7 +52,7 @@ clap-cargo = "0.18.3"
 clap-verbosity-flag = "3.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.9.12"
+toml = "1.0.3"
 log = "0.4"
 env_logger = { version = "0.11", default-features = false, features = ["auto-color"] }
 bstr = "1.12"
@@ -70,7 +70,7 @@ typed-arena = "2.0.2"
 thread_local = "1.1.9"
 globset = "0.4.18"
 anstyle = "1.0.13"
-anstream = "0.6.21"
+anstream = "1.0.0"
 colorchoice-clap = "1.0.7"
 serde_regex = "1.1.0"
 regex = "1.12.3"
@@ -85,8 +85,8 @@ supports-unicode = "3.0.0"
 assert_fs = "1.1"
 divan = "0.1.21"
 maplit = "1.0"
-snapbox = { version = "0.6.24", features = ["json"] }
-trycmd = "0.15.11"
+snapbox = { version = "1.0.1", features = ["json"] }
+trycmd = "1.0.1"
 
 [[bench]]
 name = "check_file"
