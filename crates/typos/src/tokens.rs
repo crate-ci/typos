@@ -194,13 +194,15 @@ mod parser {
                 terminated(url_literal, sep1),
                 terminated(jwt, sep1),
                 terminated(base64_literal, sep1), // base64 should be quoted or something
-                terminated(hash_literal, sep1),
-                terminated(ordinal_literal, sep1),
-                terminated(hex_literal, sep1),
-                terminated(dec_literal, sep1), // Allow digit-prefixed words
-                terminated(css_color, sep1),
-                terminated(c_escape, sep1),
-                terminated(printf, sep1),
+                alt((
+                    terminated(hash_literal, sep1),
+                    terminated(ordinal_literal, sep1),
+                    terminated(hex_literal, sep1),
+                    terminated(dec_literal, sep1), // Allow digit-prefixed words
+                    terminated(css_color, sep1),
+                    terminated(c_escape, sep1),
+                    terminated(printf, sep1),
+                )),
                 other,
             ))),
         )
