@@ -27,7 +27,7 @@ unicase = "2.9.0"
 codegenrs = "3.0"
 dictgen = { version = "^0.5", path = "../dictgen", features = ["codegen", "map", "aho-corasick"] }
 varcon = { version = "^1.0", path = "../varcon" }
-snapbox = "1.0.1"
+snapbox = "1.1.0"
 indexmap = "2.13.0"
 divan = "0.1.21"
 heck = "0.5.0"
