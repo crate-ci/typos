@@ -193,6 +193,7 @@ mod parser {
                 terminated(email_literal, sep1),
                 terminated(url_literal, sep1),
                 terminated(jwt, sep1),
+                terminated(ssh_ed25519_pub_key, sep1),
                 terminated(base64_literal, sep1), // base64 should be quoted or something
                 alt((
                     terminated(hash_literal, sep1),
@@ -346,6 +347,26 @@ mod parser {
             || c.is_ascii_digit()
             || c == '_'
             || c == '-'
+    }
+
+    fn ssh_ed25519_pub_key<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    where
+        T: Compare<char>,
+        T: Compare<&'i str>,
+        T: Stream + StreamIsPartial + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
+    {
+        trace(
+            "ssh_ed25519_pub_key",
+            (
+                "AAAAC3NzaC1lZDI1NTE5AAAAI",
+                // Technically the next digit can only be in `[A-P]` but not worth the complexity
+                take_while(43, is_base64_digit),
+            )
+                .take(),
+        )
+        .parse_next(input)
     }
 
     fn uuid_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
@@ -1635,11 +1656,6 @@ mod test {
         offset: 0,
     },
     Identifier {
-        token: "AAAAC3NzaC1lZDI1NTE5AAAAIJSKdqkBEQY2y9f8C8RXxee3ZKXyWYR0QIW7oxISXrrf",
-        case: None,
-        offset: 6,
-    },
-    Identifier {
         token: "end",
         case: None,
         offset: 75,
@@ -1657,11 +1673,6 @@ mod test {
         token: "Start",
         case: None,
         offset: 0,
-    },
-    Identifier {
-        token: "AAAAC3NzaC1lZDI1NTE5AAAAIJSKdqkBEQY2y9f8C8RXxee3ZKXyWYR0QIW7oxISXrrf",
-        case: None,
-        offset: 6,
     },
     Identifier {
         token: "end",
