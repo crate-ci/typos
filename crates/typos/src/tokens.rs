@@ -1619,6 +1619,62 @@ mod test {
     }
 
     #[test]
+    fn tokenize_ignore_ssh_ed25519_public_key() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input =
+            "Start AAAAC3NzaC1lZDI1NTE5AAAAIJSKdqkBEQY2y9f8C8RXxee3ZKXyWYR0QIW7oxISXrrf end";
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Start",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "AAAAC3NzaC1lZDI1NTE5AAAAIJSKdqkBEQY2y9f8C8RXxee3ZKXyWYR0QIW7oxISXrrf",
+        case: None,
+        offset: 6,
+    },
+    Identifier {
+        token: "end",
+        case: None,
+        offset: 75,
+    },
+]
+
+"#]]
+        );
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Start",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "AAAAC3NzaC1lZDI1NTE5AAAAIJSKdqkBEQY2y9f8C8RXxee3ZKXyWYR0QIW7oxISXrrf",
+        case: None,
+        offset: 6,
+    },
+    Identifier {
+        token: "end",
+        case: None,
+        offset: 75,
+    },
+]
+
+"#]]
+        );
+    }
+
+    #[test]
     fn tokenize_ignore_jwt() {
         let parser = TokenizerBuilder::new().build();
 
