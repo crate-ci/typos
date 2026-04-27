@@ -1617,7 +1617,7 @@ dependencies = [
 
 [[package]]
 name = "typos"
-version = "0.10.42"
+version = "0.10.43"
 dependencies = [
  "bstr",
  "itertools",
@@ -1630,7 +1630,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.45.1"
+version = "1.45.2"
 dependencies = [
  "ahash",
  "annotate-snippets",
