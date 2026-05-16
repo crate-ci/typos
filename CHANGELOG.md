@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct to `criterias`
+- Don't correct to `replaceables`
+
 ## [1.46.1] - 2026-05-08
 
 ### Fixes
