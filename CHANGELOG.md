@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct to `sequentials`
+- Don't correct to `subdolder`
+
 ## [1.46.2] - 2026-05-16
 
 ### Fixes
