@@ -77298,7 +77298,7 @@ seqeuncer,sequencer
 seqeuncers,sequencers
 seqeunces,sequences
 seqeuncing,sequencing
-seqeuntials,sequentials
+seqeuntials,sequential
 seqment,segment
 seqments,segments
 sequance,sequence
@@ -77333,6 +77333,7 @@ sequensing,sequencing
 sequenstial,sequential
 sequentail,sequential
 sequentally,sequentially
+sequentials,sequential
 sequentialy,sequentially
 sequentually,sequentially
 sequenze,sequence
@@ -82211,6 +82212,8 @@ subdivisio,subdivision
 subdivisiond,subdivisioned
 subdoamin,subdomain
 subdoamins,subdomains
+subdolder,subfolder
+subdolders,subfolders
 subelemet,subelement
 subelemets,subelements
 subent,subnet
@@ -82233,8 +82236,8 @@ subexpessions,subexpressions
 subexpresssion,subexpression
 subexpresssions,subexpressions
 subfeatutures,subfeatures
-subfoilder,subdolder
-subfoilders,subdolders
+subfoilder,subfolder
+subfoilders,subfolders
 subfoler,subfolder
 subfolers,subfolders
 subfolfer,subfolder
