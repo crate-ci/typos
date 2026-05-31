@@ -41,28 +41,29 @@ to be done in bulk in an attempt to lower the barrier for improving the dictiona
 
 Otherwise, to add to the dictionary:
 
-1. Add your typo to our data file `crates/typos-dict/assets/words.csv`
+1. Add your typo to our data file [crates/typos-dict/assets/words.csv](crates/typos-dict/assets/words.csv)
 
-Format: `typo,correction[,correction...]`
+   Format: `typo,correction[,correction...]`
 
-2. Code-gen the dictionary
+2. Verify (and postprocess) the dictionary
 
-With `cargo` and `rustfmt` installed, run
-```console
-$ SNAPSHOTS=overwrite cargo test --workspace
-```
-(we do development-time code-gen to speed up builds)
+   With `cargo` and `rustfmt` installed, run
+   ```console
+   $ SNAPSHOTS=overwrite cargo test -p typos-dict verify
+   ```
+   (we do development-time code-gen to speed up builds)
+   
+   Auto-cleans up your change according to some rules we have like:
+   - Don't prefer specific dialects in the dictionary, leaving those to [`varcon`](http://wordlist.aspell.net/varcon-readme/).
+   - Mixing up corrections and typos
+   - etc
 
-3. Verify your change
+3. Code-gen the dictionary
 
-Run
-```console
-$ cargo test --workspace
-```
-Auto-cleans up your change according to some rules we have like:
-- Don't prefer specific dialects in the dictionary, leaving those to [`varcon`](http://wordlist.aspell.net/varcon-readme/).
-- Mixing up corrections and typos
-- etc
+   Run
+   ```console
+   $ SNAPSHOTS=overwrite cargo test -p typos-dict codegen
+   ```
 
 ### Process
 
@@ -122,4 +123,4 @@ When we're ready to release, a project owner should do the following
 [issues]: https://github.com/crate-ci/typos/issues
 [new issue]: https://github.com/crate-ci/typos/issues/new
 [all issues]: https://github.com/crate-ci/typos/issues?utf8=%E2%9C%93&q=is%3Aissue
-[CI]: https://github.com/crate-ci/typos/tree/master/.github/workflows
+[CI]: ./.github/workflows/
