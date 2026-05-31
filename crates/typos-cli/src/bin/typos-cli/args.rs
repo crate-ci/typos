@@ -55,6 +55,20 @@ pub(crate) struct Args {
     #[arg(short = 'c', long = "config", help_heading = "Config")]
     pub(crate) custom_config: Option<std::path::PathBuf>,
 
+    /// Path to a file specifying identifiers which are to be ignored .
+    ///
+    /// The specified file should be UTF-8 encoded, and identifiers should
+    /// be separated by whitespace.
+    #[arg(long, help_heading = "Config")]
+    pub(crate) ignore_identifiers_file: Option<std::path::PathBuf>,
+
+    /// Path to a file specifying words which are to be ignored.
+    ///
+    /// The specified file should be UTF-8 encoded, and identifiers should
+    /// be separated by whitespace.
+    #[arg(long, help_heading = "Config")]
+    pub(crate) ignore_words_file: Option<std::path::PathBuf>,
+
     /// Ignore implicit configuration files.
     #[arg(long, help_heading = "Config")]
     pub(crate) isolated: bool,
