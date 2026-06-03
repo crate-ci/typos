@@ -27,6 +27,7 @@ doas,built-in OpenBSD alternative to sudo (and has been ported to other systems)
 healthz,common name for health check endpoints
 readd,as in re-add but as an identifier
 unices,alt plural of unixes
+requestors,domain-specific variant of requesters
 alloced,past tense of common programming abbreviation alloc
 aren,so contractions work
 couldn,so contractions work
