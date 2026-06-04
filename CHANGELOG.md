@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct `inferrable`
+- Correct unused `inferible` variant
+
 ## [1.47.1] - 2026-06-03
 
 ### Fixes
