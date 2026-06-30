@@ -1675,7 +1675,7 @@ dependencies = [
 
 [[package]]
 name = "typos-dict"
-version = "0.13.30"
+version = "0.13.31"
 dependencies = [
  "codegenrs",
  "csv",
