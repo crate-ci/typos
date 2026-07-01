@@ -23,9 +23,9 @@ aho-corasick = ["dep:aho-corasick"]
 
 [dependencies]
 unicase = "2.9.0"
-phf = { version = "0.13", features = ["unicase"], optional = true }
-phf_shared = { version = "0.13", optional = true }
-phf_codegen = { version = "0.13", optional = true }
+phf = { version = "0.14.0", features = ["unicase"], optional = true }
+phf_shared = { version = "0.14.0", optional = true }
+phf_codegen = { version = "0.14.0", optional = true }
 aho-corasick = { version = "1.1.4", optional = true }
 
 [lints]
