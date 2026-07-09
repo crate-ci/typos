@@ -32,6 +32,7 @@ unused_qualifications = "warn"
 [workspace.lints.clippy]
 bool_assert_comparison = "allow"
 branches_sharing_code = "allow"
+byte_char_slices = "allow"  # sometimes explicit arrays are better
 checked_conversions = "warn"
 collapsible_else_if = "allow"
 collapsible_if = "allow"
