@@ -960,7 +960,13 @@ fn walk_entry(
             (path, cwd)
         } else {
             let path = entry.path();
-            let abs_path = report_result(path.canonicalize(), Some(path), reporter)?;
+            let abs_path = match path.canonicalize() {
+                Ok(abs_path) => abs_path,
+                Err(err) => {
+                    report_error(err, Some(path), reporter)?;
+                    return Ok(());
+                }
+            };
             (path, abs_path)
         };
         let policy = engine.policy(&lookup_path);
