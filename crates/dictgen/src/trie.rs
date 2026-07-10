@@ -64,10 +64,9 @@ impl<V> Trie<V> {
                         return None;
                     };
                     debug_assert!(index < 26);
-                    if let Some(next) = n[index as usize].as_ref() {
+                    {
+                        let next = n[index as usize].as_ref()?;
                         child = next;
-                    } else {
-                        return None;
                     }
                 }
                 TrieChild::Flat(t) => {
@@ -113,7 +112,7 @@ mod codegen {
             "pub static {name}: dictgen::Trie<{value_type}> = dictgen::Trie {{"
         )?;
         writeln!(file, "    root: &{},", gen_node_name(name, ""))?;
-        writeln!(file, "    unicode: &{},", &unicode_table_name)?;
+        writeln!(file, "    unicode: &{unicode_table_name},")?;
         writeln!(
             file,
             "    range: {}..={},",
