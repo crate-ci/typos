@@ -238,8 +238,14 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
         let single_threaded = threads == 1;
 
         let mut walk = ignore::WalkBuilder::new(path);
+        let overrides = ignore::overrides::OverrideBuilder::new(".")
+            .add(".git/")
+            .with_code(proc_exit::sysexits::CONFIG_ERR)?
+            .build()
+            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
         walk.threads(threads)
             .skip_stdout(true)
+            .overrides(overrides)
             .hidden(walk_policy.ignore_hidden())
             .ignore(walk_policy.ignore_dot())
             .git_global(walk_policy.ignore_global())
