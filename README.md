@@ -1,10 +1,10 @@
 # typos
 
-> **Source code spell checker**
+> **Source Code Spell Checker**
 
-Finds and corrects spelling mistakes among source code:
+Finds and corrects spelling mistakes in source code:
 - Fast enough to run on monorepos
-- Low false positives so you can run on PRs
+- Low false positives ,so you can run on PRs
 
 ![Screenshot](./docs/screenshot.png)
 
