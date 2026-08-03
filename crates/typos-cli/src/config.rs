@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-use kstring::KString;
+use compact_str::CompactString;
 
 use crate::file_type_specifics;
 
@@ -260,7 +260,7 @@ pub struct TypeEngineConfig {
         feature = "unstable-schema",
         schemars(schema_with = "hashmap_string_t::<GlobEngineConfig>")
     )]
-    pub patterns: HashMap<KString, GlobEngineConfig>,
+    pub patterns: HashMap<CompactString, GlobEngineConfig>,
 }
 
 impl TypeEngineConfig {
@@ -269,7 +269,7 @@ impl TypeEngineConfig {
 
         for no_check_type in file_type_specifics::NO_CHECK_TYPES {
             patterns.insert(
-                KString::from(*no_check_type),
+                CompactString::const_new(no_check_type),
                 GlobEngineConfig {
                     extend_glob: Vec::new(),
                     engine: EngineConfig {
@@ -282,7 +282,7 @@ impl TypeEngineConfig {
 
         for (typ, dict_config) in file_type_specifics::TYPE_SPECIFIC_DICTS {
             patterns.insert(
-                KString::from(*typ),
+                CompactString::const_new(typ),
                 GlobEngineConfig {
                     extend_glob: Vec::new(),
                     engine: EngineConfig {
@@ -317,7 +317,7 @@ impl TypeEngineConfig {
         }
     }
 
-    pub fn patterns(&self) -> impl Iterator<Item = (KString, GlobEngineConfig)> + use<> {
+    pub fn patterns(&self) -> impl Iterator<Item = (CompactString, GlobEngineConfig)> + use<> {
         let mut engine = Self::from_defaults();
         engine.update(self);
         engine.patterns.into_iter()
@@ -331,7 +331,7 @@ impl TypeEngineConfig {
 #[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct GlobEngineConfig {
     #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
-    pub extend_glob: Vec<KString>,
+    pub extend_glob: Vec<CompactString>,
     #[serde(flatten)]
     pub engine: EngineConfig,
 }
@@ -478,7 +478,7 @@ pub struct DictConfig {
         feature = "unstable-schema",
         schemars(schema_with = "hashmap_string_string")
     )]
-    pub extend_identifiers: HashMap<KString, KString>,
+    pub extend_identifiers: HashMap<CompactString, CompactString>,
     #[serde(with = "serde_regex")]
     #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_ignore_words_re: Vec<regex::Regex>,
@@ -486,7 +486,7 @@ pub struct DictConfig {
         feature = "unstable-schema",
         schemars(schema_with = "hashmap_string_string")
     )]
-    pub extend_words: HashMap<KString, KString>,
+    pub extend_words: HashMap<CompactString, CompactString>,
 }
 
 impl DictConfig {
@@ -725,7 +725,7 @@ mod test {
         let mut actual = base;
         actual.update(&extended);
 
-        let expected: Vec<KString> = vec!["*.foo".into(), "*.bar".into()];
+        let expected: Vec<CompactString> = vec!["*.foo".into(), "*.bar".into()];
         assert_data_eq!(actual.extend_glob.into_json(), expected.into_json());
     }
 
