@@ -1626,7 +1626,7 @@ dependencies = [
 
 [[package]]
 name = "typos-cli"
-version = "1.48.0"
+version = "1.49.0"
 dependencies = [
  "ahash",
  "annotate-snippets",
