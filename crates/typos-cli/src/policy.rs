@@ -1,5 +1,7 @@
+use compact_str::CompactString;
+
 pub struct ConfigStorage {
-    arena: std::sync::Mutex<typed_arena::Arena<kstring::KString>>,
+    arena: std::sync::Mutex<typed_arena::Arena<CompactString>>,
 }
 
 impl ConfigStorage {
@@ -19,7 +21,7 @@ impl ConfigStorage {
                 self.arena
                     .lock()
                     .unwrap()
-                    .alloc(kstring::KString::from_ref(other))
+                    .alloc(CompactString::from(other))
                     .as_str(),
             )
         }
@@ -81,7 +83,7 @@ impl<'s> ConfigEngine<'s> {
     pub fn file_types(
         &self,
         cwd: &std::path::Path,
-    ) -> &std::collections::BTreeMap<kstring::KString, Vec<kstring::KString>> {
+    ) -> &std::collections::BTreeMap<CompactString, Vec<CompactString>> {
         debug_assert!(cwd.is_absolute(), "{} is not absolute", cwd.display());
         let dir = self
             .configs
@@ -199,7 +201,7 @@ impl<'s> ConfigEngine<'s> {
                 }
             } else {
                 for glob in type_engine.extend_glob.iter() {
-                    type_matcher.add(type_name.as_ref(), glob.as_ref());
+                    type_matcher.add(type_name.clone(), glob.clone());
                 }
             }
 
@@ -314,7 +316,7 @@ impl<T> Default for Intern<T> {
 struct DirConfig {
     walk: usize,
     default: FileConfig,
-    types: std::collections::HashMap<kstring::KString, FileConfig>,
+    types: std::collections::HashMap<CompactString, FileConfig>,
     type_matcher: crate::file_type::Types,
 }
 
@@ -397,7 +399,7 @@ mod test {
         let mut engine = ConfigEngine::new(&storage);
         engine.set_isolated(true);
 
-        let type_name = kstring::KString::from_static("toml");
+        let type_name = CompactString::const_new("toml");
 
         let config = crate::config::Config {
             default: crate::config::EngineConfig {
@@ -453,7 +455,7 @@ mod test {
         let mut engine = ConfigEngine::new(&storage);
         engine.set_isolated(true);
 
-        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+        let type_name = CompactString::const_new(NEVER_EXIST_TYPE);
 
         let config = crate::config::Config {
             type_: crate::config::TypeEngineConfig {
@@ -493,7 +495,7 @@ mod test {
         let mut engine = ConfigEngine::new(&storage);
         engine.set_isolated(true);
 
-        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+        let type_name = CompactString::const_new(NEVER_EXIST_TYPE);
 
         let config = crate::config::Config {
             default: crate::config::EngineConfig {
@@ -527,7 +529,7 @@ mod test {
         let mut engine = ConfigEngine::new(&storage);
         engine.set_isolated(true);
 
-        let type_name = kstring::KString::from_static(NEVER_EXIST_TYPE);
+        let type_name = CompactString::const_new(NEVER_EXIST_TYPE);
 
         let config = crate::config::Config {
             default: crate::config::EngineConfig {
