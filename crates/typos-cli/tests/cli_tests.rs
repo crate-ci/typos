@@ -14,7 +14,7 @@ fn extend_exclude_absolute_path_argument() {
     // patterns, while for an absolute argument (the same directory!) anchored
     // patterns never match and the exclusion is silently lost (#1075).
     //
-    // This test pins the current behaviour; the fix flips the absolute case.
+    // Both spellings of the same directory must exclude the same files.
     let temp = assert_fs::TempDir::new().unwrap();
     let root = temp.path();
 
@@ -59,7 +59,7 @@ fn extend_exclude_absolute_path_argument() {
         "absolute run must list kept.txt, got:\n{stdout}"
     );
     assert!(
-        stdout.contains("data.txt"),
-        "absolute run currently walks into skip/ (#1075), got:\n{stdout}"
+        !stdout.contains("data.txt"),
+        "absolute run must exclude skip/ like the relative one (#1075), got:\n{stdout}"
     );
 }

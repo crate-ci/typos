@@ -250,7 +250,13 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
             walk.sort_by_file_name(|a, b| a.cmp(b));
         }
         if !walk_policy.extend_exclude.is_empty() {
-            let mut ignores = ignore::gitignore::GitignoreBuilder::new(".");
+            // Root the matcher at the invocation directory rather than the literal ".":
+            // candidates coming out of the walker keep the spelling of the path
+            // argument, and `Gitignore` can only strip a "." root off `./`-prefixed
+            // candidates, so for an absolute path argument anchored patterns never
+            // matched (#1075). With the CWD as the root, absolute candidates are
+            // stripped to the same relative form a relative invocation produces.
+            let mut ignores = ignore::gitignore::GitignoreBuilder::new(&global_cwd);
             for pattern in walk_policy.extend_exclude.iter() {
                 ignores
                     .add_line(None, pattern)
