@@ -8,10 +8,11 @@ Configuration is read from the following (in precedence order)
 
 - Command line arguments
 - File specified via `--config PATH`
-- Search parents of specified file / directory for one of `typos.toml`, `_typos.toml`, `.typos.toml`, `Cargo.toml`, or `pyproject.toml`.
+- Search parents of specified file / directory for one of `typos.toml`, `_typos.toml`, `.typos.toml`, `Cargo.toml`, `pyproject.toml`, or `.config/typos.toml`.
   - In `pyproject.toml`, the below fields must be under the `[tool.typos]` section. If this section does not
     exist, the config file will be skipped.
   - In `Cargo.toml`, the below fields must be under either `[workspace.metadata.typos]` or `[package.metadata.typos]`
+  - `.config/typos.toml` is only used if none of the above are found in the same directory
 
 ### Format
 

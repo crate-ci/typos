@@ -14,8 +14,14 @@ pub const SUPPORTED_FILE_NAMES: &[&str] = &[
     PYPROJECT_TOML,
 ];
 
+/// Config file names looked up inside [`CONFIG_DIR`], after [`SUPPORTED_FILE_NAMES`]
+///
+/// See <https://github.com/pi0/config-dir>
+const CONFIG_DIR_FILE_NAMES: &[&str] = &["typos.toml"];
+
 const CARGO_TOML: &str = "Cargo.toml";
 const PYPROJECT_TOML: &str = "pyproject.toml";
+const CONFIG_DIR: &str = ".config";
 
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -69,7 +75,10 @@ pub struct PyprojectTomlTool {
 
 impl Config {
     pub fn from_dir(cwd: &std::path::Path) -> Result<Option<Self>, anyhow::Error> {
-        for file in find_project_files(cwd, SUPPORTED_FILE_NAMES) {
+        let config_dir = cwd.join(CONFIG_DIR);
+        for file in find_project_files(cwd, SUPPORTED_FILE_NAMES)
+            .chain(find_project_files(&config_dir, CONFIG_DIR_FILE_NAMES))
+        {
             log::debug!("Loading {}", file.display());
             if let Some(config) = Self::from_file(&file)? {
                 return Ok(Some(config));
@@ -679,6 +688,10 @@ mod test {
             "pyproject.toml",
             "[tool.typos.files]\nextend-exclude = [\"pyproject.toml\"]\n",
         );
+        write(
+            ".config/typos.toml",
+            "[files]\nextend-exclude = [\".config/typos.toml\"]\n",
+        );
 
         // Spelled out, rather than reusing `SUPPORTED_FILE_NAMES`, so that
         // reordering the constant is caught rather than mirrored
@@ -688,6 +701,7 @@ mod test {
             ".typos.toml",
             "Cargo.toml",
             "pyproject.toml",
+            ".config/typos.toml",
         ];
 
         // Deleting the winner each time walks the full fallback order
