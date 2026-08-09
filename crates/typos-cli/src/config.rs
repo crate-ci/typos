@@ -653,6 +653,58 @@ mod test {
     }
 
     #[test]
+    fn test_from_dir_precedence() {
+        let temp = assert_fs::TempDir::new().unwrap();
+        let write = |name: &str, content: &str| {
+            let path = temp.path().join(name);
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(path, content).unwrap();
+        };
+
+        // Each config excludes its own name, identifying which one got loaded
+        write("typos.toml", "[files]\nextend-exclude = [\"typos.toml\"]\n");
+        write(
+            "_typos.toml",
+            "[files]\nextend-exclude = [\"_typos.toml\"]\n",
+        );
+        write(
+            ".typos.toml",
+            "[files]\nextend-exclude = [\".typos.toml\"]\n",
+        );
+        write(
+            "Cargo.toml",
+            "[package.metadata.typos.files]\nextend-exclude = [\"Cargo.toml\"]\n",
+        );
+        write(
+            "pyproject.toml",
+            "[tool.typos.files]\nextend-exclude = [\"pyproject.toml\"]\n",
+        );
+
+        // Spelled out, rather than reusing `SUPPORTED_FILE_NAMES`, so that
+        // reordering the constant is caught rather than mirrored
+        let precedence = [
+            "typos.toml",
+            "_typos.toml",
+            ".typos.toml",
+            "Cargo.toml",
+            "pyproject.toml",
+        ];
+
+        // Deleting the winner each time walks the full fallback order
+        for expected in precedence {
+            let config = Config::from_dir(temp.path()).unwrap().unwrap();
+            assert_eq!(
+                config.files.extend_exclude,
+                [expected],
+                "expected `{expected}` to be preferred"
+            );
+            std::fs::remove_file(temp.path().join(expected)).unwrap();
+        }
+
+        assert!(Config::from_dir(temp.path()).unwrap().is_none());
+    }
+
+    #[test]
     fn test_from_defaults() {
         let null = Config::default();
         let defaulted = Config::from_defaults();
