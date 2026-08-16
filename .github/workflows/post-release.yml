@@ -97,7 +97,7 @@ jobs:
         toolchain: ${{ matrix.rust }}
         targets: ${{ matrix.target }}
     - name: Build release binary
-      run: cargo build --target ${{ matrix.target }} --verbose --release
+      run: cargo build --locked --target ${{ matrix.target }} --verbose --release
     - name: Build archive
       shell: bash
       run: |
