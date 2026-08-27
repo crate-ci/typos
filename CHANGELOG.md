@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don't correct the brand name `HashiCorp`
+
 ## [1.49.0] - 2026-08-03
 
 ### Features
