@@ -1,11 +1,4 @@
 bin.name = "typos"
 stdin = ""
-stdout = """
-error: `Hashi` should be `Hash`
-   ╭▸ ./README.md:11:17
-   │
-11 │ Some talk about HashiCorp
-   ╰╴                ━━━━━
-"""
+stdout = ""
 stderr = ""
-status.code = 2

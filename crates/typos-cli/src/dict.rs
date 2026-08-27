@@ -55,6 +55,7 @@ impl BuiltIn {
         match ident {
             "O_WRONLY" => Some(Status::Valid),
             "dBA" => Some(Status::Valid),
+            "HashiCorp" => Some(Status::Valid),
             _ => None,
         }
     }
