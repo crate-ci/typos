@@ -1,11 +1,4 @@
 bin.name = "typos"
 stdin = ""
-stdout = """
-error: `asend` should be `ascend`
-  ╭▸ ./sample.py:9:21
-  │
-9 │     await generator.asend(None)  # should work
-  ╰╴                    ━━━━━
-"""
+stdout = ""
 stderr = ""
-status.code = 2

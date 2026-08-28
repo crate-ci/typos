@@ -79,6 +79,7 @@ pub(crate) const TYPE_SPECIFIC_DICTS: &[(&str, StaticDictConfig)] = &[
                 "NDArray",  // numpy.typing.NDArray
                 "EOFError", // std
                 "arange",   // torch.arange, numpy.arange
+                "asend",    // AsyncGenerator.asend
                 "certifi",  // popular package
             ],
             ignore_words: &[],
