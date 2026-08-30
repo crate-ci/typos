@@ -24,6 +24,7 @@
         "unicode": null,
         "ignore-hex": null,
         "identifier-leading-digits": null,
+        "check-urls": null,
         "locale": null,
         "extend-ignore-identifiers-re": [],
         "extend-identifiers": {},
@@ -151,6 +152,14 @@
           ],
           "default": null
         },
+        "check-urls": {
+          "description": "Check identifiers that appear to be URLs.",
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null
+        },
         "locale": {
           "anyOf": [
             {
@@ -267,6 +276,14 @@
         },
         "identifier-leading-digits": {
           "description": "Allow identifiers to start with digits, in addition to letters.",
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": null
+        },
+        "check-urls": {
+          "description": "Check identifiers that appear to be URLs.",
           "type": [
             "boolean",
             "null"

@@ -150,6 +150,18 @@ Verify spelling in files.
 
 Allow unicode characters in identifiers (and not just ASCII).
 
+#### `default.check-urls`
+
+- Type: bool
+- Default: false
+
+Check identifiers that look like URLs.
+
+The tokenizer treats any identifier containing `/` (e.g. `example.com/hello`,
+`https://example.com/hello`) as a URL and skips it. Set this to `true` to
+spellcheck the individual segments of such identifiers instead: `categorise/feedback`
+will report `categorise`, and so will the host and path of fully-qualified URLs.
+
 #### `default.locale`
 
 - Type: String (`en`, `en-us`, `en-gb`, `en-ca`, `en-au`)

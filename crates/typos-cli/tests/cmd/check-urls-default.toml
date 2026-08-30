@@ -1,0 +1,11 @@
+bin.name = "typos"
+status.code = 2
+stdin = ""
+stdout = """
+error: `categorise` should be `categorize`
+  ╭▸ ./file.txt:1:2
+  │
+1 │ /categorise
+  ╰╴ ━━━━━━━━━━
+"""
+stderr = ""

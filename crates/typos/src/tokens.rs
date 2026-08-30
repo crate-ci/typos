@@ -5,12 +5,16 @@ use winnow::BStr;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TokenizerBuilder {
     unicode: bool,
+    ignore_url: bool,
 }
 
 impl TokenizerBuilder {
     #[inline]
     pub const fn new() -> Self {
-        Self { unicode: true }
+        Self {
+            unicode: true,
+            ignore_url: true,
+        }
     }
 
     /// Specify that unicode Identifiers are allowed.
@@ -20,10 +24,18 @@ impl TokenizerBuilder {
         self
     }
 
+    /// Specify that Identifiers appearing to be URLs are ignored.
+    #[inline]
+    pub fn ignore_url(&mut self, yes: bool) -> &mut Self {
+        self.ignore_url = yes;
+        self
+    }
+
     #[inline]
     pub const fn build(&self) -> Tokenizer {
         Tokenizer {
             unicode: self.unicode,
+            ignore_url: self.ignore_url,
         }
     }
 }
@@ -38,6 +50,7 @@ impl Default for TokenizerBuilder {
 #[derive(Debug, Clone)]
 pub struct Tokenizer {
     unicode: bool,
+    ignore_url: bool,
 }
 
 impl Tokenizer {
@@ -48,21 +61,26 @@ impl Tokenizer {
 
     pub fn parse_str<'c>(&'c self, content: &'c str) -> impl Iterator<Item = Identifier<'c>> {
         let iter = if self.unicode && !ByteSlice::is_ascii(content.as_bytes()) {
-            itertools::Either::Left(unicode_parser::iter_identifiers(content))
+            itertools::Either::Left(unicode_parser::iter_identifiers(content, self.ignore_url))
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(BStr::new(
-                content.as_bytes(),
-            )))
+            itertools::Either::Right(ascii_parser::iter_identifiers(
+                BStr::new(content.as_bytes()),
+                self.ignore_url,
+            ))
         };
         iter.map(move |identifier| self.transform(identifier, content.as_bytes()))
     }
 
     pub fn parse_bytes<'c>(&'c self, content: &'c [u8]) -> impl Iterator<Item = Identifier<'c>> {
         let iter = if self.unicode && !ByteSlice::is_ascii(content) {
-            let iter = Utf8Chunks::new(content).flat_map(unicode_parser::iter_identifiers);
+            let iter = Utf8Chunks::new(content)
+                .flat_map(move |s| unicode_parser::iter_identifiers(s, self.ignore_url));
             itertools::Either::Left(iter)
         } else {
-            itertools::Either::Right(ascii_parser::iter_identifiers(BStr::new(content)))
+            itertools::Either::Right(ascii_parser::iter_identifiers(
+                BStr::new(content),
+                self.ignore_url,
+            ))
         };
         iter.map(move |identifier| self.transform(identifier, content))
     }
@@ -146,7 +164,10 @@ mod parser {
     /// later may cause it to fail.
     const NON_TERMINATING_CAP: usize = 1024;
 
-    pub(crate) fn next_identifier<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    pub(crate) fn next_identifier<'i, T>(
+        input: &mut T,
+        ignore_url: bool,
+    ) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<&'i str>,
         T: Compare<char>,
@@ -154,7 +175,7 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        preceded(ignore, identifier).parse_next(input)
+        preceded(|input: &mut T| ignore(input, ignore_url), identifier).parse_next(input)
     }
 
     fn identifier<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
@@ -175,7 +196,7 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ignore<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn ignore<'i, T>(input: &mut T, ignore_url: bool) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<&'i str>,
         T: Compare<char>,
@@ -191,10 +212,23 @@ mod parser {
                 // - Make sure you always consume it
                 terminated(uuid_literal, sep1),
                 terminated(email_literal, sep1),
-                terminated(url_literal, sep1),
+                terminated(
+                    // Closure, not a fn pointer: `url_literal`'s unconstrained `'i` lifetime
+                    // prevents coercing it to `fn(&mut T) -> Result<...>`
+                    move |input: &mut T| {
+                        if ignore_url {
+                            url_literal(input)
+                        } else {
+                            // The error type is the unit `()`, so this is `Err(())`
+                            #[allow(clippy::unit_arg)]
+                            Err(ParserError::from_input(input))
+                        }
+                    },
+                    sep1,
+                ),
                 terminated(jwt, sep1),
                 terminated(ssh_ed25519_pub_key, sep1),
-                terminated(base64_literal, sep1), // base64 should be quoted or something
+                terminated(move |input: &mut T| base64_literal(input, ignore_url), sep1), // base64 should be quoted or something
                 alt((
                     terminated(hash_literal, sep1),
                     terminated(ordinal_literal, sep1),
@@ -433,12 +467,18 @@ mod parser {
         .parse_next(input)
     }
 
-    fn base64_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn base64_literal<T>(input: &mut T, ignore_url: bool) -> Result<<T as Stream>::Slice, ()>
     where
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
+        // When URLs are checked, short unpadded strings are more likely to be paths or
+        // identifiers (e.g. `ai/foler`) than base64, so don't ignore them.
+        // `32` matches the `IGNORE_HEX_MIN` threshold: strings that long are almost never
+        // plain text worth spellchecking.
+        const IGNORE_BASE64_MIN: usize = 32;
+
         trace("base64", move |input: &mut T| {
             let start = input.checkpoint();
             let captured = take_while(1.., is_base64_digit).parse_next(input)?;
@@ -452,7 +492,8 @@ mod parser {
 
             if captured.slice_len() < 90
                 && padding_len == 0
-                && captured.as_bstr().iter().all(|c| ![b'/', b'+'].contains(c))
+                && ((!ignore_url && captured.slice_len() < IGNORE_BASE64_MIN)
+                    || captured.as_bstr().iter().all(|c| ![b'/', b'+'].contains(c)))
             {
                 #[allow(clippy::unit_arg)]
                 return Err(ParserError::from_input(input));
@@ -707,8 +748,11 @@ mod parser {
 mod unicode_parser {
     use super::parser::next_identifier;
 
-    pub(crate) fn iter_identifiers(mut input: &str) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_identifier(&mut input) {
+    pub(crate) fn iter_identifiers(
+        mut input: &str,
+        ignore_url: bool,
+    ) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_identifier(&mut input, ignore_url) {
             Ok(o) => {
                 debug_assert_ne!(o, "");
                 Some(o)
@@ -723,8 +767,11 @@ mod ascii_parser {
 
     use winnow::BStr;
 
-    pub(crate) fn iter_identifiers(mut input: &BStr) -> impl Iterator<Item = &str> {
-        std::iter::from_fn(move || match next_identifier(&mut input) {
+    pub(crate) fn iter_identifiers(
+        mut input: &BStr,
+        ignore_url: bool,
+    ) -> impl Iterator<Item = &str> {
+        std::iter::from_fn(move || match next_identifier(&mut input, ignore_url) {
             Ok(o) => {
                 debug_assert_ne!(o, b"");
                 // This is safe because we've checked that the strings are a subset of ASCII
@@ -1870,6 +1917,194 @@ mod test {
         offset: 86,
     },
 ]
+
+"#]]
+        );
+    }
+
+    #[test]
+    fn tokenize_slash_separated_when_not_ignoring_urls() {
+        let parser = TokenizerBuilder::new().ignore_url(false).build();
+
+        let input = "categorise/feedback ai/categorise/feedback file/foler ai/foler example.com/hello ab+cdefg";
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "categorise",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "feedback",
+        case: None,
+        offset: 11,
+    },
+    Identifier {
+        token: "ai",
+        case: None,
+        offset: 20,
+    },
+    Identifier {
+        token: "categorise",
+        case: None,
+        offset: 23,
+    },
+    Identifier {
+        token: "feedback",
+        case: None,
+        offset: 34,
+    },
+    Identifier {
+        token: "file",
+        case: None,
+        offset: 43,
+    },
+    Identifier {
+        token: "foler",
+        case: None,
+        offset: 48,
+    },
+    Identifier {
+        token: "ai",
+        case: None,
+        offset: 54,
+    },
+    Identifier {
+        token: "foler",
+        case: None,
+        offset: 57,
+    },
+    Identifier {
+        token: "example",
+        case: None,
+        offset: 63,
+    },
+    Identifier {
+        token: "com",
+        case: None,
+        offset: 71,
+    },
+    Identifier {
+        token: "hello",
+        case: None,
+        offset: 75,
+    },
+    Identifier {
+        token: "ab",
+        case: None,
+        offset: 81,
+    },
+    Identifier {
+        token: "cdefg",
+        case: None,
+        offset: 84,
+    },
+]
+
+"#]]
+        );
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "categorise",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "feedback",
+        case: None,
+        offset: 11,
+    },
+    Identifier {
+        token: "ai",
+        case: None,
+        offset: 20,
+    },
+    Identifier {
+        token: "categorise",
+        case: None,
+        offset: 23,
+    },
+    Identifier {
+        token: "feedback",
+        case: None,
+        offset: 34,
+    },
+    Identifier {
+        token: "file",
+        case: None,
+        offset: 43,
+    },
+    Identifier {
+        token: "foler",
+        case: None,
+        offset: 48,
+    },
+    Identifier {
+        token: "ai",
+        case: None,
+        offset: 54,
+    },
+    Identifier {
+        token: "foler",
+        case: None,
+        offset: 57,
+    },
+    Identifier {
+        token: "example",
+        case: None,
+        offset: 63,
+    },
+    Identifier {
+        token: "com",
+        case: None,
+        offset: 71,
+    },
+    Identifier {
+        token: "hello",
+        case: None,
+        offset: 75,
+    },
+    Identifier {
+        token: "ab",
+        case: None,
+        offset: 81,
+    },
+    Identifier {
+        token: "cdefg",
+        case: None,
+        offset: 84,
+    },
+]
+
+"#]]
+        );
+    }
+
+    #[test]
+    fn tokenize_ignore_short_base64() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input = "ab+cdefg dGVzdA==";
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[]
+
+"#]]
+        );
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[]
 
 "#]]
         );
