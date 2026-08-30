@@ -1,0 +1,7 @@
+/categorise
+/categorise/feedback
+/ai/categorise/feedback
+categorise/feedback
+file/foler
+example.com/foler
+https://example.com/categorise

@@ -427,6 +427,8 @@ pub struct TokenizerConfig {
     pub ignore_hex: Option<bool>,
     /// Allow identifiers to start with digits, in addition to letters.
     pub identifier_leading_digits: Option<bool>,
+    /// Check identifiers that appear to be URLs.
+    pub check_urls: Option<bool>,
 }
 
 impl TokenizerConfig {
@@ -436,6 +438,7 @@ impl TokenizerConfig {
             unicode: Some(empty.unicode()),
             ignore_hex: Some(empty.ignore_hex()),
             identifier_leading_digits: Some(empty.identifier_leading_digits()),
+            check_urls: Some(empty.check_urls()),
         }
     }
 
@@ -449,6 +452,9 @@ impl TokenizerConfig {
         if let Some(source) = source.identifier_leading_digits {
             self.identifier_leading_digits = Some(source);
         }
+        if let Some(source) = source.check_urls {
+            self.check_urls = Some(source);
+        }
     }
 
     pub fn unicode(&self) -> bool {
@@ -461,6 +467,10 @@ impl TokenizerConfig {
 
     pub fn identifier_leading_digits(&self) -> bool {
         self.identifier_leading_digits.unwrap_or(false)
+    }
+
+    pub fn check_urls(&self) -> bool {
+        self.check_urls.unwrap_or(false)
     }
 }
 

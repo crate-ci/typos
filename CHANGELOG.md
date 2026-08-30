@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Allow checking identifiers that look like URLs via `check-urls = true`
+  (default `false`), fixing typos in slash-separated path/URL segments
+  like `categorise/feedback`
+
 ## [1.50.0] - 2026-08-28
 
 ### Features

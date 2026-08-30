@@ -251,6 +251,8 @@ impl<'s> ConfigEngine<'s> {
 
         let tokenizer = typos::tokens::TokenizerBuilder::new()
             .unicode(tokenizer_config.unicode())
+            // `check-urls` opts into checking URLs; the tokenizer flag is its inverse
+            .ignore_url(!tokenizer_config.check_urls())
             .build();
 
         let dict = crate::dict::BuiltIn::new(dict_config.locale());

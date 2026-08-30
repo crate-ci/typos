@@ -1,0 +1,46 @@
+bin.name = "typos"
+status.code = 2
+stdin = ""
+stdout = """
+error: `categorise` should be `categorize`
+  ╭▸ ./file.txt:1:2
+  │
+1 │ /categorise
+  ╰╴ ━━━━━━━━━━
+error: `categorise` should be `categorize`
+  ╭▸ ./file.txt:2:2
+  │
+2 │ /categorise/feedback
+  ╰╴ ━━━━━━━━━━
+error: `categorise` should be `categorize`
+  ╭▸ ./file.txt:3:5
+  │
+3 │ /ai/categorise/feedback
+  ╰╴    ━━━━━━━━━━
+error: `categorise` should be `categorize`
+  ╭▸ ./file.txt:4:1
+  │
+4 │ categorise/feedback
+  ╰╴━━━━━━━━━━
+error: `foler` should be `folder`
+  ╭▸ ./file.txt:5:6
+  │
+5 │ file/foler
+  ╰╴     ━━━━━
+error: `foler` should be `folder`
+  ╭▸ ./file.txt:6:13
+  │
+6 │ example.com/foler
+  ╰╴            ━━━━━
+error: `categorise` should be `categorize`
+  ╭▸ ./file.txt:7:21
+  │
+7 │ https://example.com/categorise
+  ╰╴                    ━━━━━━━━━━
+error: `categorise` should be `categorize`
+  ╭▸ ./file.txt:8:21
+  │
+8 │ example.com/foo?bar=categorise
+  ╰╴                    ━━━━━━━━━━
+"""
+stderr = ""
