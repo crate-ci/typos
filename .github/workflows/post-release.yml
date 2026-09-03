@@ -6,9 +6,15 @@
 # The build-release job runs only once create-release is finished. It gets the
 # release upload URL from create-release job outputs, then builds the release
 # executables for each supported platform and attaches them as release assets
-# to the previously created release.
+# to the previously created release. The Docker jobs then build and publish the
+# release container image.
 #
-# The key here is that we create the release only once.
+# Docker publishing is split in two stages: each platform image is built and
+# pushed independently on a native runner, then a separate job creates the
+# final tagged multi-arch manifest from those pushed images.
+#
+# The key here is that we create the release only once and only publish it once
+# all release artifacts are ready.
 #
 # Reference:
 # https://eugene-babichenko.github.io/blog/2020/05/09/github-actions-cross-platform-auto-releases/
@@ -22,6 +28,7 @@ on:
 
 env:
   BIN_NAME: typos
+  REGISTRY_IMAGE: crateci/typos
 
 # We need this to be able to create releases.
 permissions:
@@ -125,9 +132,105 @@ jobs:
       run: |
         tag="${{ needs.create-release.outputs.tag }}"
         gh release upload "$tag" ${{ env.ASSET }}
+  build-docker-image:
+    name: build-docker-image (${{ matrix.platform }})
+    needs: [create-release, build-release]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - platform: linux/amd64
+          runner: ubuntu-24.04
+        - platform: linux/arm64
+          runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    steps:
+    - name: Prepare platform pair
+      shell: bash
+      run: |
+        platform="${{ matrix.platform }}"
+        echo "PLATFORM_PAIR=${platform//\//-}" >> "$GITHUB_ENV"
+    - name: Checkout repository
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 1
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v4
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v4
+    - name: Build and push Docker image by digest
+      id: build
+      uses: docker/build-push-action@v7
+      with:
+        context: .
+        platforms: ${{ matrix.platform }}
+        outputs: type=image,push-by-digest=true,name-canonical=true,push=true
+        tags: ${{ env.REGISTRY_IMAGE }}
+    - name: Export digest
+      shell: bash
+      run: |
+        mkdir -p "${{ runner.temp }}/digests"
+        digest="${{ steps.build.outputs.digest }}"
+        touch "${{ runner.temp }}/digests/${digest#sha256:}"
+    - name: Upload digest
+      uses: actions/upload-artifact@v7
+      with:
+        name: digests-${{ env.PLATFORM_PAIR }}
+        path: ${{ runner.temp }}/digests/*
+        if-no-files-found: error
+        retention-days: 1
+  merge-docker-image:
+    name: merge-docker-image
+    needs: [create-release, build-docker-image]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - name: Download digests
+      uses: actions/download-artifact@v8
+      with:
+        path: ${{ runner.temp }}/digests
+        pattern: digests-*
+        merge-multiple: true
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v4
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Install jq
+      run: sudo apt-get update && sudo apt-get install -y --no-install-recommends jq
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v4
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v6
+      with:
+        flavor: |
+          latest=false
+        images: ${{ env.REGISTRY_IMAGE }}
+        tags: |
+          type=semver,pattern={{version}},value=${{ needs.create-release.outputs.tag }}
+          type=semver,pattern={{major}}.{{minor}},value=${{ needs.create-release.outputs.tag }}
+          type=semver,pattern={{major}},value=${{ needs.create-release.outputs.tag }}
+          type=raw,value=latest
+    - name: Create manifest list and push
+      working-directory: ${{ runner.temp }}/digests
+      env:
+        DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json }}
+      run: |
+        docker buildx imagetools create \
+          $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+          $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
+    - name: Inspect image
+      run: docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
   publish-release:
     name: Publish Release
-    needs: [create-release, build-release]
+    needs: [create-release, build-release, merge-docker-image]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository

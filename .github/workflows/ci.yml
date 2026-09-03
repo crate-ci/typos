@@ -24,7 +24,7 @@ jobs:
     permissions:
       contents: none
     name: CI
-    needs: [test, wasm, msrv, lockfile, docs, rustfmt, clippy]
+    needs: [test, wasm, msrv, lockfile, docs, rustfmt, clippy, docker]
     runs-on: ubuntu-latest
     if: "always()"
     steps:
@@ -56,6 +56,28 @@ jobs:
       run: cargo test --workspace --no-run
     - name: Test
       run: cargo hack test --each-feature --workspace
+  docker:
+    name: Docker (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - platform: linux/amd64
+          runner: ubuntu-latest
+        - platform: linux/arm64
+          runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v4
+    - name: Build Docker image
+      uses: docker/build-push-action@v7
+      with:
+        context: .
+        platforms: ${{ matrix.platform }}
+        push: false
   msrv:
     name: "Check MSRV"
     strategy:
