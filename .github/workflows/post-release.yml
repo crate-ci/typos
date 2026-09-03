@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build: [linux, linux-aarch64, macos, macos-aarch64, win-msvc]
+        build: [linux, linux-aarch64, macos, macos-aarch64, win-msvc, win-arm64-msvc]
         include:
         - build: linux
           os: ubuntu-22.04
@@ -80,6 +80,10 @@ jobs:
           os: windows-2022
           rust: stable
           target: x86_64-pc-windows-msvc
+        - build: win-arm64-msvc
+          os: windows-11-arm
+          rust: stable
+          target: aarch64-pc-windows-msvc
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
@@ -106,7 +110,7 @@ jobs:
         mkdir -p "$staging"/doc
         cp {README.md,LICENSE-*} "$staging/"
         cp {CHANGELOG.md,docs/*} "$staging/doc/"
-        if [ "${{ matrix.os }}" = "windows-2022" ]; then
+        if [[ "${{ matrix.os }}" == windows-* ]]; then
           cp "target/${{ matrix.target }}/release/${{ env.BIN_NAME }}.exe" "$staging/"
           ls -l "$staging"
           cd "$staging"
