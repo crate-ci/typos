@@ -1,9 +1,9 @@
 //! Regression test for <https://github.com/crate-ci/typos/issues/1444>
 //!
-//! `walk_entry` canonicalizes each entry's path to look up its policy. When that fails,
-//! `report_result` reports the error and then hands back `PathBuf::default()`, an empty
+//! `walk_entry` canonicalizes each entry's path to look up its policy. When that failed,
+//! `report_result` reported the error and then handed back `PathBuf::default()`, an empty
 //! path that is never a key in `ConfigEngine`'s directory map, so the `policy()` call
-//! right after it panics with `` `walk()` should be called first ``.
+//! right after it panicked with `` `walk()` should be called first ``.
 #![cfg(unix)]
 
 struct CollectingReporter {
@@ -54,27 +54,18 @@ fn walk_path_reports_file_removed_mid_walk() {
     });
     let reporter = CollectingReporter::new();
 
-    let payload = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        typos_cli::file::walk_path(
-            builder.build(),
-            &typos_cli::file::Typos,
-            &engine,
-            &reporter,
-            false,
-        )
-    }))
-    .expect_err("walk_path should panic on the failed policy lookup");
-    let message = payload
-        .downcast_ref::<String>()
-        .map(String::as_str)
-        .or_else(|| payload.downcast_ref::<&str>().copied());
-    // `policy()` checks the path with a `debug_assert!` before reaching its `expect`.
-    let expected = if cfg!(debug_assertions) {
-        " is not absolute"
-    } else {
-        "`walk()` should be called first"
-    };
-    assert_eq!(message, Some(expected));
+    let result = typos_cli::file::walk_path(
+        builder.build(),
+        &typos_cli::file::Typos,
+        &engine,
+        &reporter,
+        false,
+    );
+
+    assert!(
+        result.is_ok(),
+        "walk_path should not surface an ignore::Error: {result:?}"
+    );
     assert!(
         !reporter.errors.lock().unwrap().is_empty(),
         "expected the vanished file's canonicalize() failure to be reported"
