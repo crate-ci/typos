@@ -1,2 +1,2 @@
-[default]
+[type.gitcommit]
 extend-ignore-re = ["(?m)^[+] .*$"]
