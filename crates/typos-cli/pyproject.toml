@@ -26,7 +26,7 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/crate-ci/typos"
 Documentation = "https://github.com/crate-ci/typos#typos"
-Changelog = "https://github.com/crate-ci/typos/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/crate-ci/typos/blob/main/CHANGELOG.md"
 Releases = "https://github.com/crate-ci/typos/releases"
 
 [tool.maturin]

@@ -6,12 +6,12 @@ Finds and corrects spelling mistakes among source code:
 - Fast enough to run on monorepos
 - Low false positives so you can run on PRs
 
-![Screenshot](https://github.com/crate-ci/typos/raw/master/docs/screenshot.png)
+![Screenshot](https://github.com/crate-ci/typos/raw/main/docs/screenshot.png)
 
 
 [![Downloads](https://img.shields.io/github/downloads/crate-ci/typos/total.svg)](https://github.com/crate-ci/typos/releases)
-[![codecov](https://codecov.io/gh/crate-ci/typos/branch/master/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
-[![Documentation](https://img.shields.io/badge/docs-master-blue.svg)][Documentation]
+[![codecov](https://codecov.io/gh/crate-ci/typos/branch/main/graph/badge.svg)](https://codecov.io/gh/crate-ci/typos)
+[![Documentation](https://img.shields.io/badge/docs-main-blue.svg)][Documentation]
 ![License](https://img.shields.io/crates/l/typos.svg)
 [![Crates Status](https://img.shields.io/crates/v/typos.svg)][Crates.io]
 
@@ -23,16 +23,16 @@ Dual-licensed under [MIT](LICENSE-MIT) or [Apache 2.0](LICENSE-APACHE)
 - [Getting Started](#getting-started)
   - [False Positives](#false-positives)
   - [Integrations](#integrations)
-    - [GitHub Action](https://github.com/crate-ci/typos/blob/master/docs/github-action.md)
-    - [pre-commit](https://github.com/crate-ci/typos/blob/master/docs/pre-commit.md)
+    - [GitHub Action](https://github.com/crate-ci/typos/blob/main/docs/github-action.md)
+    - [pre-commit](https://github.com/crate-ci/typos/blob/main/docs/pre-commit.md)
     - [Custom](#custom)
   - [Debugging](#debugging)
-- [Reference](https://github.com/crate-ci/typos/blob/master/docs/reference.md)
+- [Reference](https://github.com/crate-ci/typos/blob/main/docs/reference.md)
 - [FAQ](#faq)
-- [Comparison with other spell checkers](https://github.com/crate-ci/typos/blob/master/docs/comparison.md)
+- [Comparison with other spell checkers](https://github.com/crate-ci/typos/blob/main/docs/comparison.md)
 - [Projects using typos](https://github.com/crate-ci/typos/wiki)
 - [Benchmarks](benchsuite/runs)
-- [Design](https://github.com/crate-ci/typos/blob/master/docs/design.md)
+- [Design](https://github.com/crate-ci/typos/blob/main/docs/design.md)
 - [Contribute](CONTRIBUTING.md)
 - [CHANGELOG](CHANGELOG.md)
 
@@ -79,7 +79,7 @@ If there is any ambiguity (multiple possible corrections), `typos` will just rep
 
 Sometimes, what looks like a typo is intentional, like with people's names, acronyms, or localized content.
 
-To mark a word or an identifier (grouping of words) as valid, add it to your [`_typos.toml`](https://github.com/crate-ci/typos/blob/master/docs/reference.md) by declaring itself as the valid spelling:
+To mark a word or an identifier (grouping of words) as valid, add it to your [`_typos.toml`](https://github.com/crate-ci/typos/blob/main/docs/reference.md) by declaring itself as the valid spelling:
 ```toml
 [default]
 extend-ignore-identifiers-re = [
@@ -95,7 +95,7 @@ AttributeIDSupressMenu = "AttributeIDSupressMenu"
 # Don't correct the surname "Teh"
 teh = "teh"
 ```
-For more ways to ignore or extend the dictionary with examples, see the [config reference](https://github.com/crate-ci/typos/blob/master/docs/reference.md).
+For more ways to ignore or extend the dictionary with examples, see the [config reference](https://github.com/crate-ci/typos/blob/main/docs/reference.md).
 
 For cases like localized content, you can disable spell checking of file contents while still checking the file name:
 ```toml
@@ -113,8 +113,8 @@ extend-exclude = ["localized/*.po"]
 
 ### Integrations
 
-- [GitHub Actions](https://github.com/crate-ci/typos/blob/master/docs/github-action.md)
-- [pre-commit](https://github.com/crate-ci/typos/blob/master/docs/pre-commit.md)
+- [GitHub Actions](https://github.com/crate-ci/typos/blob/main/docs/github-action.md)
+- [pre-commit](https://github.com/crate-ci/typos/blob/main/docs/pre-commit.md)
 - [🐊Putout Processor](https://github.com/putoutjs/putout-processor-typos)
 - [Visual Studio Code](https://github.com/tekumara/typos-vscode)
 - [typos-lsp (Language Server Protocol server)](https://github.com/tekumara/typos-vscode)
@@ -182,7 +182,7 @@ intent by finding the closest-looking word.  It then has a gauge for when a
 word isn't close enough and assumes you know best.  The user has the
 opportunity to verify these corrections and explicitly allow or reject them.
 
-For more on the trade offs of these approaches, see [Design](https://github.com/crate-ci/typos/blob/master/docs/design.md).
+For more on the trade offs of these approaches, see [Design](https://github.com/crate-ci/typos/blob/main/docs/design.md).
 
 - To correct it locally, see also our [False Positives documentation](#false-positives).
 - To contribute your correction, see [Contribute](CONTRIBUTING.md)
