@@ -976,28 +976,28 @@ enum WordMode {
 impl WordMode {
     fn classify(c: char) -> Self {
         if c.is_lowercase() {
-            WordMode::Lowercase
+            Self::Lowercase
         } else if c.is_uppercase() {
-            WordMode::Uppercase
+            Self::Uppercase
         } else if c.is_ascii_digit() {
-            WordMode::Number
+            Self::Number
         } else {
             // This assumes all characters are either lower or upper case.
-            WordMode::Boundary
+            Self::Boundary
         }
     }
 
-    fn case(self, last: WordMode) -> Case {
+    fn case(self, last: Self) -> Case {
         match (self, last) {
-            (WordMode::Uppercase, WordMode::Uppercase) => Case::Upper,
-            (WordMode::Uppercase, WordMode::Lowercase) => Case::Title,
-            (WordMode::Lowercase, WordMode::Lowercase) => Case::Lower,
-            (WordMode::Number, WordMode::Number) => Case::None,
-            (WordMode::Number, _)
-            | (_, WordMode::Number)
-            | (WordMode::Boundary, _)
-            | (_, WordMode::Boundary)
-            | (WordMode::Lowercase, WordMode::Uppercase) => {
+            (Self::Uppercase, Self::Uppercase) => Case::Upper,
+            (Self::Uppercase, Self::Lowercase) => Case::Title,
+            (Self::Lowercase, Self::Lowercase) => Case::Lower,
+            (Self::Number, Self::Number) => Case::None,
+            (Self::Number, _)
+            | (_, Self::Number)
+            | (Self::Boundary, _)
+            | (_, Self::Boundary)
+            | (Self::Lowercase, Self::Uppercase) => {
                 unreachable!("Invalid case combination: ({:?}, {:?})", self, last)
             }
         }
@@ -2258,7 +2258,7 @@ mod test {
         let cases = [
             (
                 "lowercase",
-                &[("lowercase", Case::Lower, 0usize)] as &[(&str, Case, usize)],
+                &[("lowercase", Case::Lower, 0_usize)] as &[(&str, Case, usize)],
             ),
             ("Class", &[("Class", Case::Title, 0)]),
             (

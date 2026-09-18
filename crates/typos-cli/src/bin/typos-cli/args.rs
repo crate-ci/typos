@@ -16,11 +16,11 @@ pub(crate) enum Format {
 impl Format {
     pub(crate) fn reporter(self) -> Box<dyn typos_cli::report::Report> {
         match self {
-            Format::Silent => Box::new(crate::report::PrintSilent),
-            Format::Brief => Box::new(crate::report::PrintBrief),
-            Format::Long => Box::new(crate::report::PrintLong),
-            Format::Json => Box::new(crate::report::PrintJson),
-            Format::Sarif => Box::new(crate::report::PrintSarif::default()),
+            Self::Silent => Box::new(crate::report::PrintSilent),
+            Self::Brief => Box::new(crate::report::PrintBrief),
+            Self::Long => Box::new(crate::report::PrintLong),
+            Self::Json => Box::new(crate::report::PrintJson),
+            Self::Sarif => Box::new(crate::report::PrintSarif::default()),
         }
     }
 }

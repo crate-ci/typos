@@ -876,7 +876,7 @@ fn is_fixable(typo: &typos::Typo<'_>) -> bool {
 }
 
 fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'static>>) -> Vec<u8> {
-    let mut offset = 0isize;
+    let mut offset = 0_isize;
     for typo in typos {
         let fix = extract_fix(&typo).expect("Caller only provides fixable typos");
         let start = ((typo.byte_offset as isize) + offset) as usize;
