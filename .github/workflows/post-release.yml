@@ -14,6 +14,10 @@
 # https://eugene-babichenko.github.io/blog/2020/05/09/github-actions-cross-platform-auto-releases/
 
 name: post-release
+
+permissions:
+  contents: read
+
 on:
   push:
     tags:
@@ -23,36 +27,37 @@ on:
 env:
   BIN_NAME: typos
 
-# We need this to be able to create releases.
-permissions:
-  contents: write
-
 jobs:
   create-release:
+    permissions:
+      contents: write
     name: create-release
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ env.TAG }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Get the release version from the tag
       if: env.TAG == ''
-      run: echo "TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+      run: echo "TAG=${GITHUB_REF_NAME}" >> $GITHUB_ENV
     - name: Show the tag
       run: |
         echo "tag is: $TAG"
     - name: Generate Release Notes
       run: |
-        ./.github/workflows/release-notes.py --tag ${{ env.TAG }} --output notes-${{ env.TAG }}.md
-        cat notes-${{ env.TAG }}.md
+        ./.github/workflows/release-notes.py --tag ${TAG} --output notes-${TAG}.md
+        cat notes-${TAG}.md
     - name: Create GitHub release
       env:
         GH_TOKEN: ${{ github.token }}
-      run: gh release create $TAG --verify-tag --draft --title $TAG --notes-file notes-${{ env.TAG }}.md
+      run: gh release create $TAG --verify-tag --draft --title $TAG --notes-file notes-${TAG}.md
   build-release:
+    permissions:
+      contents: write
     name: build-release
     needs: create-release
     strategy:
@@ -83,26 +88,24 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Install packages (Ubuntu)
       if: matrix.build == 'linux' || matrix.build == 'linux-aarch64'
       run: |
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends xz-utils liblz4-tool musl-tools
     - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        toolchain: ${{ matrix.rust }}
-        targets: ${{ matrix.target }}
+      run: rustup toolchain install ${{ matrix.rust }} --target ${{ matrix.target }} && rustup default ${{ matrix.rust }}
     - name: Build release binary
       run: cargo build --target ${{ matrix.target }} --verbose --release
     - name: Build archive
       shell: bash
       run: |
         outdir="./target/${{ matrix.target }}/release"
-        staging="${{ env.BIN_NAME }}-${{ needs.create-release.outputs.tag }}-${{ matrix.target }}"
+        staging="${{ env.BIN_NAME }}-${NEEDS_CREATE_RELEASE_OUTPUTS_TAG}-${{ matrix.target }}"
         mkdir -p "$staging"/doc
         cp {README.md,LICENSE-*} "$staging/"
         cp {CHANGELOG.md,docs/*} "$staging/doc/"
@@ -118,27 +121,30 @@ jobs:
           tar czf "$staging.tar.gz" -C "$staging" .
           echo "ASSET=$staging.tar.gz" >> $GITHUB_ENV
         fi
+      env:
+        NEEDS_CREATE_RELEASE_OUTPUTS_TAG: ${{ needs.create-release.outputs.tag }}
     - name: Upload release archive
       env:
         GH_TOKEN: ${{ github.token }}
+        NEEDS_CREATE_RELEASE_OUTPUTS_TAG: ${{ needs.create-release.outputs.tag }}
       shell: bash
       run: |
-        tag="${{ needs.create-release.outputs.tag }}"
-        gh release upload "$tag" ${{ env.ASSET }}
+        tag="${NEEDS_CREATE_RELEASE_OUTPUTS_TAG}"
+        gh release upload "$tag" ${ASSET}
   publish-release:
+    permissions:
+      contents: write
     name: Publish Release
     needs: [create-release, build-release]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       with:
         fetch-depth: 1
+        persist-credentials: false
     - name: Publish Release
       env:
         GH_TOKEN: ${{ github.token }}
-      run: gh release edit "${{ needs.create-release.outputs.tag }}" --draft=false
-    - name: Update major tag
-      uses: rickstaa/action-update-semver@v1
-      with:
-        major_version_tag_only: true
+        NEEDS_CREATE_RELEASE_OUTPUTS_TAG: ${{ needs.create-release.outputs.tag }}
+      run: gh release edit "${NEEDS_CREATE_RELEASE_OUTPUTS_TAG}" --draft=false

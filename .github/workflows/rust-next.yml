@@ -11,7 +11,12 @@ env:
   RUST_BACKTRACE: 1
   CARGO_TERM_COLOR: always
   CLICOLOR: 1
+<<<<<<< HEAD
   COLUMNS: 130
+||||||| e4f2b351
+=======
+  CARGO_INCREMENTAL: 0
+>>>>>>> _rust/main
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -34,14 +39,28 @@ jobs:
       CARGO_PROFILE_DEV_DEBUG: line-tables-only
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
+<<<<<<< HEAD
         toolchain: ${{ matrix.rust }}
         components: rustfmt
     - uses: Swatinem/rust-cache@v2
     - uses: taiki-e/install-action@cargo-hack
+||||||| e4f2b351
+        toolchain: ${{ matrix.rust }}
+    - uses: Swatinem/rust-cache@v2
+    - uses: taiki-e/install-action@cargo-hack
+=======
+        persist-credentials: false
+    - name: Install Rust
+      run: rustup update --no-self-update ${{ matrix.rust }} && rustup default ${{ matrix.rust }}
+    - name: Initialize cache
+      uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+    - name: Install cargo-hack
+      uses: taiki-e/install-action@37f7c5781271959fb65b6b35224e28652ff2b63d  # v2.87.0
+      with:
+        tool: cargo-hack
+>>>>>>> _rust/main
     - name: Build
       run: cargo test --workspace --no-run
     - name: Test
@@ -56,14 +75,28 @@ jobs:
       CARGO_RESOLVER_INCOMPATIBLE_RUST_VERSIONS: allow
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v6
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
+<<<<<<< HEAD
         toolchain: stable
         components: rustfmt
     - uses: Swatinem/rust-cache@v2
     - uses: taiki-e/install-action@cargo-hack
+||||||| e4f2b351
+        toolchain: stable
+    - uses: Swatinem/rust-cache@v2
+    - uses: taiki-e/install-action@cargo-hack
+=======
+        persist-credentials: false
+    - name: Install Rust
+      run: rustup update --no-self-update stable && rustup default stable
+    - name: Initialize cache
+      uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+    - name: Install cargo-hack
+      uses: taiki-e/install-action@37f7c5781271959fb65b6b35224e28652ff2b63d  # v2.87.0
+      with:
+        tool: cargo-hack
+>>>>>>> _rust/main
     - name: Update dependencies
       run: cargo update
     - name: Build
