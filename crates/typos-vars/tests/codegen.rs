@@ -258,16 +258,11 @@ fn collect_correct(entry: &varcon_core::Entry, category: varcon::Category) -> Ha
 }
 
 fn ignore_variant(variant: &varcon_core::Variant) -> bool {
-    if variant.word == "anesthetisation"
+    variant.word == "anesthetisation"
         && variant.types.len() == 1
         && variant.types[0].category == varcon::Category::Australian
         && (variant.types[0].tag == Some(varcon::Tag::Variant)
             || variant.types[0].tag == Some(varcon::Tag::Seldom))
-    {
-        return true;
-    }
-
-    false
 }
 
 // dict needs

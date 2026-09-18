@@ -177,11 +177,11 @@ impl BuiltIn {
 
 impl typos::Dictionary for BuiltIn {
     fn correct_ident<'s>(&'s self, ident: typos::tokens::Identifier<'_>) -> Option<Status<'s>> {
-        BuiltIn::correct_ident(self, ident)
+        Self::correct_ident(self, ident)
     }
 
     fn correct_word<'s>(&'s self, word: typos::tokens::Word<'_>) -> Option<Status<'s>> {
-        BuiltIn::correct_word(self, word)
+        Self::correct_word(self, word)
     }
 }
 
