@@ -1,5 +1,10 @@
 name: Test GitHub Action
-on: [pull_request]
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
 
 jobs:
   shallow:
@@ -9,8 +14,10 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout Actions Repository
-      uses: actions/checkout@v6
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
 
     - name: Install wget for Windows
       if: matrix.os == 'windows-latest'
@@ -38,9 +45,10 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout Actions Repository
-      uses: actions/checkout@v6
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
+        persist-credentials: false
         fetch-depth: 0
 
     - name: Install wget for Windows
