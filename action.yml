@@ -34,7 +34,7 @@ runs:
   steps:
     - name: Warn about deprecated master branch
       run: |
-        echo "::warning::Using crate-ci/typos@master is deprecated and will not receive updates. Use a release tag (preferred) or crate-ci/typos@main"
+        echo "::warning::Using crate-ci/typos@v1 is deprecated and will not receive updates. Use a release tag (preferred) or crate-ci/typos@main"
       shell: bash
     - id: typos
       run: $GITHUB_ACTION_PATH/action/entrypoint.sh
