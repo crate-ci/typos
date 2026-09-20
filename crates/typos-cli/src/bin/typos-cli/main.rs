@@ -67,15 +67,7 @@ fn run_dump_config(args: &args::Args, output_path: &std::path::Path) -> proc_exi
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = typos_cli::config::Config::default();
-    if let Some(path) = args.custom_config.as_ref() {
-        let custom = typos_cli::config::Config::from_file(path)
-            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
-        if let Some(custom) = custom {
-            overrides.update(&custom);
-        }
-    }
-    overrides.update(&args.config.to_config());
+    let overrides = get_overrides(args)?;
     engine.set_overrides(overrides);
 
     let config = engine
@@ -120,15 +112,7 @@ fn run_type_list(args: &args::Args) -> proc_exit::ExitResult {
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = typos_cli::config::Config::default();
-    if let Some(path) = args.custom_config.as_ref() {
-        let custom = typos_cli::config::Config::from_file(path)
-            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
-        if let Some(custom) = custom {
-            overrides.update(&custom);
-        }
-    }
-    overrides.update(&args.config.to_config());
+    let overrides = get_overrides(args)?;
     engine.set_overrides(overrides);
 
     engine
@@ -157,15 +141,7 @@ fn run_checks(args: &args::Args) -> proc_exit::ExitResult {
     let mut engine = typos_cli::policy::ConfigEngine::new(&storage);
     engine.set_isolated(args.isolated);
 
-    let mut overrides = typos_cli::config::Config::default();
-    if let Some(path) = args.custom_config.as_ref() {
-        let custom = typos_cli::config::Config::from_file(path)
-            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
-        if let Some(custom) = custom {
-            overrides.update(&custom);
-        }
-    }
-    overrides.update(&args.config.to_config());
+    let overrides = get_overrides(args)?;
     engine.set_overrides(overrides);
 
     let mut typos_found = false;
@@ -386,4 +362,56 @@ fn init_logging(level: Option<log::Level>) {
 
         builder.init();
     }
+}
+
+fn get_overrides(args: &args::Args) -> Result<typos_cli::config::Config, proc_exit::Exit> {
+    let mut overrides = typos_cli::config::Config::default();
+
+    if let Some(path) = args.ignore_identifiers_file.as_ref() {
+        let lines =
+            BufReader::new(std::fs::File::open(path).with_code(proc_exit::sysexits::IO_ERR)?)
+                .lines();
+        for line in lines {
+            for word in line
+                .with_code(proc_exit::sysexits::IO_ERR)?
+                .split_whitespace()
+            {
+                overrides
+                    .overrides
+                    .dict
+                    .extend_identifiers
+                    .insert(word.to_owned().into(), word.to_owned().into());
+            }
+        }
+    }
+
+    if let Some(path) = args.ignore_words_file.as_ref() {
+        let lines =
+            BufReader::new(std::fs::File::open(path).with_code(proc_exit::sysexits::IO_ERR)?)
+                .lines();
+        for line in lines {
+            for word in line
+                .with_code(proc_exit::sysexits::IO_ERR)?
+                .split_whitespace()
+            {
+                overrides
+                    .overrides
+                    .dict
+                    .extend_words
+                    .insert(word.to_owned().into(), word.to_owned().into());
+            }
+        }
+    }
+
+    if let Some(path) = args.custom_config.as_ref() {
+        let custom = typos_cli::config::Config::from_file(path)
+            .with_code(proc_exit::sysexits::CONFIG_ERR)?;
+        if let Some(custom) = custom {
+            overrides.update(&custom);
+        }
+    }
+
+    overrides.update(&args.config.to_config());
+
+    Ok(overrides)
 }
