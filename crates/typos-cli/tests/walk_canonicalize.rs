@@ -1,9 +1,8 @@
-//! Regression test for <https://github.com/crate-ci/typos/issues/1444>
+//! Regression tests for missing/deleted files during a walk.
 //!
-//! `walk_entry` canonicalizes each entry's path to look up its policy. When that failed,
-//! `report_result` reported the error and then handed back `PathBuf::default()`, an empty
-//! path that is never a key in `ConfigEngine`'s directory map, so the `policy()` call
-//! right after it panicked with `` `walk()` should be called first ``.
+//! - <https://github.com/crate-ci/typos/issues/1444>: canonicalize failure must not panic.
+//! - <https://github.com/crate-ci/typos/issues/1535>: `NotFound` must soft-skip without a
+//!   human-panic crash dump or a hard error report.
 #![cfg(unix)]
 
 struct CollectingReporter {
@@ -67,7 +66,8 @@ fn walk_path_reports_file_removed_mid_walk() {
         "walk_path should not surface an ignore::Error: {result:?}"
     );
     assert!(
-        !reporter.errors.lock().unwrap().is_empty(),
-        "expected the vanished file's canonicalize() failure to be reported"
+        reporter.errors.lock().unwrap().is_empty(),
+        "NotFound during walk should be a soft skip, not a reported error: {:?}",
+        reporter.errors.lock().unwrap()
     );
 }

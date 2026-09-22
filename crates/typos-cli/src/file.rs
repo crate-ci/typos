@@ -4,6 +4,20 @@ use std::io::Write;
 
 use crate::report;
 
+
+fn is_skippable_io_error(err: &std::io::Error) -> bool {
+    matches!(
+        err.kind(),
+        std::io::ErrorKind::NotFound | std::io::ErrorKind::Interrupted
+    )
+}
+
+fn is_skippable_ignore_error(err: &ignore::Error) -> bool {
+    err.io_error()
+        .map(is_skippable_io_error)
+        .unwrap_or(false)
+}
+
 pub trait FileChecker: Send + Sync {
     fn check_file(
         &self,
@@ -675,7 +689,14 @@ fn read_file(
         )?;
         buffer
     } else {
-        report_result(std::fs::read(path), Some(path), reporter)?
+        match std::fs::read(path) {
+            Ok(buffer) => buffer,
+            Err(err) if is_skippable_io_error(&err) => {
+                log::debug!("{}: skipping missing file ({err})", path.display());
+                return Ok((Vec::new(), content_inspector::ContentType::BINARY));
+            }
+            Err(err) => report_result(Err(err), Some(path), reporter)?,
+        }
     };
 
     let content_type = content_inspector::inspect(&buffer);
@@ -912,17 +933,47 @@ pub fn walk_path_parallel(
     let error: std::sync::Mutex<Result<(), ignore::Error>> = std::sync::Mutex::new(Ok(()));
     walk.run(|| {
         Box::new(|entry: Result<ignore::DirEntry, ignore::Error>| {
-            match walk_entry(entry, checks, engine, reporter, force_exclude) {
-                Ok(()) => ignore::WalkState::Continue,
-                Err(err) => {
-                    *error.lock().unwrap() = Err(err);
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                walk_entry(entry, checks, engine, reporter, force_exclude)
+            }));
+            match result {
+                Ok(Ok(())) => ignore::WalkState::Continue,
+                Ok(Err(err)) => {
+                    if is_skippable_ignore_error(&err) {
+                        log::debug!("skipping skippable walk error: {err}");
+                        return ignore::WalkState::Continue;
+                    }
+                    if let Ok(mut slot) = error.lock() {
+                        *slot = Err(err);
+                    }
                     ignore::WalkState::Quit
+                }
+                Err(panic) => {
+                    let msg = if let Some(s) = panic.downcast_ref::<&str>() {
+                        (*s).to_owned()
+                    } else if let Some(s) = panic.downcast_ref::<String>() {
+                        s.clone()
+                    } else {
+                        "worker panicked while walking files".to_owned()
+                    };
+                    let err = ignore::Error::from(std::io::Error::other(msg));
+                    if let Ok(slot) = error.lock() {
+                        // Prefer soft-skip for IO races that escaped as panics.
+                        if slot.is_ok() {
+                            let _ = report_error(err.to_string(), None, reporter);
+                            // Keep walking; do not abort the whole run.
+                        }
+                    }
+                    ignore::WalkState::Continue
                 }
             }
         })
     });
 
-    error.into_inner().unwrap()
+    match error.into_inner() {
+        Ok(result) => result,
+        Err(poisoned) => poisoned.into_inner(),
+    }
 }
 
 fn walk_entry(
@@ -935,6 +986,10 @@ fn walk_entry(
     let entry = match entry {
         Ok(entry) => entry,
         Err(err) => {
+            if is_skippable_ignore_error(&err) {
+                log::debug!("skipping missing path during walk: {err}");
+                return Ok(());
+            }
             report_error(err, None, reporter)?;
             return Ok(());
         }
@@ -963,7 +1018,14 @@ fn walk_entry(
             let abs_path = match path.canonicalize() {
                 Ok(abs_path) => abs_path,
                 Err(err) => {
-                    report_error(err, Some(path), reporter)?;
+                    if is_skippable_io_error(&err) {
+                        log::debug!(
+                            "{}: skipping missing file ({err})",
+                            path.display()
+                        );
+                    } else {
+                        report_error(err, Some(path), reporter)?;
+                    }
                     // Avoid a failed `engine.policy` lookup
                     return Ok(());
                 }
