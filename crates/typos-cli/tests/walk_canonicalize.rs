@@ -1,14 +1,10 @@
 //! Regression tests for <https://github.com/crate-ci/typos/issues/1444>
 //!
-//! `walk_entry` canonicalizes each entry's path to look up its policy. When that failed,
-//! `report_result` reported the error and then handed back `PathBuf::default()`, an empty
-//! path that is never a key in `ConfigEngine`'s directory map, so the `policy()` call
-//! right after it panicked with `` `walk()` should be called first ``.
-//!
-//! The panic is gone, but a file that a concurrent process removes mid-scan is still reported
-//! as an error at each of the two points it can vanish: the `canonicalize()` above, and the
-//! read in `check_file` after it. `main` turns any reported error into a failing exit code, so
-//! an unrelated tool dropping a temporary file is enough to fail an otherwise clean run.
+//! A file removed by another process mid-scan can vanish at either of two points. `walk_entry`
+//! canonicalizes each entry's path to look up its policy, and `check_file` reads the file
+//! afterwards; both used to report a `NotFound` as an error, and `main` turns any reported error
+//! into a failing exit code. A tool that drops a temporary file next to the sources being scanned
+//! was therefore enough to fail an otherwise clean run.
 #![cfg(unix)]
 
 use typos_cli::file::FileChecker;
@@ -35,7 +31,7 @@ impl typos_cli::report::Report for CollectingReporter {
 }
 
 #[test]
-fn walk_path_reports_file_removed_mid_walk() {
+fn walk_path_skips_file_removed_before_canonicalize() {
     let temp = assert_fs::TempDir::new().unwrap();
     let vanishing = temp.path().join("vanishing.txt");
     std::fs::write(&vanishing, b"helllo world\n").unwrap();
@@ -73,14 +69,15 @@ fn walk_path_reports_file_removed_mid_walk() {
         result.is_ok(),
         "walk_path should not surface an ignore::Error: {result:?}"
     );
+    let errors = reporter.errors.lock().unwrap();
     assert!(
-        !reporter.errors.lock().unwrap().is_empty(),
-        "expected the vanished file's canonicalize() failure to be reported"
+        errors.is_empty(),
+        "the vanished path should be skipped rather than reported: {errors:?}"
     );
 }
 
 #[test]
-fn check_file_reports_file_removed_before_read() {
+fn check_file_skips_file_removed_before_read() {
     let temp = assert_fs::TempDir::new().unwrap();
 
     let storage = typos_cli::policy::ConfigStorage::new();
@@ -104,8 +101,9 @@ fn check_file_reports_file_removed_before_read() {
         result.is_ok(),
         "check_file should not surface an io::Error: {result:?}"
     );
+    let errors = reporter.errors.lock().unwrap();
     assert!(
-        !reporter.errors.lock().unwrap().is_empty(),
-        "expected the vanished file's read() failure to be reported"
+        errors.is_empty(),
+        "the vanished file should be skipped rather than reported: {errors:?}"
     );
 }

@@ -675,7 +675,15 @@ fn read_file(
         )?;
         buffer
     } else {
-        report_result(std::fs::read(path), Some(path), reporter)?
+        match std::fs::read(path) {
+            Ok(buffer) => buffer,
+            Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
+                // File vanished between walk and read (temp files, parallel tools).
+                log::debug!("{}: skipped missing file", path.display());
+                return Ok((Vec::new(), content_inspector::ContentType::BINARY));
+            }
+            Err(err) => report_result(Err(err), Some(path), reporter)?,
+        }
     };
 
     let content_type = content_inspector::inspect(&buffer);
@@ -962,6 +970,10 @@ fn walk_entry(
             let path = entry.path();
             let abs_path = match path.canonicalize() {
                 Ok(abs_path) => abs_path,
+                Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
+                    log::debug!("{}: skipped missing path", path.display());
+                    return Ok(());
+                }
                 Err(err) => {
                     report_error(err, Some(path), reporter)?;
                     // Avoid a failed `engine.policy` lookup
