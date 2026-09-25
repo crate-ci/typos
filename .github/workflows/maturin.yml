@@ -15,6 +15,12 @@ on:
 permissions:
   contents: read
 
+env:
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+  CLICOLOR: 1
+  CARGO_INCREMENTAL: 0
+
 jobs:
   linux:
     runs-on: ubuntu-latest
@@ -22,23 +28,24 @@ jobs:
       matrix:
         target: [x86_64, x86, aarch64]
     steps:
-      - uses: actions/checkout@v6
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-      - name: Build wheels
-        uses: PyO3/maturin-action@v1
-        with:
-          target: ${{ matrix.target }}
-          args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
-          sccache: 'true'
-          manylinux: auto
-      - name: Upload wheels
-        uses: actions/upload-artifact@v7
-        with:
-          name: wheels-linux-${{ matrix.target }}
-          path: dist
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - name: Install Rust
+      run: rustup update --no-self-update stable && rustup default stable
+    - name: Build wheels
+      uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+      with:
+        target: ${{ matrix.target }}
+        args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
+        sccache: false
+        manylinux: auto
+    - name: Upload wheels
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1 Latest
+      with:
+        name: wheels-linux-${{ matrix.target }}
+        path: dist
 
   musllinux:
     runs-on: ubuntu-latest
@@ -46,23 +53,24 @@ jobs:
       matrix:
         target: [x86_64, aarch64]
     steps:
-      - uses: actions/checkout@v6
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-      - name: Build wheels
-        uses: PyO3/maturin-action@v1
-        with:
-          target: ${{ matrix.target }}
-          args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
-          sccache: 'true'
-          manylinux: musllinux_1_2
-      - name: Upload wheels
-        uses: actions/upload-artifact@v7
-        with:
-          name: wheels-musllinux-${{ matrix.target }}
-          path: dist
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - name: Install Rust
+      run: rustup update --no-self-update stable && rustup default stable
+    - name: Build wheels
+      uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+      with:
+        target: ${{ matrix.target }}
+        args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
+        sccache: false
+        manylinux: musllinux_1_2
+    - name: Upload wheels
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1 Latest
+      with:
+        name: wheels-musllinux-${{ matrix.target }}
+        path: dist
 
   windows:
     runs-on: windows-latest
@@ -70,22 +78,23 @@ jobs:
       matrix:
         target: [x64, x86]
     steps:
-      - uses: actions/checkout@v6
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-      - name: Build wheels
-        uses: PyO3/maturin-action@v1
-        with:
-          target: ${{ matrix.target }}
-          args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
-          sccache: 'true'
-      - name: Upload wheels
-        uses: actions/upload-artifact@v7
-        with:
-          name: wheels-windows-${{ matrix.target }}
-          path: dist
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - name: Install Rust
+      run: rustup update --no-self-update stable && rustup default stable
+    - name: Build wheels
+      uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+      with:
+        target: ${{ matrix.target }}
+        args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
+        sccache: false
+    - name: Upload wheels
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1 Latest
+      with:
+        name: wheels-windows-${{ matrix.target }}
+        path: dist
 
   macos:
     runs-on: macos-latest
@@ -93,37 +102,41 @@ jobs:
       matrix:
         target: [x86_64, aarch64]
     steps:
-      - uses: actions/checkout@v6
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-      - name: Build wheels
-        uses: PyO3/maturin-action@v1
-        with:
-          target: ${{ matrix.target }}
-          args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
-          sccache: 'true'
-      - name: Upload wheels
-        uses: actions/upload-artifact@v7
-        with:
-          name: wheels-macos-${{ matrix.target }}
-          path: dist
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - name: Install Rust
+      run: rustup update --no-self-update stable && rustup default stable
+    - name: Build wheels
+      uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+      with:
+        target: ${{ matrix.target }}
+        args: --manifest-path crates/typos-cli/Cargo.toml --release --out dist
+        sccache: false
+    - name: Upload wheels
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1 Latest
+      with:
+        name: wheels-macos-${{ matrix.target }}
+        path: dist
 
   sdist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - name: Build sdist
-        uses: PyO3/maturin-action@v1
-        with:
-          command: sdist
-          args: --manifest-path crates/typos-cli/Cargo.toml --out dist
-      - name: Upload sdist
-        uses: actions/upload-artifact@v7
-        with:
-          name: wheels-sdist
-          path: dist
+    - name: Checkout repository
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+    - name: Build sdist
+      uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+      with:
+        command: sdist
+        args: --manifest-path crates/typos-cli/Cargo.toml --out dist
+    - name: Upload sdist
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1 Latest
+      with:
+        name: wheels-sdist
+        path: dist
 
   release:
     name: Release
@@ -131,13 +144,13 @@ jobs:
     if: "startsWith(github.ref, 'refs/tags/')"
     needs: [linux, windows, macos, sdist]
     steps:
-      - uses: actions/download-artifact@v8
-        with:
-          merge-multiple: true
-      - name: Publish to PyPI
-        uses: PyO3/maturin-action@v1
-        env:
-          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-        with:
-          command: upload
-          args: --skip-existing *
+    - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      with:
+        merge-multiple: true
+    - name: Publish to PyPI
+      uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
+      env:
+        MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+      with:
+        command: upload
+        args: --skip-existing *
