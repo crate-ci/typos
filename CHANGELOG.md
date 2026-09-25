@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Don'y panicwhen case-converting non-ASCII corrections
+
 ## [1.50.2] - 2026-09-15
 
 ### Fixes
