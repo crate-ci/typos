@@ -4412,6 +4412,7 @@ amibguities,ambiguities
 amibguity,ambiguity
 amibguous,ambiguous
 amibguously,ambiguously
+amibiguity,ambiguity
 amiguities,ambiguities
 amiguity,ambiguity
 amiguous,ambiguous
@@ -5736,16 +5737,20 @@ aplying,applying
 apmplify,amplify
 apocalipse,apocalypse
 apocaliptic,apocalyptic
+apocalptic,apocalyptic
 apocalpyse,apocalypse
 apocalpytic,apocalyptic
 apocalype,apocalypse
 apocalypes,apocalypse
 apocalypic,apocalyptic
 apocalypitic,apocalyptic
+apocalyps,apocalypse
+apocalyptc,apocalyptic
 apocalyspe,apocalypse
 apocalytic,apocalyptic
 apocalytpic,apocalyptic
 apocaplyse,apocalypse
+apoclypse,apocalypse
 apocolapse,apocalypse
 apocraful,apocryphal
 apointed,appointed
@@ -8595,6 +8600,7 @@ athletisicm,athleticism
 athletisim,athleticism
 athletisism,athleticism
 athlets,athletes
+athmospere,atmosphere
 athmosphere,atmosphere
 athorization,authorization
 athough,although
@@ -10364,6 +10370,7 @@ bascially,basically
 bascic,basic
 bascily,basically
 bascktrack,backtrack
+basd,bad,based
 basebame,basename
 basektball,basketball
 baseslines,baselines
@@ -14693,6 +14700,7 @@ cetrifies,certifies
 cetrify,certify
 cetrifying,certifying
 cetting,setting
+cfor,for
 cgywin,cygwin
 chaacters,characters
 chaarcter,character
@@ -25253,6 +25261,7 @@ dateteims,datetimes
 datetiem,datetime
 datetiems,datetimes
 datin,dating,satin,latin
+datra,data
 datrabase,database
 datset,dataset
 datsets,datasets
@@ -29896,6 +29905,7 @@ disccussion,discussion
 disccussions,discussions
 discepline,discipline
 disception,discretion
+discerete,discrete
 discernable,discernible
 discertation,dissertation
 dischage,discharge
@@ -39927,6 +39937,7 @@ fotografical,photographical
 fotografy,photography
 fotograph,photograph
 fotography,photography
+fotonote,footnote
 foucs,focus
 foucsed,focused
 foudn,found
@@ -45642,6 +45653,7 @@ inconsisntency,inconsistency
 inconsistance,inconsistency
 inconsistancies,inconsistencies
 inconsistancy,inconsistency
+inconsistanly,inconsistency,inconsistently
 inconsistant,inconsistent
 inconsistantly,inconsistently
 inconsistecy,inconsistency
@@ -46528,6 +46540,7 @@ inexplicablly,inexplicably
 inexplicaby,inexplicably
 inexplicibly,inexplicably
 infailable,infallible
+infaillable,infallible
 infaillible,infallible
 infalability,infallibility
 infallable,infallible
@@ -47860,6 +47873,7 @@ inpsired,inspired
 inpsiring,inspiring
 inpt,input
 inpterpreter,interpreter
+inptu,input
 inpu,input
 inpupt,input
 inpurt,input
@@ -48195,6 +48209,7 @@ installlers,installers
 installling,installing
 installls,installs
 installmant,installment
+installting,installing
 installtion,installation
 installtions,installations
 installus,installs
@@ -48683,6 +48698,7 @@ integerating,integrating
 integeration,integration
 integerations,integrations
 integere,integer
+integeres,integers
 integirty,integrity
 integraal,integral
 integracion,integration
@@ -51297,6 +51313,7 @@ keybiding,keybinding
 keybidings,keybindings
 keybindining,keybinding
 keybindnig,keybinding
+keybinsd,keybinds
 keyboaard,keyboard
 keyboaards,keyboards
 keyboad,keyboard
@@ -52634,6 +52651,7 @@ lineair,linear
 linearily,linearly,linearity
 lineary,linearly
 linera,linear
+lineraly,linearly
 linerisation,linearisation
 linerisations,linearisations
 linerization,linearization
@@ -57104,6 +57122,7 @@ mroning,morning
 msater,master
 msaters,masters
 msesage,message
+msgnitude,magnitude
 msis,miss
 msot,most
 mssing,missing
@@ -63911,6 +63930,7 @@ peculure,peculiar
 pedantisch,pedantic
 pedastal,pedestal
 pedeantic,pedantic
+pedegogical,pedagogical
 pedestiran,pedestrian
 pedestirans,pedestrians
 pedestrain,pedestrian
@@ -75673,6 +75693,7 @@ retriction,restriction,retraction
 retrictions,restrictions,retractions
 retrictive,restrictive
 retricts,restricts,retracts
+retrie,retire,retry,retries
 retriebe,retrieve
 retriece,retrieve
 retrieces,retrieves
@@ -78383,6 +78404,7 @@ sepearations,separations
 sepearator,separator
 sepearators,separators
 sepearet,separate
+sepearete,separate
 sepearetly,separately
 sepearte,separate
 sepearted,separated
@@ -79493,6 +79515,7 @@ significato,significant
 significence,significance
 significent,significant
 significently,significantly
+significnatly,significantly
 signifigance,significance
 signifigant,significant
 signifigantly,significantly
@@ -80984,6 +81007,7 @@ sould,could,should,sold,souls,soul
 soultion,solution
 soultions,solutions
 soundard,soundcard
+soundess,sounds,soundness
 soundrtack,soundtracks
 soundtracs,soundtracks
 soundtrak,soundtrack
@@ -92547,6 +92571,7 @@ uupdate,update
 uupload,upload
 uupper,upper
 uwinding,unwinding
+uwnind,unwind
 uyou,you
 uypdate,update
 vaaluable,valuable
