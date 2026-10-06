@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Add ARM Windows builds
+
 ## [1.51.0] - 2026-10-06
 
 ### Fixes
