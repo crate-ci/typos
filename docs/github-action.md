@@ -45,7 +45,7 @@ jobs:
 
 `write_changes`: doesn't commit or push anything to the branch. It only writes the changes locally
 to disk, and this can be combined with other actions, for instance that will [submit code
-suggestions based on that local diff](https://github.com/getsentry/action-git-diff-suggestions).
+suggestions based on that local diff](https://github.com/parkerbxyz/suggest-changes).
 
 ### Examples
 
