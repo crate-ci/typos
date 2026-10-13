@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 use std::path::Path;
 
-use kstring::KString;
+use compact_str::CompactString;
 
 #[derive(Default, Clone, Debug)]
 pub(crate) struct TypesBuilder {
-    definitions: BTreeMap<KString, Vec<(KString, usize)>>,
+    definitions: BTreeMap<CompactString, Vec<(CompactString, usize)>>,
 }
 
 impl TypesBuilder {
@@ -18,8 +18,11 @@ impl TypesBuilder {
             crate::default_types::DEFAULT_TYPES
                 .iter()
                 .map(|(name, glob)| {
-                    let name = KString::from(*name);
-                    let globs = glob.iter().map(|s| (KString::from(*s), 0)).collect();
+                    let name = CompactString::const_new(name);
+                    let globs = glob
+                        .iter()
+                        .map(|s| (CompactString::const_new(s), 0))
+                        .collect();
                     (name, globs)
                 }),
         );
@@ -29,7 +32,7 @@ impl TypesBuilder {
         self.definitions.contains_key(name)
     }
 
-    pub(crate) fn add(&mut self, name: impl Into<KString>, glob: impl Into<KString>) {
+    pub(crate) fn add(&mut self, name: impl Into<CompactString>, glob: impl Into<CompactString>) {
         let name = name.into();
         let glob = glob.into();
         let weight = self.definitions.len();
@@ -56,7 +59,7 @@ impl TypesBuilder {
             .iter()
             .map(|(_, _, name, glob)| (*glob, *name))
             .collect::<BTreeMap<_, _>>();
-        let mut unique_definitions = BTreeMap::<KString, Vec<KString>>::new();
+        let mut unique_definitions = BTreeMap::<CompactString, Vec<CompactString>>::new();
         for (glob, name) in rev_definitions {
             unique_definitions
                 .entry(name.clone())
@@ -111,15 +114,15 @@ enum GlobPart<'s> {
 
 #[derive(Default, Clone, Debug)]
 pub(crate) struct Types {
-    definitions: BTreeMap<KString, Vec<KString>>,
-    glob_to_name: Vec<KString>,
+    definitions: BTreeMap<CompactString, Vec<CompactString>>,
+    glob_to_name: Vec<CompactString>,
     set: globset::GlobSet,
     /// Temporary storage for globs that match.
     matches: std::sync::Arc<thread_local::ThreadLocal<std::cell::RefCell<Vec<usize>>>>,
 }
 
 impl Types {
-    pub(crate) fn definitions(&self) -> &BTreeMap<KString, Vec<KString>> {
+    pub(crate) fn definitions(&self) -> &BTreeMap<CompactString, Vec<CompactString>> {
         &self.definitions
     }
 

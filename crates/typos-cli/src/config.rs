@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-use kstring::KString;
+use compact_str::CompactString;
 
 use crate::file_type_specifics;
 
@@ -138,7 +138,7 @@ impl Config {
         }
     }
 
-    pub fn update(&mut self, source: &Config) {
+    pub fn update(&mut self, source: &Self) {
         self.files.update(&source.files);
         self.default.update(&source.default);
         self.type_.update(&source.type_);
@@ -194,7 +194,7 @@ impl Walk {
         }
     }
 
-    pub fn update(&mut self, source: &Walk) {
+    pub fn update(&mut self, source: &Self) {
         self.extend_exclude
             .extend(source.extend_exclude.iter().cloned());
         if let Some(source) = source.ignore_hidden {
@@ -260,7 +260,7 @@ pub struct TypeEngineConfig {
         feature = "unstable-schema",
         schemars(schema_with = "hashmap_string_t::<GlobEngineConfig>")
     )]
-    pub patterns: HashMap<KString, GlobEngineConfig>,
+    pub patterns: HashMap<CompactString, GlobEngineConfig>,
 }
 
 impl TypeEngineConfig {
@@ -269,7 +269,7 @@ impl TypeEngineConfig {
 
         for no_check_type in file_type_specifics::NO_CHECK_TYPES {
             patterns.insert(
-                KString::from(*no_check_type),
+                CompactString::const_new(no_check_type),
                 GlobEngineConfig {
                     extend_glob: Vec::new(),
                     engine: EngineConfig {
@@ -282,7 +282,7 @@ impl TypeEngineConfig {
 
         for (typ, dict_config) in file_type_specifics::TYPE_SPECIFIC_DICTS {
             patterns.insert(
-                KString::from(*typ),
+                CompactString::const_new(typ),
                 GlobEngineConfig {
                     extend_glob: Vec::new(),
                     engine: EngineConfig {
@@ -317,7 +317,7 @@ impl TypeEngineConfig {
         }
     }
 
-    pub fn patterns(&self) -> impl Iterator<Item = (KString, GlobEngineConfig)> + use<> {
+    pub fn patterns(&self) -> impl Iterator<Item = (CompactString, GlobEngineConfig)> + use<> {
         let mut engine = Self::from_defaults();
         engine.update(self);
         engine.patterns.into_iter()
@@ -331,13 +331,13 @@ impl TypeEngineConfig {
 #[cfg_attr(feature = "unstable-schema", derive(schemars::JsonSchema))]
 pub struct GlobEngineConfig {
     #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
-    pub extend_glob: Vec<KString>,
+    pub extend_glob: Vec<CompactString>,
     #[serde(flatten)]
     pub engine: EngineConfig,
 }
 
 impl GlobEngineConfig {
-    pub fn update(&mut self, source: &GlobEngineConfig) {
+    pub fn update(&mut self, source: &Self) {
         self.extend_glob.extend(source.extend_glob.iter().cloned());
         self.engine.update(&source.engine);
     }
@@ -370,7 +370,7 @@ pub struct EngineConfig {
 impl EngineConfig {
     pub fn from_defaults() -> Self {
         let empty = Self::default();
-        EngineConfig {
+        Self {
             binary: Some(empty.binary()),
             check_filename: Some(empty.check_filename()),
             check_file: Some(empty.check_file()),
@@ -381,7 +381,7 @@ impl EngineConfig {
         }
     }
 
-    pub fn update(&mut self, source: &EngineConfig) {
+    pub fn update(&mut self, source: &Self) {
         if let Some(source) = source.binary {
             self.binary = Some(source);
         }
@@ -439,7 +439,7 @@ impl TokenizerConfig {
         }
     }
 
-    pub fn update(&mut self, source: &TokenizerConfig) {
+    pub fn update(&mut self, source: &Self) {
         if let Some(source) = source.unicode {
             self.unicode = Some(source);
         }
@@ -478,7 +478,7 @@ pub struct DictConfig {
         feature = "unstable-schema",
         schemars(schema_with = "hashmap_string_string")
     )]
-    pub extend_identifiers: HashMap<KString, KString>,
+    pub extend_identifiers: HashMap<CompactString, CompactString>,
     #[serde(with = "serde_regex")]
     #[cfg_attr(feature = "unstable-schema", schemars(schema_with = "vec_string"))]
     pub extend_ignore_words_re: Vec<regex::Regex>,
@@ -486,7 +486,7 @@ pub struct DictConfig {
         feature = "unstable-schema",
         schemars(schema_with = "hashmap_string_string")
     )]
-    pub extend_words: HashMap<KString, KString>,
+    pub extend_words: HashMap<CompactString, CompactString>,
 }
 
 impl DictConfig {
@@ -501,7 +501,7 @@ impl DictConfig {
         }
     }
 
-    pub fn update(&mut self, source: &DictConfig) {
+    pub fn update(&mut self, source: &Self) {
         if let Some(source) = source.locale {
             self.locale = Some(source);
         }
@@ -578,11 +578,11 @@ pub enum Locale {
 impl Locale {
     pub const fn category(self) -> Option<varcon_core::Category> {
         match self {
-            Locale::En => None,
-            Locale::EnUs => Some(varcon_core::Category::American),
-            Locale::EnGb => Some(varcon_core::Category::BritishIse),
-            Locale::EnCa => Some(varcon_core::Category::Canadian),
-            Locale::EnAu => Some(varcon_core::Category::Australian),
+            Self::En => None,
+            Self::EnUs => Some(varcon_core::Category::American),
+            Self::EnGb => Some(varcon_core::Category::BritishIse),
+            Self::EnCa => Some(varcon_core::Category::Canadian),
+            Self::EnAu => Some(varcon_core::Category::Australian),
         }
     }
 
@@ -596,11 +596,11 @@ impl std::str::FromStr for Locale {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "en" => Ok(Locale::En),
-            "en-us" => Ok(Locale::EnUs),
-            "en-gb" => Ok(Locale::EnGb),
-            "en-ca" => Ok(Locale::EnCa),
-            "en-au" => Ok(Locale::EnAu),
+            "en" => Ok(Self::En),
+            "en-us" => Ok(Self::EnUs),
+            "en-gb" => Ok(Self::EnGb),
+            "en-ca" => Ok(Self::EnCa),
+            "en-au" => Ok(Self::EnAu),
             _ => Err("valid values: en, en-us, en-gb, en-ca, en-au".to_owned()),
         }
     }
@@ -609,11 +609,11 @@ impl std::str::FromStr for Locale {
 impl std::fmt::Display for Locale {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match *self {
-            Locale::En => write!(f, "en"),
-            Locale::EnUs => write!(f, "en-us"),
-            Locale::EnGb => write!(f, "en-gb"),
-            Locale::EnCa => write!(f, "en-ca"),
-            Locale::EnAu => write!(f, "en-au"),
+            Self::En => write!(f, "en"),
+            Self::EnUs => write!(f, "en-us"),
+            Self::EnGb => write!(f, "en-gb"),
+            Self::EnCa => write!(f, "en-ca"),
+            Self::EnAu => write!(f, "en-au"),
         }
     }
 }
@@ -725,7 +725,7 @@ mod test {
         let mut actual = base;
         actual.update(&extended);
 
-        let expected: Vec<KString> = vec!["*.foo".into(), "*.bar".into()];
+        let expected: Vec<CompactString> = vec!["*.foo".into(), "*.bar".into()];
         assert_data_eq!(actual.extend_glob.into_json(), expected.into_json());
     }
 

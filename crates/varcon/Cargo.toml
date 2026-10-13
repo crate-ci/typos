@@ -1,6 +1,6 @@
 [package]
 name = "varcon"
-version = "1.0.3"
+version = "1.0.5"
 description = "Source Code Spelling Correction"
 readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
@@ -26,7 +26,7 @@ varcon-core = { version = "^5.0", path = "../varcon-core" }
 [dev-dependencies]
 codegenrs = "3.0"
 varcon-core = { version = "^5.0", path = "../varcon-core", features = ["parser"] }
-snapbox = "0.6.21"
+snapbox = "1.1.0"
 
 [lints]
 workspace = true

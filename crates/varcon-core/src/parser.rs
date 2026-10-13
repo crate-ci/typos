@@ -35,9 +35,9 @@ impl Iterator for ClusterIter<'_> {
 mod test_cluster_iter {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_single() {
@@ -593,9 +593,9 @@ impl Cluster {
 mod test_cluster {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_basic() {
@@ -1044,9 +1044,9 @@ mod test_entry {
     #![allow(clippy::bool_assert_comparison)]
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_variant_only() {
@@ -1605,9 +1605,9 @@ fn word(input: &mut &str) -> ModalResult<String, ()> {
 mod test_variant {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1734,13 +1734,13 @@ impl Type {
         Self::parse_.parse(input).map_err(|_err| ParseError)
     }
 
-    fn parse_(input: &mut &str) -> ModalResult<Type, ()> {
+    fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("type", move |input: &mut &str| {
             let category = Category::parse_(input)?;
             let tag = opt(Tag::parse_).parse_next(input)?;
             let num = opt(winnow::ascii::digit1).parse_next(input)?;
             let num = num.map(|s| s.parse().expect("parser ensured it's a number"));
-            let t = Type { category, tag, num };
+            let t = Self { category, tag, num };
             Ok(t)
         })
         .parse_next(input)
@@ -1751,9 +1751,9 @@ impl Type {
 mod test_type {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1855,12 +1855,12 @@ impl Category {
             let symbols = one_of(['A', 'B', 'Z', 'C', 'D', '_']);
             symbols
                 .map(|c| match c {
-                    'A' => Category::American,
-                    'B' => Category::BritishIse,
-                    'Z' => Category::BritishIze,
-                    'C' => Category::Canadian,
-                    'D' => Category::Australian,
-                    '_' => Category::Other,
+                    'A' => Self::American,
+                    'B' => Self::BritishIse,
+                    'Z' => Self::BritishIze,
+                    'C' => Self::Canadian,
+                    'D' => Self::Australian,
+                    '_' => Self::Other,
                     _ => unreachable!("parser won't select this option"),
                 })
                 .parse_next(input)
@@ -1873,9 +1873,9 @@ impl Category {
 mod test_category {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1914,11 +1914,11 @@ impl Tag {
             let symbols = one_of(['.', 'v', 'V', '-', 'x']);
             symbols
                 .map(|c| match c {
-                    '.' => Tag::Eq,
-                    'v' => Tag::Variant,
-                    'V' => Tag::Seldom,
-                    '-' => Tag::Possible,
-                    'x' => Tag::Improper,
+                    '.' => Self::Eq,
+                    'v' => Self::Variant,
+                    'V' => Self::Seldom,
+                    '-' => Self::Possible,
+                    'x' => Self::Improper,
                     _ => unreachable!("parser won't select this option"),
                 })
                 .parse_next(input)
@@ -1931,9 +1931,9 @@ impl Tag {
 mod test_tag {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {
@@ -1970,13 +1970,13 @@ impl Pos {
     fn parse_(input: &mut &str) -> ModalResult<Self, ()> {
         trace("pos", move |input: &mut &str| {
             alt((
-                "N".value(Pos::Noun),
-                "V".value(Pos::Verb),
-                "Adj".value(Pos::Adjective),
-                "Adv".value(Pos::Adverb),
-                "A".value(Pos::AdjectiveOrAdverb),
-                "Inj".value(Pos::Interjection),
-                "Prep".value(Pos::Preposition),
+                "N".value(Self::Noun),
+                "V".value(Self::Verb),
+                "Adj".value(Self::Adjective),
+                "Adv".value(Self::Adverb),
+                "A".value(Self::AdjectiveOrAdverb),
+                "Inj".value(Self::Interjection),
+                "Prep".value(Self::Preposition),
             ))
             .parse_next(input)
         })
@@ -1988,9 +1988,9 @@ impl Pos {
 mod test_pos {
     use super::*;
 
+    use snapbox::ToDebug;
     use snapbox::assert_data_eq;
     use snapbox::str;
-    use snapbox::ToDebug;
 
     #[test]
     fn test_valid() {

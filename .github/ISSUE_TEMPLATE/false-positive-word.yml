@@ -21,7 +21,7 @@ body:
   - type: textarea
     attributes:
       label: Justification
-      description: Dictionaries, google trends, google ngram, etc
+      description: "Dictionaries (wiktionary is not accepted), google trends, google ngram, etc"
     validations:
       required: true
   - type: textarea

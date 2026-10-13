@@ -7,6 +7,191 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.51.1] - 2026-10-06
+
+### Features
+
+- Add ARM Windows builds
+
+## [1.51.0] - 2026-10-06
+
+### Fixes
+
+- Don't correct `bimap`
+
+### Features
+
+- Updated the dictionary with the [September 2026](https://github.com/crate-ci/typos/issues/1610) changes
+
+## [1.50.3] - 2026-09-25
+
+### Fixes
+
+- Don'y panicwhen case-converting non-ASCII corrections
+
+## [1.50.2] - 2026-09-15
+
+### Fixes
+
+- Don't panic when files being examined are removed
+
+## [1.50.1] - 2026-09-01
+
+### Fixes
+
+- Don't correct `asend` in Python code
+
+## [1.50.0] - 2026-08-28
+
+### Features
+
+- Updated the dictionary with the [August 2026](https://github.com/crate-ci/typos/issues/1587) changes
+
+## [1.49.1] - 2026-08-27
+
+### Fixes
+
+- Don't correct the brand name `HashiCorp`
+
+## [1.49.0] - 2026-08-03
+
+### Features
+
+- Updated the dictionary with the [July 2026](https://github.com/crate-ci/typos/issues/1573) changes
+
+## [1.48.0] - 2026-06-30
+
+### Features
+
+- Updated the dictionary with the [June 2026](https://github.com/crate-ci/typos/issues/1562) changes
+
+## [1.47.2] - 2026-06-04
+
+### Fixes
+
+- Don't correct `inferrable`
+- Correct unused `inferible` variant
+
+## [1.47.1] - 2026-06-03
+
+### Fixes
+
+- Don't correct `requestors`
+
+## [1.47.0] - 2026-05-29
+
+### Features
+
+- Updated the dictionary with the [May 2026](https://github.com/crate-ci/typos/issues/1545) changes
+
+## [1.46.3] - 2026-05-23
+
+### Fixes
+
+- Don't correct to `sequentials`
+- Don't correct to `subdolder`
+
+## [1.46.2] - 2026-05-16
+
+### Fixes
+
+- Don't correct to `criterias`
+- Don't correct to `replaceables`
+
+## [1.46.1] - 2026-05-08
+
+### Fixes
+
+- Don't correct to `confidentials`
+
+## [1.46.0] - 2026-04-30
+
+### Features
+
+- Updated the dictionary with the [April 2026](https://github.com/crate-ci/typos/issues/1531) changes
+
+## [1.45.2] - 2026-04-27
+
+### Fixes
+
+- Ignore ssh ed25519 public keys
+
+## [1.45.1] - 2026-04-13
+
+### Fixes
+
+- *(action)* Use a temp dir for caching
+
+## [1.45.0] - 2026-04-01
+
+### Features
+
+- Updated the dictionary with the [March 2026](https://github.com/crate-ci/typos/issues/1509) changes
+
+## [1.44.0] - 2026-02-27
+
+### Features
+
+- Updated the dictionary with the [February 2026](https://github.com/crate-ci/typos/issues/1488) changes
+
+## [1.43.5] - 2026-02-16
+
+### Fixes
+
+- *(pypi)* Hopefully fix the sdist build
+
+## [1.43.4] - 2026-02-09
+
+### Fixes
+
+- Don't correct `pincher`
+
+## [1.43.3] - 2026-02-06
+
+### Fixes
+
+- *(action)* Adjust how typos are reported to github
+
+## [1.43.2] - 2026-02-05
+
+### Fixes
+
+- Don't correct `certifi` in Python
+
+## [1.43.1] - 2026-02-03
+
+### Fixes
+
+- Don't correct `consts`
+
+## [1.43.0] - 2026-02-02
+
+### Compatibility
+
+- Bumped MSRV to 1.91
+
+### Features
+
+- Updated the dictionary with the [January 2026](https://github.com/crate-ci/typos/issues/1453) changes
+
+## [1.42.3] - 2026-01-27
+
+### Fixes
+
+- Don't correct `loosing`
+
+## [1.42.2] - 2026-01-26
+
+### Fixes
+
+- Don't correct `substituters`
+
+## [1.42.1] - 2026-01-19
+
+### Fixes
+
+- Ignore hex literals with suffixes (e.g. `0xffffUL`)
+
 ## [1.42.0] - 2026-01-07
 
 ### Features
@@ -1689,7 +1874,36 @@ Note: MSRV is now 1.54
 *   Only do hex check if digits are in identifiers ([68cd36d0](https://github.com/crate-ci/typos/commit/68cd36d0de90226dbc9d31c2ce6d8bf6b69adb5c))
 
 <!-- next-url -->
-[Unreleased]: https://github.com/crate-ci/typos/compare/v1.42.0...HEAD
+[Unreleased]: https://github.com/crate-ci/typos/compare/v1.51.1...HEAD
+[1.51.1]: https://github.com/crate-ci/typos/compare/v1.51.0...v1.51.1
+[1.51.0]: https://github.com/crate-ci/typos/compare/v1.50.3...v1.51.0
+[1.50.3]: https://github.com/crate-ci/typos/compare/v1.50.2...v1.50.3
+[1.50.2]: https://github.com/crate-ci/typos/compare/v1.50.1...v1.50.2
+[1.50.1]: https://github.com/crate-ci/typos/compare/v1.50.0...v1.50.1
+[1.50.0]: https://github.com/crate-ci/typos/compare/v1.49.1...v1.50.0
+[1.49.1]: https://github.com/crate-ci/typos/compare/v1.49.0...v1.49.1
+[1.49.0]: https://github.com/crate-ci/typos/compare/v1.48.0...v1.49.0
+[1.48.0]: https://github.com/crate-ci/typos/compare/v1.47.2...v1.48.0
+[1.47.2]: https://github.com/crate-ci/typos/compare/v1.47.1...v1.47.2
+[1.47.1]: https://github.com/crate-ci/typos/compare/v1.47.0...v1.47.1
+[1.47.0]: https://github.com/crate-ci/typos/compare/v1.46.3...v1.47.0
+[1.46.3]: https://github.com/crate-ci/typos/compare/v1.46.2...v1.46.3
+[1.46.2]: https://github.com/crate-ci/typos/compare/v1.46.1...v1.46.2
+[1.46.1]: https://github.com/crate-ci/typos/compare/v1.46.0...v1.46.1
+[1.46.0]: https://github.com/crate-ci/typos/compare/v1.45.2...v1.46.0
+[1.45.2]: https://github.com/crate-ci/typos/compare/v1.45.1...v1.45.2
+[1.45.1]: https://github.com/crate-ci/typos/compare/v1.45.0...v1.45.1
+[1.45.0]: https://github.com/crate-ci/typos/compare/v1.44.0...v1.45.0
+[1.44.0]: https://github.com/crate-ci/typos/compare/v1.43.5...v1.44.0
+[1.43.5]: https://github.com/crate-ci/typos/compare/v1.43.4...v1.43.5
+[1.43.4]: https://github.com/crate-ci/typos/compare/v1.43.3...v1.43.4
+[1.43.3]: https://github.com/crate-ci/typos/compare/v1.43.2...v1.43.3
+[1.43.2]: https://github.com/crate-ci/typos/compare/v1.43.1...v1.43.2
+[1.43.1]: https://github.com/crate-ci/typos/compare/v1.43.0...v1.43.1
+[1.43.0]: https://github.com/crate-ci/typos/compare/v1.42.3...v1.43.0
+[1.42.3]: https://github.com/crate-ci/typos/compare/v1.42.2...v1.42.3
+[1.42.2]: https://github.com/crate-ci/typos/compare/v1.42.1...v1.42.2
+[1.42.1]: https://github.com/crate-ci/typos/compare/v1.42.0...v1.42.1
 [1.42.0]: https://github.com/crate-ci/typos/compare/v1.41.0...v1.42.0
 [1.41.0]: https://github.com/crate-ci/typos/compare/v1.40.1...v1.41.0
 [1.40.1]: https://github.com/crate-ci/typos/compare/v1.40.0...v1.40.1

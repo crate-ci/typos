@@ -1,6 +1,6 @@
 [package]
 name = "typos-cli"
-version = "1.42.0"
+version = "1.51.1"
 description = "Source Code Spelling Correction"
 readme = "../../README.md"
 categories = ["development-tools", "text-processing"]
@@ -22,7 +22,7 @@ pre-release-replacements = [
   {file="../../CHANGELOG.md", search="\\.\\.\\.HEAD", replace="...{{tag_name}}", exactly=1},
   {file="../../CHANGELOG.md", search="ReleaseDate", replace="{{date}}", min=1},
   {file="../../CHANGELOG.md", search="<!-- next-header -->", replace="<!-- next-header -->\n## [Unreleased] - ReleaseDate\n", exactly=1},
-  {file="../../CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/crate-ci/typos/compare/{{tag_name}}...HEAD", exactly=1},
+  {file="../../CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: {{repository}}/compare/{{tag_name}}...HEAD", exactly=1},
   {file="../../action/entrypoint.sh", search="VERSION=.*", replace="VERSION={{version}}", min=1},
   {file="../../docs/pre-commit.md", search="rev: .*", replace="rev: {{tag_name}}", exactly=1},
   {file="../../docs/github-action.md", search="uses: crate-ci/typos@.*", replace="uses: crate-ci/typos@{{tag_name}}", min=1},
@@ -42,51 +42,51 @@ doc = false
 
 [dependencies]
 typos = { version = "^0.10", path = "../typos" }
-varcon-core = { version = "^5.0.5", path = "../varcon-core" }
-typos-dict = { version = "^0.13", path = "../typos-dict", optional = true }
-typos-vars = { version = "^0.10", path = "../typos-vars", optional = true }
-unicase = "2.8.1"
+varcon-core = { version = "^5.0.7", path = "../varcon-core" }
+typos-dict = { version = "^0.14", path = "../typos-dict", optional = true }
+typos-vars = { version = "^0.11", path = "../typos-vars", optional = true }
+unicase = "2.9.0"
 anyhow = "1.0"
-clap = { version = "4.5.48", features = ["derive"] }
-clap-cargo = "0.18.3"
+clap = { version = "4.6.0", features = ["derive"] }
+clap-cargo = "0.19.0"
 clap-verbosity-flag = "3.0"
 ignore = "0.4"
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.9.7"
+toml = "1.0.7"
 log = "0.4"
 env_logger = { version = "0.11", default-features = false, features = ["auto-color"] }
 bstr = "1.12"
 ahash = "0.8"
 difflib = "0.4"
 proc-exit = "2.0"
-human-panic = "2.0.3"
+human-panic = "2.0.6"
 content_inspector = "0.2.4"
-derive_more = { version = "2.0", features = ["from", "display"] }
+derive_more = { version = "2.1", features = ["from", "display"] }
 derive_setters = "0.1"
-itertools = "0.14"
+itertools = "0.15"
 serde_json = "1.0"
-kstring = { version = "2.0.2", features = ["serde"] }
 typed-arena = "2.0.2"
 thread_local = "1.1.9"
-globset = "0.4.16"
-anstyle = "1.0.13"
-anstream = "0.6.20"
-colorchoice-clap = "1.0.7"
+globset = "0.4.18"
+anstyle = "1.0.14"
+anstream = "1.0.0"
+colorchoice-clap = "1.0.8"
 serde_regex = "1.1.0"
-regex = "1.11.3"
+regex = "1.12.3"
 encoding_rs = "0.8.35"
 serde-sarif = "0.8.0"
-schemars = { version = "1.0.4", features = ["preserve_order","semver1"], optional = true }
-annotate-snippets = "0.12.4"
+schemars = { version = "1.2.1", features = ["preserve_order","semver1"], optional = true }
+annotate-snippets = "0.12.13"
 terminal_size = "0.4.3"
 supports-unicode = "3.0.0"
+compact_str = { version = "0.10.0", features = ["serde"] }
 
 [dev-dependencies]
 assert_fs = "1.1"
 divan = "0.1.21"
 maplit = "1.0"
-snapbox = { version = "0.6.21", features = ["json"] }
-trycmd = "0.15.10"
+snapbox = { version = "1.1.0", features = ["json"] }
+trycmd = "1.1.1"
 
 [[bench]]
 name = "check_file"

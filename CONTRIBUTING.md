@@ -116,10 +116,10 @@ When we're ready to release, a project owner should do the following
   - Update the dependency version in `src/lib.rs`
   - Update the dependency version in `README.md`
 - Tag the commit via `git tag -am "v<X>.<Y>.<Z>" v<X>.<Y>.<Z>`
-- `git push upstream master --tag v<X>.<Y>.<Z>`
+- `git push upstream main --tag v<X>.<Y>.<Z>`
 - Run `cargo publish` (run `cargo login` first if needed)
 
 [issues]: https://github.com/crate-ci/typos/issues
 [new issue]: https://github.com/crate-ci/typos/issues/new
 [all issues]: https://github.com/crate-ci/typos/issues?utf8=%E2%9C%93&q=is%3Aissue
-[CI]: https://github.com/crate-ci/typos/tree/master/.github/workflows
+[CI]: https://github.com/crate-ci/typos/tree/main/.github/workflows

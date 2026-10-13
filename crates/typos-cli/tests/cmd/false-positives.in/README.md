@@ -7,3 +7,5 @@ HTTP_REFERER is a valid HTTP header field
 It should be reasonable to talk about `<thead>`
 
 SHTTP is a protocol
+
+Some talk about HashiCorp

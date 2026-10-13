@@ -36,7 +36,7 @@ runs:
       run: $GITHUB_ACTION_PATH/action/entrypoint.sh
       shell: bash
       env:
-        INSTALL_DIR: .
+        INSTALL_DIR: ${{ runner.temp }}
         INPUT_FILES: ${{ inputs.files }}
         INPUT_EXTEND_IDENTIFIERS: ${{ inputs.extend_identifiers }}
         INPUT_EXTEND_WORDS: ${{ inputs.extend_words }}

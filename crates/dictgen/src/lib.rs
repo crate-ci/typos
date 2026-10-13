@@ -17,12 +17,12 @@ mod trie;
 #[cfg(feature = "aho-corasick")]
 #[cfg(feature = "codegen")]
 pub use aho_corasick::AhoCorasickGen;
+#[cfg(feature = "codegen")]
+pub use r#gen::*;
 pub use insensitive::*;
 #[cfg(feature = "map")]
 pub use map::*;
-pub use ordered_map::*;
-#[cfg(feature = "codegen")]
-pub use r#gen::*;
 #[cfg(feature = "codegen")]
 pub use r#match::*;
+pub use ordered_map::*;
 pub use trie::*;

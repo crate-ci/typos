@@ -876,7 +876,7 @@ fn is_fixable(typo: &typos::Typo<'_>) -> bool {
 }
 
 fn fix_buffer(mut buffer: Vec<u8>, typos: impl Iterator<Item = typos::Typo<'static>>) -> Vec<u8> {
-    let mut offset = 0isize;
+    let mut offset = 0_isize;
     for typo in typos {
         let fix = extract_fix(&typo).expect("Caller only provides fixable typos");
         let start = ((typo.byte_offset as isize) + offset) as usize;
@@ -960,7 +960,14 @@ fn walk_entry(
             (path, cwd)
         } else {
             let path = entry.path();
-            let abs_path = report_result(path.canonicalize(), Some(path), reporter)?;
+            let abs_path = match path.canonicalize() {
+                Ok(abs_path) => abs_path,
+                Err(err) => {
+                    report_error(err, Some(path), reporter)?;
+                    // Avoid a failed `engine.policy` lookup
+                    return Ok(());
+                }
+            };
             (path, abs_path)
         };
         let policy = engine.policy(&lookup_path);

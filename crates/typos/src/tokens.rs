@@ -129,6 +129,7 @@ impl<'s> Iterator for Utf8Chunks<'s> {
 }
 
 mod parser {
+    use winnow::Result;
     use winnow::combinator::trace;
     use winnow::combinator::{alt, eof, opt, peek, preceded, repeat, terminated};
     use winnow::error::ParserError;
@@ -140,14 +141,14 @@ mod parser {
     use winnow::stream::Stream;
     use winnow::stream::StreamIsPartial;
     use winnow::token::{one_of, take_while};
-    use winnow::Result;
 
     /// Avoid worst-case parse times by limiting how much a `take_while` can take if something
     /// later may cause it to fail.
     const NON_TERMINATING_CAP: usize = 1024;
 
-    pub(crate) fn next_identifier<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    pub(crate) fn next_identifier<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
+        T: Compare<&'i str>,
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -174,8 +175,9 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ignore<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn ignore<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
+        T: Compare<&'i str>,
         T: Compare<char>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
@@ -191,14 +193,17 @@ mod parser {
                 terminated(email_literal, sep1),
                 terminated(url_literal, sep1),
                 terminated(jwt, sep1),
+                terminated(ssh_ed25519_pub_key, sep1),
                 terminated(base64_literal, sep1), // base64 should be quoted or something
-                terminated(hash_literal, sep1),
-                terminated(ordinal_literal, sep1),
-                terminated(hex_literal, sep1),
-                terminated(dec_literal, sep1), // Allow digit-prefixed words
-                terminated(css_color, sep1),
-                terminated(c_escape, sep1),
-                terminated(printf, sep1),
+                alt((
+                    terminated(hash_literal, sep1),
+                    terminated(ordinal_literal, sep1),
+                    terminated(hex_literal, sep1),
+                    terminated(dec_literal, sep1), // Allow digit-prefixed words
+                    terminated(css_color, sep1),
+                    terminated(c_escape, sep1),
+                    terminated(printf, sep1),
+                )),
                 other,
             ))),
         )
@@ -236,9 +241,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn ordinal_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn ordinal_literal<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -254,7 +260,7 @@ mod parser {
             (
                 take_while(0.., is_sep),
                 take_while(1.., is_dec_digit),
-                alt((('s', 't'), ('n', 'd'), ('r', 'd'), ('t', 'h'))),
+                alt((("st"), ("nd"), ("rd"), ("th"))),
                 take_while(0.., is_sep),
             )
                 .take(),
@@ -278,7 +284,13 @@ mod parser {
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
     {
-        ('0', alt(('x', 'X')), take_while(1.., is_hex_digit_with_sep))
+        (
+            '0',
+            alt(('x', 'X')),
+            take_while(1.., is_hex_digit_with_sep),
+            take_while(0.., is_xid_continue)
+                .verify(|s: &<T as Stream>::Slice| std::str::from_utf8(s.as_bstr()).is_ok()),
+        )
             .take()
             .parse_next(input)
     }
@@ -304,9 +316,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn jwt<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn jwt<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -314,12 +327,9 @@ mod parser {
         trace(
             "jwt",
             (
-                'e',
-                'y',
+                "ey",
                 take_while(20.., is_jwt_token),
-                '.',
-                'e',
-                'y',
+                ".ey",
                 take_while(20.., is_jwt_token),
                 '.',
                 take_while(20.., is_jwt_token),
@@ -337,6 +347,26 @@ mod parser {
             || c.is_ascii_digit()
             || c == '_'
             || c == '-'
+    }
+
+    fn ssh_ed25519_pub_key<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    where
+        T: Compare<char>,
+        T: Compare<&'i str>,
+        T: Stream + StreamIsPartial + PartialEq,
+        <T as Stream>::Slice: AsBStr + SliceLen + Default,
+        <T as Stream>::Token: AsChar + Copy,
+    {
+        trace(
+            "ssh_ed25519_pub_key",
+            (
+                "AAAAC3NzaC1lZDI1NTE5AAAAI",
+                // Technically the next digit can only be in `[A-P]` but not worth the complexity
+                take_while(43, is_base64_digit),
+            )
+                .take(),
+        )
+        .parse_next(input)
     }
 
     fn uuid_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
@@ -422,10 +452,7 @@ mod parser {
 
             if captured.slice_len() < 90
                 && padding_len == 0
-                && captured
-                    .as_bstr()
-                    .iter()
-                    .all(|c| !['/', '+'].contains(&c.as_char()))
+                && captured.as_bstr().iter().all(|c| ![b'/', b'+'].contains(c))
             {
                 #[allow(clippy::unit_arg)]
                 return Err(ParserError::from_input(input));
@@ -459,9 +486,10 @@ mod parser {
         .parse_next(input)
     }
 
-    fn url_literal<T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
+    fn url_literal<'i, T>(input: &mut T) -> Result<<T as Stream>::Slice, ()>
     where
         T: Compare<char>,
+        T: Compare<&'i str>,
         T: Stream + StreamIsPartial + PartialEq,
         <T as Stream>::Slice: AsBStr + SliceLen + Default,
         <T as Stream>::Token: AsChar + Copy,
@@ -473,7 +501,7 @@ mod parser {
                     take_while(1..NON_TERMINATING_CAP, is_scheme_char),
                     // HACK: Technically you can skip `//` if you don't have a domain but that would
                     // get messy to support.
-                    (':', '/', '/'),
+                    ("://"),
                 )),
                 (
                     opt((url_userinfo, '@')),
@@ -948,28 +976,28 @@ enum WordMode {
 impl WordMode {
     fn classify(c: char) -> Self {
         if c.is_lowercase() {
-            WordMode::Lowercase
+            Self::Lowercase
         } else if c.is_uppercase() {
-            WordMode::Uppercase
+            Self::Uppercase
         } else if c.is_ascii_digit() {
-            WordMode::Number
+            Self::Number
         } else {
             // This assumes all characters are either lower or upper case.
-            WordMode::Boundary
+            Self::Boundary
         }
     }
 
-    fn case(self, last: WordMode) -> Case {
+    fn case(self, last: Self) -> Case {
         match (self, last) {
-            (WordMode::Uppercase, WordMode::Uppercase) => Case::Upper,
-            (WordMode::Uppercase, WordMode::Lowercase) => Case::Title,
-            (WordMode::Lowercase, WordMode::Lowercase) => Case::Lower,
-            (WordMode::Number, WordMode::Number) => Case::None,
-            (WordMode::Number, _)
-            | (_, WordMode::Number)
-            | (WordMode::Boundary, _)
-            | (_, WordMode::Boundary)
-            | (WordMode::Lowercase, WordMode::Uppercase) => {
+            (Self::Uppercase, Self::Uppercase) => Case::Upper,
+            (Self::Uppercase, Self::Lowercase) => Case::Title,
+            (Self::Lowercase, Self::Lowercase) => Case::Lower,
+            (Self::Number, Self::Number) => Case::None,
+            (Self::Number, _)
+            | (_, Self::Number)
+            | (Self::Boundary, _)
+            | (_, Self::Boundary)
+            | (Self::Lowercase, Self::Uppercase) => {
                 unreachable!("Invalid case combination: ({:?}, {:?})", self, last)
             }
         }
@@ -1260,7 +1288,7 @@ mod test {
     fn tokenize_ignore_hex() {
         let parser = TokenizerBuilder::new().build();
 
-        let input = "Hello 0xDEADBEEF World";
+        let input = "Hello 0xDEADBEEF 0x1afe23456UL World";
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_data_eq!(
             actual.to_debug(),
@@ -1274,7 +1302,7 @@ mod test {
     Identifier {
         token: "World",
         case: None,
-        offset: 17,
+        offset: 31,
     },
 ]
 
@@ -1293,7 +1321,7 @@ mod test {
     Identifier {
         token: "World",
         case: None,
-        offset: 17,
+        offset: 31,
     },
 ]
 
@@ -1401,9 +1429,15 @@ mod test {
             // A SHA-1 output, in mixed case: Not a ignored.
             ("485865fd0412e40d041E861506BB3AC11A3A91E3", false),
             // A SHA-256 output, in upper case.
-            ("E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855", true),
+            (
+                "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+                true,
+            ),
             // A SHA-512 output, in lower case.
-            ("cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e", true),
+            (
+                "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
+                true,
+            ),
             // An MD5 (deprecated) output, in upper case.
             ("D41D8CD98F00B204E9800998ECF8427E", true),
             // A 31-character hexadecimal string: too short to be a hash.
@@ -1412,9 +1446,9 @@ mod test {
             let input = format!("Hello {hashlike} World");
             let mut expected: Vec<Identifier<'_>> = vec![
                 Identifier::new_unchecked("Hello", Case::None, 0),
-                Identifier::new_unchecked("World", Case::None, 7+hashlike.len()),
+                Identifier::new_unchecked("World", Case::None, 7 + hashlike.len()),
             ];
-            if ! is_ignored {
+            if !is_ignored {
                 expected.insert(1, Identifier::new_unchecked(hashlike, Case::None, 6));
             }
             let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
@@ -1606,6 +1640,52 @@ mod test {
     }
 
     #[test]
+    fn tokenize_ignore_ssh_ed25519_public_key() {
+        let parser = TokenizerBuilder::new().build();
+
+        let input =
+            "Start AAAAC3NzaC1lZDI1NTE5AAAAIJSKdqkBEQY2y9f8C8RXxee3ZKXyWYR0QIW7oxISXrrf end";
+        let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Start",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "end",
+        case: None,
+        offset: 75,
+    },
+]
+
+"#]]
+        );
+        let actual: Vec<_> = parser.parse_str(input).collect();
+        assert_data_eq!(
+            actual.to_debug(),
+            str![[r#"
+[
+    Identifier {
+        token: "Start",
+        case: None,
+        offset: 0,
+    },
+    Identifier {
+        token: "end",
+        case: None,
+        offset: 75,
+    },
+]
+
+"#]]
+        );
+    }
+
+    #[test]
     fn tokenize_ignore_jwt() {
         let parser = TokenizerBuilder::new().build();
 
@@ -1754,8 +1834,7 @@ mod test {
     fn tokenize_ignore_max_url() {
         let parser = TokenizerBuilder::new().build();
 
-        let input =
-            "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment,split Bye";
+        let input = "Good http://user:password@example.com:3142/hello?query=value&extra=two#fragment,split Bye";
         let actual: Vec<_> = parser.parse_bytes(input.as_bytes()).collect();
         assert_data_eq!(
             actual.to_debug(),
@@ -2179,7 +2258,7 @@ mod test {
         let cases = [
             (
                 "lowercase",
-                &[("lowercase", Case::Lower, 0usize)] as &[(&str, Case, usize)],
+                &[("lowercase", Case::Lower, 0_usize)] as &[(&str, Case, usize)],
             ),
             ("Class", &[("Class", Case::Title, 0)]),
             (

@@ -3,8 +3,8 @@ use std::collections::HashMap;
 
 use unicase::UniCase;
 
-use typos::tokens::Case;
 use typos::Status;
+use typos::tokens::Case;
 
 #[derive(Default)]
 pub struct BuiltIn {
@@ -55,6 +55,7 @@ impl BuiltIn {
         match ident {
             "O_WRONLY" => Some(Status::Valid),
             "dBA" => Some(Status::Valid),
+            "HashiCorp" => Some(Status::Valid),
             _ => None,
         }
     }
@@ -176,11 +177,11 @@ impl BuiltIn {
 
 impl typos::Dictionary for BuiltIn {
     fn correct_ident<'s>(&'s self, ident: typos::tokens::Identifier<'_>) -> Option<Status<'s>> {
-        BuiltIn::correct_ident(self, ident)
+        Self::correct_ident(self, ident)
     }
 
     fn correct_word<'s>(&'s self, word: typos::tokens::Word<'_>) -> Option<Status<'s>> {
-        BuiltIn::correct_word(self, word)
+        Self::correct_word(self, word)
     }
 }
 
@@ -188,26 +189,25 @@ impl typos::Dictionary for BuiltIn {
 fn case_correct(correction: &mut Cow<'_, str>, case: Case) {
     match case {
         Case::Lower | Case::None => (),
-        Case::Title => match correction {
-            Cow::Borrowed(s) => {
-                let mut s = String::from(*s);
-                s[0..1].make_ascii_uppercase();
+        Case::Title => {
+            debug_assert!(!correction.is_empty());
+            if correction.as_bytes()[0].is_ascii() {
+                correction.to_mut()[0..1].make_ascii_uppercase();
+            } else {
+                let mut chars = correction.chars();
+                let mut s = String::with_capacity(correction.len());
+                s.extend(chars.next().unwrap().to_uppercase());
+                s.push_str(chars.as_str());
                 *correction = s.into();
             }
-            Cow::Owned(s) => {
-                s[0..1].make_ascii_uppercase();
+        }
+        Case::Upper => {
+            if correction.is_ascii() {
+                correction.to_mut().make_ascii_uppercase();
+            } else {
+                *correction = correction.to_uppercase().into();
             }
-        },
-        Case::Upper => match correction {
-            Cow::Borrowed(s) => {
-                let mut s = String::from(*s);
-                s.make_ascii_uppercase();
-                *correction = s.into();
-            }
-            Cow::Owned(s) => {
-                s.make_ascii_uppercase();
-            }
-        },
+        }
     }
 }
 
@@ -390,6 +390,11 @@ mod test {
             ("foo", Case::Title, "Foo"),
             ("foo", Case::Upper, "FOO"),
             ("fOo", Case::None, "fOo"),
+            ("3d", Case::Title, "3d"),
+            ("über", Case::Title, "Über"),
+            ("über", Case::Upper, "ÜBER"),
+            ("château", Case::Title, "Château"),
+            ("château", Case::Upper, "CHÂTEAU"),
         ];
         for (correction, case, expected) in cases.iter() {
             let mut actual = Cow::Borrowed(*correction);
