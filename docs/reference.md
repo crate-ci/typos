@@ -240,6 +240,10 @@ File globs for matching `NAME`. This is required when defining new file types.
 
 When there are multiple globs that would match,
 the most specific glob is used.
+Two globs of the same specificity are ordered by their type: a type from a
+config file wins over a built-in one, and between two types of the same kind the
+greater `NAME` wins (so of `prose` and `prose-skip`, both claiming `*.md`,
+`prose-skip` applies).
 
 Run with `--type-list` to see available `NAME`s.
 

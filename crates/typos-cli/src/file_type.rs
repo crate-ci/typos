@@ -3,6 +3,11 @@ use std::path::Path;
 
 use compact_str::CompactString;
 
+/// Weight of a type from `default_types.rs`; a `[type.*]` table from a config file
+/// carries `USER_WEIGHT`, so a user definition wins a glob a built-in type also claims.
+const BUILTIN_WEIGHT: usize = 0;
+const USER_WEIGHT: usize = 1;
+
 #[derive(Default, Clone, Debug)]
 pub(crate) struct TypesBuilder {
     definitions: BTreeMap<CompactString, Vec<(CompactString, usize)>>,
@@ -14,18 +19,15 @@ impl TypesBuilder {
     }
 
     pub(crate) fn add_defaults(&mut self) {
-        self.definitions.extend(
-            crate::default_types::DEFAULT_TYPES
-                .iter()
-                .map(|(name, glob)| {
-                    let name = CompactString::const_new(name);
-                    let globs = glob
-                        .iter()
-                        .map(|s| (CompactString::const_new(s), 0))
-                        .collect();
-                    (name, globs)
-                }),
-        );
+        for (name, globs) in crate::default_types::DEFAULT_TYPES.iter() {
+            for glob in globs.iter() {
+                self.add_weighted(
+                    CompactString::const_new(name),
+                    CompactString::const_new(glob),
+                    BUILTIN_WEIGHT,
+                );
+            }
+        }
     }
 
     pub(crate) fn contains_name(&self, name: &str) -> bool {
@@ -33,15 +35,31 @@ impl TypesBuilder {
     }
 
     pub(crate) fn add(&mut self, name: impl Into<CompactString>, glob: impl Into<CompactString>) {
+        self.add_weighted(name, glob, USER_WEIGHT);
+    }
+
+    fn add_weighted(
+        &mut self,
+        name: impl Into<CompactString>,
+        glob: impl Into<CompactString>,
+        weight: usize,
+    ) {
         let name = name.into();
         let glob = glob.into();
-        let weight = self.definitions.len();
         self.definitions
             .entry(name)
             .or_default()
             .push((glob, weight));
     }
 
+    /// Build the matcher.
+    ///
+    /// Order of `add` does not matter: a file's type is decided by the glob's
+    /// specificity, then by the weight of the definition it came from, and two
+    /// definitions of the same weight are separated by the type name. Before the
+    /// weight was fixed per source, it was the insertion position and two `[type.*]`
+    /// tables claiming one glob resolved by the order the config happened to be read
+    /// in, so the same file was assigned a different type from run to run.
     pub(crate) fn build(self) -> Result<Types, anyhow::Error> {
         let mut definitions = self
             .definitions
@@ -223,4 +241,43 @@ mod tests {
         ["z.partial*", "z*.partial", "a.specific"]
     );
     sort!(most_specific, ["*.txt.in", "*.in"], ["*.in", "*.txt.in"]);
+
+    #[test]
+    fn same_glob_in_two_types_resolves_by_name_not_insertion_order() {
+        // `[type.prose] extend-glob = ["*.md"]` next to
+        // `[type.prose-skip] extend-glob = ["*.md"]`: whichever the config reader
+        // yields first must not decide which type the file gets.
+        let mut forward = TypesBuilder::new();
+        forward.add("prose", "*.md");
+        forward.add("prose-skip", "*.md");
+
+        let mut reverse = TypesBuilder::new();
+        reverse.add("prose-skip", "*.md");
+        reverse.add("prose", "*.md");
+
+        let path = Path::new("README.md");
+        assert_eq!(
+            Some("prose-skip"),
+            forward.build().unwrap().file_matched(path)
+        );
+        assert_eq!(
+            Some("prose-skip"),
+            reverse.build().unwrap().file_matched(path)
+        );
+    }
+
+    #[test]
+    fn a_user_type_wins_the_glob_of_a_builtin_type() {
+        let mut types = TypesBuilder::new();
+        types.add_defaults();
+        // `aaa-markdown` sorts before the built-in `md`: the weight of the
+        // definition, not the type name, is what makes a `[type.*]` table win here.
+        types.add("aaa-markdown", "*.md");
+
+        let types = types.build().unwrap();
+        assert_eq!(
+            Some("aaa-markdown"),
+            types.file_matched(Path::new("README.md"))
+        );
+    }
 }
