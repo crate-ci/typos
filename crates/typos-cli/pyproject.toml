@@ -4,6 +4,11 @@ build-backend = "maturin"
 
 [project]
 name = "typos"
+dynamic = [
+    "license",
+    "readme",
+    "version",
+]
 description = "Source Code Spelling Correction"
 requires-python = ">=3.8"
 keywords = [
