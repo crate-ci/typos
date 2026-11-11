@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- *(pypi)* Don't publish wheels for x86
+
 ## [1.52.1] - 2026-11-09
 
 ### Fixes
