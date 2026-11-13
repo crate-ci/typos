@@ -1,0 +1,6 @@
+bin.name = "typos"
+args = "--sort"
+status.code = 0
+stdin = ""
+stdout = ""
+stderr = ""
