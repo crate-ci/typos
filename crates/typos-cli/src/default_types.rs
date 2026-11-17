@@ -103,6 +103,10 @@ pub(crate) const DEFAULT_TYPES: &[(&str, &[&str])] = &[
     ("fsharp", &["*.fs", "*.fsx", "*.fsi"]),
     ("fut", &["*.fut"]),
     ("gap", &["*.g", "*.gap", "*.gi", "*.gd", "*.tst"]),
+    ("gitcommit", &[
+        "COMMIT_EDITMSG", "EDIT_DESCRIPTION", "MERGE_MSG", "NOTES_EDITMSG",
+        "TAG_EDITMSG",
+    ]),
     ("gleam", &["*.gleam"]),
     ("gn", &["*.gn", "*.gni"]),
     ("go", &["*.go", "go.mod", "go.work"]),
