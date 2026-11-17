@@ -19,10 +19,6 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Install wget for Windows
-      if: matrix.os == 'windows-latest'
-      run: choco install wget --no-progress
-
     - name: Prepare file with mistakes.
       run: echo "Finallizes" > file.txt
     - name: Test force pass with mistakes
@@ -50,10 +46,6 @@ jobs:
       with:
         persist-credentials: false
         fetch-depth: 0
-
-    - name: Install wget for Windows
-      if: matrix.os == 'windows-latest'
-      run: choco install wget --no-progress
 
     - name: Prepare file with mistakes.
       run: echo "Finallizes" > file.txt
