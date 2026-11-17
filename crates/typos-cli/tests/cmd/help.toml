@@ -6,54 +6,138 @@ Source Code Spelling Correction
 Usage: typos[EXE] [OPTIONS] [PATH]...
 
 Arguments:
-  [PATH]...  Paths to check (`-` to check stdin) [default: .]
+  [PATH]...
+          Paths to check (`-` to check stdin)
+          
+          [default: .]
 
 Options:
-      --file-list <FILE_LIST>  Read the list of newline separated paths from file or stdin (if `-`)
-  -j, --threads <THREADS>      The approximate number of threads to use [default: 0]
-      --sort                   Sort results
-      --force-exclude          Respect excluded files even for paths passed explicitly
-  -h, --help                   Print help
-  -V, --version                Print version
+      --file-list <FILE_LIST>
+          Read the list of newline separated paths from file or stdin (if `-`)
+
+  -j, --threads <THREADS>
+          The approximate number of threads to use
+          
+          [default: 0]
+
+      --sort
+          Sort results
+
+      --force-exclude
+          Respect excluded files even for paths passed explicitly
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
 
 Config:
-  -c, --config <CUSTOM_CONFIG>  Custom config file
-      --isolated                Ignore implicit configuration files
-      --exclude <GLOB>          Ignore files & directories matching the glob
-      --hidden                  Search hidden files and directories
-      --no-ignore               Don't respect ignore files
-      --no-ignore-dot           Don't respect .ignore files
-      --no-ignore-global        Don't respect global ignore files
-      --no-ignore-parent        Don't respect ignore files in parent directories
-      --no-ignore-vcs           Don't respect ignore files in vcs directories
-      --binary                  Search binary files
-      --no-check-filenames      Skip verifying spelling in file names
-      --no-check-files          Skip verifying spelling in files
-      --no-unicode              Only allow ASCII characters in identifiers
-      --locale <LOCALE>         Language locale to suggest corrections for [possible values: en,
-                                en-us, en-gb, en-ca, en-au]
+  -c, --config <CUSTOM_CONFIG>
+          Custom config file
+
+      --ignore-identifiers-file <IGNORE_IDENTIFIERS_FILE>
+          Path to a file specifying identifiers which are to be ignored .
+          
+          The specified file should be UTF-8 encoded, and identifiers should be separated by
+          whitespace.
+
+      --ignore-words-file <IGNORE_WORDS_FILE>
+          Path to a file specifying words which are to be ignored.
+          
+          The specified file should be UTF-8 encoded, and identifiers should be separated by
+          whitespace.
+
+      --isolated
+          Ignore implicit configuration files
+
+      --exclude <GLOB>
+          Ignore files & directories matching the glob
+
+      --hidden
+          Search hidden files and directories
+
+      --no-ignore
+          Don't respect ignore files
+
+      --no-ignore-dot
+          Don't respect .ignore files
+
+      --no-ignore-global
+          Don't respect global ignore files
+
+      --no-ignore-parent
+          Don't respect ignore files in parent directories
+
+      --no-ignore-vcs
+          Don't respect ignore files in vcs directories
+
+      --binary
+          Search binary files
+
+      --no-check-filenames
+          Skip verifying spelling in file names
+
+      --no-check-files
+          Skip verifying spelling in files
+
+      --no-unicode
+          Only allow ASCII characters in identifiers
+
+      --locale <LOCALE>
+          Language locale to suggest corrections for
+          
+          [possible values: en, en-us, en-gb, en-ca, en-au]
 
 Mode:
-      --diff                       Print a diff of what would change
-  -w, --write-changes              Write fixes out
-      --files                      Debug: Print each file that would be spellchecked
-      --file-types                 Debug: Print each file's type
-      --highlight-identifiers      Debug: Print back out files, stylizing identifiers that would be
-                                   spellchecked
-      --identifiers                Debug: Print each identifier that would be spellchecked
-      --highlight-words            Debug: Print back out files, stylizing words that would be
-                                   spellchecked
-      --words                      Debug: Print each word that would be spellchecked
-      --dump-config <DUMP_CONFIG>  Write the current configuration to file with `-` for stdout
-      --type-list                  Show all supported file types
+      --diff
+          Print a diff of what would change
+
+  -w, --write-changes
+          Write fixes out
+
+      --files
+          Debug: Print each file that would be spellchecked
+
+      --file-types
+          Debug: Print each file's type
+
+      --highlight-identifiers
+          Debug: Print back out files, stylizing identifiers that would be spellchecked
+
+      --identifiers
+          Debug: Print each identifier that would be spellchecked
+
+      --highlight-words
+          Debug: Print back out files, stylizing words that would be spellchecked
+
+      --words
+          Debug: Print each word that would be spellchecked
+
+      --dump-config <DUMP_CONFIG>
+          Write the current configuration to file with `-` for stdout
+
+      --type-list
+          Show all supported file types
 
 Output:
-      --format <FORMAT>  Render style for messages [default: long] [possible values: silent, brief,
-                         long, json, sarif]
-      --color <WHEN>     Controls when to use color [default: auto] [possible values: auto, always,
-                         never]
-  -v, --verbose...       Increase logging verbosity
-  -q, --quiet...         Decrease logging verbosity
+      --format <FORMAT>
+          Render style for messages
+          
+          [default: long]
+          [possible values: silent, brief, long, json, sarif]
+
+      --color <WHEN>
+          Controls when to use color
+          
+          [default: auto]
+          [possible values: auto, always, never]
+
+  -v, --verbose...
+          Increase logging verbosity
+
+  -q, --quiet...
+          Decrease logging verbosity
 """
 stderr = ""
 
