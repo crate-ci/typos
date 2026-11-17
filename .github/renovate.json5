@@ -1,16 +1,20 @@
 {
-  extends: ["helpers:pinGitHubActionDigests"],
+  extends: [
+    'helpers:pinGitHubActionDigests',
+  ],
   schedule: [
     'before 5am on the first day of the month',
   ],
-  minimumReleaseAge: "3 days",
-  internalChecksFilter: "strict",
+  minimumReleaseAge: '3 days',
+  internalChecksFilter: 'strict',
   semanticCommits: 'enabled',
   commitMessageLowerCase: 'never',
   configMigration: true,
-  dependencyDashboard: true,
-  "pre-commit": {
-    enabled: true
+  dependencyDashboard: {
+    enabled: true,
+  },
+  'pre-commit': {
+    enabled: true,
   },
   customManagers: [
     {
@@ -53,7 +57,7 @@
       matchDepNames: [
         'STABLE',
       ],
-      extractVersion: '^(?<version>\\d+\\.\\d+)',  // Drop the patch version
+      extractVersion: '^(?<version>\\d+\\.\\d+)',
       schedule: [
         '* * * * *',
       ],
@@ -81,9 +85,6 @@
       automerge: true,
       groupName: 'compatible (actions)',
     },
-    // Goals:
-    // - Rollup safe upgrades to reduce CI runner load
-    // - Have lockfile and manifest in-sync
     {
       matchManagers: [
         'cargo',
