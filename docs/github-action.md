@@ -32,7 +32,7 @@ jobs:
 ).
 
 **Notes:**
-- The tag `v1` is available but CI could fail when new releases find new typos
+- The tag `v1` is deprecated. If you'd like to get the latest version please use crate-ci/typos@main but CI could fail when new releases find new typos
 
 ## Input
 
