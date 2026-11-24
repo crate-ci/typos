@@ -31,9 +31,6 @@ jobs:
 [#1191](https://github.com/crate-ci/typos/issues/1191)
 ).
 
-**Notes:**
-- The tag `v1` is deprecated. If you'd like to get the latest version please use crate-ci/typos@main but CI could fail when new releases find new typos
-
 ## Input
 
 | Name               | Description                                                     | Required | Default                                              |
