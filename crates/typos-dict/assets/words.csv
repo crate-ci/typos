@@ -4590,6 +4590,7 @@ analoge,analogue
 analogeous,analogous
 analoges,analogues
 analogicaly,analogically
+analogouos,analogous
 analogout,analogous
 analoguous,analogous
 analoguously,analogously
@@ -8170,6 +8171,7 @@ assoiciation,association
 assoiciations,associations
 assoiciative,associative
 assomption,assumption
+assoociated,associated
 assosciate,associate
 assosciated,associated
 assosciates,associates
@@ -13652,6 +13654,7 @@ cappacitance,capacitance
 cappacitor,capacitor
 cappacitors,capacitors
 cappacity,capacity
+cappturing,capturing
 caprenter,carpenter
 capsuels,capsules
 capsulers,capsules
@@ -16878,6 +16881,7 @@ coalsece,coalesce
 coalseced,coalesced
 coalsecense,coalescence
 coalsence,coalescence
+coarsend,coarsened
 coaslescing,coalescing
 cobination,combination
 cobinations,combinations
@@ -20908,6 +20912,8 @@ consequnce,consequence
 consequneces,consequences
 consequtive,consecutive
 consequtively,consecutively
+conserative,conservative
+conseravtive,conservative
 consern,concern
 conserned,concerned
 conserning,concerning
@@ -22535,6 +22541,7 @@ convrt,convert
 convsation,conversation
 convseration,conservation
 convserion,conversion
+convservative,conservative
 convulated,convoluted
 convulute,convolute
 convuluted,convoluted
@@ -25277,6 +25284,7 @@ daugtherboard,daughterboard
 daugthers,daughters
 daulity,duality
 davantage,advantage
+daviations,deviations
 dawrves,dwarves
 daybue,debut
 dayly,daily
@@ -29435,6 +29443,7 @@ dingees,dinghies
 dinghys,dinghies
 dingity,dignity
 dinmaic,dynamic
+dinmensional,dimensional
 dinominator,denominator
 dinosar,dinosaur
 dinosaures,dinosaurs
@@ -30082,6 +30091,7 @@ discresion,discretion
 discret,discrete,discreet
 discretation,discretization
 discretiation,discretization
+discretiations,discretizations
 discreting,discretion
 discretited,discredited
 discretiztion,discretization
@@ -30905,6 +30915,7 @@ distrcits,districts
 distrct,district
 distrcts,districts
 distrebuted,distributed
+distretize,discretize
 distribative,distributive
 distribition,distribution
 distribitions,distributions
@@ -43011,6 +43022,7 @@ hiarchy,hierarchy
 hich,which
 hiddden,hidden
 hidded,hidden
+hiddend,hidden
 hiddent,hidden
 hiddin,hidden,hiding
 hidding,hiding,hidden
@@ -46247,6 +46259,8 @@ indictes,indicates
 indictor,indicator
 indictrinated,indoctrinated
 indide,inside,indeed
+indididual,individual
+indidvidual,individual
 indien,indian,endian
 indiens,indians,endians
 indifferance,indifference
@@ -46375,6 +46389,7 @@ indonesion,indonesian
 indonisian,indonesian
 indonistan,indonesian
 indoro,indoor
+indpedenent,independent
 indpendence,independence
 indpendent,independent
 indpendently,independently
@@ -50427,6 +50442,7 @@ invovled,involved
 invovlement,involvement
 invovles,involves
 invovling,involving
+invscid,inviscid
 invulenrable,invulnerable
 invulernable,invulnerable
 invulnarable,invulnerable
@@ -51142,6 +51158,7 @@ juggurnaut,juggernaut
 jugnling,jungling
 juipter,jupiter
 juli,july
+julua,julia
 juming,jumping
 jumo,jump
 jumoed,jumped
@@ -51730,6 +51747,7 @@ langage,language
 langages,languages
 langague,language
 langagues,languages
+langange,language,lagrange
 langauage,language
 langauages,languages
 langauge,language
@@ -53335,6 +53353,7 @@ magled,mangled
 magnatiude,magnitude
 magnatude,magnitude
 magnatudes,magnitudes
+magnectic,magnetic
 magneficent,magnificent
 magneisum,magnesium
 magnesuim,magnesium
@@ -55791,6 +55810,7 @@ mininize,minimize
 mininized,minimized
 mininizes,minimizes
 mininizing,minimizing
+mininmal,minimal
 mininos,minions
 mininterpret,misinterpret
 mininterpreting,misinterpreting
@@ -59197,6 +59217,7 @@ nomralizing,normalizing
 nomrally,normally
 nomrals,normals
 noncombatents,noncombatants
+nonconseravtive,nonconservative
 nondeteministic,nondeterministic
 nonesense,nonsense
 nonesensical,nonsensical
@@ -59217,6 +59238,7 @@ nonsenscial,nonsensical
 nonsensicle,nonsensical
 nonsesne,nonsense
 nonsignificant,insignificant
+nonsymmmetric,nonsymmetric
 nonte,note
 nontheless,nonetheless
 nonthing,nothing
@@ -65986,6 +66008,7 @@ polynomals,polynomials
 polynomical,polynomial
 polynomicals,polynomials
 polynominal,polynomial
+polynoms,polynomials
 polyomial,polynomial
 polyonimial,polynomial
 polyons,polygons
@@ -67172,6 +67195,7 @@ prelimanary,preliminary
 prelimary,preliminary
 prelimenary,preliminary
 prelimiary,preliminary
+preliminaray,preliminary
 preliminarly,preliminary
 prelimitary,preliminary
 prellocate,preallocate
@@ -70108,6 +70132,7 @@ pyton,python
 pytyon,python
 qalified,qualified
 qantized,quantized
+qaudrant,quadrant
 qaulification,qualification
 qaulifications,qualifications
 qaulifiers,qualifiers
@@ -70341,6 +70366,7 @@ qucikest,quickest
 quckly,quickly
 quckstarter,quickstarter
 qudrangles,quadrangles
+qudrants,quadrants
 qudratic,quadratic
 queation,equation
 queations,equations
@@ -71110,6 +71136,7 @@ reather,feather,rather
 reatil,retail
 reatiler,retailer
 reatime,realtime
+reatively,relatively
 reattache,reattach,reattached
 reattachement,reattachment
 reauire,require
@@ -71721,6 +71748,7 @@ reconstrucion,reconstruction
 reconstruciton,reconstruction
 reconstructer,reconstructor,reconstruct
 reconstructers,reconstructors,reconstructs
+reconstructured,reconstructed
 reconstruncted,reconstructed
 reconstrution,reconstruction
 reconstrutions,reconstructions
@@ -75877,6 +75905,7 @@ reuslted,resulted
 reuslting,resulting
 reuslts,results
 reussing,reusing
+reusues,reuses
 reutnr,return
 reutnred,returned
 reutnring,returning
@@ -78104,6 +78133,7 @@ sematnics,semantics
 semblence,semblance
 semconductor,semiconductor
 semding,sending
+semdiscretization,semidiscretization
 sement,cement,segment
 sementation,segmentation
 semented,cemented,segmented
@@ -78131,6 +78161,9 @@ semicondictor,semiconductor
 semiconducter,semiconductor
 semiconducters,semiconductors
 semicondutor,semiconductor
+semidiscretiation,semidiscretization
+semidiscretiations,semidiscretizations
+semidiscretizaion,semidiscretization
 semiphores,semaphores
 semnatics,semantics
 sempahore,semaphore
@@ -79747,6 +79780,7 @@ simimlarly,similarly
 simiple,simple
 simipler,simpler
 simiplest,simplest
+simiplifies,simplifies
 simiply,simply
 simiulated,simulated
 simlar,similar
@@ -82785,6 +82819,7 @@ steamline,streamline
 steamlined,streamlined
 steamlines,streamlines
 steapness,steepness
+steate,state
 steathly,stealthy
 stechiometric,stoichiometric
 steeleries,steelers
@@ -86689,6 +86724,7 @@ teraforms,terraforms
 terain,terrain,train
 terains,terrains,trains
 terarform,terraform
+teration,iteration
 terator,iterator
 terators,iterators
 tere,there,here
@@ -88629,6 +88665,7 @@ transfferable,transferable
 transffered,transferred
 transfferred,transferred
 transffers,transfers
+transfitie,transfinite
 transfmrom,transform
 transfmromation,transformation
 transfmromations,transformations
@@ -89190,6 +89227,7 @@ traversible,traversable
 traversie,traverse
 traversier,traverse
 traversin,traversing
+traversion,traversal
 traverssal,traversal
 travesal,traversal
 travese,traverse
@@ -89775,6 +89813,7 @@ turain,terrain
 turains,terrains
 turaround,turnaround
 turbins,turbines
+turbolent,turbulent
 turcoise,turquoise
 ture,true,pure
 turkisch,turkish
@@ -93234,6 +93273,7 @@ velidate,validate
 vell,well
 velociries,velocities
 velociry,velocity
+velocites,velocities
 veloicity,velocity
 velolcity,velocity
 velue,value
@@ -93889,6 +93929,7 @@ visitign,visiting
 visitng,visiting
 visiuble,visible
 visivble,visible
+visocsity,viscosity
 visonary,visionary
 vissible,visible
 vissual,visual
